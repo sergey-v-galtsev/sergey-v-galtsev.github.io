@@ -1,0 +1,335 @@
+<!DOCTYPE HTML>
+<html lang="ru" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Таблица процессов - Лабораторные работы</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="0-intro-1-nikka.html">Введение в лабораторные работы</a></li><li class="chapter-item expanded affix "><a href="0-intro-2-rust.html">Почему Rust</a></li><li class="chapter-item expanded affix "><a href="0-intro-3-dirs.html">Структура кода</a></li><li class="chapter-item expanded affix "><a href="0-intro-4-install.html">Компиляция и запуск тестов</a></li><li class="chapter-item expanded affix "><a href="0-intro-5-gdb.html">Запуск с отладчиком gdb</a></li><li class="chapter-item expanded affix "><a href="0-intro-6-log.html">Логирование и логи</a></li><li class="chapter-item expanded affix "><a href="0-intro-7-vscode.html">Настройка VSCode</a></li><li class="chapter-item expanded affix "><li class="part-title">Лабораторная работа №1</li><li class="chapter-item expanded "><a href="1-time-0-intro.html"><strong aria-hidden="true">1.</strong> Время</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="1-time-1-rtc.html"><strong aria-hidden="true">1.1.</strong> Часы реального времени</a></li><li class="chapter-item expanded "><a href="1-time-2-tsc.html"><strong aria-hidden="true">1.2.</strong> Счётчик тактов процессора</a></li><li class="chapter-item expanded "><a href="1-time-3-correlation-point.html"><strong aria-hidden="true">1.3.</strong> Счётчики тиков</a></li><li class="chapter-item expanded "><a href="1-time-4-correlation-interval.html"><strong aria-hidden="true">1.4.</strong> Измерение частоты процессора и повышение разрешения часов</a></li><li class="chapter-item expanded "><a href="1-time-5-interrupts.html"><strong aria-hidden="true">1.5.</strong> Обработка прерываний RTC</a></li><li class="chapter-item expanded "><a href="1-time-6-info.html"><strong aria-hidden="true">1.6.</strong> Информация о системе</a></li><li class="chapter-item expanded "><a href="1-time-7-summary.html"><strong aria-hidden="true">1.7.</strong> Собираем всё вместе</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №2</li><li class="chapter-item expanded "><a href="2-mm-0-intro.html"><strong aria-hidden="true">2.</strong> Память</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="2-mm-1-types.html"><strong aria-hidden="true">2.1.</strong> Типы</a></li><li class="chapter-item expanded "><a href="2-mm-2-mapping.html"><strong aria-hidden="true">2.2.</strong> Страничные отображения</a></li><li class="chapter-item expanded "><a href="2-mm-3-diagrams.html"><strong aria-hidden="true">2.3.</strong> Диаграммы преобразований</a></li><li class="chapter-item expanded "><a href="2-mm-4-plan.html"><strong aria-hidden="true">2.4.</strong> План</a></li><li class="chapter-item expanded "><a href="2-mm-5-boot-frame-allocator.html"><strong aria-hidden="true">2.5.</strong> Временный аллокатор фреймов</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space.html"><strong aria-hidden="true">2.6.</strong> Виртуальное адресное пространство</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="2-mm-6-address-space-1-allocation.html"><strong aria-hidden="true">2.6.1.</strong> Аллокатор виртуальных страниц адресного пространства</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space-2-translate.html"><strong aria-hidden="true">2.6.2.</strong> Отображение виртуальных страниц в физические фреймы</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space-3-map.html"><strong aria-hidden="true">2.6.3.</strong> Высокоуровневый интерфейс управления адресным пространством</a></li></ol></li><li class="chapter-item expanded "><a href="2-mm-7-main-frame-allocator.html"><strong aria-hidden="true">2.7.</strong> Основной аллокатор фреймов</a></li><li class="chapter-item expanded "><a href="2-mm-8-tests.html"><strong aria-hidden="true">2.8.</strong> Проверьте себя</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №3</li><li class="chapter-item expanded "><a href="3-user-0-intro.html"><strong aria-hidden="true">3.</strong> Процессы</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="3-user-1-elf.html"><strong aria-hidden="true">3.1.</strong> Загрузка процесса в память</a></li><li class="chapter-item expanded "><a href="3-user-2-permission-checks.html"><strong aria-hidden="true">3.2.</strong> Проверки доступа процесса к памяти</a></li><li class="chapter-item expanded "><a href="3-user-3-user-mode.html"><strong aria-hidden="true">3.3.</strong> Переход в режим пользователя</a></li><li class="chapter-item expanded "><a href="3-user-4-syscall.html"><strong aria-hidden="true">3.4.</strong> Поддержка системных вызовов</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №4</li><li class="chapter-item expanded "><a href="4-concurrency-0-intro.html"><strong aria-hidden="true">4.</strong> Конкурентное выполнение задач</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="4-concurrency-1-smp-0-intro.html"><strong aria-hidden="true">4.1.</strong> Поддержка нескольких процессоров (SMP)</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="4-concurrency-1-smp-1-local-apic.html"><strong aria-hidden="true">4.1.1.</strong> Работа с local APIC</a></li><li class="chapter-item expanded "><a href="4-concurrency-1-smp-2-cpus.html"><strong aria-hidden="true">4.1.2.</strong> Состояние каждого процессора</a></li><li class="chapter-item expanded "><a href="4-concurrency-1-smp-3-ap-init.html"><strong aria-hidden="true">4.1.3.</strong> Загрузка Application Processor</a></li></ol></li><li class="chapter-item expanded "><a href="4-concurrency-2-table.html" class="active"><strong aria-hidden="true">4.2.</strong> Таблица процессов</a></li><li class="chapter-item expanded "><a href="4-concurrency-3-preemption.html"><strong aria-hidden="true">4.3.</strong> Вытесняющая многозадачность</a></li><li class="chapter-item expanded "><a href="4-concurrency-4-scheduler.html"><strong aria-hidden="true">4.4.</strong> Планировщик</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №5</li><li class="chapter-item expanded "><a href="5-um-0-intro.html"><strong aria-hidden="true">5.</strong> Продвинутая работа с памятью в пространстве пользователя</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="5-um-1-ring-buffer.html"><strong aria-hidden="true">5.1.</strong> Разделяемая память</a></li><li class="chapter-item expanded "><a href="5-um-2-memory.html"><strong aria-hidden="true">5.2.</strong> Системные вызовы для работы с виртуальной памятью</a></li><li class="chapter-item expanded "><a href="5-um-3-eager-fork.html"><strong aria-hidden="true">5.3.</strong> Eager fork</a></li><li class="chapter-item expanded "><a href="5-um-4-traps.html"><strong aria-hidden="true">5.4.</strong> Обработка исключений в режиме пользователя</a></li><li class="chapter-item expanded "><a href="5-um-5-cow-fork.html"><strong aria-hidden="true">5.5.</strong> Copy-on-write fork</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Лабораторные работы</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="Таблица-процессов"><a class="header" href="#Таблица-процессов">Таблица процессов</a></h2>
+<p>Код таблицы процессов находится в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/process/table.rs"><code>kernel/src/process/table.rs</code></a>.</p>
+<h3 id="Идентификаторы-процессов-pid"><a class="header" href="#Идентификаторы-процессов-pid">Идентификаторы процессов <code>Pid</code></a></h3>
+<p>В файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/ku/src/process/pid.rs"><code>ku/src/process/pid.rs</code></a> описана структура</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[derive(Clone, Copy, Eq, PartialEq)]
+pub enum Pid {
+    Current,
+    Id {
+        slot: u16,
+        epoch: u32,
+    },
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>Она позволяет отдельно указывать <code>Pid::Current</code> — текущий процесс,
+это удобно для использования тех системных вызовов, что принимают на вход <code>Pid</code>.
+Либо конкретный процесс <code>Pid::Id</code>, идентификатор которого состоит из номера слота в таблице процессов <code>slot</code>
+и эпохи этого слота <code>epoch</code>.
+<code>slot</code> позволяет быстро находить процесс по его идентификатору в таблице процессов, —
+она может быть устроена как вектор, а не как хеш-таблица.
+А <code>epoch</code> позволяет сделать идентификаторы процессов уникальными на протяжении всего времени работы системы.
+Например, в Unix есть гонка, из-за того что одно и то же значение <code>pid_t</code> может в разное время ссылаться на разные процессы.
+Если вы хотите что-то сделать с определённым процессом, и записали его <code>pid_t</code> себе,
+то конкурентно он может прекратить своё исполнение, а ядро выдаст то же самое значение <code>pid_t</code> новому процессу.
+Теперь вы что-то делаете с процессом по сохранённому у себя <code>pid_t</code>, например, посылаете ему сигнал <code>SIGKILL</code>, но это уже другой процесс.
+Реализации пытаются уменьшить вероятность таких гонок за счёт выдачи <code>pid_t</code> по кругу.
+В Nikka для избежания гонки, каждый раз, когда новый процесс получает тот же <code>slot</code>, он получает на 1 большее значение <code>epoch</code>, за это отвечает метод <code>Pid::next_epoch()</code>.</p>
+<p>Другие методы <code>Pid</code>:</p>
+<ul>
+<li><code>Pid::new(slot)</code> создаёт <code>pid</code> с начальным значением <code>epoch</code> для заданного <code>slot</code>.</li>
+<li><code>Pid::slot()</code> возвращает значение <code>slot</code>.</li>
+<li><code>Pid::into_usize()</code> и <code>Pid::from_usize()</code> позволяют сериализовать <code>Pid</code> в регистр для передачи в системные вызовы.</li>
+</ul>
+<h3 id="Слоты-таблицы-процессов"><a class="header" href="#Слоты-таблицы-процессов">Слоты таблицы процессов</a></h3>
+<p>Таблица процессов состоит из фиксированного количества слотов</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>enum Slot {
+    Free {
+        pid: Pid,
+        next: Option&lt;Pid&gt;,
+    },
+    Occupied {
+        process: Mutex&lt;Process&gt;,
+    },
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>Каждый из которых либо свободен — <code>Slot::Free</code>, либо занят — <code>Slot::Occupied</code>.</p>
+<p>Свободные слоты содержат <code>pid</code> для того, что помнить эпоху последнего процесса, занимавшего этот слот.
+И выдать следующему процессу, который попадёт в тот же слот, номер эпохи на 1 больше.
+Также свободные слоты провязаны в список, чтобы удобнее было за O(1) находить какой-нибудь свободный слот под новый процесс.</p>
+<p>Занятые слоты содержат мьютекс <code>process</code>.
+Когда нам понадобится обратиться к процессу, нужно будет захватить его мьютекс, чтобы избежать неконсистентного конкурентного изменения структуры <code>Process</code>.
+Чтобы обратиться с самой таблице процессов
+<a href="../../doc/kernel/process/table/struct.TABLE.html"><code>static ref kernel::process::table::TABLE: Mutex&lt;Table&gt;</code></a>,
+конечно тоже нужно захватить её общий мьютекс.
+Но не хочется держать заблокированным мьютекс всей таблицы, пока мы работаем со структурой <code>Process</code> одного её процесса.
+Поэтому, таблица будет по идентификатору процесса <code>Pid</code> фактически обменивать заблокированный мьютекс <code>Mutex&lt;Table&gt;</code> на заблокированный мьютекс процесса <code>Mutex&lt;Process&gt;</code>.
+После чего вызывающий код сможет работать с процессом конкурентно другому коду, который сможет захватить уже освободившийся <code>Mutex&lt;Table&gt;</code>.</p>
+<h3 id="Задача-2--инициализация-таблицы"><a class="header" href="#Задача-2--инициализация-таблицы">Задача 2 — инициализация таблицы</a></h3>
+<p>Реализуйте метод</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn Table::new(len: usize) -&gt; Self
+<span class="boring">}
+</span></code></pre></pre>
+<p>Он создаёт таблицу процессов <code>Table::table</code> размера <code>len</code> элементов, заполняя её пустыми слотами <code>Slot::Free</code> с соответствующими индексам слотов полями <code>Pid::slot</code>.
+Эти пустые слоты он провязывает в односвязный список с головой в поле <code>Table::free</code>.
+Чтобы избежать переаллокаций рекомендуется использовать метод
+<a href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html#method.with_capacity"><code>alloc::vec::Vec::with_capacity()</code></a>.</p>
+<h3 id="Задача-3--аллокация-слота-под-процесс"><a class="header" href="#Задача-3--аллокация-слота-под-процесс">Задача 3 — аллокация слота под процесс</a></h3>
+<p>Реализуйте метод</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn Table::allocate(mut process: Process) -&gt; Result&lt;Pid&gt;
+<span class="boring">}
+</span></code></pre></pre>
+<p>Он должен выделить новому процессу <code>process</code> свободный слот таблицы.
+Слот возьмите из головы списка свободных <code>Table::free</code>.
+Запишите в него <code>process</code>, а <code>Pid</code> слота запишите в структуру процесса <code>process</code> методом <code>Process::set_pid()</code>.
+Если же свободного слота нет, верните ошибку <code>Error::NoProcessSlot</code>.
+В этом случае при выходе из метода, <code>process</code> будет автоматически уничтожен, а все его ресурсы освобождены.
+Так как по сигнатуре <code>Table::allocate(process: Process)</code> поглощает свой аргумент.
+Этот и все последующие методы — статические, они оперируют с глобальным
+<a href="https://en.wikipedia.org/wiki/Singleton_pattern">синглтоном</a>
+<a href="../../doc/kernel/process/table/struct.TABLE.html"><code>static ref TABLE: Mutex&lt;Table&gt;</code></a>,
+захватывая его блокировку — <code>TABLE.lock()</code>.
+При реализации вам может пригодиться метод
+<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.take"><code>Option::take()</code></a>.</p>
+<h3 id="Задача-4--получение-процесса-по-его-идентификатору"><a class="header" href="#Задача-4--получение-процесса-по-его-идентификатору">Задача 4 — получение процесса по его идентификатору</a></h3>
+<p>Реализуйте метод</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn Table::get(pid: Pid) -&gt; Result&lt;MutexGuard&lt;'static, Process&gt;&gt;
+<span class="boring">}
+</span></code></pre></pre>
+<p>Он возвращает заблокированный мьютекс <code>MutexGuard</code> со структурой <code>Process</code>, соответствующей идентификатору <code>pid</code>.
+Верните ошибку <code>Error::NoProcess</code>, если процесса по указанному <code>pid</code> нет.
+То есть, если либо не занят <code>pid.slot()</code>, либо в этом слоте другое значение поля <code>Slot::pid</code> (значит у него другая эпоха <code>Pid::epoch</code>, так как слот <code>Pid::slot</code> должен совпадать).
+Вытащить значение <code>epoch</code> тип <code>Pid</code> не позволяет, но зато он позволяет сравнивать два своих значения на равенство за счёт реализации <code>#[derive(..., Eq, PartialEq)]</code>.</p>
+<p>Так как размер таблицы процессов
+<a href="../../doc/kernel/process/table/struct.TABLE.html"><code>static ref TABLE: Mutex&lt;Table&gt;</code></a>
+после инициализации мы никода не меняем, и в частности не уменьшаем, время жизни каждого её слота — практически <code>'static</code>.
+Который и указан в результирующем типе метода <code>Table::get()</code>.
+Но Rust не может проверить это самостоятельно.
+Нам придётся пообещать ему это с помощью unsafe–функции</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>unsafe fn forge_static_lifetime&lt;T&gt;(x: &amp;T) -&gt; &amp;'static T
+<span class="boring">}
+</span></code></pre></pre>
+<p>Естественно, чтобы вернуть <code>MutexGuard</code> нужно заблокировать процесс в слоте методом <code>Mutex::lock()</code>.
+Мьютекс же самой <code>TABLE</code> будет автоматически разблокирован аналогичным гардом при выходе из функции.
+Получается, что она в начале захватывает низкогранулярную блокировку на всю таблицу <code>TABLE</code>,
+а потом повышает гранулярность этой блокировки до блокировки одного слота таблицы.
+И вызывающая функции в дальнейшем работает уже с высокогранулярной блокировкой.</p>
+<h3 id="Задача-5--освобождение-слота-с-уничтожением-процесса"><a class="header" href="#Задача-5--освобождение-слота-с-уничтожением-процесса">Задача 5 — освобождение слота с уничтожением процесса</a></h3>
+<p>Реализуйте метод</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn Table::free(process: MutexGuard&lt;Process&gt;)
+<span class="boring">}
+</span></code></pre></pre>
+<p>Он:</p>
+<ul>
+<li>Удаляет процесс <code>process</code>.</li>
+<li>Инкриментирует эпоху в освободившемся слоте.</li>
+<li>Вставляет слот в голову списка свободных слотов <code>Table::free</code>.</li>
+</ul>
+<p>Вам могут пригодиться функции <code>drop()</code> и
+<a href="https://doc.rust-lang.org/nightly/core/mem/fn.replace.html"><code>core::mem::replace()</code></a>.</p>
+<h3 id="Ориентировочный-объём-работ-этой-части-лабораторки"><a class="header" href="#Ориентировочный-объём-работ-этой-части-лабораторки">Ориентировочный объём работ этой части лабораторки</a></h3>
+<pre><code class="language-console"> table.rs |  100 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 96 insertions(+), 4 deletions(-)
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="4-concurrency-1-smp-3-ap-init.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next" href="4-concurrency-3-preemption.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="4-concurrency-1-smp-3-ap-init.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" href="4-concurrency-3-preemption.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </body>
+</html>

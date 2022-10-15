@@ -1,0 +1,6 @@
+(function() {var implementors = {
+"kernel":[["impl <a class=\"trait\" href=\"tracing_core/field/trait.Visit.html\" title=\"trait tracing_core::field::Visit\">Visit</a> for <a class=\"struct\" href=\"kernel/log/struct.LogEvent.html\" title=\"struct kernel::log::LogEvent\">LogEvent</a>"]],
+"ku":[["impl <a class=\"trait\" href=\"tracing_core/field/trait.Visit.html\" title=\"trait tracing_core::field::Visit\">Visit</a> for <a class=\"struct\" href=\"ku/log/struct.LogEvent.html\" title=\"struct ku::log::LogEvent\">LogEvent</a>&lt;'_&gt;"],["impl&lt;const N:&nbsp;<a class=\"primitive\" href=\"https://doc.rust-lang.org/nightly/core/primitive.usize.html\">usize</a>&gt; <a class=\"trait\" href=\"tracing_core/field/trait.Visit.html\" title=\"trait tracing_core::field::Visit\">Visit</a> for <a class=\"struct\" href=\"ku/log/struct.PlanB.html\" title=\"struct ku::log::PlanB\">PlanB</a>&lt;N&gt;"]],
+"tracing":[],
+"tracing_core":[]
+};if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":[["BootFrameAllocator","Вспомогательный аллокатор физических фреймов, использующийся до инициализации основного [`super::main_frame_allocator::MainFrameAllocator`]. Выделяет фреймы из блока подряд и не способен забирать их назад (освобождать)."]]};

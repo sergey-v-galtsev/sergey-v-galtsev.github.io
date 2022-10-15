@@ -1,0 +1,392 @@
+<!DOCTYPE HTML>
+<html lang="ru" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Высокоуровневый интерфейс управления адресным пространством - Лабораторные работы</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="0-intro-1-nikka.html">Введение в лабораторные работы</a></li><li class="chapter-item expanded affix "><a href="0-intro-2-rust.html">Почему Rust</a></li><li class="chapter-item expanded affix "><a href="0-intro-3-dirs.html">Структура кода</a></li><li class="chapter-item expanded affix "><a href="0-intro-4-install.html">Компиляция и запуск тестов</a></li><li class="chapter-item expanded affix "><a href="0-intro-5-gdb.html">Запуск с отладчиком gdb</a></li><li class="chapter-item expanded affix "><a href="0-intro-6-log.html">Логирование и логи</a></li><li class="chapter-item expanded affix "><a href="0-intro-7-vscode.html">Настройка VSCode</a></li><li class="chapter-item expanded affix "><li class="part-title">Лабораторная работа №1</li><li class="chapter-item expanded "><a href="1-time-0-intro.html"><strong aria-hidden="true">1.</strong> Время</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="1-time-1-rtc.html"><strong aria-hidden="true">1.1.</strong> Часы реального времени</a></li><li class="chapter-item expanded "><a href="1-time-2-tsc.html"><strong aria-hidden="true">1.2.</strong> Счётчик тактов процессора</a></li><li class="chapter-item expanded "><a href="1-time-3-correlation-point.html"><strong aria-hidden="true">1.3.</strong> Счётчики тиков</a></li><li class="chapter-item expanded "><a href="1-time-4-correlation-interval.html"><strong aria-hidden="true">1.4.</strong> Измерение частоты процессора и повышение разрешения часов</a></li><li class="chapter-item expanded "><a href="1-time-5-interrupts.html"><strong aria-hidden="true">1.5.</strong> Обработка прерываний RTC</a></li><li class="chapter-item expanded "><a href="1-time-6-info.html"><strong aria-hidden="true">1.6.</strong> Информация о системе</a></li><li class="chapter-item expanded "><a href="1-time-7-summary.html"><strong aria-hidden="true">1.7.</strong> Собираем всё вместе</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №2</li><li class="chapter-item expanded "><a href="2-mm-0-intro.html"><strong aria-hidden="true">2.</strong> Память</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="2-mm-1-types.html"><strong aria-hidden="true">2.1.</strong> Типы</a></li><li class="chapter-item expanded "><a href="2-mm-2-mapping.html"><strong aria-hidden="true">2.2.</strong> Страничные отображения</a></li><li class="chapter-item expanded "><a href="2-mm-3-diagrams.html"><strong aria-hidden="true">2.3.</strong> Диаграммы преобразований</a></li><li class="chapter-item expanded "><a href="2-mm-4-plan.html"><strong aria-hidden="true">2.4.</strong> План</a></li><li class="chapter-item expanded "><a href="2-mm-5-boot-frame-allocator.html"><strong aria-hidden="true">2.5.</strong> Временный аллокатор фреймов</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space.html"><strong aria-hidden="true">2.6.</strong> Виртуальное адресное пространство</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="2-mm-6-address-space-1-allocation.html"><strong aria-hidden="true">2.6.1.</strong> Аллокатор виртуальных страниц адресного пространства</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space-2-translate.html"><strong aria-hidden="true">2.6.2.</strong> Отображение виртуальных страниц в физические фреймы</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space-3-map.html" class="active"><strong aria-hidden="true">2.6.3.</strong> Высокоуровневый интерфейс управления адресным пространством</a></li></ol></li><li class="chapter-item expanded "><a href="2-mm-7-main-frame-allocator.html"><strong aria-hidden="true">2.7.</strong> Основной аллокатор фреймов</a></li><li class="chapter-item expanded "><a href="2-mm-8-tests.html"><strong aria-hidden="true">2.8.</strong> Проверьте себя</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №3</li><li class="chapter-item expanded "><a href="3-user-0-intro.html"><strong aria-hidden="true">3.</strong> Процессы</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="3-user-1-elf.html"><strong aria-hidden="true">3.1.</strong> Загрузка процесса в память</a></li><li class="chapter-item expanded "><a href="3-user-2-permission-checks.html"><strong aria-hidden="true">3.2.</strong> Проверки доступа процесса к памяти</a></li><li class="chapter-item expanded "><a href="3-user-3-user-mode.html"><strong aria-hidden="true">3.3.</strong> Переход в режим пользователя</a></li><li class="chapter-item expanded "><a href="3-user-4-syscall.html"><strong aria-hidden="true">3.4.</strong> Поддержка системных вызовов</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №4</li><li class="chapter-item expanded "><a href="4-concurrency-0-intro.html"><strong aria-hidden="true">4.</strong> Конкурентное выполнение задач</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="4-concurrency-1-smp-0-intro.html"><strong aria-hidden="true">4.1.</strong> Поддержка нескольких процессоров (SMP)</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="4-concurrency-1-smp-1-local-apic.html"><strong aria-hidden="true">4.1.1.</strong> Работа с local APIC</a></li><li class="chapter-item expanded "><a href="4-concurrency-1-smp-2-cpus.html"><strong aria-hidden="true">4.1.2.</strong> Состояние каждого процессора</a></li><li class="chapter-item expanded "><a href="4-concurrency-1-smp-3-ap-init.html"><strong aria-hidden="true">4.1.3.</strong> Загрузка Application Processor</a></li></ol></li><li class="chapter-item expanded "><a href="4-concurrency-2-table.html"><strong aria-hidden="true">4.2.</strong> Таблица процессов</a></li><li class="chapter-item expanded "><a href="4-concurrency-3-preemption.html"><strong aria-hidden="true">4.3.</strong> Вытесняющая многозадачность</a></li><li class="chapter-item expanded "><a href="4-concurrency-4-scheduler.html"><strong aria-hidden="true">4.4.</strong> Планировщик</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №5</li><li class="chapter-item expanded "><a href="5-um-0-intro.html"><strong aria-hidden="true">5.</strong> Продвинутая работа с памятью в пространстве пользователя</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="5-um-1-ring-buffer.html"><strong aria-hidden="true">5.1.</strong> Разделяемая память</a></li><li class="chapter-item expanded "><a href="5-um-2-memory.html"><strong aria-hidden="true">5.2.</strong> Системные вызовы для работы с виртуальной памятью</a></li><li class="chapter-item expanded "><a href="5-um-3-eager-fork.html"><strong aria-hidden="true">5.3.</strong> Eager fork</a></li><li class="chapter-item expanded "><a href="5-um-4-traps.html"><strong aria-hidden="true">5.4.</strong> Обработка исключений в режиме пользователя</a></li><li class="chapter-item expanded "><a href="5-um-5-cow-fork.html"><strong aria-hidden="true">5.5.</strong> Copy-on-write fork</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Лабораторные работы</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="Высокоуровневый-интерфейс-управления-адресным-пространством"><a class="header" href="#Высокоуровневый-интерфейс-управления-адресным-пространством">Высокоуровневый интерфейс управления адресным пространством</a></h2>
+<p>Всё управление адресным пространством инкапсулировано в структуре
+<a href="../../doc/kernel/memory/address_space/struct.AddressSpace.html"><code>kernel::memory::address_space::AddressSpace</code></a>.
+Её поле
+<a href="../../doc/kernel/memory/address_space/struct.AddressSpace.html#structfield.mapping"><code>AddressSpace::mapping</code></a>
+служит для модификации отображения страниц и <a href="../../lab/book/2-mm-6-address-space-2-translate.html">реализовано вами ранее</a>.
+А поле
+<a href="../../doc/kernel/memory/address_space/struct.AddressSpace.html#structfield.page_allocator"><code>AddressSpace::page_allocator</code></a> —
+для выделения виртуальных страниц внутри этого адресного пространства.
+И тоже <a href="../../lab/book/2-mm-6-address-space-1-allocation.html">уже реализовано</a>.</p>
+<h3 id="Задача-4--высокоуровневый-интерфейс-управления-адресным-пространством"><a class="header" href="#Задача-4--высокоуровневый-интерфейс-управления-адресным-пространством">Задача 4 — высокоуровневый интерфейс управления адресным пространством</a></h3>
+<h4 id="Отображение-виртуальной-страницы-на-физический-фрейм"><a class="header" href="#Отображение-виртуальной-страницы-на-физический-фрейм">Отображение виртуальной страницы на физический фрейм</a></h4>
+<p>Реализуйте <a href="../../doc/kernel/memory/address_space/struct.AddressSpace.html#method.map_page_to_frame">метод</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>unsafe fn AddressSpace::map_page_to_frame(
+    &amp;mut self,
+    page: Page,
+    frame: Frame,
+    flags: PageTableFlags,
+) -&gt; Result&lt;()&gt;
+<span class="boring">}
+</span></code></pre></pre>
+<p>в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/memory/address_space.rs"><code>kernel/src/memory/address_space.rs</code></a>.
+Он должен отобразить заданную виртуальную страницу <code>page</code> на заданный физический фрейм <code>frame</code> с указанными флагами доступа <code>flags</code>.
+Используйте
+<a href="../../doc/kernel/memory/mapping/struct.Mapping.html#method.translate"><code>Mapping::translate()</code></a>
+и
+<a href="../../doc/kernel/memory/struct.FRAME_ALLOCATOR.html"><code>FRAME_ALLOCATOR</code></a>.
+Вам может пригодиться метод
+<a href="../../doc/kernel/memory/mmu/struct.PageTableEntry.html#method.set_frame"><code>PageTableEntry::set_frame()</code></a>.
+Увеличивать количество ссылок на <code>frame</code> не нужно, это задача вызывающей функции.
+Дело в том, что нам иногда захочется использовать
+<a href="../../doc/kernel/memory/address_space/struct.AddressSpace.html#method.map_page_to_frame"><code>AddressSpace::map_page_to_frame()</code></a>
+для отображения зарезервированных физических фреймов, про которые
+<a href="../../doc/kernel/memory/enum.FrameAllocator.html"><code>FrameAllocator</code></a>
+ничего не знает и не отслеживает количество ссылок на них.
+Например, это делает метод
+<a href="../../doc/kernel/smp/local_apic/struct.LocalApic.html#method.map"><code>kernel::smp::local_apic::LocalApic::map()</code></a>,
+инициализирующий работу с
+<a href="https://wiki.osdev.org/APIC">контроллером прерываний APIC</a>
+методом ввода–вывода через память
+(<a href="https://en.wikipedia.org/wiki/Memory-mapped_I/O">Memory-mapped I/O</a>).</p>
+<p>Если страница <code>page</code> уже замаплена, то проверьте что у неё есть флаг <code>PageTableFlags::USER_ACCESSIBLE</code>.
+Если флаг есть, то есть видимо пользовательский процесс хочет изменить маппинг доступной ему страницы,
+удалите старый маппинг с помощью метода
+<a href="../../doc/kernel/memory/address_space/struct.AddressSpace.html#method.unmap_pte"><code>AddressSpace::unmap_pte()</code></a>.
+Если флага нет, <code>map_page_to_frame()</code> должен вернуть ошибку
+<a href="../../doc/kernel/error/enum.Error.html#variant.PermissionDenied"><code>Error::PermissionDenied</code></a>.</p>
+<p>Используя
+<a href="../../doc/kernel/memory/enum.FrameAllocator.html#method.allocate"><code>FrameAllocator::allocate()</code></a>
+из глобального
+<a href="../../doc/kernel/memory/struct.FRAME_ALLOCATOR.html"><code>FRAME_ALLOCATOR</code></a>
+и
+<a href="../../doc/kernel/memory/address_space/struct.AddressSpace.html#method.map_page_to_frame"><code>AddressSpace::map_page_to_frame()</code></a>
+реализуйте <a href="../../doc/kernel/memory/address_space/struct.AddressSpace.html#method.map_page">метод</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>unsafe fn AddressSpace::map_page(
+    &amp;mut self,
+    page: Page,
+    flags: PageTableFlags,
+) -&gt; Result&lt;Frame&gt;
+<span class="boring">}
+</span></code></pre></pre>
+<p>в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/memory/address_space.rs"><code>kernel/src/memory/address_space.rs</code></a>.
+Он отличается от
+<a href="../../doc/kernel/memory/address_space/struct.AddressSpace.html#method.map_page_to_frame"><code>AddressSpace::map_page_to_frame()</code></a>
+только тем, что не принимает <code>frame</code>, а выделяет его сам.</p>
+<h4 id="Удаление-отображения-заданной-страницы"><a class="header" href="#Удаление-отображения-заданной-страницы">Удаление отображения заданной страницы</a></h4>
+<p>Реализуйте <a href="../../doc/kernel/memory/address_space/struct.AddressSpace.html#method.unmap_page">метод</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>unsafe fn AddressSpace::unmap_page(
+    &amp;mut self,
+    page: Page,
+) -&gt; Result&lt;()&gt;
+<span class="boring">}
+</span></code></pre></pre>
+<p>и его вспомогательный <a href="../../doc/kernel/memory/address_space/struct.AddressSpace.html#method.unmap_pte">метод</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>unsafe fn AddressSpace::unmap_pte(
+    page: Page,
+    pte: &amp;mut PageTableEntry,
+) -&gt; Result&lt;()&gt;
+<span class="boring">}
+</span></code></pre></pre>
+<p>в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/memory/address_space.rs"><code>kernel/src/memory/address_space.rs</code></a>.
+Воспользуйтесь
+<a href="../../doc/kernel/memory/mapping/struct.Mapping.html#method.translate"><code>Mapping::translate()</code></a>,
+теперь в качестве <code>flags</code> ему можно передать пустой набор флагов
+<a href="../../doc/kernel/memory/mmu/struct.PageTableFlags.html#method.empty"><code>PageTableFlags::empty()</code></a>.</p>
+<p><strong>Важно</strong> сбросить запись в
+<a href="https://ru.wikipedia.org/wiki/%D0%91%D1%83%D1%84%D0%B5%D1%80_%D0%B0%D1%81%D1%81%D0%BE%D1%86%D0%B8%D0%B0%D1%82%D0%B8%D0%B2%D0%BD%D0%BE%D0%B9_%D1%82%D1%80%D0%B0%D0%BD%D1%81%D0%BB%D1%8F%D1%86%D0%B8%D0%B8">буфере ассоциативной трансляции</a>
+(<a href="https://en.wikipedia.org/wiki/Translation_lookaside_buffer">Translation lookaside buffer</a>,
+<a href="https://wiki.osdev.org/TLB">TLB</a>)
+касающуюся <code>page</code>.
+Иначе процессор может использовать старую закешерованную в TLB запись, когда обратится по адресу внутри <code>page</code> в следующий раз.
+А это может быть как уже совершенно другой физический фрейм, так и намеренно не отображённая на физическую память страница.
+Выглядеть с вашей точки зрения это будет так: вы обращаетесь по некоторому адресу, а там находится совсем не то что вы ожидаете.
+Даже отладчик будет показывать вам то же самое, что вы ожидаете.
+А вот процессор будет читать и писать совсем в другую физическую память.
+Это приведёт к трудно отлаживаемым
+<a href="https://ru.wikipedia.org/wiki/%D0%93%D0%B5%D0%B9%D0%B7%D0%B5%D0%BD%D0%B1%D0%B0%D0%B3">гейзенбагам</a>.
+Для сброса нужной записи TLB поможет функция
+<a href="../../doc/kernel/memory/mmu/fn.flush.html">kernel::memory::mmu::flush()</a>.</p>
+<p>Также вам пригодятся</p>
+<ul>
+<li><a href="../../doc/kernel/memory/enum.FrameAllocator.html#method.deallocate"><code>FrameAllocator::deallocate()</code></a> и</li>
+<li><a href="../../doc/kernel/memory/mmu/struct.PageTableEntry.html#method.clear"><code>PageTableEntry::clear()</code></a>.</li>
+</ul>
+<h3 id="Изучите-как-устроены-отображения-целых-блоков"><a class="header" href="#Изучите-как-устроены-отображения-целых-блоков">Изучите как устроены отображения целых блоков</a></h3>
+<p>Посмотрите на методы</p>
+<ul>
+<li><a href="../../doc/kernel/memory/address_space/struct.AddressSpace.html#method.map_block"><code>unsafe fn AddressSpace::map_block(&amp;mut self, pages: Block&lt;Page&gt;, flags: PageTableFlags) -&gt; Result&lt;()&gt;</code></a> и</li>
+<li><a href="../../doc/kernel/memory/address_space/struct.AddressSpace.html#method.unmap_block"><code>unsafe fn AddressSpace::unmap_block(&amp;mut self, pages: Block&lt;Page&gt;) -&gt; Result&lt;()&gt;</code></a>.</li>
+</ul>
+<p>Их код и назначение должны быть уже понятны.</p>
+<h3 id="Изучите-как-устроены-отображения-срезов"><a class="header" href="#Изучите-как-устроены-отображения-срезов">Изучите как устроены отображения срезов</a></h3>
+<p>С помощью реализованных вами функций <a href="../../doc/kernel/memory/address_space/struct.AddressSpace.html#method.map_slice_uninit">метод</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn AddressSpace::map_slice_uninit&lt;T&gt;(
+    &amp;mut self,
+    len: usize,
+    flags: PageTableFlags,
+) -&gt; Result&lt;&amp;'static mut [MaybeUninit&lt;T&gt;]&gt;
+<span class="boring">}
+</span></code></pre></pre>
+<p>выделяет срез неинициализированной памяти
+<a href="https://doc.rust-lang.org/nightly/core/mem/union.MaybeUninit.html"><code>core::mem::MaybeUninit</code></a>,
+достаточный для <code>len</code> элементов типа <code>T</code>.
+Так как он пользуется выделением виртуальных страниц и физических фреймов,
+каждый вызов расходует целое число фреймов.
+То есть, выделение через него срезов маленького размера в байтах неэффективно.
+В результате вернётся срез с большим, чем было запрошено, количеством элементов —
+сколько поместилось в аллоцированном наборе страниц.</p>
+<p><a href="../../doc/kernel/memory/address_space/struct.AddressSpace.html#method.map_slice">Метод</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn AddressSpace::map_slice&lt;T, F: Fn() -&gt; T&gt;(
+    &amp;mut self,
+    len: usize,
+    flags: PageTableFlags,
+    default: F,
+) -&gt; Result&lt;&amp;'static mut [T]&gt;
+<span class="boring">}
+</span></code></pre></pre>
+<p>дополнительно параметризован
+<a href="https://doc.rust-lang.ru/book/ch13-01-closures.html">замыканием</a>
+типажа
+<a href="https://doc.rust-lang.org/nightly/core/ops/trait.Fn.html"><code>core::ops::Fn</code></a>.
+Возвращаемый им срез уже инициализирован значениями, которые возвращает замыкание <code>default</code>.</p>
+<p><a href="../../doc/kernel/memory/address_space/struct.AddressSpace.html#method.map_slice_zeroed">Метод</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>unsafe fn AddressSpace::map_slice_zeroed&lt;T&gt;(
+    &amp;mut self,
+    len: usize,
+    flags: PageTableFlags,
+) -&gt; Result&lt;&amp;'static mut [T]&gt;
+<span class="boring">}
+</span></code></pre></pre>
+<p>не принимает значение для инициализации, а инициализирует память нулями.
+<code>unsafe</code> означает, что вызывающая функция должна гарантировать, что <a href="https://doc.rust-lang.org/nightly/core/mem/union.MaybeUninit.html#example-2">нулевые байты являются корректным значением</a> для типа <code>T</code>.</p>
+<p><a href="../../doc/kernel/memory/address_space/struct.AddressSpace.html#method.unmap_slice">Метод</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>unsafe fn AddressSpace::unmap_slice&lt;T&gt;(
+    &amp;mut self,
+    slice: &amp;mut [T],
+) -&gt; Result&lt;()&gt;
+<span class="boring">}
+</span></code></pre></pre>
+<p>удаляет отображение страниц под заданным срезом.
+Он проверяет, что срез действительно занимает свои страницы целиком.
+<code>unsafe</code> означает, что вызывающая функция должна гарантировать, что <code>slice</code> больше не будет использоваться.</p>
+<h3 id="Проверьте-себя"><a class="header" href="#Проверьте-себя">Проверьте себя</a></h3>
+<p>Запустите тест:</p>
+<pre><code class="language-console">$ (cd kernel; cargo test --test 2-mm-4-map)
+...
+2_mm_4_interface::map_slice---------------------------------
+19:10:06 0 D slice = [0v7FFFFEFFF000, 0v7FFFFFFFF000), size 16.000 MiB, Virt[~128.000 TiB, ~128.000 TiB)
+2_mm_4_interface::map_slice------------------------ [passed]
+19:10:09.133 0 I exit qemu; exit_code = SUCCESS
+</code></pre>
+<p>Как и в случае копирования и удаления виртуальных отображений для проверки метода
+<a href="../../doc/kernel/memory/address_space/struct.AddressSpace.html#method.unmap_slice"><code>AddressSpace::unmap_slice()</code></a>
+нам понадобится основной аллокатор физических фреймов.
+Поэтому тест для него придётся отложить.</p>
+<h3 id="Ориентировочный-объём-работ-этой-части-лабораторки"><a class="header" href="#Ориентировочный-объём-работ-этой-части-лабораторки">Ориентировочный объём работ этой части лабораторки</a></h3>
+<pre><code class="language-console"> kernel/src/memory/address_space.rs |   20 +++++++++++++++++---
+ 1 file changed, 17 insertions(+), 3 deletions(-)
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="2-mm-6-address-space-2-translate.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next" href="2-mm-7-main-frame-allocator.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="2-mm-6-address-space-2-translate.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" href="2-mm-7-main-frame-allocator.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </body>
+</html>

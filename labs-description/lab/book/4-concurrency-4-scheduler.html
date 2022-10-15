@@ -1,0 +1,297 @@
+<!DOCTYPE HTML>
+<html lang="ru" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Планировщик - Лабораторные работы</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="0-intro-1-nikka.html">Введение в лабораторные работы</a></li><li class="chapter-item expanded affix "><a href="0-intro-2-rust.html">Почему Rust</a></li><li class="chapter-item expanded affix "><a href="0-intro-3-dirs.html">Структура кода</a></li><li class="chapter-item expanded affix "><a href="0-intro-4-install.html">Компиляция и запуск тестов</a></li><li class="chapter-item expanded affix "><a href="0-intro-5-gdb.html">Запуск с отладчиком gdb</a></li><li class="chapter-item expanded affix "><a href="0-intro-6-log.html">Логирование и логи</a></li><li class="chapter-item expanded affix "><a href="0-intro-7-vscode.html">Настройка VSCode</a></li><li class="chapter-item expanded affix "><li class="part-title">Лабораторная работа №1</li><li class="chapter-item expanded "><a href="1-time-0-intro.html"><strong aria-hidden="true">1.</strong> Время</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="1-time-1-rtc.html"><strong aria-hidden="true">1.1.</strong> Часы реального времени</a></li><li class="chapter-item expanded "><a href="1-time-2-tsc.html"><strong aria-hidden="true">1.2.</strong> Счётчик тактов процессора</a></li><li class="chapter-item expanded "><a href="1-time-3-correlation-point.html"><strong aria-hidden="true">1.3.</strong> Счётчики тиков</a></li><li class="chapter-item expanded "><a href="1-time-4-correlation-interval.html"><strong aria-hidden="true">1.4.</strong> Измерение частоты процессора и повышение разрешения часов</a></li><li class="chapter-item expanded "><a href="1-time-5-interrupts.html"><strong aria-hidden="true">1.5.</strong> Обработка прерываний RTC</a></li><li class="chapter-item expanded "><a href="1-time-6-info.html"><strong aria-hidden="true">1.6.</strong> Информация о системе</a></li><li class="chapter-item expanded "><a href="1-time-7-summary.html"><strong aria-hidden="true">1.7.</strong> Собираем всё вместе</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №2</li><li class="chapter-item expanded "><a href="2-mm-0-intro.html"><strong aria-hidden="true">2.</strong> Память</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="2-mm-1-types.html"><strong aria-hidden="true">2.1.</strong> Типы</a></li><li class="chapter-item expanded "><a href="2-mm-2-mapping.html"><strong aria-hidden="true">2.2.</strong> Страничные отображения</a></li><li class="chapter-item expanded "><a href="2-mm-3-diagrams.html"><strong aria-hidden="true">2.3.</strong> Диаграммы преобразований</a></li><li class="chapter-item expanded "><a href="2-mm-4-plan.html"><strong aria-hidden="true">2.4.</strong> План</a></li><li class="chapter-item expanded "><a href="2-mm-5-boot-frame-allocator.html"><strong aria-hidden="true">2.5.</strong> Временный аллокатор фреймов</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space.html"><strong aria-hidden="true">2.6.</strong> Виртуальное адресное пространство</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="2-mm-6-address-space-1-allocation.html"><strong aria-hidden="true">2.6.1.</strong> Аллокатор виртуальных страниц адресного пространства</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space-2-translate.html"><strong aria-hidden="true">2.6.2.</strong> Отображение виртуальных страниц в физические фреймы</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space-3-map.html"><strong aria-hidden="true">2.6.3.</strong> Высокоуровневый интерфейс управления адресным пространством</a></li></ol></li><li class="chapter-item expanded "><a href="2-mm-7-main-frame-allocator.html"><strong aria-hidden="true">2.7.</strong> Основной аллокатор фреймов</a></li><li class="chapter-item expanded "><a href="2-mm-8-tests.html"><strong aria-hidden="true">2.8.</strong> Проверьте себя</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №3</li><li class="chapter-item expanded "><a href="3-user-0-intro.html"><strong aria-hidden="true">3.</strong> Процессы</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="3-user-1-elf.html"><strong aria-hidden="true">3.1.</strong> Загрузка процесса в память</a></li><li class="chapter-item expanded "><a href="3-user-2-permission-checks.html"><strong aria-hidden="true">3.2.</strong> Проверки доступа процесса к памяти</a></li><li class="chapter-item expanded "><a href="3-user-3-user-mode.html"><strong aria-hidden="true">3.3.</strong> Переход в режим пользователя</a></li><li class="chapter-item expanded "><a href="3-user-4-syscall.html"><strong aria-hidden="true">3.4.</strong> Поддержка системных вызовов</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №4</li><li class="chapter-item expanded "><a href="4-concurrency-0-intro.html"><strong aria-hidden="true">4.</strong> Конкурентное выполнение задач</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="4-concurrency-1-smp-0-intro.html"><strong aria-hidden="true">4.1.</strong> Поддержка нескольких процессоров (SMP)</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="4-concurrency-1-smp-1-local-apic.html"><strong aria-hidden="true">4.1.1.</strong> Работа с local APIC</a></li><li class="chapter-item expanded "><a href="4-concurrency-1-smp-2-cpus.html"><strong aria-hidden="true">4.1.2.</strong> Состояние каждого процессора</a></li><li class="chapter-item expanded "><a href="4-concurrency-1-smp-3-ap-init.html"><strong aria-hidden="true">4.1.3.</strong> Загрузка Application Processor</a></li></ol></li><li class="chapter-item expanded "><a href="4-concurrency-2-table.html"><strong aria-hidden="true">4.2.</strong> Таблица процессов</a></li><li class="chapter-item expanded "><a href="4-concurrency-3-preemption.html"><strong aria-hidden="true">4.3.</strong> Вытесняющая многозадачность</a></li><li class="chapter-item expanded "><a href="4-concurrency-4-scheduler.html" class="active"><strong aria-hidden="true">4.4.</strong> Планировщик</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №5</li><li class="chapter-item expanded "><a href="5-um-0-intro.html"><strong aria-hidden="true">5.</strong> Продвинутая работа с памятью в пространстве пользователя</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="5-um-1-ring-buffer.html"><strong aria-hidden="true">5.1.</strong> Разделяемая память</a></li><li class="chapter-item expanded "><a href="5-um-2-memory.html"><strong aria-hidden="true">5.2.</strong> Системные вызовы для работы с виртуальной памятью</a></li><li class="chapter-item expanded "><a href="5-um-3-eager-fork.html"><strong aria-hidden="true">5.3.</strong> Eager fork</a></li><li class="chapter-item expanded "><a href="5-um-4-traps.html"><strong aria-hidden="true">5.4.</strong> Обработка исключений в режиме пользователя</a></li><li class="chapter-item expanded "><a href="5-um-5-cow-fork.html"><strong aria-hidden="true">5.5.</strong> Copy-on-write fork</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Лабораторные работы</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="round-robin-планировщик"><a class="header" href="#round-robin-планировщик">Round-robin планировщик</a></h2>
+<p>Планировщик процессов расположен в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/process/scheduler.rs"><code>kernel/src/process/scheduler.rs</code></a> и реализует простейшее
+<a href="https://en.wikipedia.org/wiki/Round-robin_scheduling">циклическое исполнение процессов</a>.
+Он содержит очередь процессов <code>Scheduler::queue</code> такой же ёмкости, как таблица процессов.
+И, так же как и таблица процессов, является <a href="https://en.wikipedia.org/wiki/Singleton_pattern">синглтоном</a>
+<code>static ref SCHEDULER: Mutex&lt;Scheduler&gt;</code>.</p>
+<h3 id="Задача-8--реализуйте-методы-планировщика"><a class="header" href="#Задача-8--реализуйте-методы-планировщика">Задача 8 — реализуйте методы планировщика</a></h3>
+<ul>
+<li><code>fn Scheduler::enqueue(pid: Pid)</code> ставит процесс, заданный идентификатором <code>pid</code> в очередь исполнения.</li>
+<li><code>fn Scheduler::dequeue() -&gt; Option&lt;Pid&gt;</code> достаёт из очереди первый процесс.</li>
+<li><code>fn Scheduler::run_one() -&gt; bool</code> выполняет один цикл работы — берёт первый процесс из очереди и исполняет его пользовательский код. Если метод <code>Process::enter_user_mode()</code> вернёт <code>true</code>, то есть процесс был снят с CPU принудительно по прерыванию таймера, <code>run_one()</code> перепланирует исполнение процесса, ставя его в конец очереди. <code>run_one()</code> возвращает <code>true</code> если в очереди на исполнение нашёлся хотя бы один процесс.</li>
+</ul>
+<p>Метод <code>fn Scheduler::run() -&gt; !</code> уже реализован.
+Он в вечном цикле выполняет <code>Scheduler::run_one()</code>.
+Если в очереди на исполнение, процессов не нашлось,
+то он выключает процессор до прихода следующего прерывания, самое долгое — до следующего тика таймера</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>extern &quot;x86-interrupt&quot; fn apic_timer(mut context: InterruptContext)
+<span class="boring">}
+</span></code></pre></pre>
+<p>Для этого служит специальная инструкция <code>hlt</code> —
+<a href="../../doc/x86_64/instructions/fn.hlt.html"><code>x86_64::instructions::hlt()</code></a>.</p>
+<p>Добавьте вызов <code>Scheduler::run()</code> в конец функции
+<a href="../../doc/kernel/smp/ap_init/fn.init_ap.html"><code>init_ap()</code></a>
+в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/smp/ap_init.rs"><code>kernel/src/smp/ap_init.rs</code></a>, чтобы все CPU занялись исполнением процессов.</p>
+<h3 id="Проверьте-себя"><a class="header" href="#Проверьте-себя">Проверьте себя</a></h3>
+<p>Теперь должен заработать тест <code>scheduler()</code> в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/tests/process.rs"><code>kernel/src/tests/process.rs</code></a>:</p>
+<pre><code class="language-console">kernel::tests::process::scheduler---------------------------
+15:08:34.039 0 I page allocator init; free_page_count = 33688649728; block = [2.000 TiB, 127.500 TiB), size 125.500 TiB
+15:08:34.061 0 I duplicate; address_space = &quot;process&quot; @ 0p30B0000
+15:08:34.065 0 I switch to; address_space = &quot;process&quot; @ 0p30B0000
+15:08:34.075 0 D extend mapping; block = [0x10000000, 0x10004e86), size 19.631 KiB; page_block = [0x10000, 0x10005), size 20.000 KiB; flags =   R; page_flags = PRESENT | WRITABLE | USER_ACCESSIBLE
+15:08:34.086 0 D elf loadable program header; file_block = [0x268bf1, 0x26da77), size 19.631 KiB; memory_block = [0x10000000, 0x10004e86), size 19.631 KiB; flags =   R
+15:08:34.105 0 D extend mapping; block = [0x10005000, 0x1002ddd6), size 163.459 KiB; page_block = [0x10005, 0x1002e), size 164.000 KiB; flags = X R; page_flags = PRESENT | WRITABLE | USER_ACCESSIBLE
+15:08:34.113 0 D elf loadable program header; file_block = [0x26da81, 0x2969c7), size 163.818 KiB; memory_block = [0x10004e90, 0x1002ddd6), size 163.818 KiB; flags = X R
+15:08:34.130 0 D elf loadable program header; file_block = [0x2969c9, 0x296ab9), size 240 B; memory_block = [0x1002ddd8, 0x1002dec8), size 240 B; flags =  WR
+15:08:34.137 0 D extend mapping; block = [0x1002e000, 0x10030960), size 10.344 KiB; page_block = [0x1002e, 0x10031), size 12.000 KiB; flags =  WR; page_flags = PRESENT | WRITABLE | USER_ACCESSIBLE
+15:08:34.145 0 D elf loadable program header; file_block = [0x296ab9, 0x299529), size 10.609 KiB; memory_block = [0x1002dec8, 0x10030960), size 10.648 KiB; flags =  WR
+15:08:34.184 0 I switch to; address_space = &quot;base&quot; @ 0p1000
+15:08:34.195 0 I loaded ELF file; context = { rip: 0v10004F30, rsp: 0v7F7FFFFFF000 }; file_size = 408.727 KiB; process = { pid: &lt;current&gt;, address_space: &quot;process&quot; @ 0p30B0000, { rip: 0v10004F30, rsp: 0v7F7FFFFFF000 } }
+15:08:34.221 0 I switch to; address_space = &quot;0:7&quot; @ 0p30B0000
+15:08:34.232 0 I allocate; slot = Process { pid: 0:7, address_space: &quot;0:7&quot; @ 0p30B0000, { rip: 0v10004F30, rsp: 0v7F7FFFFFF000 } }; process_count = 1
+15:08:34.240 0 I user process page table entry; entry_point = 0v10004F30; frame = Frame(12386 @ 0p3062000); flags = PRESENT | WRITABLE | USER_ACCESSIBLE | ACCESSED | DIRTY
+15:08:34.248 0 D process_frames = 90
+15:08:34.295 0 I page allocator init; free_page_count = 33688649728; block = [2.000 TiB, 127.500 TiB), size 125.500 TiB
+15:08:34.311 0 I duplicate; address_space = &quot;process&quot; @ 0p306D000
+15:08:34.321 0 I switch to; address_space = &quot;process&quot; @ 0p306D000
+15:08:34.331 0 D extend mapping; block = [0x10000000, 0x10004ecf), size 19.702 KiB; page_block = [0x10000, 0x10005), size 20.000 KiB; flags =   R; page_flags = PRESENT | WRITABLE | USER_ACCESSIBLE
+15:08:34.342 0 D elf loadable program header; file_block = [0x3373a7, 0x33c276), size 19.702 KiB; memory_block = [0x10000000, 0x10004ecf), size 19.702 KiB; flags =   R
+15:08:34.362 0 D extend mapping; block = [0x10005000, 0x1002de8a), size 163.635 KiB; page_block = [0x10005, 0x1002e), size 164.000 KiB; flags = X R; page_flags = PRESENT | WRITABLE | USER_ACCESSIBLE
+15:08:34.370 0 D elf loadable program header; file_block = [0x33c277, 0x365231), size 163.932 KiB; memory_block = [0x10004ed0, 0x1002de8a), size 163.932 KiB; flags = X R
+15:08:34.387 0 D elf loadable program header; file_block = [0x365237, 0x365327), size 240 B; memory_block = [0x1002de90, 0x1002df80), size 240 B; flags =  WR
+15:08:34.393 0 D extend mapping; block = [0x1002e000, 0x10030a30), size 10.547 KiB; page_block = [0x1002e, 0x10031), size 12.000 KiB; flags =  WR; page_flags = PRESENT | WRITABLE | USER_ACCESSIBLE
+15:08:34.401 0 D elf loadable program header; file_block = [0x365327, 0x367daf), size 10.633 KiB; memory_block = [0x1002df80, 0x10030a30), size 10.672 KiB; flags =  WR
+15:08:34.428 0 I switch to; address_space = &quot;base&quot; @ 0p1000
+15:08:34.443 0 I loaded ELF file; context = { rip: 0v10008260, rsp: 0v7F7FFFFFF000 }; file_size = 408.961 KiB; process = { pid: &lt;current&gt;, address_space: &quot;process&quot; @ 0p306D000, { rip: 0v10008260, rsp: 0v7F7FFFFFF000 } }
+15:08:34.457 0 I switch to; address_space = &quot;1:0&quot; @ 0p306D000
+15:08:34.462 0 I allocate; slot = Process { pid: 1:0, address_space: &quot;1:0&quot; @ 0p306D000, { rip: 0v10008260, rsp: 0v7F7FFFFFF000 } }; process_count = 2
+15:08:34.469 0 I user process page table entry; entry_point = 0v10008260; frame = Frame(12425 @ 0p3089000); flags = PRESENT | WRITABLE | USER_ACCESSIBLE | ACCESSED | DIRTY
+15:08:34.478 0 D process_frames = 90
+15:08:34.481 0 I dequeue; pid = Some(0:2)
+15:08:34.484 0 I dequeue; pid = Some(0:2)
+15:08:34.487 0 I dequeue; pid = Some(0:2)
+15:08:34.489 0 I dequeue; pid = Some(0:7)
+15:08:34.492 0 I switch to; address_space = &quot;0:7&quot; @ 0p30B0000
+15:08:34.496 0 D entering the user mode; pid = 0:7; registers = { rax: 0x0, rdi: 0x7F7FFFFEB000, rsi: 0x0, { mode: user, cs:rip: 0x0023:0v10004F30, ss:rsp: 0x001B:0v7F7FFFFFF000, rflags: IF } }
+15:08:34.518 0 D leaving the user mode; pid = 0:7
+15:08:34.521 0 I the process was preempted; pid = 0:7; user_context = { mode: user, cs:rip: 0x0023:0v1001A1B6, ss:rsp: 0x001B:0v7F7FFFFFEF28, rflags: IF AF }
+15:08:34.528 0 I returned
+15:08:34.531 0 I dequeue; pid = Some(1:0)
+15:08:34.534 0 I switch to; address_space = &quot;1:0&quot; @ 0p306D000
+15:08:34.537 0 D entering the user mode; pid = 1:0; registers = { rax: 0x0, rdi: 0x7F7FFFFEB000, rsi: 0x0, { mode: user, cs:rip: 0x0023:0v10008260, ss:rsp: 0x001B:0v7F7FFFFFF000, rflags: IF } }
+15:08:34.547 0 D exception = &quot;Page Fault&quot;; context = { mode: user, cs:rip: 0x0023:0v10004F96, ss:rsp: 0x001B:0v7F7FFFFFEF78, rflags: IF ZF PF }
+15:08:34.578 0 I user mode exception; exception = &quot;Page Fault&quot;; number = 14; info = { code: 0b100 = non-present page | read | user, address: 0v1 }; context = { mode: user, cs:rip: 0x0023:0v10004F96, ss:rsp: 0x001B:0v7F7FFFFFEF78, rflags: IF ZF PF }; pid = 1:0
+15:08:34.595 0 I free; slot = Process { pid: 1:0, address_space: &quot;1:0&quot; @ 0p306D000, { rip: 0v10008260, rsp: 0v7F7FFFFFF000 } }; process_count = 1
+15:08:34.601 0 I switch to; address_space = &quot;base&quot; @ 0p1000
+15:08:34.604 0 I drop the current address space; address_space = &quot;1:0&quot; @ 0p306D000; switch_to = &quot;base&quot; @ 0p1000
+15:08:34.645 0 D leaving the user mode; pid = 1:0
+15:08:34.649 0 I dequeue; pid = Some(0:7)
+15:08:34.652 0 I switch to; address_space = &quot;0:7&quot; @ 0p30B0000
+15:08:34.655 0 D entering the user mode; pid = 0:7; registers = { rax: 0x10030950, rdi: 0x10030950, rsi: 0x1, { mode: user, cs:rip: 0x0023:0v1001A1B6, ss:rsp: 0x001B:0v7F7FFFFFEF28, rflags: IF AF } }
+15:08:34.664 0 D leaving the user mode; pid = 0:7
+15:08:34.679 0 I the process was preempted; pid = 0:7; user_context = { mode: user, cs:rip: 0x0023:0v1001A1B6, ss:rsp: 0x001B:0v7F7FFFFFEF28, rflags: IF AF }
+15:08:34.689 0 I returned
+15:08:34.692 0 I dequeue; pid = Some(0:7)
+15:08:34.695 0 I switch to; address_space = &quot;0:7&quot; @ 0p30B0000
+15:08:34.699 0 D entering the user mode; pid = 0:7; registers = { rax: 0x10030950, rdi: 0x10030950, rsi: 0x1, { mode: user, cs:rip: 0x0023:0v1001A1B6, ss:rsp: 0x001B:0v7F7FFFFFEF28, rflags: IF AF } }
+15:08:34.713 0 I free; slot = Process { pid: 0:7, address_space: &quot;0:7&quot; @ 0p30B0000, { rip: 0v10004EEC, rsp: 0v0 } }; process_count = 0
+15:08:34.719 0 I switch to; address_space = &quot;base&quot; @ 0p1000
+15:08:34.722 0 I drop the current address space; address_space = &quot;0:7&quot; @ 0p30B0000; switch_to = &quot;base&quot; @ 0p1000
+15:08:34.764 0 I syscall = &quot;exit&quot;; pid = 0:7; code = 3141592653589793238; reason = None
+15:08:34.771 0 D leaving the user mode; pid = 0:7
+15:08:34.774 0 I dequeue; pid = None
+kernel::tests::process::scheduler------------------ [passed]
+</code></pre>
+<h3 id="Ориентировочный-объём-работ-этой-части-лабораторки"><a class="header" href="#Ориентировочный-объём-работ-этой-части-лабораторки">Ориентировочный объём работ этой части лабораторки</a></h3>
+<pre><code class="language-console"> kernel/src/process/scheduler.rs |   26 +++++++++++++++++++++++---
+ 1 file changed, 23 insertions(+), 3 deletions(-)
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="4-concurrency-3-preemption.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next" href="5-um-0-intro.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="4-concurrency-3-preemption.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" href="5-um-0-intro.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </body>
+</html>

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":[["RsdpError",""]],"fn":[["find_search_areas","Find the areas we should search for the RSDP in."]],"mod":[["handler",""]],"struct":[["Rsdp","The first structure found in ACPI. It just tells us where the RSDT is."]]};

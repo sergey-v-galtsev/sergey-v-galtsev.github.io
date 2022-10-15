@@ -1,0 +1,361 @@
+<!DOCTYPE HTML>
+<html lang="ru" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Состояние каждого процессора - Лабораторные работы</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="0-intro-1-nikka.html">Введение в лабораторные работы</a></li><li class="chapter-item expanded affix "><a href="0-intro-2-rust.html">Почему Rust</a></li><li class="chapter-item expanded affix "><a href="0-intro-3-dirs.html">Структура кода</a></li><li class="chapter-item expanded affix "><a href="0-intro-4-install.html">Компиляция и запуск тестов</a></li><li class="chapter-item expanded affix "><a href="0-intro-5-gdb.html">Запуск с отладчиком gdb</a></li><li class="chapter-item expanded affix "><a href="0-intro-6-log.html">Логирование и логи</a></li><li class="chapter-item expanded affix "><a href="0-intro-7-vscode.html">Настройка VSCode</a></li><li class="chapter-item expanded affix "><li class="part-title">Лабораторная работа №1</li><li class="chapter-item expanded "><a href="1-time-0-intro.html"><strong aria-hidden="true">1.</strong> Время</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="1-time-1-rtc.html"><strong aria-hidden="true">1.1.</strong> Часы реального времени</a></li><li class="chapter-item expanded "><a href="1-time-2-tsc.html"><strong aria-hidden="true">1.2.</strong> Счётчик тактов процессора</a></li><li class="chapter-item expanded "><a href="1-time-3-correlation-point.html"><strong aria-hidden="true">1.3.</strong> Счётчики тиков</a></li><li class="chapter-item expanded "><a href="1-time-4-correlation-interval.html"><strong aria-hidden="true">1.4.</strong> Измерение частоты процессора и повышение разрешения часов</a></li><li class="chapter-item expanded "><a href="1-time-5-interrupts.html"><strong aria-hidden="true">1.5.</strong> Обработка прерываний RTC</a></li><li class="chapter-item expanded "><a href="1-time-6-info.html"><strong aria-hidden="true">1.6.</strong> Информация о системе</a></li><li class="chapter-item expanded "><a href="1-time-7-summary.html"><strong aria-hidden="true">1.7.</strong> Собираем всё вместе</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №2</li><li class="chapter-item expanded "><a href="2-mm-0-intro.html"><strong aria-hidden="true">2.</strong> Память</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="2-mm-1-types.html"><strong aria-hidden="true">2.1.</strong> Типы</a></li><li class="chapter-item expanded "><a href="2-mm-2-mapping.html"><strong aria-hidden="true">2.2.</strong> Страничные отображения</a></li><li class="chapter-item expanded "><a href="2-mm-3-diagrams.html"><strong aria-hidden="true">2.3.</strong> Диаграммы преобразований</a></li><li class="chapter-item expanded "><a href="2-mm-4-plan.html"><strong aria-hidden="true">2.4.</strong> План</a></li><li class="chapter-item expanded "><a href="2-mm-5-boot-frame-allocator.html"><strong aria-hidden="true">2.5.</strong> Временный аллокатор фреймов</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space.html"><strong aria-hidden="true">2.6.</strong> Виртуальное адресное пространство</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="2-mm-6-address-space-1-allocation.html"><strong aria-hidden="true">2.6.1.</strong> Аллокатор виртуальных страниц адресного пространства</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space-2-translate.html"><strong aria-hidden="true">2.6.2.</strong> Отображение виртуальных страниц в физические фреймы</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space-3-map.html"><strong aria-hidden="true">2.6.3.</strong> Высокоуровневый интерфейс управления адресным пространством</a></li></ol></li><li class="chapter-item expanded "><a href="2-mm-7-main-frame-allocator.html"><strong aria-hidden="true">2.7.</strong> Основной аллокатор фреймов</a></li><li class="chapter-item expanded "><a href="2-mm-8-tests.html"><strong aria-hidden="true">2.8.</strong> Проверьте себя</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №3</li><li class="chapter-item expanded "><a href="3-user-0-intro.html"><strong aria-hidden="true">3.</strong> Процессы</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="3-user-1-elf.html"><strong aria-hidden="true">3.1.</strong> Загрузка процесса в память</a></li><li class="chapter-item expanded "><a href="3-user-2-permission-checks.html"><strong aria-hidden="true">3.2.</strong> Проверки доступа процесса к памяти</a></li><li class="chapter-item expanded "><a href="3-user-3-user-mode.html"><strong aria-hidden="true">3.3.</strong> Переход в режим пользователя</a></li><li class="chapter-item expanded "><a href="3-user-4-syscall.html"><strong aria-hidden="true">3.4.</strong> Поддержка системных вызовов</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №4</li><li class="chapter-item expanded "><a href="4-concurrency-0-intro.html"><strong aria-hidden="true">4.</strong> Конкурентное выполнение задач</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="4-concurrency-1-smp-0-intro.html"><strong aria-hidden="true">4.1.</strong> Поддержка нескольких процессоров (SMP)</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="4-concurrency-1-smp-1-local-apic.html"><strong aria-hidden="true">4.1.1.</strong> Работа с local APIC</a></li><li class="chapter-item expanded "><a href="4-concurrency-1-smp-2-cpus.html" class="active"><strong aria-hidden="true">4.1.2.</strong> Состояние каждого процессора</a></li><li class="chapter-item expanded "><a href="4-concurrency-1-smp-3-ap-init.html"><strong aria-hidden="true">4.1.3.</strong> Загрузка Application Processor</a></li></ol></li><li class="chapter-item expanded "><a href="4-concurrency-2-table.html"><strong aria-hidden="true">4.2.</strong> Таблица процессов</a></li><li class="chapter-item expanded "><a href="4-concurrency-3-preemption.html"><strong aria-hidden="true">4.3.</strong> Вытесняющая многозадачность</a></li><li class="chapter-item expanded "><a href="4-concurrency-4-scheduler.html"><strong aria-hidden="true">4.4.</strong> Планировщик</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №5</li><li class="chapter-item expanded "><a href="5-um-0-intro.html"><strong aria-hidden="true">5.</strong> Продвинутая работа с памятью в пространстве пользователя</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="5-um-1-ring-buffer.html"><strong aria-hidden="true">5.1.</strong> Разделяемая память</a></li><li class="chapter-item expanded "><a href="5-um-2-memory.html"><strong aria-hidden="true">5.2.</strong> Системные вызовы для работы с виртуальной памятью</a></li><li class="chapter-item expanded "><a href="5-um-3-eager-fork.html"><strong aria-hidden="true">5.3.</strong> Eager fork</a></li><li class="chapter-item expanded "><a href="5-um-4-traps.html"><strong aria-hidden="true">5.4.</strong> Обработка исключений в режиме пользователя</a></li><li class="chapter-item expanded "><a href="5-um-5-cow-fork.html"><strong aria-hidden="true">5.5.</strong> Copy-on-write fork</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Лабораторные работы</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="Состояние-каждого-процессора"><a class="header" href="#Состояние-каждого-процессора">Состояние каждого процессора</a></h2>
+<p>В мультипроцессорной системе нужно различать состояние системы в целом и состояние каждого отдельного процессора.
+В Nikka состояние отдельного процессора описано в
+<a href="../../doc/kernel/smp/cpu/struct.Cpu.html"><code>kernel::smp::cpu::Cpu</code></a>,
+определённой в <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/smp/cpu.rs"><code>kernel/src/smp/cpu.rs</code></a>.
+Номер процессора, на котором сейчас происходит выполнение кода, продублирован в этой структуре и его можно узнать с помощью метода
+<a href="../../doc/kernel/smp/cpu/struct.Cpu.html#method.id"><code>Cpu::id()</code></a>.
+Саму структуру
+<a href="../../doc/kernel/smp/cpu/struct.Cpu.html"><code>Cpu</code></a>
+текущего процессора можно получить из статического метода
+<a href="../../doc/kernel/smp/cpu/struct.Cpu.html#method.get"><code>Cpu::get()</code></a>.</p>
+<p>Состояние отдельного процессора, которое стоит учитывать:</p>
+<ul>
+<li>Стек ядра <a href="../../doc/kernel/smp/cpu/struct.Cpu.html#structfield.kernel_stack"><code>Cpu::kernel_stack</code></a>. Процессоры обрабатывают системные вызовы и прерывания независимо, так что у каждого должен быть свой стек для этого.</li>
+<li>Также полезен дополнительный стек <a href="../../doc/kernel/smp/cpu/struct.Cpu.html#structfield.page_fault_stack"><code>Cpu::page_fault_stack</code></a>, который используется во время обработки Page Fault. Он позволяет напечатать диагностику возникшего исключения даже в случае, когда оно вызвано исчерпанием основного стека ядра.</li>
+<li>Task State Segment <a href="../../doc/kernel/smp/cpu/struct.Cpu.html#structfield.tss"><code>Cpu::tss</code></a>. В TSS описано, где находится стек ядра для текущего процессора. Разумеется, раз стеки разные, то и TSS тоже должны быть разные.</li>
+<li>Исполняющийся на данном CPU в текущий момент пользовательский процесс <a href="../../doc/kernel/smp/cpu/struct.Cpu.html#structfield.current_process"><code>Cpu::current_process</code></a>. Пользовательские процессы выполняются независимо на разных ядрах. Следовательно, у каждого ядра текущий процесс должен быть своим.</li>
+<li>Системные регистры. У каждого процессора свои системные регистры. Так что функции их инициализации должны быть вызваны для каждого CPU. Явно в структуре <a href="../../doc/kernel/smp/cpu/struct.Cpu.html"><code>Cpu</code></a> регистры не хранятся.
+<ul>
+<li><a href="https://wiki.osdev.org/GDT#GDTR"><code>GDTR</code></a> — Global Descriptor Table Register, содержит адрес <a href="../../doc/kernel/memory/gdt/type.Gdt.html">kernel::memory::gdt::Gdt</a>.</li>
+<li><a href="https://wiki.osdev.org/IDT#IDTR"><code>IDTR</code></a> — Interrupt Descriptor Table Register, содержит адрес <a href="../../doc/x86_64/structures/idt/struct.InterruptDescriptorTable.html">x86_64::structures::idt::InterruptDescriptorTable</a>.</li>
+<li><a href="https://wiki.osdev.org/CPU_Registers_x86-64#CR3"><code>CR3</code></a> — содержит адрес корневой таблицы страниц <a href="../../doc/ku/memory/mmu/type.PageTable.html">ku::memory::mmu::PageTable</a>.</li>
+<li><a href="https://wiki.osdev.org/CPU_Registers_x86-64#TR"><code>TR</code></a> — Task Register, содержит адрес <a href="../../doc/x86_64/structures/tss/struct.TaskStateSegment.html">x86_64::structures::tss::TaskStateSegment</a>.</li>
+<li><a href="https://wiki.osdev.org/CPU_Registers_x86-64#FS.base.2C_GS.base"><code>FS</code></a> — доступен для программных нужд.</li>
+</ul>
+</li>
+</ul>
+<h3 id="Задача-2--инициализация-tss-и-регистра-tr"><a class="header" href="#Задача-2--инициализация-tss-и-регистра-tr">Задача 2 — инициализация TSS и регистра <code>TR</code></a></h3>
+<p>Реализуйте <a href="../../doc/kernel/smp/cpu/struct.Cpu.html#method.set_tss">метод</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn Cpu::set_tss()
+<span class="boring">}
+</span></code></pre></pre>
+<p>Он должен завести в GDT запись для Task State Segment текущего процессора.
+И загрузить её в <a href="https://wiki.osdev.org/CPU_Registers_x86-64#TR"><code>TR</code></a> своего CPU.
+Сам Task State Segment в поле <a href="../../doc/kernel/smp/cpu/struct.Cpu.html#structfield.tss"><code>Cpu::tss</code></a>
+уже инициализирован методом
+<a href="../../doc/kernel/smp/cpu/struct.Cpu.html#method.new"><code>Cpu::new()</code></a>.</p>
+<p>Для определения идентификатора текущего процессора можно использовать
+<a href="../../doc/kernel/smp/cpu/struct.Cpu.html#method.id"><code>Cpu::id()</code></a>.
+Полезно проверить, что он выдаёт ровно такое же значение, что и метод
+<a href="../../doc/kernel/smp/local_apic/struct.LocalApic.html#method.id"><code>LocalApic::id()</code></a>.
+Если это не так, значит инициализация local APIC ранее или запуск AP в одной из дальнейших задач выполняется неверно.</p>
+<p>Также вам пригодятся:</p>
+<ul>
+<li><a href="../../doc/kernel/memory/gdt/struct.GDT.html"><code>kernel::memory::gdt::GDT</code></a>,</li>
+<li><a href="../../doc/kernel/memory/gdt/struct.SmpGdt.html#method.set_tss"><code>kernel::memory::gdt::Gdt::set_tss()</code></a>,</li>
+<li><a href="../../doc/kernel/memory/gdt/struct.SmpGdt.html#method.tss"><code>kernel::memory::gdt::Gdt::tss()</code></a>,</li>
+<li><a href="../../doc/x86_64/instructions/tables/fn.load_tss.html"><code>x86_64::instructions::tables::load_tss</code></a>.</li>
+</ul>
+<h3 id="Задача-3--инициализация-регистра-fs"><a class="header" href="#Задача-3--инициализация-регистра-fs">Задача 3 — инициализация регистра <code>FS</code></a></h3>
+<p>Регистр <code>FS</code> будем использовать для аналога
+<a href="https://en.wikipedia.org/wiki/Thread-local_storage">thread–local storage</a>, —
+CPU–local storage.
+Например, в момент получения системного вызова процессор работает на стеке пользователя.
+Доверять стеку пользователя нельзя, поэтому до использования стека процессор должен переключиться на стек ядра.
+Адрес стека ядра, предназначенного данному CPU, он возьмёт из нашего CPU–local storage, обратившись к нему через свой регистр <code>FS</code>.
+Как вы уже догадались, сам CPU–local storage в Nikka — это структура
+<a href="../../doc/kernel/smp/cpu/struct.Cpu.html"><code>Cpu</code></a>.</p>
+<p>Реализуйте <a href="../../doc/kernel/smp/cpu/struct.Cpu.html#method.set_fs">метод</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn Cpu::set_fs()
+<span class="boring">}
+</span></code></pre></pre>
+<p>Он должен сохранить адрес структуры
+<a href="../../doc/kernel/smp/cpu/struct.Cpu.html"><code>Cpu</code></a>
+для текущего CPU в его собственном регистре <code>FS</code>.
+Этот же адрес нужно будет записать в поле
+<a href="../../doc/kernel/smp/cpu/struct.Cpu.html#structfield.this"><code>Cpu::this</code></a>.
+Дело в том, что адресовать память относительно регистра <code>FS</code> можно, но узнать его абсолютный адрес можно только прочитав его напрямую.
+Получить абсолютный адрес через инструкцию <code>lea</code> не получится.
+А адресовать что-либо через <code>FS</code> неудобно — это можно сделать только в ассемблере.
+Самым удобным представляется такой вариант: прочитать адрес структуры
+<a href="../../doc/kernel/smp/cpu/struct.Cpu.html"><code>Cpu</code></a>
+из поля
+<a href="../../doc/kernel/smp/cpu/struct.Cpu.html#structfield.this"><code>Cpu::this</code></a>,
+обращаясь к самому этому полю относительно регистра <code>FS</code>.
+А дальше, имея абсолютный адрес структуры
+<a href="../../doc/kernel/smp/cpu/struct.Cpu.html"><code>Cpu</code></a>
+получить её саму и дальше обращаться к её полям и методам без использования <code>FS</code>.
+Что уже можно делать в Rust безо всякого ассемблера.</p>
+<p>Для сохранения значения в регистр <code>FS</code> вам пригодится метод
+<a href="../../doc/x86_64/registers/model_specific/struct.FsBase.html#method.write"><code>x86_64::registers::model_specific::FsBase::write()</code></a>.
+Он принимает
+<a href="../../doc/x86_64/addr/struct.VirtAddr.html"><code>x86_64::addr::VirtAddr</code></a>,
+а не
+<a href="../../doc/kernel/memory/type.Virt.html"><code>kernel::memory::Virt</code></a>.
+Для преобразования
+<a href="../../doc/kernel/memory/type.Virt.html"><code>Virt</code></a> в
+<a href="../../doc/x86_64/addr/struct.VirtAddr.html"><code>VirtAddr</code></a>
+можно использовать метод
+<a href="../../doc/kernel/memory/addr/struct.Addr.html#method.into"><code>Virt::into()</code></a>,
+см. <a href="../../doc/kernel/memory/type.Virt.html#%D0%9F%D1%80%D0%B5%D0%BE%D0%B1%D1%80%D0%B0%D0%B7%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F-%D0%BC%D0%B5%D0%B6%D0%B4%D1%83-virt-%D0%B8-virtaddr">примеры</a>.</p>
+<p>Также вам может пригодиться метод
+<a href="../../doc/kernel/memory/addr/struct.Addr.html#method.from_ref"><code>Virt::from_ref()</code></a>.</p>
+<h3 id="Задача-4--использование-регистра-fs-для-получения-текущего-kernelsmpcpucpu"><a class="header" href="#Задача-4--использование-регистра-fs-для-получения-текущего-kernelsmpcpucpu">Задача 4 — использование регистра <code>FS</code> для получения текущего <a href="../../doc/kernel/smp/cpu/struct.Cpu.html"><code>kernel::smp::cpu::Cpu</code></a></a></h3>
+<p>Реализуйте <a href="../../doc/kernel/smp/cpu/struct.Cpu.html#method.get">метод</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>unsafe fn Cpu::get() -&gt; &amp;'static mut Cpu
+<span class="boring">}
+</span></code></pre></pre>
+<p><code>unsafe</code> означает, что вызывающая сторона должна гарантировать, что вызывает
+<a href="../../doc/kernel/smp/cpu/struct.Cpu.html#method.get"><code>Cpu::get()</code></a>
+только после инициализации <code>FS</code> методом
+<a href="../../doc/kernel/smp/cpu/struct.Cpu.html#method.set_fs"><code>Cpu::set_fs()</code></a>.
+Иначе в лучшем случае будет паника, а в худшем — обращение к невалидной или занятой другими данными памяти.</p>
+<p>Загрузите из инициализированного в предыдущей задаче
+<a href="../../doc/kernel/smp/cpu/struct.Cpu.html#structfield.this"><code>Cpu::this</code></a>
+адрес структуры
+<a href="../../doc/kernel/smp/cpu/struct.Cpu.html"><code>Cpu</code></a>.
+Однако
+<a href="../../doc/kernel/smp/cpu/struct.Cpu.html#structfield.this"><code>Cpu::this</code></a> —
+это поле структуры, адрес которой мы как раз хотим узнать.
+Поэтому нам придётся использовать обращение через инициализированный в предыдущей задаче регистр <code>FS</code>.</p>
+<p>Тут придётся использовать ассемблер, например прибегнуть к макросу
+<a href="https://doc.rust-lang.org/core/arch/macro.asm.html"><code>asm!()</code></a>,
+документацию на который можно посмотреть в
+<a href="https://doc.rust-lang.org/nightly/rust-by-example/unsafe/asm.html">Rust By Example</a> и
+<a href="https://doc.rust-lang.org/nightly/reference/inline-assembly.html">The Rust Reference</a>.</p>
+<p>Также понадобится передать в ассемблерную инструкцию константу, определяющую смещение поля
+<a href="../../doc/kernel/smp/cpu/struct.Cpu.html#structfield.this"><code>Cpu::this</code></a>
+внутри структуры
+<a href="../../doc/kernel/smp/cpu/struct.Cpu.html"><code>Cpu</code></a>.
+Для этого пригодится макрос
+<a href="../../doc/memoffset/macro.offset_of.html"><code>memoffset::offset_of!()</code></a>.</p>
+<p>Полученный адрес нужно будет сохранить в переменной подходящего типа, поддерживаемом макросом <code>asm!()</code>, например <code>usize</code>.
+Преобразовать его в ссылку на структуру
+<a href="../../doc/kernel/smp/cpu/struct.Cpu.html"><code>Cpu</code></a>
+можно с помощью
+<a href="../../doc/kernel/memory/type.Virt.html"><code>Virt</code></a>.
+Он выполнит необходимые проверки на валидность этого адреса.
+В случае, если проверки не пройдут и вернётся ошибка, можно паниковать.</p>
+<h3 id="Задача-5--Инициализация-вектора-структур-kernelsmpcpucpu"><a class="header" href="#Задача-5--Инициализация-вектора-структур-kernelsmpcpucpu">Задача 5 — Инициализация вектора структур <a href="../../doc/kernel/smp/cpu/struct.Cpu.html"><code>kernel::smp::cpu::Cpu</code></a></a></h3>
+<p>Чтобы пользоваться структурами
+<a href="../../doc/kernel/smp/cpu/struct.Cpu.html"><code>Cpu</code></a>
+для них и для содержащихся в них стеках нужно выделить память.</p>
+<p>Реализуйте <a href="../../doc/kernel/smp/cpu/fn.init_cpu_vec.html">функцию</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn init_cpu_vec(cpu_count: usize) -&gt; Result&lt;Vec&lt;Cpu&gt;&gt;
+<span class="boring">}
+</span></code></pre></pre>
+<p>Все нужные стеки в количестве
+<code>cpu_count *</code><a href="../../doc/kernel/smp/cpu/struct.Cpu.html#associatedconstant.STACKS_PER_CPU"><code>Cpu::STACKS_PER_CPU</code></a>
+можно выделить одним вызовом метода
+<a href="../../doc/kernel/memory/stack/struct.Stack.html#method.new_slice"><code>kernel::memory::stack::Stack::new_slice()</code></a>.
+А для избежания переаллокаций при выделении памяти под
+<a href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html"><code>Vec</code></a><code>&lt;</code><a href="../../doc/kernel/smp/cpu/struct.Cpu.html"><code>Cpu</code></a><code>&gt;</code>
+стоит использовать метод
+<a href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html#method.with_capacity"><code>alloc::vec::Vec::with_capacity()</code></a>.</p>
+<p>Далее нужно будет заполнить этот вектор передавая в метод
+<a href="../../doc/kernel/smp/cpu/struct.Cpu.html#method.new"><code>Cpu::new()</code></a>
+индекс соответствующей структуры в векторе в качестве идентификатора CPU
+<a href="../../doc/kernel/smp/local_apic/type.CpuId.html"><code>kernel::smp::local_apic::CpuId</code></a>
+и срез из части ранее выделенных стеков в количестве
+<a href="../../doc/kernel/smp/cpu/struct.Cpu.html#associatedconstant.STACKS_PER_CPU"><code>Cpu::STACKS_PER_CPU</code></a>
+штук.</p>
+<h3 id="Ориентировочный-объём-работ-этой-части-лабораторки"><a class="header" href="#Ориентировочный-объём-работ-этой-части-лабораторки">Ориентировочный объём работ этой части лабораторки</a></h3>
+<pre><code class="language-console"> kernel/src/smp/cpu.rs |   32 ++++++++++++++++++++++++++++----
+ 1 file changed, 28 insertions(+), 4 deletions(-)
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="4-concurrency-1-smp-1-local-apic.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next" href="4-concurrency-1-smp-3-ap-init.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="4-concurrency-1-smp-1-local-apic.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" href="4-concurrency-1-smp-3-ap-init.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </body>
+</html>

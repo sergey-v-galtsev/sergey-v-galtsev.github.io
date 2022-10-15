@@ -1,0 +1,64 @@
+digraph diagram {
+    rankdir = LR
+    ranksep = 1.5
+
+    fontname="Helvetica,Arial,sans-serif"
+
+    node [fontname="Helvetica,Arial,sans-serif"]
+    edge [arrowhead = vee; fontname="Helvetica,Arial,sans-serif"]
+
+    subgraph cluster_virt_memory {
+        label = "Виртуальные"
+        labelloc = "t"
+
+        Virt [label = "Virt"]
+        const_ptr [label = "*const T"]
+        mut_ptr [label = "*mut T"]
+        const_ref [label = "&T"]
+        mut_ref [label = "&mut T"]
+        mut_slice [label = "&mut [T]"]
+        VirtAddr [label = "x86_64::VirtAddr"]
+
+        const_ptr -> Virt [label = "Virt::from_ptr<T>()"]
+        const_ref -> Virt [label = "Virt::from_ref<T>()"]
+        VirtAddr -> Virt [label = "Virt::from()"]
+
+        Virt -> const_ptr [label = "Virt::into_ptr<T>()"]
+        Virt -> mut_ptr [label = "Virt::into_mut_ptr<T>()"]
+        Virt -> mut_ref [label = "Virt::into_mut_ref<T>()"]
+        Virt -> mut_slice [label = "Virt::into_mut_slice<T>()"]
+        Virt -> VirtAddr [label = "Virt::into()"]
+
+        { rank = same; const_ptr mut_ptr const_ref mut_ref mut_slice; }
+    }
+
+    subgraph cluster_phys_memory {
+        label = "Физические"
+        labelloc = "t"
+
+        Phys [label = "Phys"]
+    }
+
+    usize [label = "usize"]
+    u64 [label = "u64"]
+
+    { rank = same; usize u64; }
+
+    usize -> u64 [label = "ku::memory::size::into_u64()"]
+    u64 -> usize [label = "ku::memory::size::into_usize()"]
+
+    usize -> Virt [label = "Virt::new()"]
+    u64 -> Virt [label = "Virt::new_u64()"]
+
+    Virt -> usize [label = "Virt::into_usize()"]
+    Virt -> u64 [label = "Virt::into_u64()"]
+
+    usize -> Phys [label = "Phys::new()"]
+    u64 -> Phys [label = "Phys::new_u64()"]
+
+    Phys -> usize [label = "Phys::into_usize()"]
+    Phys -> u64 [label = "Phys::into_u64()"]
+
+    Virt -> Phys [label = "Mapping::translate()"]
+    Phys -> Virt [label = "phys2virt_map()"]
+}

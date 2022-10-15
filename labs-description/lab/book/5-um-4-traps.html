@@ -1,0 +1,383 @@
+<!DOCTYPE HTML>
+<html lang="ru" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Обработка исключений в режиме пользователя - Лабораторные работы</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="0-intro-1-nikka.html">Введение в лабораторные работы</a></li><li class="chapter-item expanded affix "><a href="0-intro-2-rust.html">Почему Rust</a></li><li class="chapter-item expanded affix "><a href="0-intro-3-dirs.html">Структура кода</a></li><li class="chapter-item expanded affix "><a href="0-intro-4-install.html">Компиляция и запуск тестов</a></li><li class="chapter-item expanded affix "><a href="0-intro-5-gdb.html">Запуск с отладчиком gdb</a></li><li class="chapter-item expanded affix "><a href="0-intro-6-log.html">Логирование и логи</a></li><li class="chapter-item expanded affix "><a href="0-intro-7-vscode.html">Настройка VSCode</a></li><li class="chapter-item expanded affix "><li class="part-title">Лабораторная работа №1</li><li class="chapter-item expanded "><a href="1-time-0-intro.html"><strong aria-hidden="true">1.</strong> Время</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="1-time-1-rtc.html"><strong aria-hidden="true">1.1.</strong> Часы реального времени</a></li><li class="chapter-item expanded "><a href="1-time-2-tsc.html"><strong aria-hidden="true">1.2.</strong> Счётчик тактов процессора</a></li><li class="chapter-item expanded "><a href="1-time-3-correlation-point.html"><strong aria-hidden="true">1.3.</strong> Счётчики тиков</a></li><li class="chapter-item expanded "><a href="1-time-4-correlation-interval.html"><strong aria-hidden="true">1.4.</strong> Измерение частоты процессора и повышение разрешения часов</a></li><li class="chapter-item expanded "><a href="1-time-5-interrupts.html"><strong aria-hidden="true">1.5.</strong> Обработка прерываний RTC</a></li><li class="chapter-item expanded "><a href="1-time-6-info.html"><strong aria-hidden="true">1.6.</strong> Информация о системе</a></li><li class="chapter-item expanded "><a href="1-time-7-summary.html"><strong aria-hidden="true">1.7.</strong> Собираем всё вместе</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №2</li><li class="chapter-item expanded "><a href="2-mm-0-intro.html"><strong aria-hidden="true">2.</strong> Память</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="2-mm-1-types.html"><strong aria-hidden="true">2.1.</strong> Типы</a></li><li class="chapter-item expanded "><a href="2-mm-2-mapping.html"><strong aria-hidden="true">2.2.</strong> Страничные отображения</a></li><li class="chapter-item expanded "><a href="2-mm-3-diagrams.html"><strong aria-hidden="true">2.3.</strong> Диаграммы преобразований</a></li><li class="chapter-item expanded "><a href="2-mm-4-plan.html"><strong aria-hidden="true">2.4.</strong> План</a></li><li class="chapter-item expanded "><a href="2-mm-5-boot-frame-allocator.html"><strong aria-hidden="true">2.5.</strong> Временный аллокатор фреймов</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space.html"><strong aria-hidden="true">2.6.</strong> Виртуальное адресное пространство</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="2-mm-6-address-space-1-allocation.html"><strong aria-hidden="true">2.6.1.</strong> Аллокатор виртуальных страниц адресного пространства</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space-2-translate.html"><strong aria-hidden="true">2.6.2.</strong> Отображение виртуальных страниц в физические фреймы</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space-3-map.html"><strong aria-hidden="true">2.6.3.</strong> Высокоуровневый интерфейс управления адресным пространством</a></li></ol></li><li class="chapter-item expanded "><a href="2-mm-7-main-frame-allocator.html"><strong aria-hidden="true">2.7.</strong> Основной аллокатор фреймов</a></li><li class="chapter-item expanded "><a href="2-mm-8-tests.html"><strong aria-hidden="true">2.8.</strong> Проверьте себя</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №3</li><li class="chapter-item expanded "><a href="3-user-0-intro.html"><strong aria-hidden="true">3.</strong> Процессы</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="3-user-1-elf.html"><strong aria-hidden="true">3.1.</strong> Загрузка процесса в память</a></li><li class="chapter-item expanded "><a href="3-user-2-permission-checks.html"><strong aria-hidden="true">3.2.</strong> Проверки доступа процесса к памяти</a></li><li class="chapter-item expanded "><a href="3-user-3-user-mode.html"><strong aria-hidden="true">3.3.</strong> Переход в режим пользователя</a></li><li class="chapter-item expanded "><a href="3-user-4-syscall.html"><strong aria-hidden="true">3.4.</strong> Поддержка системных вызовов</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №4</li><li class="chapter-item expanded "><a href="4-concurrency-0-intro.html"><strong aria-hidden="true">4.</strong> Конкурентное выполнение задач</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="4-concurrency-1-smp-0-intro.html"><strong aria-hidden="true">4.1.</strong> Поддержка нескольких процессоров (SMP)</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="4-concurrency-1-smp-1-local-apic.html"><strong aria-hidden="true">4.1.1.</strong> Работа с local APIC</a></li><li class="chapter-item expanded "><a href="4-concurrency-1-smp-2-cpus.html"><strong aria-hidden="true">4.1.2.</strong> Состояние каждого процессора</a></li><li class="chapter-item expanded "><a href="4-concurrency-1-smp-3-ap-init.html"><strong aria-hidden="true">4.1.3.</strong> Загрузка Application Processor</a></li></ol></li><li class="chapter-item expanded "><a href="4-concurrency-2-table.html"><strong aria-hidden="true">4.2.</strong> Таблица процессов</a></li><li class="chapter-item expanded "><a href="4-concurrency-3-preemption.html"><strong aria-hidden="true">4.3.</strong> Вытесняющая многозадачность</a></li><li class="chapter-item expanded "><a href="4-concurrency-4-scheduler.html"><strong aria-hidden="true">4.4.</strong> Планировщик</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №5</li><li class="chapter-item expanded "><a href="5-um-0-intro.html"><strong aria-hidden="true">5.</strong> Продвинутая работа с памятью в пространстве пользователя</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="5-um-1-ring-buffer.html"><strong aria-hidden="true">5.1.</strong> Разделяемая память</a></li><li class="chapter-item expanded "><a href="5-um-2-memory.html"><strong aria-hidden="true">5.2.</strong> Системные вызовы для работы с виртуальной памятью</a></li><li class="chapter-item expanded "><a href="5-um-3-eager-fork.html"><strong aria-hidden="true">5.3.</strong> Eager fork</a></li><li class="chapter-item expanded "><a href="5-um-4-traps.html" class="active"><strong aria-hidden="true">5.4.</strong> Обработка исключений в режиме пользователя</a></li><li class="chapter-item expanded "><a href="5-um-5-cow-fork.html"><strong aria-hidden="true">5.5.</strong> Copy-on-write fork</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Лабораторные работы</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="Обработка-исключений-в-режиме-пользователя"><a class="header" href="#Обработка-исключений-в-режиме-пользователя">Обработка исключений в режиме пользователя</a></h2>
+<h3 id="Пользовательская-часть-системного-вызова-set_trap_handler"><a class="header" href="#Пользовательская-часть-системного-вызова-set_trap_handler">Пользовательская часть системного вызова <code>set_trap_handler</code></a></h3>
+<p>Посмотрите на функцию</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn set_trap_handler(
+    dst_pid: Pid,
+    trap_handler: fn(&amp;TrapInfo),
+    trap_stack: Block&lt;Page&gt;,
+) -&gt; Result&lt;()&gt;
+<span class="boring">}
+</span></code></pre></pre>
+<p>в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/user/lib/src/syscall.rs"><code>user/lib/src/syscall.rs</code></a>.</p>
+<p>Она делает не совсем то, чего можно было бы ожидать.
+А именно, она не передаёт адрес функции <code>trap_stack</code> в системный вызов.
+Вместо этого она устанавливает в качестве обработчика прерываний функцию <code>trap_trampoline()</code>,
+а <code>trap_handler</code> просто сохраняет в статическую переменную
+<code>static mut TRAP_HANDLER: fn(&amp;TrapInfo)</code>.</p>
+<p>Это позволяет функции <code>trap_handler</code> не заниматься той технической машинерией по сохранению и восстановлению контекста, которую мы сейчас реализуем в <code>trap_trampoline()</code>.</p>
+<h3 id="Трамплин-обработчика-прерываний"><a class="header" href="#Трамплин-обработчика-прерываний">Трамплин обработчика прерываний</a></h3>
+<p>Реализуйте функцию</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>extern &quot;C&quot; fn trap_trampoline() -&gt; !
+<span class="boring">}
+</span></code></pre></pre>
+<p>в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/user/lib/src/syscall.rs"><code>user/lib/src/syscall.rs</code></a>.</p>
+<p>Она будет получать управление, если в коде пользователя возникло прерывание, например Page Fault.
+Прерывание может возникнуть в произвольный момент, поэтому нужно сохранить содержимое всех регистров в стеке.
+Стек, на котором эта функция будет запущена, специальный, он может отличаться от стека в момент возникновения исключения.
+Причём на момент вызова <code>trap_trampoline()</code> в стеке лежит структура <code>TrapInfo</code> с информацией о возникшем прерывании.</p>
+<p>Это похоже на метод
+<a href="../../doc/kernel/process/registers/struct.Registers.html#method.switch_to"><code>Registers::switch_to()</code></a>
+<a href="../../lab/book/3-user-3-user-mode.html#%D0%97%D0%B0%D0%B4%D0%B0%D1%87%D0%B0-7--%D0%BF%D0%B5%D1%80%D0%B5%D0%BA%D0%BB%D1%8E%D1%87%D0%B5%D0%BD%D0%B8%D0%B5-%D0%BF%D1%80%D0%BE%D1%86%D0%B5%D1%81%D1%81%D0%BE%D1%80%D0%B0-%D0%B2-%D1%80%D0%B5%D0%B6%D0%B8%D0%BC-%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D1%8F-%D0%B8-%D0%B2%D0%BE%D0%B7%D0%B2%D1%80%D0%B0%D1%82-%D0%B8%D0%B7-%D0%BD%D0%B5%D0%B3%D0%BE">который вы реализовали</a>
+в одной из прошлых лабораторок.</p>
+<p><strong>Важно</strong> также сохранить в стек текущее состояние регистра флагов <code>RFLAGS</code>.</p>
+<p>После сохранения регистров нужно вызвать функцию</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>extern &quot;C&quot; fn trap_handler_invoker(
+    info: &amp;mut TrapInfo, // rdi
+)
+<span class="boring">}
+</span></code></pre></pre>
+<p>Передав ей в регистре <code>RDI</code> адрес <code>TrapInfo</code>, на который указывал регистр <code>RSP</code> в момент вызова <code>trap_trampoline()</code>.
+Мы только что положили в стек регистры, и <code>RSP</code> сдвинулся.
+Поэтому для получения адреса <code>TrapInfo</code> нужно прибавить к нему объём сохранённых регистров.
+После вызова <code>trap_handler_invoker()</code> нужно восстановить регистры из стека.</p>
+<p>Далее нужно переключить стек — <code>RSP</code> — на состояние в котором он был в момент возникновения исключения.
+И вернуть <code>RIP</code> в точку, в которой исключение возникло.
+Посмотрите, что делает <code>trap_handler_invoker()</code>:</p>
+<ul>
+<li>Вызывает функцию, сохранённую в переменной <code>static mut TRAP_HANDLER: fn(&amp;TrapInfo)</code>.</li>
+<li>Выполняет <code>TrapInfo::prepare_for_ret()</code>.</li>
+</ul>
+<p>А <code>TrapInfo::prepare_for_ret()</code> кладёт в стек времени возникновения исключения регистр <code>RIP</code> — адрес кода, который исполнялся в этот момент.
+Значит, если мы установим <code>RSP</code> на место в памяти, где сохранён <code>RIP</code> и сделаем <code>ret</code>, то инструкция <code>ret</code> одновременно</p>
+<ul>
+<li>Вернёт управление в то место, которое исполнялось в момент исключения.</li>
+<li>Вернёт стек — регистр <code>RSP</code> — в состояние на момент возникновения исключения.</li>
+</ul>
+<p>Что нам и нужно. Таким образом, <code>trap_trampoline()</code> должна переключить <code>RSP</code> на этот адрес и выполнить <code>ret</code>.
+Лежит нужный нам <code>RSP</code> в поле <code>TrapInfo::context</code> структуры</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[derive(Clone, Copy, Debug)]
+#[repr(C)]
+pub struct TrapInfo {
+    number: usize,
+    info: Info,
+    context: MiniContext,
+
+    /// `TrapInfo` can be pushed into the same stack the `context` is pointing to.
+    /// Eg. if the trap is recursive - the trap has happened inside a trap handler.
+    /// In this case [`lib::syscall::trap_trampoline`] and [`lib::syscall::trap_handler_invoker`]
+    /// will push on the `context` stack a return address effectively overwriting the `TrapInfo`.
+    /// This field exists only to protect meaningfull fields of the `TrapInfo` from beeing overwritten.
+    return_address_placeholder: [u8; Self::PLACEHOLDER_SIZE],
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>И к нему можно обратиться по смещению</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub const RSP_OFFSET_IN_TRAP_INFO: usize = offset_of!(TrapInfo, context) + RSP_OFFSET_IN_MINI_CONTEXT;
+<span class="boring">}
+</span></code></pre></pre>
+<p>от начала структуры <code>TrapInfo</code>, которое сейчас находится в <code>RSP</code>.</p>
+<h3 id="Ядерная-часть-системного-вызова-set_trap_handler"><a class="header" href="#Ядерная-часть-системного-вызова-set_trap_handler">Ядерная часть системного вызова <code>set_trap_handler</code></a></h3>
+<p>Реализуйте системный вызов</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn set_trap_handler(
+    process: MutexGuard&lt;Process&gt;,
+    dst_pid: usize,
+    rip: usize,
+    stack_address: usize,
+    stack_size: usize,
+) -&gt; Result&lt;SyscallResult&gt;
+<span class="boring">}
+</span></code></pre></pre>
+<p>в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/process/syscall.rs"><code>kernel/src/process/syscall.rs</code></a>.</p>
+<p>Он устанавливает для целевого процесса, заданного идентификатором <code>dst_pid</code> пользовательский обработчик прерывания с виртуальным адресом <code>rip</code> и стеком, который задаётся блоком виртуальных адресов начиная с <code>stack_address</code> и размера <code>stack_size</code>.
+Стек может быть не выровнен по границе страниц.
+Проверять его на права доступа пока бессмысленно, так как пользовательский код может изменить доступы к этим адресам позже.
+Проверять права доступа к памяти надо непосредственно перед доступом.
+В случае обработчика исключений доступ будет позднее, в функции <code>user_trap_handler()</code>, и проверку придётся отложить до соответствующего момента.</p>
+<p>Вам пригодятся методы <code>Process::set_trap_context()</code> и <code>TrapContext::new()</code>.
+<code>TrapContext</code> — это просто пара из контекста пользовательского обработчика <code>context</code> и его стека <code>stack</code>,
+который нужен для определения рекурсивности прерывания в функции <code>user_trap_handler()</code>:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+pub(crate) struct TrapContext {
+    context: MiniContext,
+    stack: Block&lt;Virt&gt;,
+}
+<span class="boring">}
+</span></code></pre></pre>
+<h3 id="Передача-прерывания-из-режима-ядра-в-режим-пользователя"><a class="header" href="#Передача-прерывания-из-режима-ядра-в-режим-пользователя">Передача прерывания из режима ядра в режим пользователя</a></h3>
+<p>Реализуйте функцию</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn user_trap_handler(
+    process: &amp;mut MutexGuard&lt;Process&gt;,
+    original_context: &amp;mut InterruptContext,
+    number: usize,
+    info: Info,
+) -&gt; Result&lt;()&gt;
+<span class="boring">}
+</span></code></pre></pre>
+<p>в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/interrupts.rs"><code>kernel/src/interrupts.rs</code></a>.</p>
+<p>Её задача — вернуть управление в код пользователя (запускается она в режиме ядра) в контекст
+пользовательского обработчика прерывания.
+Этот контекст возвращает метод <code>Process::trap_context()</code>.</p>
+<p>Но учтите, что возможна ситуация, когда пользовательский обработчик прерывания сам вызовет исключение.
+Например, в <code>cow_fork</code> так и будет, обработчик Page Fault сам будет иногда вызывать Page Fault, который сам же и починит, будучи вызванным фактически рекурсивно.
+Поэтому нельзя безусловно использовать значение регистра <code>RSP</code> из <code>Process::trap_context()</code>.
+Так как тогда рекурсивный вызов обработчика прерывания перезапишет стек первоначального вызова.
+Нужно проверить, что стек <code>original_context</code> указывает внутрь стека, который задаётся <code>Process::trap_context()</code>.
+Если это так, это означает что пользовательский код как раз исполняет обработчик прерывания, так как использует его стек.
+Тогда переключать стек не нужно, значение <code>RSP</code> должно остаться как было в <code>original_context</code>.
+Если же пользовательский <code>RSP</code> указывает не в стек обработчика прерываний, то его нужно туда переключить.
+Ведь, возможно, Page Fault был вызван попыткой обратиться в обычный стек и если запустить
+пользовательский обработчик прерываний, не переключив стек, Page Fault повторится и программа зациклится в рекурсивных вызовах обработчика прерываний.
+Соберите <code>MiniContext</code> из <code>Process::trap_context()</code> и <code>original_context</code> описанным образом.</p>
+<p>С помощью метода <code>MiniContext::push()</code> выделите на стеке пользователя блок памяти под структуру <code>TrapInfo</code>.
+Помните, — доверять пользовательскому стеку нельзя!
+Он может быт некорректным изначально или просто уже исчерпаться.
+Поэтому обязательно проверьте, что выделенный блок памяти доступен пользователю для записи методом
+<a href="../../doc/kernel/memory/address_space/struct.AddressSpace.html#method.check_permission_mut"><code>AddressSpace::check_permission_mut&lt;T&gt;()</code></a>.
+Только после этого в него можно записать структуру <code>TrapInfo</code> с описанием возникшего прерывания и его контекста из <code>original_context</code>.
+Метод
+<a href="../../doc/kernel/memory/address_space/struct.AddressSpace.html#method.check_permission_mut"><code>AddressSpace::check_permission_mut&lt;T&gt;()</code></a>
+возвращает срез, а у нас на самом деле один элемент, — просто используйте <code>[0]</code>.</p>
+<p>Если в процессе возникла какая-либо ошибка, верните её в вызывающую функцию.
+Иначе, подмените в <code>original_context</code> контекст, в котором возникло прерывание,
+на контекст пользовательского обработчика, чтобы в итоге попасть в него.
+И верните <code>Ok</code> в вызывающую функцию.</p>
+<h3 id="Вызов-user_trap_handler-из-generic_trap"><a class="header" href="#Вызов-user_trap_handler-из-generic_trap">Вызов <code>user_trap_handler()</code> из <code>generic_trap()</code></a></h3>
+<p>Поправьте функцию</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn generic_trap(
+    context: &amp;mut InterruptContext,
+    number: usize,
+    info: Info,
+    fatal: Fatal,
+)
+<span class="boring">}
+</span></code></pre></pre>
+<p>в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/interrupts.rs"><code>kernel/src/interrupts.rs</code></a>, чтобы в случае если</p>
+<ul>
+<li>прерывание произошло в режиме пользователя и</li>
+<li>установлен пользовательский обработчик исключений (<code>Process::trap_context().is_valid()</code> возвращает <code>true</code>),</li>
+</ul>
+<p>вызвать функцию <code>user_trap_handler()</code>.
+Если она вернёт <code>Ok</code>, выйдите из <code>generic_trap()</code>, иначе — продолжите исполнение обработчика
+<code>generic_trap()</code>, как если бы пользовательский обработчик не был установлен.
+Естественно, ошибочную ситуацию стоит залогировать.</p>
+<h3 id="Ориентировочный-объём-работ-этой-части-лабораторки"><a class="header" href="#Ориентировочный-объём-работ-этой-части-лабораторки">Ориентировочный объём работ этой части лабораторки</a></h3>
+<pre><code class="language-console"> kernel/src/interrupts.rs      |   40 ++++++++++++++++++++-
+ kernel/src/process/syscall.rs |    8 +++-
+ user/lib/src/syscall.rs       |   79 +++++++++++++++++++++++++++++++++++++++++-
+ 3 files changed, 123 insertions(+), 4 deletions(-)
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="5-um-3-eager-fork.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next" href="5-um-5-cow-fork.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="5-um-3-eager-fork.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" href="5-um-5-cow-fork.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </body>
+</html>

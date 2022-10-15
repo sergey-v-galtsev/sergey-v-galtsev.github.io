@@ -1,0 +1,452 @@
+<!DOCTYPE HTML>
+<html lang="ru" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Основной аллокатор фреймов - Лабораторные работы</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="0-intro-1-nikka.html">Введение в лабораторные работы</a></li><li class="chapter-item expanded affix "><a href="0-intro-2-rust.html">Почему Rust</a></li><li class="chapter-item expanded affix "><a href="0-intro-3-dirs.html">Структура кода</a></li><li class="chapter-item expanded affix "><a href="0-intro-4-install.html">Компиляция и запуск тестов</a></li><li class="chapter-item expanded affix "><a href="0-intro-5-gdb.html">Запуск с отладчиком gdb</a></li><li class="chapter-item expanded affix "><a href="0-intro-6-log.html">Логирование и логи</a></li><li class="chapter-item expanded affix "><a href="0-intro-7-vscode.html">Настройка VSCode</a></li><li class="chapter-item expanded affix "><li class="part-title">Лабораторная работа №1</li><li class="chapter-item expanded "><a href="1-time-0-intro.html"><strong aria-hidden="true">1.</strong> Время</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="1-time-1-rtc.html"><strong aria-hidden="true">1.1.</strong> Часы реального времени</a></li><li class="chapter-item expanded "><a href="1-time-2-tsc.html"><strong aria-hidden="true">1.2.</strong> Счётчик тактов процессора</a></li><li class="chapter-item expanded "><a href="1-time-3-correlation-point.html"><strong aria-hidden="true">1.3.</strong> Счётчики тиков</a></li><li class="chapter-item expanded "><a href="1-time-4-correlation-interval.html"><strong aria-hidden="true">1.4.</strong> Измерение частоты процессора и повышение разрешения часов</a></li><li class="chapter-item expanded "><a href="1-time-5-interrupts.html"><strong aria-hidden="true">1.5.</strong> Обработка прерываний RTC</a></li><li class="chapter-item expanded "><a href="1-time-6-info.html"><strong aria-hidden="true">1.6.</strong> Информация о системе</a></li><li class="chapter-item expanded "><a href="1-time-7-summary.html"><strong aria-hidden="true">1.7.</strong> Собираем всё вместе</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №2</li><li class="chapter-item expanded "><a href="2-mm-0-intro.html"><strong aria-hidden="true">2.</strong> Память</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="2-mm-1-types.html"><strong aria-hidden="true">2.1.</strong> Типы</a></li><li class="chapter-item expanded "><a href="2-mm-2-mapping.html"><strong aria-hidden="true">2.2.</strong> Страничные отображения</a></li><li class="chapter-item expanded "><a href="2-mm-3-diagrams.html"><strong aria-hidden="true">2.3.</strong> Диаграммы преобразований</a></li><li class="chapter-item expanded "><a href="2-mm-4-plan.html"><strong aria-hidden="true">2.4.</strong> План</a></li><li class="chapter-item expanded "><a href="2-mm-5-boot-frame-allocator.html"><strong aria-hidden="true">2.5.</strong> Временный аллокатор фреймов</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space.html"><strong aria-hidden="true">2.6.</strong> Виртуальное адресное пространство</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="2-mm-6-address-space-1-allocation.html"><strong aria-hidden="true">2.6.1.</strong> Аллокатор виртуальных страниц адресного пространства</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space-2-translate.html"><strong aria-hidden="true">2.6.2.</strong> Отображение виртуальных страниц в физические фреймы</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space-3-map.html"><strong aria-hidden="true">2.6.3.</strong> Высокоуровневый интерфейс управления адресным пространством</a></li></ol></li><li class="chapter-item expanded "><a href="2-mm-7-main-frame-allocator.html" class="active"><strong aria-hidden="true">2.7.</strong> Основной аллокатор фреймов</a></li><li class="chapter-item expanded "><a href="2-mm-8-tests.html"><strong aria-hidden="true">2.8.</strong> Проверьте себя</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №3</li><li class="chapter-item expanded "><a href="3-user-0-intro.html"><strong aria-hidden="true">3.</strong> Процессы</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="3-user-1-elf.html"><strong aria-hidden="true">3.1.</strong> Загрузка процесса в память</a></li><li class="chapter-item expanded "><a href="3-user-2-permission-checks.html"><strong aria-hidden="true">3.2.</strong> Проверки доступа процесса к памяти</a></li><li class="chapter-item expanded "><a href="3-user-3-user-mode.html"><strong aria-hidden="true">3.3.</strong> Переход в режим пользователя</a></li><li class="chapter-item expanded "><a href="3-user-4-syscall.html"><strong aria-hidden="true">3.4.</strong> Поддержка системных вызовов</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №4</li><li class="chapter-item expanded "><a href="4-concurrency-0-intro.html"><strong aria-hidden="true">4.</strong> Конкурентное выполнение задач</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="4-concurrency-1-smp-0-intro.html"><strong aria-hidden="true">4.1.</strong> Поддержка нескольких процессоров (SMP)</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="4-concurrency-1-smp-1-local-apic.html"><strong aria-hidden="true">4.1.1.</strong> Работа с local APIC</a></li><li class="chapter-item expanded "><a href="4-concurrency-1-smp-2-cpus.html"><strong aria-hidden="true">4.1.2.</strong> Состояние каждого процессора</a></li><li class="chapter-item expanded "><a href="4-concurrency-1-smp-3-ap-init.html"><strong aria-hidden="true">4.1.3.</strong> Загрузка Application Processor</a></li></ol></li><li class="chapter-item expanded "><a href="4-concurrency-2-table.html"><strong aria-hidden="true">4.2.</strong> Таблица процессов</a></li><li class="chapter-item expanded "><a href="4-concurrency-3-preemption.html"><strong aria-hidden="true">4.3.</strong> Вытесняющая многозадачность</a></li><li class="chapter-item expanded "><a href="4-concurrency-4-scheduler.html"><strong aria-hidden="true">4.4.</strong> Планировщик</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №5</li><li class="chapter-item expanded "><a href="5-um-0-intro.html"><strong aria-hidden="true">5.</strong> Продвинутая работа с памятью в пространстве пользователя</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="5-um-1-ring-buffer.html"><strong aria-hidden="true">5.1.</strong> Разделяемая память</a></li><li class="chapter-item expanded "><a href="5-um-2-memory.html"><strong aria-hidden="true">5.2.</strong> Системные вызовы для работы с виртуальной памятью</a></li><li class="chapter-item expanded "><a href="5-um-3-eager-fork.html"><strong aria-hidden="true">5.3.</strong> Eager fork</a></li><li class="chapter-item expanded "><a href="5-um-4-traps.html"><strong aria-hidden="true">5.4.</strong> Обработка исключений в режиме пользователя</a></li><li class="chapter-item expanded "><a href="5-um-5-cow-fork.html"><strong aria-hidden="true">5.5.</strong> Copy-on-write fork</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Лабораторные работы</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="Основной-аллокатор-физических-фреймов"><a class="header" href="#Основной-аллокатор-физических-фреймов">Основной аллокатор физических фреймов</a></h2>
+<p>Приступим к реализации основного аллокатора физических фреймов
+<a href="../../doc/kernel/memory/main_frame_allocator/struct.MainFrameAllocator.html"><code>kernel::memory::main_frame_allocator::MainFrameAllocator</code></a>.</p>
+<p>Он построен на описателе физического фрейма
+<a href="../../doc/kernel/memory/main_frame_allocator/enum.FrameInfo.html"><code>kernel::memory::main_frame_allocator::FrameInfo</code></a>.
+Это <a href="https://doc.rust-lang.ru/book/ch06-01-defining-an-enum.html">перечисление</a> с вариантами:</p>
+<ul>
+<li><a href="../../doc/kernel/memory/main_frame_allocator/enum.FrameInfo.html#variant.Absent"><code>FrameInfo::Absent</code></a> — этого физического фрейма нет в компьютере или же он зарезервирован, например <a href="https://en.wikipedia.org/wiki/BIOS">BIOS</a> или загрузчиком <a href="../../doc/bootloader/index.html">bootloader</a>.</li>
+<li><a href="../../doc/kernel/memory/main_frame_allocator/enum.FrameInfo.html#variant.Free"><code>FrameInfo::Free</code></a> — этот физический фрейм свободен. Содержит поле <a href="../../doc/kernel/memory/main_frame_allocator/enum.FrameInfo.html#variant.Free.field.next_free"><code>FrameInfo::Free::next_free</code></a> с номером следующего свободного фрейма, либо <code>None</code> если это последний элемент списка. То есть, описатели свободных фреймов провязаны в односвязный <a href="https://ru.wikipedia.org/wiki/%D0%98%D0%BD%D1%82%D1%80%D1%83%D0%B7%D0%B8%D0%B2%D0%BD%D1%8B%D0%B9_%D1%81%D0%BF%D0%B8%D1%81%D0%BE%D0%BA">интрузивный список</a> с номерами вместо указателей.</li>
+<li><a href="../../doc/kernel/memory/main_frame_allocator/enum.FrameInfo.html#variant.Used"><code>FrameInfo::Used</code></a> — этот физический фрейм занят. Содержит поле <a href="../../doc/kernel/memory/main_frame_allocator/enum.FrameInfo.html#variant.Used.field.reference_count"><code>FrameInfo::Used::reference_count</code></a> с количеством ссылок на описываемый фрейм.</li>
+</ul>
+<p>В
+<a href="../../doc/kernel/memory/main_frame_allocator/struct.MainFrameAllocator.html"><code>MainFrameAllocator</code></a>
+все описатели физических фреймов собраны в поле
+<a href="../../doc/kernel/memory/main_frame_allocator/struct.MainFrameAllocator.html#structfield.frame_info"><code>MainFrameAllocator::frame_info</code></a>.
+Это срез <code>&amp;[FrameInfo]</code> достаточного размера, чтобы хранить описатели всех физических фреймов, доступных в компьютере.
+Как вы можете догадаться, этот срез выделяется с помощью
+<a href="../../doc/kernel/memory/address_space/struct.AddressSpace.html#method.map_slice"><code>AddressSpace::map_slice()</code></a>:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let frame_count = total_frames(memory_map);
+let frame_info = BASE_ADDRESS_SPACE
+    .lock()
+    .map_slice(frame_count, KERNEL_RW, || FrameInfo::Absent)
+    .expect(&quot;failed to allocate memory for MainFrameAllocator metadata&quot;);
+<span class="boring">}
+</span></code></pre></pre>
+<p>А количество необходимых записей <code>frame_count</code> вычисляется с помощью знакомой вам
+<a href="../../doc/bootloader/bootinfo/struct.MemoryMap.html"><code>bootloader::bootinfo::MemoryMap</code></a>.
+Эта инициализация происходит в
+<a href="../../doc/kernel/memory/main_frame_allocator/struct.MainFrameAllocator.html#method.new"><code>MainFrameAllocator::new()</code></a>.</p>
+<p>Поле
+<a href="../../doc/kernel/memory/main_frame_allocator/struct.MainFrameAllocator.html#structfield.free_frame"><code>MainFrameAllocator::free_frame</code></a>
+содержит голову списка свободных фреймов.
+А поле
+<a href="../../doc/kernel/memory/main_frame_allocator/struct.MainFrameAllocator.html#structfield.free_count"><code>MainFrameAllocator::free_count</code></a> —
+их количество.</p>
+<h3 id="Задача-5--mainframeallocator"><a class="header" href="#Задача-5--mainframeallocator">Задача 5 — <a href="../../doc/kernel/memory/main_frame_allocator/struct.MainFrameAllocator.html"><code>MainFrameAllocator</code></a></a></h3>
+<h4 id="Инициализация-описателей-фреймов"><a class="header" href="#Инициализация-описателей-фреймов">Инициализация описателей фреймов</a></h4>
+<p>Реализуйте <a href="../../doc/kernel/memory/main_frame_allocator/struct.MainFrameAllocator.html#method.init_frame_info">метод</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn MainFrameAllocator::init_frame_info(
+    &amp;mut self,
+    memory_map: &amp;MemoryMap,
+    boot_frame_allocator: &amp;BootFrameAllocator,
+)
+<span class="boring">}
+</span></code></pre></pre>
+<p>в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/memory/main_frame_allocator.rs"><code>kernel/src/memory/main_frame_allocator.rs</code></a>.
+Пройдите по <code>memory_map</code> с картой памяти <a href="../../doc/bootloader/bootinfo/struct.MemoryMap.html"><code>MemoryMap</code></a>,
+аналогично тому как вы делали в
+<a href="../../lab/book/2-mm-5-boot-frame-allocator.html#%D0%97%D0%B0%D0%B4%D0%B0%D1%87%D0%B0-1--%D0%B8%D0%BD%D0%B8%D1%86%D0%B8%D0%B0%D0%BB%D0%B8%D0%B7%D0%B0%D1%86%D0%B8%D1%8F-bootframeallocatornew">задаче 1</a>.
+Обратите внимание, что на вход метод принимает неизменяемый <code>boot_frame_allocator</code>.
+Так как он неизменяемый, выделить с его помощью память не получится.
+Он нужен для того, чтобы проверить, принадлежит ли данный фрейм аллокатору <code>boot_frame_allocator</code> или нет с помощью метода
+<a href="../../doc/kernel/memory/boot_frame_allocator/struct.BootFrameAllocator.html#method.is_managed"><code>BootFrameAllocator::is_managed()</code></a>.</p>
+<ul>
+<li>Если тип региона памяти не является <a href="../../doc/bootloader/bootinfo/enum.MemoryRegionType.html#variant.Usable"><code>MemoryRegionType::Usable</code></a>, пометьте фрейм как <a href="../../doc/kernel/memory/main_frame_allocator/enum.FrameInfo.html#variant.Absent"><code>FrameInfo::Absent</code></a>. В этом случае можно просто ничего не делать. Как вы видели, <a href="../../doc/kernel/memory/main_frame_allocator/struct.MainFrameAllocator.html#method.new"><code>MainFrameAllocator::new()</code></a> при аллокации среза <a href="../../doc/kernel/memory/main_frame_allocator/struct.MainFrameAllocator.html#structfield.frame_info"><code>MainFrameAllocator::frame_info</code></a> инициализирует его значением <a href="../../doc/kernel/memory/main_frame_allocator/enum.FrameInfo.html#variant.Absent"><code>FrameInfo::Absent</code></a>.</li>
+<li>Если фрейм принадлежит <code>boot_frame_allocator</code>, пометьте его как занятый — <a href="../../doc/kernel/memory/main_frame_allocator/enum.FrameInfo.html#variant.Used"><code>FrameInfo::Used</code></a>, — со счётчиком использований равным 1.</li>
+<li>В остальных случаях, пометьте фреймы из <a href="../../doc/bootloader/bootinfo/enum.MemoryRegionType.html#variant.Usable"><code>Usable</code></a> регионов как <a href="../../doc/kernel/memory/main_frame_allocator/enum.FrameInfo.html#variant.Free"><code>FrameInfo::Free</code></a> и провяжите их в односвязный список.</li>
+</ul>
+<p>Количество найденных свободных фреймов сохраните в
+<a href="../../doc/kernel/memory/main_frame_allocator/struct.MainFrameAllocator.html#structfield.free_count"><code>MainFrameAllocator::free_count</code></a>.</p>
+<p>Вам могут пригодиться функции</p>
+<ul>
+<li><a href="../../doc/ku/memory/frage/struct.Frage.html#method.from_index"><code>ku::memory::frage::Frame::from_index()</code></a>.</li>
+<li><a href="../../doc/ku/memory/size/fn.into_usize.html"><code>ku::memory::size::into_usize()</code></a>.</li>
+<li><a href="https://doc.rust-lang.org/nightly/core/cmp/fn.min.html"><code>core::cmp::min()</code></a>.</li>
+<li><a href="https://doc.rust-lang.org/nightly/core/mem/fn.replace.html"><code>core::mem::replace()</code></a>.</li>
+</ul>
+<h4 id="Аллокация-фрейма"><a class="header" href="#Аллокация-фрейма">Аллокация фрейма</a></h4>
+<p>Реализуйте <a href="../../doc/kernel/memory/main_frame_allocator/struct.MainFrameAllocator.html#method.allocate">метод</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn MainFrameAllocator::allocate(&amp;mut self) -&gt; Result&lt;Frame&gt;
+<span class="boring">}
+</span></code></pre></pre>
+<p>в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/memory/main_frame_allocator.rs"><code>kernel/src/memory/main_frame_allocator.rs</code></a>.
+Он аллоцирует и возвращает свободный фрейм.
+Как обычно, верните ошибку
+<a href="../../doc/kernel/error/enum.Error.html#variant.NoFrame"><code>Error::NoFrame</code></a>,
+если свободных физических фреймов не осталось.
+Чтобы долго не искать, используйте фрейм из головы списка свободных —
+<a href="../../doc/kernel/memory/main_frame_allocator/struct.MainFrameAllocator.html#structfield.free_frame"><code>MainFrameAllocator::free_frame</code></a>.
+Также обновите количество оставшихся свободных фреймов <a href="../../doc/kernel/memory/main_frame_allocator/struct.MainFrameAllocator.html#structfield.free_count"><code>MainFrameAllocator::free_count</code></a>.</p>
+<p>На всякий случай можно перепроверить, что
+<a href="../../doc/kernel/memory/main_frame_allocator/struct.MainFrameAllocator.html#structfield.free_frame"><code>MainFrameAllocator::free_frame</code></a>
+соответствует записи в
+<a href="../../doc/kernel/memory/main_frame_allocator/struct.MainFrameAllocator.html#structfield.frame_info"><code>MainFrameAllocator::frame_info</code></a>,
+являющейся
+<a href="../../doc/kernel/memory/main_frame_allocator/enum.FrameInfo.html#variant.Free"><code>FrameInfo::Free</code></a>.
+И запаниковать, если это не так:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>panic!(&quot;your {} message {:?}&quot;, ...);
+<span class="boring">}
+</span></code></pre></pre>
+<h4 id="Освобождение-фрейма"><a class="header" href="#Освобождение-фрейма">Освобождение фрейма</a></h4>
+<p>Реализуйте <a href="../../doc/kernel/memory/main_frame_allocator/struct.MainFrameAllocator.html#method.deallocate">метод</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn MainFrameAllocator::deallocate(
+    &amp;mut self,
+    frame: Frame,
+)
+<span class="boring">}
+</span></code></pre></pre>
+<p>в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/memory/main_frame_allocator.rs"><code>kernel/src/memory/main_frame_allocator.rs</code></a>.
+Он уменьшает количество ссылок на данный <code>frame</code> и помечает его как
+<a href="../../doc/kernel/memory/main_frame_allocator/enum.FrameInfo.html#variant.Free"><code>FrameInfo::Free</code></a>,
+если ссылок не осталось.
+<code>unsafe</code> означает, что вызывающая функция должна гарантировать, что если ссылок на <code>frame</code> не осталось, то он больше не будет использоваться и, в частности, не участвует ни в одном
+<a href="../../doc/kernel/memory/mapping/struct.Mapping.html"><code>Mapping</code></a>.
+Если <code>frame</code> уже является
+<a href="../../doc/kernel/memory/main_frame_allocator/enum.FrameInfo.html#variant.Free"><code>FrameInfo::Free</code></a>,
+стоит запаниковать.</p>
+<p>Однако освобождение фрейма, который помечен как
+<a href="../../doc/kernel/memory/main_frame_allocator/enum.FrameInfo.html#variant.Absent"><code>FrameInfo::Absent</code></a> —
+корректная ситуация, паниковать не нужно.
+Дело в том, что зарезервированные фреймы, которые мы так помечаем в
+<a href="../../doc/kernel/memory/main_frame_allocator/struct.MainFrameAllocator.html#method.init_frame_info"><code>MainFrameAllocator::init_frame_info()</code></a>
+могут быть отображены в память загрузчиком
+<a href="../../doc/bootloader/index.html">bootloader</a>.
+И при копировании и освобождении
+<a href="../../doc/kernel/memory/mapping/struct.Mapping.html"><code>Mapping</code></a>
+мы можем попытаться поменять количество ссылок на них.
+В этом случае ничего делать не нужно, фрейм должен остаться
+<a href="../../doc/kernel/memory/main_frame_allocator/enum.FrameInfo.html#variant.Absent"><code>FrameInfo::Absent</code></a>
+и не должен попасть в список свободных.
+Так как может быть много разных причин почему он не был
+<a href="../../doc/bootloader/bootinfo/enum.MemoryRegionType.html#variant.Usable"><code>MemoryRegionType::Usable</code></a>.
+Например, он может соответствовать микросхеме
+<a href="https://ru.wikipedia.org/wiki/%D0%9F%D0%BE%D1%81%D1%82%D0%BE%D1%8F%D0%BD%D0%BD%D0%BE%D0%B5_%D0%B7%D0%B0%D0%BF%D0%BE%D0%BC%D0%B8%D0%BD%D0%B0%D1%8E%D1%89%D0%B5%D0%B5_%D1%83%D1%81%D1%82%D1%80%D0%BE%D0%B9%D1%81%D1%82%D0%B2%D0%BE">постоянного запоминающего устройства</a>,
+которая позволяет только читать данные, и не может быть использован ядром для произвольных данных.</p>
+<p>То же самое относится к фреймам, номера которых выходят за границы среза
+<a href="../../doc/kernel/memory/main_frame_allocator/struct.MainFrameAllocator.html#structfield.frame_info"><code>MainFrameAllocator::frame_info</code></a>, —
+могут иметься зарезервированные участки памяти, которые находятся по очень большим адресам.
+Один из таких участков — область ввода–вывода через память (<a href="https://en.wikipedia.org/wiki/Memory-mapped_I/O">Memory-mapped I/O</a>) для управления <a href="https://wiki.osdev.org/APIC">контроллером прерываний APIC</a>:</p>
+<pre><code class="language-console">15:08:28 0 I acpi_info = AcpiInfo { local_apic_address: Phys(0pFEE00000), bsp_id: 0, ap_ids: [1, 2, 3] }
+15:08:28 0 I Local APIC init; cpu = 0; cpu_count = 4; local_apic_address = 0pFEE00000
+</code></pre>
+<p>Обратите внимание на физический адрес в районе 4 GiB — <code>local_apic_address = 0pFEE00000</code>.
+Поэтому функция
+<a href="../../doc/kernel/memory/main_frame_allocator/fn.total_frames.html"><code>kernel::memory::main_frame_allocator::total_frames()</code></a>
+игнорирует не
+<a href="../../doc/bootloader/bootinfo/enum.MemoryRegionType.html#variant.Usable"><code>Usable</code></a> регионы,
+чтобы не нужно было выделять огромный срез
+<a href="../../doc/kernel/memory/main_frame_allocator/struct.MainFrameAllocator.html#structfield.frame_info"><code>MainFrameAllocator::frame_info</code></a>,
+который может просто не поместится в память,
+и будет содержать в основном
+<a href="../../doc/kernel/memory/main_frame_allocator/enum.FrameInfo.html#variant.Absent"><code>Absent</code></a> записи.</p>
+<h4 id="Увеличение-счётчика-использований-фрейма"><a class="header" href="#Увеличение-счётчика-использований-фрейма">Увеличение счётчика использований фрейма</a></h4>
+<p>Реализуйте <a href="../../doc/kernel/memory/main_frame_allocator/struct.MainFrameAllocator.html#method.reference">метод</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn MainFrameAllocator::reference(
+    &amp;mut self,
+    frame: Frame,
+)
+<span class="boring">}
+</span></code></pre></pre>
+<p>в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/memory/main_frame_allocator.rs"><code>kernel/src/memory/main_frame_allocator.rs</code></a>.
+Он наоборот, увеличивает количество ссылок на заданный <code>frame</code>.
+Если <code>frame</code> является
+<a href="../../doc/kernel/memory/main_frame_allocator/enum.FrameInfo.html#variant.Free"><code>FrameInfo::Free</code></a>,
+стоит запаниковать.
+Как и для
+<a href="../../doc/kernel/memory/main_frame_allocator/struct.MainFrameAllocator.html#method.deallocate"><code>MainFrameAllocator::deallocate()</code></a>,
+если фрейм
+<a href="../../doc/kernel/memory/main_frame_allocator/enum.FrameInfo.html#variant.Absent"><code>FrameInfo::Absent</code></a>
+или выходит за границы среза
+<a href="../../doc/kernel/memory/main_frame_allocator/struct.MainFrameAllocator.html#structfield.frame_info"><code>MainFrameAllocator::frame_info</code></a> —
+это допустимая ситуация, в которой ничего делать не нужно.</p>
+<h4 id="Перенесение-свободных-фреймов-из-bootframeallocator-в-mainframeallocator"><a class="header" href="#Перенесение-свободных-фреймов-из-bootframeallocator-в-mainframeallocator">Перенесение свободных фреймов из <a href="../../doc/kernel/memory/boot_frame_allocator/struct.BootFrameAllocator.html"><code>BootFrameAllocator</code></a> в <a href="../../doc/kernel/memory/main_frame_allocator/struct.MainFrameAllocator.html"><code>MainFrameAllocator</code></a></a></h4>
+<p>Финальный штрих — реализация <a href="../../doc/kernel/memory/main_frame_allocator/struct.MainFrameAllocator.html#method.move_free_frames">метода</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn MainFrameAllocator::move_free_frames(
+    &amp;mut self,
+    mut src: BootFrameAllocator,
+)
+<span class="boring">}
+</span></code></pre></pre>
+<p>в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/memory/main_frame_allocator.rs"><code>kernel/src/memory/main_frame_allocator.rs</code></a>.
+Он переносит все фреймы, которые на данный момент принадлежат
+<a href="../../doc/kernel/memory/boot_frame_allocator/struct.BootFrameAllocator.html"><code>BootFrameAllocator</code></a>
+и являются свободными, под управление
+<a href="../../doc/kernel/memory/main_frame_allocator/struct.MainFrameAllocator.html"><code>MainFrameAllocator</code></a>.</p>
+<p>Для этого аллоцируйте все фреймы, оставшиеся в
+<a href="../../doc/kernel/memory/boot_frame_allocator/struct.BootFrameAllocator.html"><code>BootFrameAllocator</code></a>.
+Это можно сделать за один вызов метода
+<a href="../../doc/kernel/memory/boot_frame_allocator/struct.BootFrameAllocator.html#method.allocate_block"><code>BootFrameAllocator::allocate_block()</code></a>,
+если передать в него весь оставшийся в
+<a href="../../doc/kernel/memory/boot_frame_allocator/struct.BootFrameAllocator.html"><code>BootFrameAllocator</code></a>
+свободный размер — <code>src.count() * Frame::SIZE</code>.
+Затем деаллоцируйте эти фреймы в
+<a href="../../doc/kernel/memory/main_frame_allocator/struct.MainFrameAllocator.html"><code>MainFrameAllocator</code></a>
+методом
+<a href="../../doc/kernel/memory/main_frame_allocator/struct.MainFrameAllocator.html#method.deallocate"><code>MainFrameAllocator::deallocate()</code></a>.</p>
+<p>Обратите внимание на сигнатуру <code>fn move_free_frames(..., src: BootFrameAllocator)</code>.
+Она означает, что функция поглощает аргумент <code>src</code>, так как он передаётся по значению, а не по ссылке.
+Вместе с тем фактом, что
+<a href="../../doc/kernel/memory/boot_frame_allocator/struct.BootFrameAllocator.html"><code>BootFrameAllocator</code></a>
+не является
+<a href="https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html">core::marker::Copy</a>
+типом,
+это приводит к уничтожению <code>src</code> при выходе из <code>move_free_frames()</code>.
+Так что Rust не даст случайно воспользоваться исходным <code>src</code>
+после вызова <code>move_free_frames(src, ...)</code>.
+В терминах C++ здесь работает семантика перемещения.</p>
+<h3 id="Проверьте-себя"><a class="header" href="#Проверьте-себя">Проверьте себя</a></h3>
+<p>Наконец можно проверить не только основной аллокатор фреймов,
+но также копирование и удаление виртуальных отображений и метод
+<a href="../../doc/kernel/memory/address_space/struct.AddressSpace.html#method.unmap_slice"><code>AddressSpace::unmap_slice()</code></a>.
+Запустите тест:</p>
+<pre><code class="language-console">$ (cd kernel; cargo test --test 2-mm-5-main-frame-allocator)
+...
+2_mm_5_main_frame_allocator::sanity_check-------------------
+19:31:13 0 D free_frames = 31452; min_free_frames = 28672; qemu_memory_frames = 32768
+2_mm_5_main_frame_allocator::sanity_check---------- [passed]
+
+2_mm_5_main_frame_allocator::basic_frame_allocator_functions
+19:31:13 0 D frames = [Frame(32540 @ 0p7F1C000), Frame(32539 @ 0p7F1B000)]
+19:31:13 0 D reallocate_last_freed_frame = Frame(32540 @ 0p7F1C000)
+2_mm_5_main_frame_allocator::basic_frame_allocator_functions [passed]
+
+2_mm_5_main_frame_allocator::allocated_frames_are_unique----
+19:31:13 0 D free_frames = 31390
+19:31:13 0 D free_frames = 0
+19:31:15.579 0 D free_frames = 31390
+2_mm_5_main_frame_allocator::allocated_frames_are_unique [passed]
+
+2_mm_5_main_frame_allocator::shared_memory------------------
+19:31:15.613 0 D frame = Frame(32479 @ 0p7EDF000)
+19:31:15.617 0 D pages = [Page(34359738111 @ 0v7FFFFFEFF000), Page(34359738112 @ 0v7FFFFFF00000)]
+19:31:15.627 0 D write_ptr = 0x7ffffff00000; read_ptr = 0x7fffffeff000
+19:31:15.633 0 D write_value = 0; read_value = 0
+19:31:15.637 0 D write_value = 1; read_value = 1
+19:31:15.643 0 D write_value = 2; read_value = 2
+2_mm_5_main_frame_allocator::shared_memory--------- [passed]
+
+2_mm_5_main_frame_allocator::duplicate_and_drop_mapping-----
+19:31:15.695 0 I page allocator init; free_page_count = 33822867456; block = [0v18000000000, 0v7F8000000000), size 126.000 TiB
+19:31:15.705 0 I duplicate; address_space = &quot;process&quot; @ 0p7EDF000
+19:31:15.709 0 D ptes = [PageTableEntry(2613347), PageTableEntry(2613347)]
+19:31:15.715 0 D pte_addresses = [Virt(0vFFFFF000005BB008), Virt(0vFFFFF00007EE7008)]
+19:31:15.725 0 I drop; address_space = &quot;process&quot; @ 0p7EDF000
+2_mm_5_main_frame_allocator::duplicate_and_drop_mapping [passed]
+19:31:15.761 0 I exit qemu; exit_code = SUCCESS
+</code></pre>
+<h3 id="Ориентировочный-объём-работ-этой-части-лабораторки"><a class="header" href="#Ориентировочный-объём-работ-этой-части-лабораторки">Ориентировочный объём работ этой части лабораторки</a></h3>
+<pre><code class="language-console"> kernel/src/memory/main_frame_allocator.rs |  116 ++++++++++++++++++++++++++++--
+ 1 file changed, 111 insertions(+), 5 deletions(-)
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="2-mm-6-address-space-3-map.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next" href="2-mm-8-tests.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="2-mm-6-address-space-3-map.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" href="2-mm-8-tests.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </body>
+</html>

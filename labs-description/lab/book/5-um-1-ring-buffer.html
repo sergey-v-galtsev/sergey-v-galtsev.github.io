@@ -1,0 +1,390 @@
+<!DOCTYPE HTML>
+<html lang="ru" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Разделяемая память - Лабораторные работы</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="0-intro-1-nikka.html">Введение в лабораторные работы</a></li><li class="chapter-item expanded affix "><a href="0-intro-2-rust.html">Почему Rust</a></li><li class="chapter-item expanded affix "><a href="0-intro-3-dirs.html">Структура кода</a></li><li class="chapter-item expanded affix "><a href="0-intro-4-install.html">Компиляция и запуск тестов</a></li><li class="chapter-item expanded affix "><a href="0-intro-5-gdb.html">Запуск с отладчиком gdb</a></li><li class="chapter-item expanded affix "><a href="0-intro-6-log.html">Логирование и логи</a></li><li class="chapter-item expanded affix "><a href="0-intro-7-vscode.html">Настройка VSCode</a></li><li class="chapter-item expanded affix "><li class="part-title">Лабораторная работа №1</li><li class="chapter-item expanded "><a href="1-time-0-intro.html"><strong aria-hidden="true">1.</strong> Время</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="1-time-1-rtc.html"><strong aria-hidden="true">1.1.</strong> Часы реального времени</a></li><li class="chapter-item expanded "><a href="1-time-2-tsc.html"><strong aria-hidden="true">1.2.</strong> Счётчик тактов процессора</a></li><li class="chapter-item expanded "><a href="1-time-3-correlation-point.html"><strong aria-hidden="true">1.3.</strong> Счётчики тиков</a></li><li class="chapter-item expanded "><a href="1-time-4-correlation-interval.html"><strong aria-hidden="true">1.4.</strong> Измерение частоты процессора и повышение разрешения часов</a></li><li class="chapter-item expanded "><a href="1-time-5-interrupts.html"><strong aria-hidden="true">1.5.</strong> Обработка прерываний RTC</a></li><li class="chapter-item expanded "><a href="1-time-6-info.html"><strong aria-hidden="true">1.6.</strong> Информация о системе</a></li><li class="chapter-item expanded "><a href="1-time-7-summary.html"><strong aria-hidden="true">1.7.</strong> Собираем всё вместе</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №2</li><li class="chapter-item expanded "><a href="2-mm-0-intro.html"><strong aria-hidden="true">2.</strong> Память</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="2-mm-1-types.html"><strong aria-hidden="true">2.1.</strong> Типы</a></li><li class="chapter-item expanded "><a href="2-mm-2-mapping.html"><strong aria-hidden="true">2.2.</strong> Страничные отображения</a></li><li class="chapter-item expanded "><a href="2-mm-3-diagrams.html"><strong aria-hidden="true">2.3.</strong> Диаграммы преобразований</a></li><li class="chapter-item expanded "><a href="2-mm-4-plan.html"><strong aria-hidden="true">2.4.</strong> План</a></li><li class="chapter-item expanded "><a href="2-mm-5-boot-frame-allocator.html"><strong aria-hidden="true">2.5.</strong> Временный аллокатор фреймов</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space.html"><strong aria-hidden="true">2.6.</strong> Виртуальное адресное пространство</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="2-mm-6-address-space-1-allocation.html"><strong aria-hidden="true">2.6.1.</strong> Аллокатор виртуальных страниц адресного пространства</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space-2-translate.html"><strong aria-hidden="true">2.6.2.</strong> Отображение виртуальных страниц в физические фреймы</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space-3-map.html"><strong aria-hidden="true">2.6.3.</strong> Высокоуровневый интерфейс управления адресным пространством</a></li></ol></li><li class="chapter-item expanded "><a href="2-mm-7-main-frame-allocator.html"><strong aria-hidden="true">2.7.</strong> Основной аллокатор фреймов</a></li><li class="chapter-item expanded "><a href="2-mm-8-tests.html"><strong aria-hidden="true">2.8.</strong> Проверьте себя</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №3</li><li class="chapter-item expanded "><a href="3-user-0-intro.html"><strong aria-hidden="true">3.</strong> Процессы</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="3-user-1-elf.html"><strong aria-hidden="true">3.1.</strong> Загрузка процесса в память</a></li><li class="chapter-item expanded "><a href="3-user-2-permission-checks.html"><strong aria-hidden="true">3.2.</strong> Проверки доступа процесса к памяти</a></li><li class="chapter-item expanded "><a href="3-user-3-user-mode.html"><strong aria-hidden="true">3.3.</strong> Переход в режим пользователя</a></li><li class="chapter-item expanded "><a href="3-user-4-syscall.html"><strong aria-hidden="true">3.4.</strong> Поддержка системных вызовов</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №4</li><li class="chapter-item expanded "><a href="4-concurrency-0-intro.html"><strong aria-hidden="true">4.</strong> Конкурентное выполнение задач</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="4-concurrency-1-smp-0-intro.html"><strong aria-hidden="true">4.1.</strong> Поддержка нескольких процессоров (SMP)</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="4-concurrency-1-smp-1-local-apic.html"><strong aria-hidden="true">4.1.1.</strong> Работа с local APIC</a></li><li class="chapter-item expanded "><a href="4-concurrency-1-smp-2-cpus.html"><strong aria-hidden="true">4.1.2.</strong> Состояние каждого процессора</a></li><li class="chapter-item expanded "><a href="4-concurrency-1-smp-3-ap-init.html"><strong aria-hidden="true">4.1.3.</strong> Загрузка Application Processor</a></li></ol></li><li class="chapter-item expanded "><a href="4-concurrency-2-table.html"><strong aria-hidden="true">4.2.</strong> Таблица процессов</a></li><li class="chapter-item expanded "><a href="4-concurrency-3-preemption.html"><strong aria-hidden="true">4.3.</strong> Вытесняющая многозадачность</a></li><li class="chapter-item expanded "><a href="4-concurrency-4-scheduler.html"><strong aria-hidden="true">4.4.</strong> Планировщик</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №5</li><li class="chapter-item expanded "><a href="5-um-0-intro.html"><strong aria-hidden="true">5.</strong> Продвинутая работа с памятью в пространстве пользователя</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="5-um-1-ring-buffer.html" class="active"><strong aria-hidden="true">5.1.</strong> Разделяемая память</a></li><li class="chapter-item expanded "><a href="5-um-2-memory.html"><strong aria-hidden="true">5.2.</strong> Системные вызовы для работы с виртуальной памятью</a></li><li class="chapter-item expanded "><a href="5-um-3-eager-fork.html"><strong aria-hidden="true">5.3.</strong> Eager fork</a></li><li class="chapter-item expanded "><a href="5-um-4-traps.html"><strong aria-hidden="true">5.4.</strong> Обработка исключений в режиме пользователя</a></li><li class="chapter-item expanded "><a href="5-um-5-cow-fork.html"><strong aria-hidden="true">5.5.</strong> Copy-on-write fork</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Лабораторные работы</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="Разделяемая-память"><a class="header" href="#Разделяемая-память">Разделяемая память</a></h2>
+<p>Для общения между разными процессами и между кодом ядра и кодом режима пользователя внутри одного процесса необходим тот или иной метод
+<a href="https://en.wikipedia.org/wiki/Inter-process_communication">межпроцессного взаимодействия</a>.
+В Nikka используется <a href="https://en.wikipedia.org/wiki/Shared_memory">разделяемая память</a>,
+организованная в виде <a href="https://en.wikipedia.org/wiki/Circular_buffer">циклического буфера</a>.
+Для удобства в нём сделаны две доработки.</p>
+<h3 id="Непрерывный-циклический-буфер"><a class="header" href="#Непрерывный-циклический-буфер">Непрерывный циклический буфер</a></h3>
+<p>Обычный циклический буфер оборачивается вокруг своего конца, но адресовать память нужно линейно.
+Поэтому если блок данных пересекает границу буфера, его нужно адресовать двумя частями — от начала блока данных до конца буфера и от начала буфера до конца блока данных.
+Это неудобно, и некоторые циклические буферы предоставляют метод для сдвига данных внутри буфера, чтобы выровнять содержащиеся данные на границу буфера, например это делает метод
+<a href="https://doc.rust-lang.org/nightly/alloc/collections/vec_deque/struct.VecDeque.html#method.make_contiguous"><code>alloc::collections::vec_deque::VecDeque::make_contiguous()</code></a>.</p>
+<p>Мы поступим <a href="https://fgiesen.wordpress.com/2012/07/21/the-magic-ring-buffer/">другим способом</a>.
+Отобразим в виртуальную память буфер дважды подряд. Тогда, при пересечении границы буфера, циклическое оборачивание адресов делать не будет нужно.
+Точнее, за нас его сделает механизм виртуальной памяти.
+В результате любой отрезок буфера, размера не превышающего ёмкость буфера, и начинающийся по виртуальному адресу внутри первой копии буфера, может быть использован как непрерывный.
+Заплатим мы за это тем, что размер буфера должен быть кратен размеру страницы памяти, а также двойным расходом виртуального адресного пространства.</p>
+<h3 id="Транзакции"><a class="header" href="#Транзакции">Транзакции</a></h3>
+<p>Добавим транзакции к интерфейсу буфера.
+Каждая транзакция будет либо пишущей, либо читающей.</p>
+<p>Пишущие транзакции будут удобны в следующей ситуации.
+Мы будем писать логически атомарный блок данных по кусочкам.
+И, возможно, он не влезет целиком.
+А знать заранее полный размер мы не будем.
+Тогда будет удобно сбросить транзакцию записи.
+Кроме того, если исполнение кода переключится между записывающей и читающей сторонами, читающая сторона не увидит в буфере только часть атомарного блока данных.</p>
+<p>Для читающей стороны транзакции полезны другим.
+Читающая сторона в некоторых случаях может не копировать данные из буфера к себе, а обрабатывать данные прямо в буфере.
+И отметить факт обработанности коммитом читающей транзакции только когда ей больше эти данные не будут нужны.
+Однако тут нужно быть осторожным.
+Если читающая сторона не должна доверять пишущей, как в случае если читает код ядра, а пишет код пользователя, она не должна, например сначала провалидировать структуру данных в буфере, а после спокойно ей пользоваться.
+Потому что пишущая сторона может подменить данные после валидации, но до их использования читающей стороной.
+Ядро может препятствовать такой атаке за счёт того, что не даст процессор коду пользователя во время работы читающей транзакции.
+Другой вариант — скопировать данные из буфера в собственную, не разделяемую, память.
+А валидировать и использовать их уже там.</p>
+<h3 id="Структура-циклического-буфера"><a class="header" href="#Структура-циклического-буфера">Структура циклического буфера</a></h3>
+<p>В файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/ku/src/ring_buffer.rs"><code>ku/src/ring_buffer.rs</code></a> определён <a href="https://en.wikipedia.org/wiki/Circular_buffer">циклический буфер</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub struct RingBuffer {
+    buf: &amp;'static mut RingBufferRaw,
+    head: AtomicUsize,
+    tail: AtomicUsize,
+    stats: [RingBufferStats; 2],
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>ёмкости <code>RingBuffer::REAL_SIZE</code>.
+Его поля:</p>
+<ul>
+<li><code>RingBuffer::buf</code> — ссылка на память с данными, которые хранятся в буфере.</li>
+<li><code>RingBuffer::head</code> — номер первого, содержащегося в буфере байта данных.</li>
+<li><code>RingBuffer::tail</code> — номер следующего за последним, содержащимся в буфере байте данных.</li>
+</ul>
+<p>Поле <code>RingBuffer::stats</code> поддерживает статистики чтения и записи в буфер:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub struct RingBufferStats {
+    commited: AtomicUsize,
+    commits: AtomicUsize,
+    dropped: AtomicUsize,
+    drops: AtomicUsize,
+    errors: AtomicUsize,
+    txs: AtomicUsize,
+}
+<span class="boring">}
+</span></code></pre></pre>
+<ul>
+<li><code>RingBufferStats::txs</code> — количество транзакций чтения либо записи соответственно.</li>
+<li><code>RingBufferStats::commits</code> — количество закоммиченных транзакций соответствующего типа.</li>
+<li><code>RingBufferStats::drops</code> — количество оборванных (dropped, rolled back, aborted) транзакций соответствующего типа.</li>
+<li><code>RingBufferStats::commited</code> — количество байт, прочитанных или записанных в закоммиченных транзакциях.</li>
+<li><code>RingBufferStats::dropped</code> — количество байт, прочитанных или записанных в оборванных транзакциях.</li>
+<li><code>RingBufferStats::errors</code> — количество ошибок в транзакциях.</li>
+</ul>
+<p>Методы <code>RingBuffer</code> создают транзакции:</p>
+<ul>
+<li><code>RingBuffer::read_tx()</code> — читающую;</li>
+<li><code>RingBuffer::write_tx()</code> — пишущую.</li>
+</ul>
+<p>Транзакции устроены так:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub struct RingBufferTx&lt;'a, T: Tag&gt; {
+    ring_buffer: &amp;'a mut RingBuffer,
+    head: usize,
+    tail: usize,
+    bytes: usize,
+    _tag: PhantomData&lt;T&gt;,
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>Они хранят:</p>
+<ul>
+<li>Ссылку <code>RingBufferTx::ring_buffer</code> на исходный <code>RingBuffer</code>.</li>
+<li><code>RingBufferTx::head</code> и <code>RingBufferTx::tail</code> — актуальные в рамках транзакции значения, в момент старта транзакции инициализирующиеся из полей <code>RingBuffer::head</code>.</li>
+<li><code>RingBufferTx::bytes</code> — количество байт, прочитанных или записанных на текущий момент в данной транзакции.</li>
+<li>Тег <code>RingBufferTx::_tag</code>, отличающий пишущие транзакции от читающих.</li>
+</ul>
+<h3 id="Задача-1--читающая-транзакция"><a class="header" href="#Задача-1--читающая-транзакция">Задача 1 — читающая транзакция</a></h3>
+<p>Реализуйте метод</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn RingBufferTx&lt;'_, ReadTag&gt;::read(&amp;mut self) -&gt; &amp;[u8]
+<span class="boring">}
+</span></code></pre></pre>
+<p>который возвращает в виде среза все доступные на момент запуска читающей транзакции байты из буфера, обновляя поля только самой транзакции <code>RingBufferTx</code>.</p>
+<p>И метод</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn RingBufferTx&lt;'_, ReadTag&gt;::commit(&amp;mut self)
+<span class="boring">}
+</span></code></pre></pre>
+<p>который коммитит читающую транзакцию, записывая обновлённое значение
+<code>RingBuffer::head</code> и статистику <code>RingBuffer::read_stats()</code> в поля <code>RingBuffer</code>.</p>
+<h3 id="Задача-2--пишущая-транзакция"><a class="header" href="#Задача-2--пишущая-транзакция">Задача 2 — пишущая транзакция</a></h3>
+<p>Реализуйте метод</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn RingBufferTx&lt;'_, WriteTag&gt;::write(&amp;mut self, data: &amp;[u8]) -&gt; Result&lt;()&gt;
+<span class="boring">}
+</span></code></pre></pre>
+<p>которая копирует в буфер байты среза <code>data</code>, обновляя поля самой транзакции <code>RingBufferTx</code> и статистики <code>RingBuffer::write_stats()</code>, но не трогает поля <code>RingBuffer::head</code> и <code>RingBuffer::tail</code>.
+Если в буфере не остаётся места под <code>data</code> верните ошибку</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub enum Error {
+    Overflow {
+        capacity: usize,
+        len: usize,
+        exceeding_object_len: usize,
+    },
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>С информацией</p>
+<ul>
+<li>Об остававшемся месте в буфере на момент старта транзакции. То есть, полной доступной для транзакции ёмкости, — <code>Error::Overflow::capacity</code>.</li>
+<li>О уже записанном ранее в рамках той же транзакции объёме — <code>Error::Overflow::len</code>.</li>
+<li>О размере объекта, который не влез — <code>Error::Overflow::exceeding_object_len</code>.</li>
+</ul>
+<p>Вам может пригодиться метод
+<a href="https://doc.rust-lang.org/nightly/core/primitive.slice.html#method.copy_from_slice"><code>copy_from_slice()</code></a>
+срезов.</p>
+<p>Реализуйте метод</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn RingBufferTx&lt;'_, WriteTag&gt;::commit(&amp;mut self)
+<span class="boring">}
+</span></code></pre></pre>
+<p>который коммитит пишущую транзакцию, обновляя значение
+<code>RingBuffer::tail</code> и статистику <code>RingBuffer::write_stats()</code> в полях <code>RingBuffer</code>.</p>
+<h3 id="Задача-3--сброс-транзакции"><a class="header" href="#Задача-3--сброс-транзакции">Задача 3 — сброс транзакции</a></h3>
+<p>Реализуйте типаж <a href="https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html"><code>core::ops::Drop</code></a> для транзакций обоих типов — метод</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn RingBufferTx::drop(&amp;mut self)
+<span class="boring">}
+</span></code></pre></pre>
+<p>который обновляет соответствующие статистики <code>RingBufferTx::ring_buffer.stats[T::STATS_INDEX]</code>,
+если в транзакции был прочитан или записан хотя бы один байт.</p>
+<h3 id="Задача-4--отображение-буфера-в-память-процесса"><a class="header" href="#Задача-4--отображение-буфера-в-память-процесса">Задача 4 — отображение буфера в память процесса</a></h3>
+<p>Реализуйте функцию</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn map_log(address_space: &amp;mut AddressSpace) -&gt; Result&lt;RingBuffer&gt;
+<span class="boring">}
+</span></code></pre></pre>
+<p>в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/process/mod.rs"><code>kernel/src/process/mod.rs</code></a>.
+Она должна реализовать двойное отображение памяти буфера в адресное пространство <code>address_space</code> процесса.
+То есть, она должна выделить
+<code>RingBuffer::REAL_SIZE</code> байт в физической памяти и
+<code>RingBuffer::MAPPED_SIZE</code> — в виртуальной.
+И построить отображение выделенных физических фреймов дважды подряд в пространство <code>address_space</code>.</p>
+<h3 id="Проверьте-себя"><a class="header" href="#Проверьте-себя">Проверьте себя</a></h3>
+<p>Теперь должен заработать тест <code>stress()</code> в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/tests/ring_buffer.rs"><code>kernel/src/tests/ring_buffer.rs</code></a>:</p>
+<pre><code class="language-console">kernel::tests::ring_buffer::stress--------------------------
+15:09:02.202 0 D iteration = 0; read_stats = RingBufferStats { commited: 0, commits: 0, dropped: 0, drops: 0, errors: 0, txs: 0 }; write_stats = RingBufferStats { commited: 0, commits: 0, dropped: 0, drops: 0, errors: 0, txs: 0 }
+15:09:03.126 0 D iteration = 1000; read_stats = RingBufferStats { commited: 1191484, commits: 438, dropped: 1306871, drops: 442, errors: 0, txs: 904 }; write_stats = RingBufferStats { commited: 1192706, commits: 567, dropped: 678585, drops: 435, errors: 651, txs: 1398 }
+15:09:04.038 0 D iteration = 2000; read_stats = RingBufferStats { commited: 2357303, commits: 883, dropped: 2401911, drops: 819, errors: 0, txs: 1764 }; write_stats = RingBufferStats { commited: 2359122, commits: 1121, dropped: 1426607, drops: 883, errors: 1263, txs: 2762 }
+15:09:04.919 0 D iteration = 3000; read_stats = RingBufferStats { commited: 3523519, commits: 1344, dropped: 3583669, drops: 1213, errors: 0, txs: 2651 }; write_stats = RingBufferStats { commited: 3527312, commits: 1671, dropped: 2039230, drops: 1254, errors: 1874, txs: 4097 }
+15:09:05.821 0 D iteration = 4000; read_stats = RingBufferStats { commited: 4696968, commits: 1776, dropped: 4824359, drops: 1611, errors: 0, txs: 3515 }; write_stats = RingBufferStats { commited: 4696968, commits: 2237, dropped: 2690684, drops: 1644, errors: 2484, txs: 5453 }
+15:09:06.698 0 D iteration = 5000; read_stats = RingBufferStats { commited: 5859816, commits: 2206, dropped: 5997402, drops: 2001, errors: 0, txs: 4378 }; write_stats = RingBufferStats { commited: 5859816, commits: 2811, dropped: 3301265, drops: 2021, errors: 3097, txs: 6816 }
+15:09:07.619 0 D iteration = 6000; read_stats = RingBufferStats { commited: 7078240, commits: 2657, dropped: 7114728, drops: 2393, errors: 0, txs: 5253 }; write_stats = RingBufferStats { commited: 7078783, commits: 3400, dropped: 4011499, drops: 2424, errors: 3733, txs: 8213 }
+15:09:08.545 0 D iteration = 7000; read_stats = RingBufferStats { commited: 8313431, commits: 3104, dropped: 8435844, drops: 2832, errors: 0, txs: 6173 }; write_stats = RingBufferStats { commited: 8313462, commits: 3982, dropped: 4718830, drops: 2854, errors: 4417, txs: 9661 }
+15:09:09.401 0 D iteration = 8000; read_stats = RingBufferStats { commited: 9457469, commits: 3537, dropped: 9491752, drops: 3199, errors: 0, txs: 7006 }; write_stats = RingBufferStats { commited: 9458642, commits: 4539, dropped: 5338305, drops: 3279, errors: 4991, txs: 10976 }
+15:09:10.307 0 D iteration = 9000; read_stats = RingBufferStats { commited: 10635416, commits: 3972, dropped: 10666640, drops: 3611, errors: 0, txs: 7880 }; write_stats = RingBufferStats { commited: 10639354, commits: 5114, dropped: 6080415, drops: 3732, errors: 5631, txs: 12382 }
+kernel::tests::ring_buffer::stress----------------- [passed]
+</code></pre>
+<h3 id="Ориентировочный-объём-работ-этой-части-лабораторки"><a class="header" href="#Ориентировочный-объём-работ-этой-части-лабораторки">Ориентировочный объём работ этой части лабораторки</a></h3>
+<pre><code class="language-console"> kernel/src/process/mod.rs |   24 ++++++++++++++++++++++-
+ ku/src/ring_buffer.rs     |   47 +++++++++++++++++++++++++++++++++++++++++-----
+ 2 files changed, 65 insertions(+), 6 deletions(-)
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="5-um-0-intro.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next" href="5-um-2-memory.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="5-um-0-intro.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" href="5-um-2-memory.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </body>
+</html>

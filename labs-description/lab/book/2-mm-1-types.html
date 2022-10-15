@@ -1,0 +1,590 @@
+<!DOCTYPE HTML>
+<html lang="ru" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Типы - Лабораторные работы</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="0-intro-1-nikka.html">Введение в лабораторные работы</a></li><li class="chapter-item expanded affix "><a href="0-intro-2-rust.html">Почему Rust</a></li><li class="chapter-item expanded affix "><a href="0-intro-3-dirs.html">Структура кода</a></li><li class="chapter-item expanded affix "><a href="0-intro-4-install.html">Компиляция и запуск тестов</a></li><li class="chapter-item expanded affix "><a href="0-intro-5-gdb.html">Запуск с отладчиком gdb</a></li><li class="chapter-item expanded affix "><a href="0-intro-6-log.html">Логирование и логи</a></li><li class="chapter-item expanded affix "><a href="0-intro-7-vscode.html">Настройка VSCode</a></li><li class="chapter-item expanded affix "><li class="part-title">Лабораторная работа №1</li><li class="chapter-item expanded "><a href="1-time-0-intro.html"><strong aria-hidden="true">1.</strong> Время</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="1-time-1-rtc.html"><strong aria-hidden="true">1.1.</strong> Часы реального времени</a></li><li class="chapter-item expanded "><a href="1-time-2-tsc.html"><strong aria-hidden="true">1.2.</strong> Счётчик тактов процессора</a></li><li class="chapter-item expanded "><a href="1-time-3-correlation-point.html"><strong aria-hidden="true">1.3.</strong> Счётчики тиков</a></li><li class="chapter-item expanded "><a href="1-time-4-correlation-interval.html"><strong aria-hidden="true">1.4.</strong> Измерение частоты процессора и повышение разрешения часов</a></li><li class="chapter-item expanded "><a href="1-time-5-interrupts.html"><strong aria-hidden="true">1.5.</strong> Обработка прерываний RTC</a></li><li class="chapter-item expanded "><a href="1-time-6-info.html"><strong aria-hidden="true">1.6.</strong> Информация о системе</a></li><li class="chapter-item expanded "><a href="1-time-7-summary.html"><strong aria-hidden="true">1.7.</strong> Собираем всё вместе</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №2</li><li class="chapter-item expanded "><a href="2-mm-0-intro.html"><strong aria-hidden="true">2.</strong> Память</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="2-mm-1-types.html" class="active"><strong aria-hidden="true">2.1.</strong> Типы</a></li><li class="chapter-item expanded "><a href="2-mm-2-mapping.html"><strong aria-hidden="true">2.2.</strong> Страничные отображения</a></li><li class="chapter-item expanded "><a href="2-mm-3-diagrams.html"><strong aria-hidden="true">2.3.</strong> Диаграммы преобразований</a></li><li class="chapter-item expanded "><a href="2-mm-4-plan.html"><strong aria-hidden="true">2.4.</strong> План</a></li><li class="chapter-item expanded "><a href="2-mm-5-boot-frame-allocator.html"><strong aria-hidden="true">2.5.</strong> Временный аллокатор фреймов</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space.html"><strong aria-hidden="true">2.6.</strong> Виртуальное адресное пространство</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="2-mm-6-address-space-1-allocation.html"><strong aria-hidden="true">2.6.1.</strong> Аллокатор виртуальных страниц адресного пространства</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space-2-translate.html"><strong aria-hidden="true">2.6.2.</strong> Отображение виртуальных страниц в физические фреймы</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space-3-map.html"><strong aria-hidden="true">2.6.3.</strong> Высокоуровневый интерфейс управления адресным пространством</a></li></ol></li><li class="chapter-item expanded "><a href="2-mm-7-main-frame-allocator.html"><strong aria-hidden="true">2.7.</strong> Основной аллокатор фреймов</a></li><li class="chapter-item expanded "><a href="2-mm-8-tests.html"><strong aria-hidden="true">2.8.</strong> Проверьте себя</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №3</li><li class="chapter-item expanded "><a href="3-user-0-intro.html"><strong aria-hidden="true">3.</strong> Процессы</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="3-user-1-elf.html"><strong aria-hidden="true">3.1.</strong> Загрузка процесса в память</a></li><li class="chapter-item expanded "><a href="3-user-2-permission-checks.html"><strong aria-hidden="true">3.2.</strong> Проверки доступа процесса к памяти</a></li><li class="chapter-item expanded "><a href="3-user-3-user-mode.html"><strong aria-hidden="true">3.3.</strong> Переход в режим пользователя</a></li><li class="chapter-item expanded "><a href="3-user-4-syscall.html"><strong aria-hidden="true">3.4.</strong> Поддержка системных вызовов</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №4</li><li class="chapter-item expanded "><a href="4-concurrency-0-intro.html"><strong aria-hidden="true">4.</strong> Конкурентное выполнение задач</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="4-concurrency-1-smp-0-intro.html"><strong aria-hidden="true">4.1.</strong> Поддержка нескольких процессоров (SMP)</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="4-concurrency-1-smp-1-local-apic.html"><strong aria-hidden="true">4.1.1.</strong> Работа с local APIC</a></li><li class="chapter-item expanded "><a href="4-concurrency-1-smp-2-cpus.html"><strong aria-hidden="true">4.1.2.</strong> Состояние каждого процессора</a></li><li class="chapter-item expanded "><a href="4-concurrency-1-smp-3-ap-init.html"><strong aria-hidden="true">4.1.3.</strong> Загрузка Application Processor</a></li></ol></li><li class="chapter-item expanded "><a href="4-concurrency-2-table.html"><strong aria-hidden="true">4.2.</strong> Таблица процессов</a></li><li class="chapter-item expanded "><a href="4-concurrency-3-preemption.html"><strong aria-hidden="true">4.3.</strong> Вытесняющая многозадачность</a></li><li class="chapter-item expanded "><a href="4-concurrency-4-scheduler.html"><strong aria-hidden="true">4.4.</strong> Планировщик</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №5</li><li class="chapter-item expanded "><a href="5-um-0-intro.html"><strong aria-hidden="true">5.</strong> Продвинутая работа с памятью в пространстве пользователя</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="5-um-1-ring-buffer.html"><strong aria-hidden="true">5.1.</strong> Разделяемая память</a></li><li class="chapter-item expanded "><a href="5-um-2-memory.html"><strong aria-hidden="true">5.2.</strong> Системные вызовы для работы с виртуальной памятью</a></li><li class="chapter-item expanded "><a href="5-um-3-eager-fork.html"><strong aria-hidden="true">5.3.</strong> Eager fork</a></li><li class="chapter-item expanded "><a href="5-um-4-traps.html"><strong aria-hidden="true">5.4.</strong> Обработка исключений в режиме пользователя</a></li><li class="chapter-item expanded "><a href="5-um-5-cow-fork.html"><strong aria-hidden="true">5.5.</strong> Copy-on-write fork</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Лабораторные работы</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="Физические-и-виртуальные-адреса"><a class="header" href="#Физические-и-виртуальные-адреса">Физические и виртуальные адреса</a></h2>
+<p>Ядру приходится работать с двумя разными множествами адресов — физическими и виртуальными.
+Прикладные программы обычно работают только с виртуальными адресами, поэтому необходимость разделять множества физических и виртуальных адресов может быть непривычна.
+Но это один из важных моментов, который придётся держать в голове, выполняя лабораторную работу.
+И желание произвольно преобразовывать между собой указатели и целые числа, содержащие адреса, может привести к большим проблемам.
+Если где-то перепутать физический адрес с виртуальным, или просто тождественно преобразовать битовое представление одного типа адреса в другой, то результатом будет неопределённое поведение.
+Усугубляющееся тем, что оно возникло не в пользовательском коде, а в ядре.
+Оно, например, может привести к перезагрузке компьютера с потерей данных, необходимых для отладки.</p>
+<p>В частности поэтому, запускать ОС мы будем не на физическом железе, а в эмуляторе qemu.
+Так отлаживать будет проще.
+К qemu можно подключить gdb и отлаживать ядро практически как обычный пользовательский код.
+Кроме того, мы выведем логирование в COM-порт, а всё что будем в него писать, средствами qemu перенаправим в файл.
+Так логи не потеряются даже если эмулируемая машина перезагрузится.</p>
+<h2 id="Типы-для-работы-с-памятью-и-базовые-преобразования"><a class="header" href="#Типы-для-работы-с-памятью-и-базовые-преобразования">Типы для работы с памятью и базовые преобразования</a></h2>
+<p>Для того чтобы было проще не перепутать физические и виртуальные адреса, мы не будем для них использовать базовые типы <a href="https://doc.rust-lang.org/nightly/core/primitive.usize.html"><code>usize</code></a>/<a href="https://doc.rust-lang.org/nightly/core/primitive.u64.html"><code>u64</code></a>.
+Вместо этого вводятся два разных высокоуровневых типа, которые сделаны несовместимы:</p>
+<ul>
+<li><a href="../../doc/ku/memory/addr/type.Phys.html"><code>Phys</code></a> для физических адресов;</li>
+<li><a href="../../doc/ku/memory/addr/type.Virt.html"><code>Virt</code></a> для виртуальных.</li>
+</ul>
+<p>Так что если присвоить переменной виртуального адреса значение физического, или наоборот,</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let phys = Phys::new(0x123ABC);
+let virt: Virt;
+virt = phys;
+<span class="boring">}
+</span></code></pre></pre>
+<p>компилятор выдаст ошибку и предотвратит неопределённое поведение:</p>
+<pre><code class="language-console">error[E0308]: mismatched types
+   --&gt; src/memory/addr.rs:353:12
+    |
+353 |     virt = phys;
+    |            ^^^^ expected struct `Addr`, found enum `core::result::Result`
+    |
+    = note: expected struct `Addr&lt;VirtTag&gt;`
+                 found enum `core::result::Result&lt;Addr&lt;PhysTag&gt;, error::Error&gt;`
+</code></pre>
+<p>Типы не совместимы, но родственны, так как оба являются мономорфизациями
+<a href="https://doc.rust-lang.ru/book/ch10-01-syntax.html">обобщённого типа</a>
+<a href="../../doc/ku/memory/addr/struct.Addr.html"><code>Addr</code></a><code>&lt;T: </code><a href="../../doc/ku/memory/addr/trait.Tag.html"><code>Tag</code></a><code>&gt;</code>.
+Это сделано чтобы не дублировать одинаковый код.
+При поиске по документации полезно помнить, что
+<a href="../../doc/ku/memory/addr/type.Phys.html"><code>Phys</code></a> и
+<a href="../../doc/ku/memory/addr/type.Virt.html"><code>Virt</code></a> —
+это мономорфизации <a href="../../doc/ku/memory/addr/struct.Addr.html"><code>Addr</code></a>.
+Потому что общие методы реализованы в обобщённом типе
+<a href="../../doc/ku/memory/addr/struct.Addr.html"><code>Addr</code></a>,
+и в документации показываются только там.
+В документации на
+<a href="../../doc/ku/memory/addr/type.Phys.html"><code>Phys</code></a> и
+<a href="../../doc/ku/memory/addr/type.Virt.html"><code>Virt</code></a>
+будут только методы специфичные для них, общих методов из
+<a href="../../doc/ku/memory/addr/struct.Addr.html"><code>Addr</code></a>
+не будет показываться.</p>
+<p>Таким образом места, где нужно повышенное внимание к типу адреса, а компилятор не в силах помочь, — это места преобразований между базовыми типами
+<a href="https://doc.rust-lang.org/nightly/core/primitive.usize.html"><code>usize</code></a>/<a href="https://doc.rust-lang.org/nightly/core/primitive.u64.html"><code>u64</code></a>
+и высокоуровневыми типами адресов.
+К счастью, таких мест очень мало.
+Записываются эти преобразования как показано в примерах
+<a href="../../doc/ku/memory/addr/type.Phys.html#%D0%9F%D1%80%D0%B5%D0%BE%D0%B1%D1%80%D0%B0%D0%B7%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F-%D0%BC%D0%B5%D0%B6%D0%B4%D1%83-phys-%D0%B8-%D0%B1%D0%B0%D0%B7%D0%BE%D0%B2%D1%8B%D0%BC%D0%B8-%D1%82%D0%B8%D0%BF%D0%B0%D0%BC%D0%B8">для <code>Phys</code></a> и
+<a href="../../doc/ku/memory/addr/type.Virt.html#%D0%9F%D1%80%D0%B5%D0%BE%D0%B1%D1%80%D0%B0%D0%B7%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F-%D0%BC%D0%B5%D0%B6%D0%B4%D1%83-virt-%D0%B8-%D0%B1%D0%B0%D0%B7%D0%BE%D0%B2%D1%8B%D0%BC%D0%B8-%D1%82%D0%B8%D0%BF%D0%B0%D0%BC%D0%B8">для <code>Virt</code></a>.
+Иногда нам также встретится тип для виртуальных адресов библиотеки
+<a href="../../doc/x86_64/index.html">x86_64</a> —
+<a href="../../doc/x86_64/addr/struct.VirtAddr.html"><code>x86_64::VirtAddr</code></a>.
+<a href="../../doc/ku/memory/addr/type.Virt.html"><code>Virt</code></a> может быть преобразован в <a href="../../doc/x86_64/addr/struct.VirtAddr.html"><code>x86_64::VirtAddr</code></a> как <a href="../../doc/ku/memory/addr/type.Virt.html#%D0%9F%D1%80%D0%B5%D0%BE%D0%B1%D1%80%D0%B0%D0%B7%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F-%D0%BC%D0%B5%D0%B6%D0%B4%D1%83-virt-%D0%B8-virtaddr">показано в примерах в документации</a>:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn f(virt_addr: VirtAddr) -&gt; Virt {
+    virt_addr.into()
+}
+
+let virt = Virt::new(0x123ABC)?;
+let virt_addr: VirtAddr = virt.into();
+let virt2: Virt = virt_addr.into();
+assert!(virt == virt2);
+assert!(virt == f(virt.into()));
+<span class="boring">}
+</span></code></pre></pre>
+<p>Rust поддерживает полиморфизм по возвращаемому значению, поэтому можно преобразовывать через
+<a href="../../doc/ku/memory/addr/type.Virt.html#method.into"><code>Virt::into()</code></a>
+в контексте, который требует
+<a href="../../doc/x86_64/addr/struct.VirtAddr.html"><code>x86_64::VirtAddr</code></a>, —
+<code>f(virt.into())</code> и наоборот — <code>virt_addr.into()</code>.
+Это преобразование делается через стандартный типаж
+<a href="https://doc.rust-lang.org/nightly/core/convert/trait.From.html"><code>core::convert::From</code></a>
+в <a href="../../doc/ku/memory/addr/type.Virt.html#method.from"><code>Virt::from()</code></a>,
+именно её зовёт <a href="../../doc/x86_64/addr/struct.VirtAddr.html#method.into"><code>x86_64::VirtAddr::into()</code></a>.</p>
+<h2 id="Некорректные-физические-и-виртуальные-адреса"><a class="header" href="#Некорректные-физические-и-виртуальные-адреса">Некорректные физические и виртуальные адреса</a></h2>
+<p><code>?</code> в <code>Virt::new(0x123ABC)?</code> означает проброс ошибки на уровень выше в стеке вызовов функций.
+Дело в том, что не любое 64-битное число является валидным физическим или виртуальным адресом с точки зрения
+<a href="https://wiki.osdev.org/X86-64">архитектуры x86-64</a>.
+Поэтому <a href="../../doc/ku/memory/addr/struct.Addr.html#method.new"><code>Addr::new()</code></a> возвращает
+<a href="../../doc/ku/error/type.Result.html"><code>Result&lt;Addr&gt;</code></a>, в котором либо лежит адрес, либо ошибка
+<a href="../../doc/ku/error/enum.Error.html#variant.InvalidArgument"><code>Error::InvalidArgument</code></a>.
+Оператор <code>?</code> соответственно либо возвращает адрес, либо пробрасывает ошибку выше.
+Примеры получения ошибки есть в документации
+<a href="../../doc/ku/memory/addr/type.Phys.html#%D0%9D%D0%B5%D0%BA%D0%BA%D0%BE%D1%80%D1%80%D0%B5%D0%BA%D1%82%D0%BD%D1%8B%D0%B5-%D0%B0%D0%B4%D1%80%D0%B5%D1%81%D0%B0">для <code>Phys</code></a> и
+<a href="../../doc/ku/memory/addr/type.Virt.html#%D0%9D%D0%B5%D0%BA%D0%BA%D0%BE%D1%80%D1%80%D0%B5%D0%BA%D1%82%D0%BD%D1%8B%D0%B5-%D0%B0%D0%B4%D1%80%D0%B5%D1%81%D0%B0">для <code>Virt</code></a>.</p>
+<p>Поведение <a href="../../doc/x86_64/addr/struct.VirtAddr.html#method.new"><code>x86_64::VirtAddr::new()</code></a>
+в случае ошибки отличается, —
+<a href="../../doc/x86_64/addr/struct.VirtAddr.html#panics">эта функция паникует</a>.
+Это одна из причин, по которой мы не можем использовать всюду
+<a href="../../doc/x86_64/addr/struct.VirtAddr.html"><code>x86_64::VirtAddr</code></a>,
+и вынуждены определять собственный тип
+<a href="../../doc/ku/memory/addr/type.Virt.html"><code>Virt</code></a>.</p>
+<p>Когда мы дойдём до реализации системных вызовов, нам понадобится в ядре создавать виртуальные адреса из 64-х битных чисел, переданных из пользовательского процесса.
+При этом мы не можем наложить аппаратных ограничений на эти числа, вроде того, чтобы потребовать от них быть валидными адресами.
+То есть, ядро должно программно валидировать все приходящие ему из пользовательских процессов данные.
+Если мы в ядре во время обработки системного вызова без дополнительной валидации вызовем
+<code>x86_64::VirtAddr::new(user_address)</code>, то ядро запаникует,
+как только сбойный или зловредный пользовательский процесс передаст невалидный <code>user_address</code> в этот системный вызов.
+Тогда работа компьютера остановится и пострадают все процессы, а не только виноватый.
+Вместо паники ядро должно вернуть ошибку пользовательскому процессу.
+А для этого нужно эту ошибку прокинуть по всему стеку вызовов от места возникновения до точки входа в системные вызовы в ядре.</p>
+<p>По той же причине ядро имеет право паниковать только при обнаружении некорректной работы самого себя или оборудования.
+А значит, паникующими функциями в ядре пользоваться нужно очень внимательно.</p>
+<p>С другой стороны, функции преобразования указателей и ссылок в
+<a href="../../doc/ku/memory/addr/type.Virt.html"><code>Virt</code></a></p>
+<ul>
+<li><a href="../../doc/ku/memory/addr/type.Virt.html#method.from_ptr"><code>fn Virt::from_ptr&lt;T&gt;(ptr: *const T) -&gt; Virt</code></a> и</li>
+<li><a href="../../doc/ku/memory/addr/type.Virt.html#method.from_ref"><code>fn from_ref&lt;T&gt;(x: &amp;T) -&gt; Virt</code></a></li>
+</ul>
+<p>паникуют на некорректных виртуальных адресах.
+Потому что указатели и ссылки должны быть корректными виртуальными адресами.
+Иначе, есть ошибка в том месте кода ядра, которое сформировало такую невалидную ссылку или указатель.</p>
+<p>А вот функции преобразования
+<a href="../../doc/ku/memory/addr/type.Virt.html"><code>Virt</code></a>
+в константные и изменяемые указатели, ссылки и срезы</p>
+<ul>
+<li><a href="../../doc/ku/memory/addr/type.Virt.html#method.try_into_ptr"><code>fn try_into_ptr&lt;T&gt;(self) -&gt; Result&lt;*const T&gt;</code></a>,</li>
+<li><a href="../../doc/ku/memory/addr/type.Virt.html#method.try_into_mut_ptr"><code>fn try_into_mut_ptr&lt;T&gt;(self) -&gt; Result&lt;*mut T&gt;</code></a>,</li>
+<li><a href="../../doc/ku/memory/addr/type.Virt.html#method.try_into_ref"><code>unsafe fn try_into_ref&lt;T&gt;(self) -&gt; Result&lt;&amp;T&gt;</code></a> и</li>
+<li><a href="../../doc/ku/memory/addr/type.Virt.html#method.try_into_mut"><code>unsafe fn try_into_mut&lt;T&gt;(self) -&gt; Result&lt;&amp;mut T&gt;</code></a> и</li>
+<li><a href="../../doc/ku/memory/addr/type.Virt.html#method.try_into_slice"><code>unsafe fn try_into_slice&lt;T&gt;(self, len: usize) -&gt; Result&lt;&amp;[T]&gt;</code></a></li>
+<li><a href="../../doc/ku/memory/addr/type.Virt.html#method.try_into_mut_slice"><code>unsafe fn try_into_mut_slice&lt;T&gt;(self, len: usize) -&gt; Result&lt;&amp;mut [T]&gt;</code></a></li>
+</ul>
+<p>возвращают
+<a href="../../doc/ku/error/enum.Error.html#variant.InvalidArgument"><code>Error::InvalidArgument</code></a>,
+если исходный
+<a href="../../doc/ku/memory/addr/type.Virt.html"><code>Virt</code></a>
+не удовлетворяет выравниванию запрошенного типа <code>T</code>.
+Методы, возвращающие ссылку, дополнительно возвращают
+<a href="../../doc/ku/error/enum.Error.html#variant.InvalidArgument"><code>Error::InvalidArgument</code></a>,
+если исходный
+<a href="../../doc/ku/memory/addr/type.Virt.html"><code>Virt</code></a>
+равен нулю.
+Кроме того, они помечены
+<a href="https://doc.rust-lang.ru/book/ch19-01-unsafe-rust.html"><code>unsafe</code></a>,
+так как вызывающая сторона должна гарантировать, что по адресу из исходного
+<a href="../../doc/ku/memory/addr/type.Virt.html"><code>Virt</code></a>
+находится корректное значение запрошенного типа.
+Или
+<a href="https://doc.rust-lang.ru/book/ch04-03-slices.html">срез</a>
+корректных значений запрошенного типа, не менее заданного размера, для методов
+<a href="../../doc/ku/memory/addr/type.Virt.html#method.try_into_slice"><code>Virt::try_into_slice()</code></a> и
+<a href="../../doc/ku/memory/addr/type.Virt.html#method.try_into_mut_slice"><code>Virt::try_into_mut_slice()</code></a>.
+Этим список гарантий, которые должна предоставить вызывающая сторона, не исчерпывается.
+Но это всё <a href="https://doc.rust-lang.org/reference/behavior-considered-undefined.html">требования самого Rust</a> на ссылки, например:</p>
+<ul>
+<li>в программе не возникнет нарушения уникальности <code>&amp;mut T</code> ссылок,</li>
+<li>по полученной <a href="https://doc.rust-lang.ru/book/ch03-01-variables-and-mutability.html">изменяемой</a> ссылке не находится неизменяемый объект, и т.д.</li>
+</ul>
+<p>Собственных требований эти функции не накладывают.</p>
+<h2 id="Печать-адресов"><a class="header" href="#Печать-адресов">Печать адресов</a></h2>
+<p>Нам часто захочется печатать адреса.
+Чтобы и тут легко отличать виртуальные адреса от физических, они печатаются по-разному.
+В качестве базового формата взят 16-ричный формат с префиксом <code>0x</code> и заглавными буквами <code>A</code>-<code>F</code>.
+Но для физических адресов префикс <code>0x</code>
+<a href="../../doc/ku/memory/addr/trait.Tag.html#associatedconstant.HEX_PREFIX">заменён</a>
+на <code>0p</code> (<strong>p</strong>hysical), а для виртуальных — на <code>0v</code> (<strong>v</strong>irtual).
+Например, <code>0p123ABC</code> — физический адрес, а <code>0v123ABC</code> — виртуальный.
+К сожалению, легко глобально переопределить формат печати обычных указателей не получается.
+Поэтому, в тех редких случаях, когда печатается стандартный
+<a href="https://doc.rust-lang.org/std/primitive.pointer.html">указатель</a>,
+его формат будет <code>0x123abc</code>.
+Но при включённом пейджинге указатели могут быть только виртуальными, поэтому неоднозначности не возникает.</p>
+<blockquote>
+<p>Заглавные буквы используются чтобы все шестнадцатеричные цифры имели одинаковую высоту.
+Благодаря этому шестнадцатеричные числа лучше выделяются в тексте, особенно англоязычном, и их легче читать.
+<code>Compare 0xdeadbeaf and 0xDEADBEEF for example</code>.
+Отдельный шрифт не всегда применим, например для лога.
+Заметьте, что в современной технической литературе используются шрифты с одинаковой высотой десятичных цифр.
+А вот в художественной литературе попадаются <a href="https://art-nto.ru/800/600/http/legionfonts.com/img-fonts/zanerian-two/og-zanerian-two-font-abc.jpg">шрифты</a>, которые не обладают таким свойством.</p>
+</blockquote>
+<h2 id="Страницы-памяти"><a class="header" href="#Страницы-памяти">Страницы памяти</a></h2>
+<p>Физические страницы обычно называют фреймами.
+Когда говорят про просто страницы, возникает неоднозначность — могут иметься в виду фреймы или страницы виртуальной памяти.
+Постараемся придерживаться слова страница только в отношении виртуальной памяти.
+Физические фреймы памяти также не стоит путать с виртуальными страницами, поэтому для них тоже заведены отдельные несовместимые типы:</p>
+<ul>
+<li><a href="../../doc/ku/memory/frage/type.Frame.html"><code>Frame</code></a> для физических фреймов;</li>
+<li><a href="../../doc/ku/memory/frage/type.Page.html"><code>Page</code></a> для виртуальных страниц.</li>
+</ul>
+<p>Они также являются мономорфизациями одного и того же обобщённого типа
+<a href="../../doc/ku/memory/frage/struct.Frage.html"><code>Frage&lt;T: Tag&gt;</code></a> (<strong>Fra</strong>me or P<strong>age</strong>)<sup class="footnote-reference"><a href="#1">1</a></sup>.
+<a href="../../doc/ku/memory/frage/struct.Frage.html"><code>Frage</code></a> естественным образом связан с
+<a href="../../doc/ku/memory/addr/struct.Addr.html"><code>Addr</code></a> — собственным адресом.
+Для преобразований используются
+<a href="../../doc/ku/memory/frage/struct.Frage.html#method.new"><code>Frage::new(address: Addr) -&gt; Result&lt;Frage&gt;</code></a> и
+<a href="../../doc/ku/memory/frage/struct.Frage.html#method.address"><code>Frage::address(&amp;self) -&gt; Addr</code></a>.</p>
+<p>Кроме того, ещё удобно нумеровать фреймы и страницы, поэтому
+<a href="../../doc/ku/memory/frage/struct.Frage.html"><code>Frage</code></a> поддерживает преобразования из/в свой номер —
+<a href="../../doc/ku/memory/frage/struct.Frage.html#method.from_index"><code>Frage::from_index(index: usize) -&gt; Frage</code></a>,
+<a href="../../doc/ku/memory/frage/struct.Frage.html#method.index"><code>Frage::index(self) -&gt; usize</code></a>.</p>
+<p>Поддерживать будем только 4KiB-ные страницы, вы встретите в коде константу
+<a href="../../doc/ku/memory/frage/struct.Frage.html#associatedconstant.SIZE"><code>Page::SIZE</code></a>.
+Конечно, в таком случае преобразования адреса страницы из/в индекс тривиально, — это просто умножение/деление на
+<code>4096 = 4 *</code><a href="../../doc/ku/memory/size/constant.KiB.html"><code>KiB</code></a>.
+Но стоит пользоваться именно именованными функциями, а не просто арифметической операцией, так как это более явно говорит о намерениях и более понятно читателю кода.</p>
+<p>При поиске по документации полезно помнить, что
+<a href="../../doc/ku/memory/frage/type.Frame.html"><code>Frame</code></a> и
+<a href="../../doc/ku/memory/frage/type.Page.html"><code>Page</code></a> —
+это мономорфизации
+<a href="../../doc/ku/memory/frage/struct.Frage.html"><code>Frage</code></a>.
+Потому что общие методы реализованы в обобщённом типе
+<a href="../../doc/ku/memory/frage/struct.Frage.html"><code>Frage</code></a>,
+и в документации показываются только там.
+В документации на
+<a href="../../doc/ku/memory/frage/type.Frame.html"><code>Frame</code></a> и
+<a href="../../doc/ku/memory/frage/type.Page.html"><code>Page</code></a>
+будут только методы специфичные для них, общих методов из
+<a href="../../doc/ku/memory/frage/struct.Frage.html"><code>Frage</code></a>
+не будет.</p>
+<hr />
+<p><sup class="footnote-reference"><a href="#1">1</a></sup> Объявляется конкурс на более элегантное название.</p>
+<h2 id="Печать-переменных-для-страниц"><a class="header" href="#Печать-переменных-для-страниц">Печать переменных для страниц</a></h2>
+<p>Печать переменных для страниц базируется на индексе и адресе, в формате <code>индекс @ адрес</code> для <a href="../../doc/ku/memory/frage/struct.Frage.html#impl-Display"><code>Display (если нажать на [src] справа, вы увидите реализацию этого в коде)</code></a>.
+При этом адрес выдаётся в ранее упомянутом формате, поэтому из него легко понять распечатана переменная физического фрейма или виртуальной страницы.
+Кроме того, <a href="../../doc/ku/memory/frage/struct.Frage.html#impl-Debug">в формате <code>Debug</code></a>
+всё это снабжается явным указанием типа и получается формат
+<a href="../../doc/ku/memory/addr/trait.Tag.html#associatedconstant.FRAGE_NAME"><code>тип</code></a><code>(индекс @ адрес)</code>.
+Например: <code>Frame(12492 @ 0p30CC000)</code> для <code>Debug</code> и <code>12492 @ 0p30CC000</code> для <code>Display</code>,
+<code>Page(4503599627370148 @ 0vFFFFFFFFFFEA4000)</code> для <code>Debug</code> и <code>4503599627370148 @ 0vFFFFFFFFFFEA4000</code> для <code>Display</code>.</p>
+<h2 id="Блоки-памяти"><a class="header" href="#Блоки-памяти">Блоки памяти</a></h2>
+<p><a href="../../doc/ku/memory/block/struct.Block.html"><code>Block&lt;T&gt;</code></a> — это абстракция куска физической или виртуальной памяти, постраничного или произвольного:</p>
+<ul>
+<li><code>Block&lt;Phys&gt;</code> — произвольный кусок физической памяти;</li>
+<li><code>Block&lt;Virt&gt;</code> — произвольный кусок виртуальной памяти;</li>
+<li><code>Block&lt;Frame&gt;</code> — набор последовательных физических фреймов;</li>
+<li><code>Block&lt;Page&gt;</code> — набор последовательных виртуальных страниц.</li>
+</ul>
+<p><code>Block</code> не владеет описываемой им памятью.</p>
+<p>Реализация <a href="../../doc/ku/memory/block/struct.Block.html"><code>Block</code></a> — это просто пара индексов.
+<a href="../../doc/ku/memory/block/struct.Block.html#structfield.start"><code>Block::start</code></a> — индекс первого элемента в блоке.
+<a href="../../doc/ku/memory/block/struct.Block.html#structfield.end"><code>Block::end</code></a> — индекс следующего за последним элементом блока.
+То есть, как обычно, это полуоткрытый интервал элементов.
+Основные его методы:</p>
+<ul>
+<li><a href="../../doc/ku/memory/block/struct.Block.html#method.new"><code>fn Block::new(start: T, end: T) -&gt; Result&lt;Self&gt;</code></a> — создаёт блок для полуоткрытого интервала <code>[start, end)</code> базового типа <code>T</code>, который может быть <code>Phys</code>, <code>Virt</code>, <code>Frame</code> или <code>Page</code>.</li>
+<li><a href="../../doc/ku/memory/block/struct.Block.html#method.from_index"><code>fn Block::from_index(start: usize, end: usize) -&gt; Result&lt;Self&gt;</code></a> — создаёт блок для полуоткрытого интервала <code>[start, end)</code> базового типа <code>T</code>, который задаётся своими индексами — номерами байт для <code>Phys</code> и <code>Virt</code>, номерами фреймов для <code>Frame</code> и номерами страниц для <code>Page</code>.</li>
+<li><a href="../../doc/ku/memory/block/struct.Block.html#method.from_index_u64"><code>fn Block::from_index_u64(start: u64, end: u64) -&gt; Result&lt;Self&gt;</code></a> — аналогичен <a href="../../doc/ku/memory/block/struct.Block.html#method.from_index"><code>Block::from_index()</code></a>, но индексы имеют тип <a href="https://doc.rust-lang.org/nightly/core/primitive.u64.html"><code>u64</code></a> вместо <a href="https://doc.rust-lang.org/nightly/core/primitive.usize.html"><code>usize</code></a>.</li>
+<li><a href="../../doc/ku/memory/block/struct.Block.html#method.count"><code>fn Block::count() -&gt; usize</code></a> — количество элементов в блоке, равно <code>Block::end() - Block::start()</code>.</li>
+<li><a href="../../doc/ku/memory/block/struct.Block.html#method.size"><code>fn Block::size() -&gt; usize</code></a> — размер блока в байтах, равно количеству элементов в блоке, умноженному на размер элемента.</li>
+<li><a href="../../doc/ku/memory/block/struct.Block.html#method.start_address"><code>fn Block::start_address() -&gt; Addr</code></a> — адрес первого элемента блока.</li>
+<li><a href="../../doc/ku/memory/block/struct.Block.html#method.end_address"><code>fn Block::end_address() -&gt; Result&lt;Addr&gt;</code></a> — адрес следующего за последним элементом блока. Может не существовать из-за переполнения, поэтому с ним нужно обращаться осторожно.</li>
+<li><a href="../../doc/ku/memory/block/struct.Block.html#method.contains"><code>fn Block::contains(element: T) -&gt; bool</code></a> — возвращает <code>true</code>, если блок содержит заданный элемент.</li>
+<li><a href="../../doc/ku/memory/block/struct.Block.html#method.contains"><code>fn Block::contains_address(addr: Addr) -&gt; bool</code></a> — возвращает <code>true</code>, если блок содержит заданный адрес.</li>
+<li><a href="../../doc/ku/memory/block/struct.Block.html#method.contains"><code>fn Block::tail(count: usize) -&gt; Option&lt;Self&gt;</code></a> — откусывает от блока хвост с заданным количеством элементов, и возвращает его в виде нового блока. Старое значение исходного блока таким образом разбивается на дизъюнктное объединение нового значение исходного блока и возвращаемого значения. Если исходный блок содержит менее <code>count</code> единиц базового типа <code>T</code>, метод не меняет исходный блок и возвращает <code>None</code>.</li>
+</ul>
+<p>По <code>Block::&lt;Frame&gt;</code> или <code>Block::&lt;Page&gt;</code> <a href="../../doc/ku/memory/block/struct.Block.html#impl-IntoIterator">можно проитерироваться</a>, вызвав <a href="../../doc/ku/memory/block/struct.Block.html#method.into_iter"><code>Block::&lt;Frage&gt;::into_iter()</code></a>.
+Полученный итератор будет последовательно выдавать очередной <code>Frame</code> или <code>Page</code>.</p>
+<p><code>Block::&lt;Virt&gt;</code> может быть создан из
+указателя, ссылки или
+<a href="https://doc.rust-lang.ru/book/ch04-03-slices.html">среза</a>:</p>
+<ul>
+<li><a href="../../doc/ku/memory/block/struct.Block.html#method.from_ptr"><code>fn Block::&lt;Virt&gt;::from_ptr&lt;T&gt;(x: *const T) -&gt; Block&lt;Virt&gt;</code></a>,</li>
+<li><a href="../../doc/ku/memory/block/struct.Block.html#method.from_ptr"><code>fn Block::&lt;Virt&gt;::from_ref&lt;T&gt;(x: &amp;T) -&gt; Block&lt;Virt&gt;</code></a>,</li>
+<li><a href="../../doc/ku/memory/block/struct.Block.html#method.from_slice"><code>fn Block::&lt;Virt&gt;::from_slice&lt;T&gt;(x: &amp;[T]) -&gt; Block&lt;Virt&gt;</code></a></li>
+</ul>
+<p><code>Block::&lt;Virt&gt;</code> и <code>Block::&lt;Page&gt;</code> могут быть превращены в константные и изменяемые указатели, ссылки и слайсы:</p>
+<ul>
+<li><a href="../../doc/ku/memory/block/struct.Block.html#method.try_into_ptr"><code>fn Block::try_into_ptr&lt;Q&gt;() -&gt; Result&lt;*const Q&gt;</code></a></li>
+<li><a href="../../doc/ku/memory/block/struct.Block.html#method.try_into_mut_ptr"><code>fn Block::try_into_mut_ptr&lt;Q&gt;() -&gt; Result&lt;*mut Q&gt;</code></a></li>
+<li><a href="../../doc/ku/memory/block/struct.Block.html#method.try_into_ref"><code>unsafe fn Block::try_into_ref&lt;Q&gt;() -&gt; Result&lt;&amp;Q&gt;</code></a></li>
+<li><a href="../../doc/ku/memory/block/struct.Block.html#method.try_into_mut"><code>unsafe fn Block::try_into_mut&lt;Q&gt;() -&gt; Result&lt;&amp;Q&gt;</code></a></li>
+<li><a href="../../doc/ku/memory/block/struct.Block.html#method.try_into_slice"><code>unsafe fn Block::try_into_slice&lt;Q&gt;() -&gt; Result&lt;&amp;[Q]&gt;</code></a></li>
+<li><a href="../../doc/ku/memory/block/struct.Block.html#method.try_into_mut_slice"><code>unsafe fn Block::try_into_mut_slice&lt;Q&gt;() -&gt; Result&lt;&amp;mut [Q]&gt;</code></a></li>
+</ul>
+<p>Эти методы аналогичны соответствующим методам <code>Virt</code>.
+Использовать <code>Block</code> для подобных целей предпочтительнее, чем <code>Virt</code>,
+так как <code>Block</code> знает свой размер в памяти и делает дополнительные проверки на него.
+И, по той же причине, не требует указания количества элементов при преобразованиях в срезы.</p>
+<p>У <code>Block::&lt;Addr&gt;</code> есть ещё метод</p>
+<ul>
+<li><a href="../../doc/ku/memory/block/struct.Block.html#method.enclosing"><code>fn Block::&lt;Addr&gt;::enclosing() -&gt; Block&lt;Frage&gt;</code></a>, который для заданного блока виртуальных или физических адресов возвращает минимальный содержащий его блок виртуальных страниц или физических фреймов соответственно.</li>
+</ul>
+<h2 id="Две-половины-виртуального-адресного-пространства"><a class="header" href="#Две-половины-виртуального-адресного-пространства">Две половины виртуального адресного пространства</a></h2>
+<p>У виртуальных адресов в <a href="https://en.wikipedia.org/wiki/X86-64">архитектуре x86-64</a>
+есть особенность.
+Множество их допустимых значений разбивается на
+<a href="https://en.wikipedia.org/wiki/X86-64#Virtual_address_space_details">две половины</a>.
+В данный момент реально используются 48–битные виртуальные адреса и получаются такие диапазоны:</p>
+<ul>
+<li>“нижняя половина” от <code>0v0000_0000_0000_0000</code> до <code>0v0000_7FFF_FFFF_FFFF</code> включительно и</li>
+<li>“верхняя половина” от <code>0vFFFF_8000_0000_0000</code> до <code>0vFFFF_FFFF_FFFF_FFFF</code> включительно.</li>
+</ul>
+<p>То есть, виртуальные адреса скорее ведут себя как 48–битные <strong>знаковые</strong> числа.
+Но, в обычных языках таких типов нет, и в целом удобнее пользоваться для адресов беззнаковыми числами.
+К тому же для физических адресов ничего подобного нет, у них единый диапазон.</p>
+<p>Поэтому при работе с виртуальными адресами нужно проявлять осторожность.
+Следующий за виртуальным адресом <code>0v0000_7FFF_FFFF_FFFF</code> — это
+не <code>0v0000_8000_0000_0000</code>, а <code>0vFFFF_8000_0000_0000</code>.
+А адрес <code>0v0000_8000_0000_0000</code> не валиден и приведёт к исключению процессора.
+А расстояние между этими последовательными адресами не 1, как между другими последовательными адресами.
+Или по-другому, размер объекта, который начался в “нижней половине”, а закончился в “верхней половине”
+не соответствует разности между битовыми представлениями его
+конца — следующего адреса за последним, принадлежащим объекту, — и его начала.</p>
+<p>Кроме того, чтобы не рисковать получить какую-нибудь ошибку из-за переполнения,
+пересекать границу между <code>0vFFFF_FFFF_FFFF_FFFF</code> и <code>0v0000_0000_0000_0000</code> тоже не стоит.</p>
+<p>То есть, чтобы работать без риска ошибок, стоит ввести ограничение:</p>
+<ul>
+<li>Любой объект в виртуальном адресном пространстве должен целиком содержаться либо в “нижней половине”, либо в “верхней половине”. И не должен пересекать границы между ними — ни границу <code>0v0000_7FFF_FFFF_FFFF/0vFFFF_8000_0000_0000</code>, ни границу <code>0vFFFF_FFFF_FFFF_FFFF/0v0000_0000_0000_0000</code>.</li>
+</ul>
+<p><code>Block&lt;Virt&gt;</code> и <code>Block&lt;Page&gt;</code> учитывают это ограничение и возвращают ошибку
+<a href="../../doc/ku/error/enum.Error.html#variant.InvalidArgument"><code>Error::InvalidArgument</code></a>,
+если попытаться создать блок с началом и концом в разных половинах виртуального адресного пространства.</p>
+<h2 id="usize-versus-u64"><a class="header" href="#usize-versus-u64">usize versus u64</a></h2>
+<p>Для низкоуровневого хранения величин, вроде адресов, номеров и т.д. можно было бы использовать любой из этих римитивных типов:</p>
+<ul>
+<li><a href="https://doc.rust-lang.org/nightly/core/primitive.u64.html"><code>u64</code></a> — целочисленный тип с фиксированным количеством бит, подходящий для регистров <a href="https://wiki.osdev.org/X86-64">x86-64</a> и часто использующийся при взаимодействии с железом в этой архитектуре.</li>
+<li><a href="https://doc.rust-lang.org/nightly/core/primitive.usize.html"><code>usize</code></a> — языковая абстракция регистра в текущей архитектуре, размера объекта в памяти и, фактически, указателя. (Если закрыть глаза на <a href="https://en.wikipedia.org/wiki/Far_pointer">far pointer</a>, с которыми мы почти не столкнёмся. И который в любом случае не 64–битный.)</li>
+</ul>
+<p>Тип <a href="https://doc.rust-lang.org/nightly/core/primitive.u64.html"><code>u64</code></a> хорош своей фиксированностью.
+Если нужно, чтобы код работал со структурами данных фиксированного размера конкретной фиксированной платформы,
+такими как таблицы страниц, GDT, и т.п., этот тип хорошо подходит.
+Особенно, если хочется компилироваться, в том числе, не под целевую платформу, но при этом работать с её структурами.
+Подобная задача, например, возникает при эмуляции целевой платформы под платформой с другой архитектурой.
+Поэтому <a href="https://doc.rust-lang.org/nightly/core/primitive.u64.html"><code>u64</code></a> — выбор библиотек
+<a href="../../doc/x86/index.html">x86</a> и <a href="../../doc/x86_64/index.html">x86_64</a>,
+которые реализуют работу с конкретной аппаратной платформой.</p>
+<p>Однако аналогично другим языкам высокого уровня, в Rust в случаях,
+когда нужно указать размер объекта в памяти, индекс в срезе и тому подобного,
+для переносимости кода между архитектурами используется тип
+<a href="https://doc.rust-lang.org/nightly/core/primitive.usize.html"><code>usize</code></a>.
+Так как он привязан не к какой-то конкретной платформе, а к текущей.
+Поэтому, если в коде нужно работать с
+<a href="https://doc.rust-lang.org/nightly/core/primitive.u64.html"><code>u64</code></a>,
+то в нём часто будут выполняться преобразования между
+<a href="https://doc.rust-lang.org/nightly/core/primitive.u64.html"><code>u64</code></a> и
+<a href="https://doc.rust-lang.org/nightly/core/primitive.usize.html"><code>usize</code></a>.
+В языках вроде C или C++, которые спокойно относятся к преобразованиям между целыми даже разного размера и
+даже к преобразованиям, теряющим часть бит информации,
+это не отобразилось бы на исходном коде.
+Только привело бы к трудноуловимым ошибкам, когда потеря информации при преобразовании не является умышленной.
+Rust строже относится к работе с типами, и в нём преобразования между разными целыми типами нужно делать явно.</p>
+<p>Nikka не является эмулятором и запускается на той же платформе, для которой строит предопределённые железом структуры данных.
+Поэтому она может выбрать как
+<a href="https://doc.rust-lang.org/nightly/core/primitive.u64.html"><code>u64</code></a>, так и
+<a href="https://doc.rust-lang.org/nightly/core/primitive.usize.html"><code>usize</code></a>.
+Для удобства работы, чтобы явных преобразований между
+<a href="https://doc.rust-lang.org/nightly/core/primitive.u64.html"><code>u64</code></a> и
+<a href="https://doc.rust-lang.org/nightly/core/primitive.usize.html"><code>usize</code></a>
+делать как можно меньше,
+в Nikka выбор сделан в пользу использования
+<a href="https://doc.rust-lang.org/nightly/core/primitive.usize.html"><code>usize</code></a>.
+В том числе в случаях, в которых в <a href="https://wiki.osdev.org/X86-64">архитектуре x86-64</a>
+требуется 64-битная величина.</p>
+<p>К сожалению, полностью от преобразований между
+<a href="https://doc.rust-lang.org/nightly/core/primitive.u64.html"><code>u64</code></a> и
+<a href="https://doc.rust-lang.org/nightly/core/primitive.usize.html"><code>usize</code></a>
+уйти не получается.
+Например, они иногда возникают в тех местах, где используются библиотеки
+<a href="../../doc/x86/index.html">x86</a> и <a href="../../doc/x86_64/index.html">x86_64</a>.
+Писать <code>value as type</code> в таких случаях некомфортно, так как в общем случае <code>as</code> может терять информацию.
+Например, <code>12345u16 as u8</code> молча теряет информацию, поэтому лучше</p>
+<ul>
+<li>либо написать <code>u8::try_from(x)</code> и обработать ошибку,</li>
+<li>либо явно срезать лишние биты — <code>u8::try_from(x &amp; 0xFF).expect(&quot;...&quot;)</code>.</li>
+</ul>
+<p>А <code>as</code> оставить для преобразований, где без него не обойтись, например между ссылками и указателями, указателями и
+<a href="https://doc.rust-lang.org/nightly/core/primitive.usize.html"><code>usize</code></a> и т.п.
+В коде, пестрящем <code>as</code>, глаз замыливается и становится ещё труднее увидеть ошибку,
+вызванную потерей информации в одном из <code>as</code>.</p>
+<p>Для самых частых преобразований, собственно, между
+<a href="https://doc.rust-lang.org/nightly/core/primitive.u64.html"><code>u64</code></a> и
+<a href="https://doc.rust-lang.org/nightly/core/primitive.usize.html"><code>usize</code></a>,
+есть вспомогательные функции:</p>
+<ul>
+<li><a href="../../doc/ku/memory/size/fn.into_usize.html"><code>ku::memory::size::into_usize(x: u64)</code></a></li>
+<li><a href="../../doc/ku/memory/size/fn.into_u64.html"><code>ku::memory::size::into_u64(x: usize)</code></a></li>
+</ul>
+<p>Во время компиляции они на всякий случай проверяют, что входной и целевой тип имеют одинаковый размер.
+Поэтому гарантируют, что потери информации при преобразованиях не будет.</p>
+<p>Для удобства, высокоуровневые типы, для которых это может пригодиться, предоставляют конструкторы из
+<a href="https://doc.rust-lang.org/nightly/core/primitive.u64.html"><code>u64</code></a>,
+в дополнение к основным конструкторам из
+<a href="https://doc.rust-lang.org/nightly/core/primitive.usize.html"><code>usize</code></a>.
+Например:</p>
+<ul>
+<li><a href="../../doc/ku/memory/addr/struct.Addr.html#method.new_u64"><code>Virt::new_u64(addr: u64)</code></a> и</li>
+<li><a href="../../doc/ku/memory/block/struct.Block.html#method.from_index_u64"><code>Block::from_index_u64(start: u64, end: 64)</code></a>.</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="2-mm-0-intro.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next" href="2-mm-2-mapping.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="2-mm-0-intro.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" href="2-mm-2-mapping.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </body>
+</html>

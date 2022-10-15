@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":[["GiB",""],["KiB",""],["MiB",""],["TiB",""]],"fn":[["into_u64",""],["into_usize",""],["try_into_u32",""]],"struct":[["Size",""]],"trait":[["SizeOf",""]]};

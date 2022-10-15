@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":[["load_cs","Reload code segment register."],["rdfsbase","Read FS Segment Base"],["rdgsbase","Read GS Segment Base"],["swapgs","Swap the GS register."],["wrfsbase","Write FS Segment Base"],["wrgsbase","Write GS Segment Base"]],"struct":[["Descriptor64","Entry for IDT, GDT or LDT."]]};

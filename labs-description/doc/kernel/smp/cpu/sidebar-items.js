@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":[["KERNEL_RSP_OFFSET_IN_CPU",""]],"fn":[["init",""],["init_cpu_vec","Выделяет память для структур [`Cpu`] и для содержащихся в них стеках."]],"struct":[["Cpu","CPU-local storage. Aligned on the cache line size to avoid false sharing. Why align on 128 bytes instead of 64?"]]};

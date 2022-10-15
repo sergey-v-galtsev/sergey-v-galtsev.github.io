@@ -1,0 +1,366 @@
+<!DOCTYPE HTML>
+<html lang="ru" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Загрузка процесса в память - Лабораторные работы</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="0-intro-1-nikka.html">Введение в лабораторные работы</a></li><li class="chapter-item expanded affix "><a href="0-intro-2-rust.html">Почему Rust</a></li><li class="chapter-item expanded affix "><a href="0-intro-3-dirs.html">Структура кода</a></li><li class="chapter-item expanded affix "><a href="0-intro-4-install.html">Компиляция и запуск тестов</a></li><li class="chapter-item expanded affix "><a href="0-intro-5-gdb.html">Запуск с отладчиком gdb</a></li><li class="chapter-item expanded affix "><a href="0-intro-6-log.html">Логирование и логи</a></li><li class="chapter-item expanded affix "><a href="0-intro-7-vscode.html">Настройка VSCode</a></li><li class="chapter-item expanded affix "><li class="part-title">Лабораторная работа №1</li><li class="chapter-item expanded "><a href="1-time-0-intro.html"><strong aria-hidden="true">1.</strong> Время</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="1-time-1-rtc.html"><strong aria-hidden="true">1.1.</strong> Часы реального времени</a></li><li class="chapter-item expanded "><a href="1-time-2-tsc.html"><strong aria-hidden="true">1.2.</strong> Счётчик тактов процессора</a></li><li class="chapter-item expanded "><a href="1-time-3-correlation-point.html"><strong aria-hidden="true">1.3.</strong> Счётчики тиков</a></li><li class="chapter-item expanded "><a href="1-time-4-correlation-interval.html"><strong aria-hidden="true">1.4.</strong> Измерение частоты процессора и повышение разрешения часов</a></li><li class="chapter-item expanded "><a href="1-time-5-interrupts.html"><strong aria-hidden="true">1.5.</strong> Обработка прерываний RTC</a></li><li class="chapter-item expanded "><a href="1-time-6-info.html"><strong aria-hidden="true">1.6.</strong> Информация о системе</a></li><li class="chapter-item expanded "><a href="1-time-7-summary.html"><strong aria-hidden="true">1.7.</strong> Собираем всё вместе</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №2</li><li class="chapter-item expanded "><a href="2-mm-0-intro.html"><strong aria-hidden="true">2.</strong> Память</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="2-mm-1-types.html"><strong aria-hidden="true">2.1.</strong> Типы</a></li><li class="chapter-item expanded "><a href="2-mm-2-mapping.html"><strong aria-hidden="true">2.2.</strong> Страничные отображения</a></li><li class="chapter-item expanded "><a href="2-mm-3-diagrams.html"><strong aria-hidden="true">2.3.</strong> Диаграммы преобразований</a></li><li class="chapter-item expanded "><a href="2-mm-4-plan.html"><strong aria-hidden="true">2.4.</strong> План</a></li><li class="chapter-item expanded "><a href="2-mm-5-boot-frame-allocator.html"><strong aria-hidden="true">2.5.</strong> Временный аллокатор фреймов</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space.html"><strong aria-hidden="true">2.6.</strong> Виртуальное адресное пространство</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="2-mm-6-address-space-1-allocation.html"><strong aria-hidden="true">2.6.1.</strong> Аллокатор виртуальных страниц адресного пространства</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space-2-translate.html"><strong aria-hidden="true">2.6.2.</strong> Отображение виртуальных страниц в физические фреймы</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space-3-map.html"><strong aria-hidden="true">2.6.3.</strong> Высокоуровневый интерфейс управления адресным пространством</a></li></ol></li><li class="chapter-item expanded "><a href="2-mm-7-main-frame-allocator.html"><strong aria-hidden="true">2.7.</strong> Основной аллокатор фреймов</a></li><li class="chapter-item expanded "><a href="2-mm-8-tests.html"><strong aria-hidden="true">2.8.</strong> Проверьте себя</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №3</li><li class="chapter-item expanded "><a href="3-user-0-intro.html"><strong aria-hidden="true">3.</strong> Процессы</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="3-user-1-elf.html" class="active"><strong aria-hidden="true">3.1.</strong> Загрузка процесса в память</a></li><li class="chapter-item expanded "><a href="3-user-2-permission-checks.html"><strong aria-hidden="true">3.2.</strong> Проверки доступа процесса к памяти</a></li><li class="chapter-item expanded "><a href="3-user-3-user-mode.html"><strong aria-hidden="true">3.3.</strong> Переход в режим пользователя</a></li><li class="chapter-item expanded "><a href="3-user-4-syscall.html"><strong aria-hidden="true">3.4.</strong> Поддержка системных вызовов</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №4</li><li class="chapter-item expanded "><a href="4-concurrency-0-intro.html"><strong aria-hidden="true">4.</strong> Конкурентное выполнение задач</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="4-concurrency-1-smp-0-intro.html"><strong aria-hidden="true">4.1.</strong> Поддержка нескольких процессоров (SMP)</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="4-concurrency-1-smp-1-local-apic.html"><strong aria-hidden="true">4.1.1.</strong> Работа с local APIC</a></li><li class="chapter-item expanded "><a href="4-concurrency-1-smp-2-cpus.html"><strong aria-hidden="true">4.1.2.</strong> Состояние каждого процессора</a></li><li class="chapter-item expanded "><a href="4-concurrency-1-smp-3-ap-init.html"><strong aria-hidden="true">4.1.3.</strong> Загрузка Application Processor</a></li></ol></li><li class="chapter-item expanded "><a href="4-concurrency-2-table.html"><strong aria-hidden="true">4.2.</strong> Таблица процессов</a></li><li class="chapter-item expanded "><a href="4-concurrency-3-preemption.html"><strong aria-hidden="true">4.3.</strong> Вытесняющая многозадачность</a></li><li class="chapter-item expanded "><a href="4-concurrency-4-scheduler.html"><strong aria-hidden="true">4.4.</strong> Планировщик</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №5</li><li class="chapter-item expanded "><a href="5-um-0-intro.html"><strong aria-hidden="true">5.</strong> Продвинутая работа с памятью в пространстве пользователя</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="5-um-1-ring-buffer.html"><strong aria-hidden="true">5.1.</strong> Разделяемая память</a></li><li class="chapter-item expanded "><a href="5-um-2-memory.html"><strong aria-hidden="true">5.2.</strong> Системные вызовы для работы с виртуальной памятью</a></li><li class="chapter-item expanded "><a href="5-um-3-eager-fork.html"><strong aria-hidden="true">5.3.</strong> Eager fork</a></li><li class="chapter-item expanded "><a href="5-um-4-traps.html"><strong aria-hidden="true">5.4.</strong> Обработка исключений в режиме пользователя</a></li><li class="chapter-item expanded "><a href="5-um-5-cow-fork.html"><strong aria-hidden="true">5.5.</strong> Copy-on-write fork</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Лабораторные работы</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="Загрузка-процесса-в-память"><a class="header" href="#Загрузка-процесса-в-память">Загрузка процесса в память</a></h2>
+<p>В Nikka ещё нет файловой системы.
+Код пользовательских программ линкуется прямо в бинарник ядра макросом <a href="https://doc.rust-lang.org/core/macro.include_bytes.html"><code>core::include_bytes!()</code></a>:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>const LOOP_ELF: &amp;[u8] = include_bytes!(&quot;../../../user/loop/target/kernel/debug/loop&quot;);
+process::create(LOOP_ELF);
+<span class="boring">}
+</span></code></pre></pre>
+<p>Первой нашей задачей будет распарсить
+<a href="https://en.wikipedia.org/wiki/Executable_and_Linkable_Format">ELF–файл</a>
+с помощью библиотеки
+<a href="../../doc/xmas_elf/index.html"><code>xmas_elf</code></a> и построить его образ в памяти.
+Нам достаточно <a href="https://wiki.osdev.org/ELF#Loading_ELF_Binaries">простейшей реализации</a>,
+которая поддерживает только статические ELF–файлы,
+без <a href="https://wiki.osdev.org/ELF#Relocation">релокаций</a>, обработки
+<a href="https://en.wikipedia.org/wiki/Executable_and_Linkable_Format#Section_header">секций</a> и символов.
+Она содержится в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/process/elf.rs"><code>kernel/src/process/elf.rs</code></a>.
+Основной является <a href="../../doc/kernel/process/elf/fn.load.html">функция</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn kernel::process::elf::load(
+    address_space: &amp;mut AddressSpace,
+    file: &amp;[u8],
+) -&gt; Result&lt;Virt&gt;
+<span class="boring">}
+</span></code></pre></pre>
+<p>Она принимает на вход</p>
+<ul>
+<li>Адресное пространство <code>address_space</code> процесса, куда нужно загрузить его образ. Для упрощения реализации функции<a href="../../doc/kernel/process/elf/fn.load.html"><code>load()</code></a>, вызывающая её функция гарантирует, что <code>address_space</code> является текущим адресным пространством.</li>
+<li>Срез <code>file</code> с записанным в памяти ELF–файлом процесса.</li>
+</ul>
+<p>Из <code>file</code> она создаёт объект <a href="../../doc/xmas_elf/struct.ElfFile.html"><code>xmas_elf::ElfFile</code></a>,
+проходится по его
+<a href="https://en.wikipedia.org/wiki/Executable_and_Linkable_Format#Program_header">сегментам</a> итератором
+<a href="../../doc/xmas_elf/struct.ElfFile.html#method.program_iter"><code>ElfFile::program_iter()</code></a>
+и загружает в память те из них, у которых тип
+<a href="../../doc/xmas_elf/program/enum.ProgramHeader.html#method.get_type"><code>ProgramHeader::get_type()</code></a>
+является загружаемым —
+<a href="../../doc/xmas_elf/program/enum.Type.html#variant.Load"><code>Type::Load</code></a>.
+После загрузки она возвращает точку входа в загруженную программу
+<a href="../../doc/xmas_elf/header/enum.HeaderPt2.html#method.entry_point"><code>HeaderPt2::entry_point()</code></a>.
+в виде виртуального адреса
+<a href="../../doc/ku/memory/addr/type.Virt.html"><code>Virt</code></a>.</p>
+<p>Для загрузки сегмента файла она пользуется вспомогательной <a href="../../doc/kernel/process/elf/fn.load_program_header.html">функцией</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn kernel::process::elf::load_program_header(
+    address_space: &amp;mut AddressSpace,
+    program_header: &amp;ProgramHeader,
+    file: &amp;[u8],
+    mapped_end: &amp;mut Virt,
+) -&gt; Result&lt;()&gt;
+<span class="boring">}
+</span></code></pre></pre>
+<p>Функция <a href="../../doc/kernel/process/elf/fn.load_program_header.html"><code>load_program_header()</code></a>
+загружает в память заданный <code>program_header</code>, поддерживая <code>mapped_end</code> —
+адрес до которого (не включительно) память для загружаемого процесса уже аллоцирована.</p>
+<p>Отслеживать конец аллоцированной части памяти <code>mapped_end</code> нужно,
+так как аллоцировать и отображать память можно только постранично,
+а сегменты ELF–файла могут быть невыровнены по границе страницы.
+И несколько сегментов могут задевать одну и ту же страницу.
+При загрузке первого из них
+<a href="../../doc/kernel/process/elf/fn.load_program_header.html"><code>load_program_header()</code></a>
+отобразит эту страницу в память и обновит <code>mapped_end</code>.
+А при загрузке последующих по значению <code>mapped_end</code> она поймёт, что отображать страницу в память уже не нужно
+и достаточно только записать в неё очередную порцию из данных из ELF–файла.</p>
+<p>Таким образом,
+<a href="../../doc/kernel/process/elf/fn.load_program_header.html"><code>load_program_header()</code></a>
+делает две вещи:</p>
+<ul>
+<li>Расширяет отображённое в память пространство процесса.</li>
+<li>Копирует содержимое очередного сегмента <code>program_header</code> записанного в срезе <code>file</code> по смещению <a href="../../doc/xmas_elf/program/enum.ProgramHeader.html#method.offset"><code>ProgramHeader::offset()</code></a> в память по адресу <a href="../../doc/xmas_elf/program/enum.ProgramHeader.html#method.virtual_addr"><code>ProgramHeader::virtual_addr()</code></a>.</li>
+</ul>
+<p>Обратите внимание на то, что размер сегмента в файле
+<a href="../../doc/xmas_elf/program/enum.ProgramHeader.html#method.file_size"><code>ProgramHeader::file_size()</code></a>
+может быть меньше чем его размер в памяти
+<a href="../../doc/xmas_elf/program/enum.ProgramHeader.html#method.mem_size"><code>ProgramHeader::mem_size()</code></a>.
+Тогда дополнительные байты памяти нужно занулить.
+Этого требует формат ELF — там может, например, располагаться секция
+<a href="https://en.wikipedia.org/wiki/.bss"><code>.bss</code></a>,
+предназначенная для неинициализированных или инициализированных нулями статических данных.
+Также обратите внимание, что отображать в память образ процесса нужно с флагом
+<a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.USER_ACCESSIBLE"><code>PageTableFlags::USER_ACCESSIBLE</code></a>,
+иначе он просто не заработает в пространстве пользователя,
+вызвав исключение доступа к памяти — Page Fault.</p>
+<p>Для расширения отображения,
+<a href="../../doc/kernel/process/elf/fn.load_program_header.html"><code>load_program_header()</code></a>
+прибегает к помощи вспомогательной
+<a href="../../doc/kernel/process/elf/fn.extend_mapping.html">функции</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn kernel::process::elf::extend_mapping(
+    address_space: &amp;mut AddressSpace,
+    memory_block: &amp;Block&lt;Virt&gt;,
+    flags: Flags,
+    mapped_end: &amp;mut Virt,
+) -&gt; Result&lt;()&gt;
+<span class="boring">}
+</span></code></pre></pre>
+<p>Кроме уже знакомых нам аргументов, функция
+<a href="../../doc/kernel/process/elf/fn.extend_mapping.html"><code>extend_mapping()</code></a>
+принимает</p>
+<ul>
+<li>Описатель блока виртуальной памяти <code>memory_block</code> для очередного сегмента ELF–файла.</li>
+<li>Флаги <code>flags</code> этого сегмента — <a href="../../doc/xmas_elf/program/enum.ProgramHeader.html#method.flags"><code>ProgramHeader::flags()</code></a>.</li>
+</ul>
+<p>Для вычисления <code>memory_block</code> используется вспомогательная <a href="../../doc/kernel/process/elf/fn.memory_block.html">функция</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn kernel::process::elf::memory_block(
+    program_header: &amp;ProgramHeader,
+) -&gt; Result&lt;Block&lt;Virt&gt;&gt;
+<span class="boring">}
+</span></code></pre></pre>
+<h3 id="Задача-1--загрузка-elfфайла"><a class="header" href="#Задача-1--загрузка-elfфайла">Задача 1 — загрузка ELF–файла</a></h3>
+<p>Реализуйте указанные функции.
+Вам могут пригодиться:</p>
+<ul>
+<li>Метод <a href="../../doc/ku/memory/block/struct.Block.html#method.enclosing"><code>fn Block::&lt;Virt&gt;::enclosing() -&gt; Block&lt;Page&gt;</code></a>, который для заданного блока виртуальных адресов возвращает минимальный содержащий его блок страниц виртуальной памяти.</li>
+<li><a href="../../doc/ku/memory/block/struct.Block.html#method.try_into_mut_slice"><code>Block::&lt;Virt&gt;::try_into_mut_slice()</code></a>.</li>
+<li>Метод <a href="https://doc.rust-lang.org/nightly/core/primitive.slice.html#method.fill"><code>fill()</code></a> <a href="https://doc.rust-lang.ru/book/ch04-03-slices.html">срезов</a>.</li>
+<li><a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.map_err"><code>Result::map_err()</code></a> для преобразования одного типа ошибки в другой.</li>
+<li><a href="../../doc/ku/memory/addr/struct.Addr.html#method.new_u64"><code>Virt::new_u64()</code></a>.</li>
+<li><a href="../../doc/ku/memory/size/fn.into_usize.html"><code>ku::memory::size::into_usize()</code></a>.</li>
+</ul>
+<h3 id="Дополнительные-материалы-про-elfфайлы"><a class="header" href="#Дополнительные-материалы-про-elfфайлы">Дополнительные материалы про ELF–файлы</a></h3>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Executable_and_Linkable_Format">Executable and Linkable Format</a></li>
+<li><a href="https://wiki.osdev.org/ELF">ELF</a></li>
+<li><a href="https://www.uclibc.org/docs/elf-64-gen.pdf">ELF-64 Object File Format</a></li>
+</ul>
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/e/e4/ELF_Executable_and_Linkable_Format_diagram_by_Ange_Albertini.png" alt="" /></p>
+<h3 id="Проверьте-себя"><a class="header" href="#Проверьте-себя">Проверьте себя</a></h3>
+<p>Должны заработать тесты <code>create_process()</code> и <code>create_process_failure()</code> в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/tests/process.rs"><code>kernel/src/tests/process.rs</code></a>:</p>
+<pre><code class="language-console">kernel::tests::process::create_process----------------------
+14:11:20 0 I page allocator init; free_page_count = 33688649728; block = [2.000 TiB, 127.500 TiB), size 125.500 TiB
+14:11:20 0 I duplicate; address_space = &quot;process&quot; @ 0p30B0000
+14:11:20 0 I switch to; address_space = &quot;process&quot; @ 0p30B0000
+14:11:20 0 D extend mapping; block = [0x10000000, 0x10004e86), size 19.631 KiB; page_block = [0x10000, 0x10005), size 20.000 KiB; flags =   R; page_flags = PRESENT | WRITABLE | USER_ACCESSIBLE
+14:11:20 0 D elf loadable program header; file_block = [0x20290e, 0x207794), size 19.631 KiB; memory_block = [0x10000000, 0x10004e86), size 19.631 KiB; flags =   R
+14:11:20 0 D extend mapping; block = [0x10005000, 0x1002dde6), size 163.475 KiB; page_block = [0x10005, 0x1002e), size 164.000 KiB; flags = X R; page_flags = PRESENT | WRITABLE | USER_ACCESSIBLE
+14:11:20 0 D elf loadable program header; file_block = [0x20779e, 0x2306f4), size 163.834 KiB; memory_block = [0x10004e90, 0x1002dde6), size 163.834 KiB; flags = X R
+14:11:20 0 D elf loadable program header; file_block = [0x2306f6, 0x2307e6), size 240 B; memory_block = [0x1002dde8, 0x1002ded8), size 240 B; flags =  WR
+14:11:20 0 D extend mapping; block = [0x1002e000, 0x10030970), size 10.359 KiB; page_block = [0x1002e, 0x10031), size 12.000 KiB; flags =  WR; page_flags = PRESENT | WRITABLE | USER_ACCESSIBLE
+14:11:20 0 D elf loadable program header; file_block = [0x2307e6, 0x233256), size 10.609 KiB; memory_block = [0x1002ded8, 0x10030970), size 10.648 KiB; flags =  WR
+14:11:20 0 I switch to; address_space = &quot;base&quot; @ 0p1000
+14:11:20 0 I loaded ELF file; context = { rip: 0v10004F40, rsp: 0v7F7FFFFFF000 }; file_size = 408.516 KiB; process = { pid: &lt;current&gt;, address_space: &quot;process&quot; @ 0p30B0000, { rip: 0v10004F40, rsp: 0v7F7FFFFFF000 } }
+14:11:20 0 I switch to; address_space = &quot;0:0&quot; @ 0p30B0000
+14:11:20 0 I allocate; slot = Process { pid: 0:0, address_space: &quot;0:0&quot; @ 0p30B0000, { rip: 0v10004F40, rsp: 0v7F7FFFFFF000 } }; process_count = 1
+14:11:20 0 I user process page table entry; entry_point = 0v10004F40; frame = Frame(12487 @ 0p30C7000); flags = PRESENT | WRITABLE | USER_ACCESSIBLE | ACCESSED | DIRTY
+14:11:20 0 D process_frames = 90
+14:11:20 0 I free; slot = Process { pid: 0:0, address_space: &quot;0:0&quot; @ 0p30B0000, { rip: 0v10004F40, rsp: 0v7F7FFFFFF000 } }; process_count = 0
+14:11:20 0 I drop; address_space = &quot;0:0&quot; @ 0p30B0000
+kernel::tests::process::create_process------------- [passed]
+
+kernel::tests::process::create_process_failure--------------
+14:11:20 0 I page allocator init; free_page_count = 33688649728; block = [2.000 TiB, 127.500 TiB), size 125.500 TiB
+14:11:20 0 I duplicate; address_space = &quot;process&quot; @ 0p30B0000
+14:11:20 0 I switch to; address_space = &quot;process&quot; @ 0p30B0000
+14:11:20 0 I switch to; address_space = &quot;base&quot; @ 0p1000
+14:11:20 0 I drop the current address space; address_space = &quot;process&quot; @ 0p30B0000; switch_to = &quot;base&quot; @ 0p1000
+14:11:20 0 I expected a process creation failure; error = Elf(&quot;File is shorter than the first ELF header part&quot;)
+kernel::tests::process::create_process_failure----- [passed]
+</code></pre>
+<h3 id="Ориентировочный-объём-работ-этой-части-лабораторки"><a class="header" href="#Ориентировочный-объём-работ-этой-части-лабораторки">Ориентировочный объём работ этой части лабораторки</a></h3>
+<pre><code class="language-console"> kernel/src/process/elf.rs |   71 +++++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 67 insertions(+), 4 deletions(-)
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="3-user-0-intro.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next" href="3-user-2-permission-checks.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="3-user-0-intro.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" href="3-user-2-permission-checks.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </body>
+</html>

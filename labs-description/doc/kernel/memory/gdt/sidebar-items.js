@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":[["BASIC_COUNT",""],["MAX_CPUS",""]],"fn":[["init",""]],"struct":[["GDT",""],["RealModePseudoDescriptor",""],["SmpGdt",""],["TssEntry",""]],"type":[["Gdt",""],["SmallGdt",""]]};

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":[["Error",""]],"struct":[["ReadTag",""],["RingBuffer","Continuous Ring Buffer"],["RingBufferMemory",""],["RingBufferStats",""],["RingBufferTx",""],["WriteTag",""]],"trait":[["Tag",""]],"type":[["Result",""],["RingBufferRaw",""],["RingBufferReadTx",""],["RingBufferWriteTx",""]]};

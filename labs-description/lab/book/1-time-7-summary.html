@@ -1,0 +1,315 @@
+<!DOCTYPE HTML>
+<html lang="ru" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Собираем всё вместе - Лабораторные работы</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="0-intro-1-nikka.html">Введение в лабораторные работы</a></li><li class="chapter-item expanded affix "><a href="0-intro-2-rust.html">Почему Rust</a></li><li class="chapter-item expanded affix "><a href="0-intro-3-dirs.html">Структура кода</a></li><li class="chapter-item expanded affix "><a href="0-intro-4-install.html">Компиляция и запуск тестов</a></li><li class="chapter-item expanded affix "><a href="0-intro-5-gdb.html">Запуск с отладчиком gdb</a></li><li class="chapter-item expanded affix "><a href="0-intro-6-log.html">Логирование и логи</a></li><li class="chapter-item expanded affix "><a href="0-intro-7-vscode.html">Настройка VSCode</a></li><li class="chapter-item expanded affix "><li class="part-title">Лабораторная работа №1</li><li class="chapter-item expanded "><a href="1-time-0-intro.html"><strong aria-hidden="true">1.</strong> Время</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="1-time-1-rtc.html"><strong aria-hidden="true">1.1.</strong> Часы реального времени</a></li><li class="chapter-item expanded "><a href="1-time-2-tsc.html"><strong aria-hidden="true">1.2.</strong> Счётчик тактов процессора</a></li><li class="chapter-item expanded "><a href="1-time-3-correlation-point.html"><strong aria-hidden="true">1.3.</strong> Счётчики тиков</a></li><li class="chapter-item expanded "><a href="1-time-4-correlation-interval.html"><strong aria-hidden="true">1.4.</strong> Измерение частоты процессора и повышение разрешения часов</a></li><li class="chapter-item expanded "><a href="1-time-5-interrupts.html"><strong aria-hidden="true">1.5.</strong> Обработка прерываний RTC</a></li><li class="chapter-item expanded "><a href="1-time-6-info.html"><strong aria-hidden="true">1.6.</strong> Информация о системе</a></li><li class="chapter-item expanded "><a href="1-time-7-summary.html" class="active"><strong aria-hidden="true">1.7.</strong> Собираем всё вместе</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №2</li><li class="chapter-item expanded "><a href="2-mm-0-intro.html"><strong aria-hidden="true">2.</strong> Память</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="2-mm-1-types.html"><strong aria-hidden="true">2.1.</strong> Типы</a></li><li class="chapter-item expanded "><a href="2-mm-2-mapping.html"><strong aria-hidden="true">2.2.</strong> Страничные отображения</a></li><li class="chapter-item expanded "><a href="2-mm-3-diagrams.html"><strong aria-hidden="true">2.3.</strong> Диаграммы преобразований</a></li><li class="chapter-item expanded "><a href="2-mm-4-plan.html"><strong aria-hidden="true">2.4.</strong> План</a></li><li class="chapter-item expanded "><a href="2-mm-5-boot-frame-allocator.html"><strong aria-hidden="true">2.5.</strong> Временный аллокатор фреймов</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space.html"><strong aria-hidden="true">2.6.</strong> Виртуальное адресное пространство</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="2-mm-6-address-space-1-allocation.html"><strong aria-hidden="true">2.6.1.</strong> Аллокатор виртуальных страниц адресного пространства</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space-2-translate.html"><strong aria-hidden="true">2.6.2.</strong> Отображение виртуальных страниц в физические фреймы</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space-3-map.html"><strong aria-hidden="true">2.6.3.</strong> Высокоуровневый интерфейс управления адресным пространством</a></li></ol></li><li class="chapter-item expanded "><a href="2-mm-7-main-frame-allocator.html"><strong aria-hidden="true">2.7.</strong> Основной аллокатор фреймов</a></li><li class="chapter-item expanded "><a href="2-mm-8-tests.html"><strong aria-hidden="true">2.8.</strong> Проверьте себя</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №3</li><li class="chapter-item expanded "><a href="3-user-0-intro.html"><strong aria-hidden="true">3.</strong> Процессы</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="3-user-1-elf.html"><strong aria-hidden="true">3.1.</strong> Загрузка процесса в память</a></li><li class="chapter-item expanded "><a href="3-user-2-permission-checks.html"><strong aria-hidden="true">3.2.</strong> Проверки доступа процесса к памяти</a></li><li class="chapter-item expanded "><a href="3-user-3-user-mode.html"><strong aria-hidden="true">3.3.</strong> Переход в режим пользователя</a></li><li class="chapter-item expanded "><a href="3-user-4-syscall.html"><strong aria-hidden="true">3.4.</strong> Поддержка системных вызовов</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №4</li><li class="chapter-item expanded "><a href="4-concurrency-0-intro.html"><strong aria-hidden="true">4.</strong> Конкурентное выполнение задач</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="4-concurrency-1-smp-0-intro.html"><strong aria-hidden="true">4.1.</strong> Поддержка нескольких процессоров (SMP)</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="4-concurrency-1-smp-1-local-apic.html"><strong aria-hidden="true">4.1.1.</strong> Работа с local APIC</a></li><li class="chapter-item expanded "><a href="4-concurrency-1-smp-2-cpus.html"><strong aria-hidden="true">4.1.2.</strong> Состояние каждого процессора</a></li><li class="chapter-item expanded "><a href="4-concurrency-1-smp-3-ap-init.html"><strong aria-hidden="true">4.1.3.</strong> Загрузка Application Processor</a></li></ol></li><li class="chapter-item expanded "><a href="4-concurrency-2-table.html"><strong aria-hidden="true">4.2.</strong> Таблица процессов</a></li><li class="chapter-item expanded "><a href="4-concurrency-3-preemption.html"><strong aria-hidden="true">4.3.</strong> Вытесняющая многозадачность</a></li><li class="chapter-item expanded "><a href="4-concurrency-4-scheduler.html"><strong aria-hidden="true">4.4.</strong> Планировщик</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №5</li><li class="chapter-item expanded "><a href="5-um-0-intro.html"><strong aria-hidden="true">5.</strong> Продвинутая работа с памятью в пространстве пользователя</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="5-um-1-ring-buffer.html"><strong aria-hidden="true">5.1.</strong> Разделяемая память</a></li><li class="chapter-item expanded "><a href="5-um-2-memory.html"><strong aria-hidden="true">5.2.</strong> Системные вызовы для работы с виртуальной памятью</a></li><li class="chapter-item expanded "><a href="5-um-3-eager-fork.html"><strong aria-hidden="true">5.3.</strong> Eager fork</a></li><li class="chapter-item expanded "><a href="5-um-4-traps.html"><strong aria-hidden="true">5.4.</strong> Обработка исключений в режиме пользователя</a></li><li class="chapter-item expanded "><a href="5-um-5-cow-fork.html"><strong aria-hidden="true">5.5.</strong> Copy-on-write fork</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Лабораторные работы</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="Собирая-всё-вместе"><a class="header" href="#Собирая-всё-вместе">Собирая всё вместе</a></h2>
+<p>В файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/main.rs"><code>kernel/src/main.rs</code></a> определена функция <code>kernel_main()</code>.
+Вы можете использовать её по своему усмотрению, например проверяя какую-нибудь функциональность.</p>
+<p>Например:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn kernel_main(boot_info: &amp;'static BootInfo) -&gt; ! {
+    kernel::init_subsystems(boot_info, Subsystems::empty());
+
+    while INTERRUPT_STATS[RTC].count() &lt; 10 {
+        if let Some(frequency) = Pit::tsc_per_second() {
+            debug!(%frequency, &quot;CPU frequency measured by PIT&quot;);
+        }
+
+        if let Some(frequency) = Rtc::tsc_per_second() {
+            debug!(%frequency, &quot;CPU frequency measured by RTC&quot;);
+        }
+
+        debug!(time_precision = %time::timer().lap());
+
+        for (number, stats) in INTERRUPT_STATS.iter().enumerate() {
+            let count = stats.count();
+            if count != 0 {
+                let mnemonic = stats.mnemonic();
+                debug!(number, %mnemonic, count, &quot;interrupt stats&quot;);
+            }
+        }
+
+        x86_64::instructions::hlt();
+    }
+
+    kernel::exit_qemu(ExitCode::SUCCESS);
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>Сначала выполняется инициализация системы функцией
+<a href="../../doc/kernel/fn.init.html"><code>kernel::init()</code></a>
+из файла <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/lib.rs"><code>kernel/src/lib.rs</code></a>.
+А затем мы в цикле выводим в лог статистику счётчиков прерываний и
+вычисленную с помощью RTC и PIT частоту процессора.
+Инструкция
+<a href="https://www.felixcloutier.com/x86/htl"><code>HLT</code></a>,
+которую мы используем через функцию
+<a href="../../doc/x86_64/instructions/fn.hlt.html"><code>x86_64::instructions::hlt()</code></a>,
+выключает процессор до прихода следующего прерывания.
+Реализация PIT устроена также, как и изученная вами реализация RTC.
+Только он настроен тикать 20 раз в секунду и не привязан к реальному времени.</p>
+<p>Запускаем:</p>
+<pre><code class="language-console">$ make run
+</code></pre>
+<p>или</p>
+<pre><code class="language-console">$ (cd kernel; cargo run)
+</code></pre>
+<p>В файле <code>kernel/serial.out</code> появляется лог, время должно соответствовать команде <code>date -u</code>:</p>
+<pre><code class="language-console">14:58:18 0 I RTC init; acknowledged_settings = USE_24_HOUR_FORMAT | USE_BINARY_FORMAT | UPDATE_ENDED_INTERRUPT
+14:58:18 0 I time init
+14:58:18 0 I Nikka booted; now = 2022-09-17 14:58:18 UTC; tsc = Tsc(5139186658)
+14:58:18 0 I GDT init
+14:58:18 0 I interrupts init
+</code></pre>
+<p>Видно, что RTC инициализировался, и выдаёт разумное время — <code>now = 2022-09-17 14:58:18 UTC</code>.
+А время в логе пока имеет разрешение в секунду.
+Дальше запускается наш цикл сбора статистик прерываний.
+На первой итерации их ещё нет и он печатает только одну строку:</p>
+<pre><code class="language-console">14:58:18 0 D time_precision = 61.005 ktsc
+</code></pre>
+<p>Так как мы пока не откалибровали частоту процессора, в ней точность времени указана в тысячах его тиков — <code>ktsc</code>.
+Потом тикает PIT:</p>
+<pre><code class="language-console">14:58:18 0 D CPU frequency measured by PIT; frequency = 3.434 GHz
+14:58:18 0 D time_precision = 2.572 ktsc
+14:58:18 0 D interrupt stats; number = 32; mnemonic = #TI; count = 1
+</code></pre>
+<p>Он сразу готов оценить частоту процессора, так как при инициализации в его
+<a href="../../doc/ku/time/correlation_interval/struct.CorrelationInterval.html#structfield.base"><code>CorrelationInterval::base</code></a>
+записывается валидное значение с
+<a href="../../doc/ku/time/correlation_point/struct.CorrelationPoint.html#structfield.count"><code>CorrelationPoint::count</code></a>
+равным нулю.
+Ждём дальше.
+PIT тикает уже 9 раз, и в первый раз тикает RTC.
+Текущее время в логе увеличивается на 1 секунду:</p>
+<pre><code class="language-console">14:58:19 0 D time_precision = 2.871 ktsc
+14:58:19 0 D interrupt stats; number = 32; mnemonic = #TI; count = 9
+14:58:19 0 D interrupt stats; number = 40; mnemonic = #RT; count = 1
+14:58:19 0 D CPU frequency measured by PIT; frequency = 3.773 GHz
+</code></pre>
+<p>RTC тикает во второй раз, и на основе его показаний уже можно оценить частоту процессора.
+Также увеличивается разрешение системного времени в лог–записях:</p>
+<pre><code>14:58:20.001 0 D CPU frequency measured by PIT; frequency = 3.557 GHz
+14:58:20.005 0 D CPU frequency measured by RTC; frequency = 3.424 GHz
+14:58:20.009 0 D time_precision = 881.745 ns
+14:58:20.016 0 D interrupt stats; number = 32; mnemonic = #TI; count = 28
+14:58:20.020 0 D interrupt stats; number = 40; mnemonic = #RT; count = 2
+</code></pre>
+<p>А вычисление интервалов времени начинает опираться на секунды — <code>time_precision = 881.745 ns</code>.
+То есть, между последовательными обращениями к <code>RDTSC</code> проходит около 881 наносекунд.
+Такая низкая точность объясняется дебажной сборкой.</p>
+<p>Если же собрать релизную, то получим более разумную цифру:</p>
+<pre><code class="language-console">$ (cd kernel; cargo run --release)
+...
+15:08:31.792 0 D time_precision = 93.029 ns
+</code></pre>
+<p>Правда, она всё ещё далека от идеала.
+Это связано с запуском под эмулятором.
+Если запустить Nikka на железе, то получаем прерно 30–80 тактов, или около 10-20 наносекунд:
+<img src="1-time-7-time-precision.png" alt="" /></p>
+<blockquote>
+<h3 id="Больше-информации-про-время-в-компьютерных-системах"><a class="header" href="#Больше-информации-про-время-в-компьютерных-системах">Больше информации про время в компьютерных системах</a></h3>
+<p>Если вас заинтересовала тема отслеживания времени в компьютерных системах,
+вы можете посмотреть небольшой отрывок с <a href="https://lk.yandexdataschool.ru/courses/2021-autumn/7.946-raspredelennye-sistemy/classes/7879/">семинара из курса распределённых систем</a>.
+В <a href="https://disk.yandex.ru/i/MwH4kiQ_p4XCsA">видеозаписи</a> он начинается с 44:44.
+Там, в частности рассказано:</p>
+<ul>
+<li>Что такое високосные секунды.</li>
+<li>Оказывается, есть несколько стандартов текущего времени. И некоторые из них зависят, например, от приливов.</li>
+<li>Как устроено отслеживание точного времени на Земле.</li>
+<li>Про несколько серьёзных компьютерных сбоев, связанных с неаккуратной работой со временем в программах. Например, про <a href="https://blog.cloudflare.com/how-and-why-the-leap-second-affected-cloudflare-dns/">сбой в Cloudflare</a> из-за использования немонотонных часов при измерении интервала времени.</li>
+</ul>
+</blockquote>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="1-time-6-info.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next" href="2-mm-0-intro.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="1-time-6-info.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" href="2-mm-0-intro.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </body>
+</html>

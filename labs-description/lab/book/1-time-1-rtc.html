@@ -1,0 +1,731 @@
+<!DOCTYPE HTML>
+<html lang="ru" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Часы реального времени - Лабораторные работы</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="0-intro-1-nikka.html">Введение в лабораторные работы</a></li><li class="chapter-item expanded affix "><a href="0-intro-2-rust.html">Почему Rust</a></li><li class="chapter-item expanded affix "><a href="0-intro-3-dirs.html">Структура кода</a></li><li class="chapter-item expanded affix "><a href="0-intro-4-install.html">Компиляция и запуск тестов</a></li><li class="chapter-item expanded affix "><a href="0-intro-5-gdb.html">Запуск с отладчиком gdb</a></li><li class="chapter-item expanded affix "><a href="0-intro-6-log.html">Логирование и логи</a></li><li class="chapter-item expanded affix "><a href="0-intro-7-vscode.html">Настройка VSCode</a></li><li class="chapter-item expanded affix "><li class="part-title">Лабораторная работа №1</li><li class="chapter-item expanded "><a href="1-time-0-intro.html"><strong aria-hidden="true">1.</strong> Время</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="1-time-1-rtc.html" class="active"><strong aria-hidden="true">1.1.</strong> Часы реального времени</a></li><li class="chapter-item expanded "><a href="1-time-2-tsc.html"><strong aria-hidden="true">1.2.</strong> Счётчик тактов процессора</a></li><li class="chapter-item expanded "><a href="1-time-3-correlation-point.html"><strong aria-hidden="true">1.3.</strong> Счётчики тиков</a></li><li class="chapter-item expanded "><a href="1-time-4-correlation-interval.html"><strong aria-hidden="true">1.4.</strong> Измерение частоты процессора и повышение разрешения часов</a></li><li class="chapter-item expanded "><a href="1-time-5-interrupts.html"><strong aria-hidden="true">1.5.</strong> Обработка прерываний RTC</a></li><li class="chapter-item expanded "><a href="1-time-6-info.html"><strong aria-hidden="true">1.6.</strong> Информация о системе</a></li><li class="chapter-item expanded "><a href="1-time-7-summary.html"><strong aria-hidden="true">1.7.</strong> Собираем всё вместе</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №2</li><li class="chapter-item expanded "><a href="2-mm-0-intro.html"><strong aria-hidden="true">2.</strong> Память</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="2-mm-1-types.html"><strong aria-hidden="true">2.1.</strong> Типы</a></li><li class="chapter-item expanded "><a href="2-mm-2-mapping.html"><strong aria-hidden="true">2.2.</strong> Страничные отображения</a></li><li class="chapter-item expanded "><a href="2-mm-3-diagrams.html"><strong aria-hidden="true">2.3.</strong> Диаграммы преобразований</a></li><li class="chapter-item expanded "><a href="2-mm-4-plan.html"><strong aria-hidden="true">2.4.</strong> План</a></li><li class="chapter-item expanded "><a href="2-mm-5-boot-frame-allocator.html"><strong aria-hidden="true">2.5.</strong> Временный аллокатор фреймов</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space.html"><strong aria-hidden="true">2.6.</strong> Виртуальное адресное пространство</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="2-mm-6-address-space-1-allocation.html"><strong aria-hidden="true">2.6.1.</strong> Аллокатор виртуальных страниц адресного пространства</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space-2-translate.html"><strong aria-hidden="true">2.6.2.</strong> Отображение виртуальных страниц в физические фреймы</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space-3-map.html"><strong aria-hidden="true">2.6.3.</strong> Высокоуровневый интерфейс управления адресным пространством</a></li></ol></li><li class="chapter-item expanded "><a href="2-mm-7-main-frame-allocator.html"><strong aria-hidden="true">2.7.</strong> Основной аллокатор фреймов</a></li><li class="chapter-item expanded "><a href="2-mm-8-tests.html"><strong aria-hidden="true">2.8.</strong> Проверьте себя</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №3</li><li class="chapter-item expanded "><a href="3-user-0-intro.html"><strong aria-hidden="true">3.</strong> Процессы</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="3-user-1-elf.html"><strong aria-hidden="true">3.1.</strong> Загрузка процесса в память</a></li><li class="chapter-item expanded "><a href="3-user-2-permission-checks.html"><strong aria-hidden="true">3.2.</strong> Проверки доступа процесса к памяти</a></li><li class="chapter-item expanded "><a href="3-user-3-user-mode.html"><strong aria-hidden="true">3.3.</strong> Переход в режим пользователя</a></li><li class="chapter-item expanded "><a href="3-user-4-syscall.html"><strong aria-hidden="true">3.4.</strong> Поддержка системных вызовов</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №4</li><li class="chapter-item expanded "><a href="4-concurrency-0-intro.html"><strong aria-hidden="true">4.</strong> Конкурентное выполнение задач</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="4-concurrency-1-smp-0-intro.html"><strong aria-hidden="true">4.1.</strong> Поддержка нескольких процессоров (SMP)</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="4-concurrency-1-smp-1-local-apic.html"><strong aria-hidden="true">4.1.1.</strong> Работа с local APIC</a></li><li class="chapter-item expanded "><a href="4-concurrency-1-smp-2-cpus.html"><strong aria-hidden="true">4.1.2.</strong> Состояние каждого процессора</a></li><li class="chapter-item expanded "><a href="4-concurrency-1-smp-3-ap-init.html"><strong aria-hidden="true">4.1.3.</strong> Загрузка Application Processor</a></li></ol></li><li class="chapter-item expanded "><a href="4-concurrency-2-table.html"><strong aria-hidden="true">4.2.</strong> Таблица процессов</a></li><li class="chapter-item expanded "><a href="4-concurrency-3-preemption.html"><strong aria-hidden="true">4.3.</strong> Вытесняющая многозадачность</a></li><li class="chapter-item expanded "><a href="4-concurrency-4-scheduler.html"><strong aria-hidden="true">4.4.</strong> Планировщик</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №5</li><li class="chapter-item expanded "><a href="5-um-0-intro.html"><strong aria-hidden="true">5.</strong> Продвинутая работа с памятью в пространстве пользователя</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="5-um-1-ring-buffer.html"><strong aria-hidden="true">5.1.</strong> Разделяемая память</a></li><li class="chapter-item expanded "><a href="5-um-2-memory.html"><strong aria-hidden="true">5.2.</strong> Системные вызовы для работы с виртуальной памятью</a></li><li class="chapter-item expanded "><a href="5-um-3-eager-fork.html"><strong aria-hidden="true">5.3.</strong> Eager fork</a></li><li class="chapter-item expanded "><a href="5-um-4-traps.html"><strong aria-hidden="true">5.4.</strong> Обработка исключений в режиме пользователя</a></li><li class="chapter-item expanded "><a href="5-um-5-cow-fork.html"><strong aria-hidden="true">5.5.</strong> Copy-on-write fork</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Лабораторные работы</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="Часы-реального-времени"><a class="header" href="#Часы-реального-времени">Часы реального времени</a></h2>
+<p>Краткое описание возможностей микросхемы RTC и её низкоуровневого интерфейса можно посмотреть в статьях
+<a href="https://wiki.osdev.org/RTC">RTC</a> и <a href="https://wiki.osdev.org/CMOS">CMOS</a>
+на сайте <a href="https://wiki.osdev.org/">OSDev.org</a>.
+Подробное описание есть в
+<a href="https://pdf1.alldatasheet.com/datasheet-pdf/view/122156/MOTOROLA/MC146818.html">спецификации микросхемы Motorola MC146818</a>.
+Современные микросхемы RTC поддерживают совместимость с ней.</p>
+<p>Прежде всего напишем драйвер для работы с микросхемой
+<a href="https://en.wikipedia.org/wiki/Real-time_clock">часов реального времени (Real-time clock, RTC)</a>.
+Основная работа с RTC собрана в модуле
+<a href="../../doc/kernel/time/rtc/index.html"><code>kernel::time::rtc</code></a>,
+который находится в файле
+<a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/time/rtc.rs"><code>kernel/src/time/rtc.rs</code></a>.</p>
+<h3 id="Порты-вводавывода"><a class="header" href="#Порты-вводавывода">Порты ввода–вывода</a></h3>
+<p>Взаимодействие процессора с устройствами называется <a href="https://en.wikipedia.org/wiki/Input/output">вводом–выводом</a> (input/output, I/O, IO).
+В <a href="https://en.wikipedia.org/wiki/X86-64">x86-64</a> этот процесс
+осуществляется одним из двух механизмов, в зависимости от устройства:</p>
+<ul>
+<li>Через <a href="https://ru.wikipedia.org/wiki/%D0%9F%D0%BE%D1%80%D1%82_%D0%B2%D0%B2%D0%BE%D0%B4%D0%B0-%D0%B2%D1%8B%D0%B2%D0%BE%D0%B4%D0%B0">порты ввода–вывода</a> (<a href="https://wiki.osdev.org/I/O_Ports">I/O port</a>, <a href="https://wiki.osdev.org/Port_IO">Port I/O</a>).</li>
+<li>Через специально выделенные диапазоны адресов памяти. Это называется <a href="https://en.wikipedia.org/wiki/Memory-mapped_I/O">ввод–вывод через память</a>. При этом собственно микросхемы памяти не задействуются, то есть термин немного не точен. Адреса ввода–вывода перехватываются другими устройствами, подключённым к <a href="https://en.wikipedia.org/wiki/System_bus">системной шине</a>.</li>
+</ul>
+<p>Порты в x86-64 в основном используются для старых устройств,
+новые чаще используют ввод–вывод через память.
+В частности, микросхема RTC появилась в архитектуре x86-64 давно и использует порты ввода–вывода.
+Поэтому с ними мы немного столкнёмся в этой лабораторке.
+Не нужно пугаться от того как страшненько выглядит интерфейс ввода–вывода через порты —
+это просто наслоения легаси, экономии всего в ранних моделях компьютеров, и обратной совместимости с ними.</p>
+<p>А вот новый контроллер прерываний
+<a href="https://en.wikipedia.org/wiki/Advanced_Programmable_Interrupt_Controller">APIC</a>
+появился относительно недавно, вместе с многопроцессорностью.
+Он использует ввод–вывод через память, с которым мы тоже поработаем.
+Но в <a href="4-concurrency-1-smp-1-local-apic.html">будущей лабораторке</a>.</p>
+<p>Порты ввода–вывода в x86-64 составляют пространство с 16–битными номерами от <code>0x0000</code> до <code>0xFFFF</code>.
+Они могут быть одно-, двух- и четырёхбайтовыми.
+Это определяется командой процессора, которая используется при чтении или записи.
+И дополнительно ограничивается натуральным выравниванием номеров.
+Например, порт <code>0x0001</code> может быть только однобайтовым.
+А порт <code>0x0002</code> может быть либо однобайтовым, либо двухбайтовым в зависимости от используемой инструкции обращения к нему.
+Во втором случае он объединяет однобайтовые порты <code>0x0002</code> и <code>0x0003</code>.
+То есть,  порты похожи на байты памяти, только другое пространство номеров и другие инструкции доступа.</p>
+<p>В старые добрые времена часто экономили номера портов.
+Для этого ограничивали количество портов, через которые можно получить доступ к устройству.
+И одни и те же порты отвечали за разные функции, в зависимости от обстоятельств.
+Например, на чтение порт мог работать совсем не так, как на запись.
+То есть, формат записываемых в порт данных мог отличаться от формата считываемых — один и тот же бит имел разный смысл.</p>
+<p>Другой подход состоял в мультиплексировании.
+То есть, один порт использовался для выбора, что будут означать данные читаемые или записываемые в другой порт.
+Так, с помощью всего двух портов, можно было эмулировать набор нескольких.
+В микросхеме RTC применена разновидность этого подхода.
+А именно, в самой микросхеме есть целый блок собственной памяти, часть которой выделена под её управляющие регистры:</p>
+<ul>
+<li>10 байт под данные даты, времени и будильника.</li>
+<li>4 байта под управляющие регистры микросхемы.</li>
+<li>Ещё <a href="https://wiki.osdev.org/CMOS">50 байт энергонезависимой памяти</a>, которые <a href="https://en.wikipedia.org/wiki/BIOS">BIOS</a> использует под нужды не связанные с RTC.</li>
+</ul>
+<p>Доступ к этому блоку внутренней памяти микросхемы RTC осуществляется всего через два однобайтовых порта.
+Первым шагом в порт номер
+<a href="../../doc/kernel/time/rtc/constant.ADDRESS_PORT.html"><code>kernel::time::rtc::ADDRESS_PORT = 0x0070</code></a>
+записывается номер байта внутренней памяти микросхемы RTC.
+Вторым шагом либо из порта номер
+<a href="../../doc/kernel/time/rtc/constant.DATA_PORT.html"><code>kernel::time::rtc::DATA_PORT = 0x0071</code></a>
+читается значение, которое находится в этом байте внутренней памяти микросхемы RTC.
+Либо в этот порт записывается значение, которое нужно сохранить в память RTC.</p>
+<p>Это делают функции
+<a href="../../doc/kernel/time/rtc/fn.rtc_read.html"><code>kernel::time::rtc::rtc_read()</code></a>:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn rtc_read(address: u8) -&gt; u8 {
+    unsafe {
+        io::outb(ADDRESS_PORT, address);
+        io::inb(DATA_PORT)
+    }
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>И
+<a href="../../doc/kernel/time/rtc/fn.rtc_read.html"><code>kernel::time::rtc::rtc_write()</code></a>:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn rtc_write(address: u8, data: u8) {
+    unsafe {
+        io::outb(ADDRESS_PORT, address);
+        io::outb(DATA_PORT, data);
+    }
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>Для чтения и записи собственно в порты ввода–вывода они используют однобайтовые инструкции <code>INB</code> и <code>OUTB</code>,
+обёрнутые в функции
+<a href="../../doc/x86/io/fn.inb.html"><code>x86::io::inb()</code></a> и
+<a href="../../doc/x86/io/fn.outb.html"><code>x86::io::outb()</code></a>
+внешней библиотеки <a href="../../doc/x86/index.html"><code>x86</code></a>.</p>
+<p>Байты номер <code>0xA</code>, <code>0xB</code>, <code>0xC</code> и <code>0xD</code> в памяти микросхемы отведены под её
+<a href="https://en.wikipedia.org/wiki/Device_register">регистры управления</a>.
+Смысл их битов вынесен в соответствующие наборы флагов
+<a href="../../doc/kernel/time/rtc/struct.RegisterA.html"><code>kernel::time::rtc::RegisterA</code></a>,
+<a href="../../doc/kernel/time/rtc/struct.RegisterB.html"><code>kernel::time::rtc::RegisterB</code></a>,
+<a href="../../doc/kernel/time/rtc/struct.RegisterC.html"><code>kernel::time::rtc::RegisterC</code></a> и
+<a href="../../doc/kernel/time/rtc/struct.RegisterD.html"><code>kernel::time::rtc::RegisterD</code></a>.</p>
+<h3 id="Прерывания"><a class="header" href="#Прерывания">Прерывания</a></h3>
+<p><a href="https://en.wikipedia.org/wiki/Interrupt">Прерывание</a> — это событие, которое останавливает текущую активность
+процессора и заставляет его переключиться на выполнение специального кода обработки возникшего прерывания.
+Прерывания происходят:</p>
+<ul>
+<li>Либо асинхронно, в произвольный момент с точки зрения текущего исполняющегося кода. Обычно — когда оборудование требует от процессора внимания.</li>
+<li>Либо синхронно, на фиксированной инструкции исполняющегося кода. Обычно, если возникла особая ситуация при выполнении текущего кода.
+<ul>
+<li>Это может быть ошибка в программе. Например, деление на ноль или <a href="https://en.wikipedia.org/wiki/Page_fault">недопустимое обращение к памяти (Page Fault)</a>.</li>
+<li>А может быть предусмотренное действие. Например, чтобы из режима пользователя переключиться в режим ядра для выполнения <a href="https://en.wikipedia.org/wiki/System_call">системного вызова</a>, такого как чтение файла.</li>
+</ul>
+</li>
+</ul>
+<p>За настройки прерываний отвечает функция
+<a href="../../doc/kernel/interrupts/fn.init.html"><code>kernel::interrupts::init()</code></a>
+в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/interrupts.rs"><code>kernel/src/interrupts.rs</code></a>.
+Она инициализирует таблицу обработчиков прерываний
+<a href="../../doc/kernel/interrupts/struct.IDT.html"><code>kernel::interrupts::IDT</code></a>
+находящимися в том же файле функциями.
+Для RTC выделен номер прерывания
+<a href="../../doc/kernel/interrupts/constant.RTC.html"><code>kernel::interrupts::RTC</code></a>,
+а его обработчик — функция
+<a href="../../doc/kernel/interrupts/fn.rtc.html"><code>kernel::interrupts::rtc()</code></a>.</p>
+<p>Она помечена как <a href="https://github.com/rust-lang/rust/issues/40180"><code>extern &quot;x86-interrupt&quot;</code></a>,
+поэтому Rust знает что это обработчик прерывания.
+То есть, — код, который может запуститься в произвольный момент
+времени и прервать исполняющийся в этот момент обычный код.
+Поэтому компилятор сохраняет все нужные регистры на стек при входе в функцию
+<a href="../../doc/kernel/interrupts/fn.rtc.html"><code>kernel::interrupts::rtc()</code></a>.
+Есть надежда, что он достаточно умён, и сохранит на стек только те регистры,
+которые реально используются кодом обработчика прерываний.
+А не вообще все регистры процессора, как сделали бы мы, если бы сохраняли регистры вручную.</p>
+<h3 id="Инициализация-микросхемы-часов-реального-времени"><a class="header" href="#Инициализация-микросхемы-часов-реального-времени">Инициализация микросхемы часов реального времени</a></h3>
+<p>Функция
+<a href="../../doc/kernel/time/rtc/fn.init.html"><code>kernel::time::rtc::init()</code></a>
+выполняет инициализацию микросхемы:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>interrupts::without_interrupts(|| {
+    defer! {
+        rtc_read(!DISABLE_NMI | REGISTER_B);
+    }
+
+    old_settings = RegisterB::from_bits(rtc_read(DISABLE_NMI | REGISTER_B)).unwrap();
+    new_settings =
+        (old_settings &amp; !RegisterB::DAYLIGHT_SAVING) | RegisterB::UPDATE_ENDED_INTERRUPT;
+    rtc_write(DISABLE_NMI | REGISTER_B, new_settings.bits());
+    acknowledged_settings = RegisterB::from_bits(rtc_read(DISABLE_NMI | REGISTER_B)).unwrap();
+
+    SETTINGS.store(acknowledged_settings.bits(), Ordering::Relaxed);
+});
+<span class="boring">}
+</span></code></pre></pre>
+<p>То есть, она</p>
+<ul>
+<li>Выключает все <a href="https://en.wikipedia.org/wiki/Interrupt">прерывания</a>, в том числе <a href="https://en.wikipedia.org/wiki/Non-maskable_interrupt">немаскируемые</a>, на время конфигурирования микросхемы. Иначе она может остаться в <a href="https://wiki.osdev.org/RTC#Avoiding_NMI_and_Other_Interrupts_While_Programming">некоррекном состоянии</a>.</li>
+<li>Выключает переход на летнее время — <code>!</code><a href="../../doc/kernel/time/rtc/struct.RegisterB.html#associatedconstant.DAYLIGHT_SAVING"><code>RegisterB::DAYLIGHT_SAVING</code></a>.</li>
+<li>Включает <a href="https://en.wikipedia.org/wiki/Interrupt">прерывание</a>, посылаемое процессору микросхемой после обновления показаний времени при тике, — <a href="../../doc/kernel/time/rtc/struct.RegisterB.html#associatedconstant.UPDATE_ENDED_INTERRUPT"><code>RegisterB::UPDATE_ENDED_INTERRUPT</code></a>.</li>
+<li>Остальные настройки оставляет без изменений.</li>
+</ul>
+<p>Далее <a href="../../doc/kernel/time/rtc/fn.init.html"><code>rtc::init()</code></a>:</p>
+<ul>
+<li>Сохраняет конфигурацию микросхемы в глобальной переменной <a href="../../doc/kernel/time/rtc/static.SETTINGS.html"><code>kernel::time::rtc::SETTINGS</code></a>.</li>
+<li>Проверяет что микросхема подтвердила изменение конфигурации.</li>
+<li>Читает текущие показания времени из микросхемы.</li>
+</ul>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>SETTINGS.store(acknowledged_settings.bits(), Ordering::Relaxed);
+
+if acknowledged_settings == new_settings {
+    let rtc = SYSTEM_INFO.rtc();
+    rtc.store_prev(CorrelationPoint::invalid(
+        timestamp().unwrap_or(0) * TICKS_PER_SECOND,
+    ));
+
+    enable_next_interrupt();
+
+    if is_time_valid() {
+        info!(?acknowledged_settings, &quot;RTC init&quot;);
+    } else {
+        error!(&quot;RTC reports low battery, its time and date values are incorrect&quot;);
+    }
+} else {
+    // ...
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>Количество тиков в секунду —
+<a href="../../doc/ku/time/rtc/constant.TICKS_PER_SECOND.html"><code>ku::time::rtc::TICKS_PER_SECOND</code></a> —
+для RTC равно 1.
+Про то, что такое
+<a href="../../doc/ku/info/static.SYSTEM_INFO.html"><code>ku::info::SYSTEM_INFO</code></a> и
+<a href="../../doc/ku/time/correlation_point/struct.CorrelationPoint.html"><code>ku::time::correlation_point::CorrelationPoint</code></a>
+узнаем чуть позже.</p>
+<p>Микросхема RTC выдаёт текущее время, разбитое на компоненты — год, месяц, день, час, минута, секунда.
+Оно переводится в
+<a href="https://en.wikipedia.org/wiki/Unix_time">секунды с момента начала Unix–эпохи</a>
+функцией
+<a href="../../doc/kernel/time/rtc/fn.timestamp.html"><code>kernel::time::rtc::timestamp()</code></a>:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn timestamp() -&gt; Option&lt;i64&gt; {
+    Date::read().map(|date| DateTime::&lt;Utc&gt;::from_utc(date.into(), Utc).timestamp())
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>В ней используется внешняя библиотека
+<a href="../../doc/chrono/index.html"><code>chrono</code></a>,
+которая реализует работу со временем и календарём.</p>
+<p>При этом код считает, что микросхема RTC хранит
+<a href="https://en.wikipedia.org/wiki/Coordinated_Universal_Time">всемирное координированное время (Coordinated Universal Time, UTC)</a>.
+Это так в тестах, которые запускают Nikka в эмуляторе <a href="https://en.wikipedia.org/wiki/QEMU"><code>qemu</code></a>.
+По умолчанию в <a href="https://en.wikipedia.org/wiki/QEMU"><code>qemu</code></a> используется UTC.</p>
+<p>Функция <a href="../../doc/kernel/time/rtc/fn.enable_next_interrupt.html"><code>enable_next_interrupt()</code></a>
+говорит микросхеме RTC, что процессор обработал
+<a href="https://en.wikipedia.org/wiki/Interrupt">прерывание</a> от неё.
+Пока процессор этого не сделает, микросхема не пошлёт следующее прерывание,
+считая что процессор ещё занят обработкой предыдущего.
+То есть, если забыть это сделать, то “время остановится”.
+Такой сигнал оборудованию от процессора иногда называется
+<a href="https://en.wikipedia.org/wiki/End_of_interrupt">end of interrupt (EOI)</a>.
+Он встречается не только для RTC, но и для другого оборудования.
+Например, контроллер прерываний можно сконфигурировать так,
+чтобы он тоже ждал от процессора подтверждения каждого прерывания.
+Посылать EOI соответствующему оборудованию нужно из каждого прерывания.
+Мы также посылаем его один раз при инициализации микросхемы RTC —
+на всякий случай стоит перевести микросхему в определённое состояние.
+Кроме того, возможно она уже успела послать прерывание до того как ядро инициализировало их обработку.
+Тогда мы его потеряли, но должны разблокировать последующие.
+В частном случае микросхемы RTC, отправка ей EOI и чтение её регистра статуса прерывания функцией
+<a href="../../doc/kernel/time/rtc/fn.interrupt_status.html"><code>interrupt_status()</code></a>, —
+это одно и то же действие:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn enable_next_interrupt() {
+    interrupt_status();
+}
+<span class="boring">}
+</span></code></pre></pre>
+<h3 id="Задача-1--чтение-реального-времени-из-микросхемы-rtc"><a class="header" href="#Задача-1--чтение-реального-времени-из-микросхемы-rtc">Задача 1 — чтение реального времени из микросхемы RTC</a></h3>
+<h4 id="Неконсистентное-чтение-даты-и-времени-из-микросхемы-rtc"><a class="header" href="#Неконсистентное-чтение-даты-и-времени-из-микросхемы-rtc">Неконсистентное чтение даты и времени из микросхемы RTC</a></h4>
+<p>Реализуйте статический <a href="../../doc/kernel/time/rtc/struct.Date.html#method.read_inconsistent">метод</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn Date::read_inconsistent() -&gt; Date
+<span class="boring">}
+</span></code></pre></pre>
+<p>в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/time/rtc.rs"><code>kernel/src/time/rtc.rs</code></a>,
+который считывает из микросхемы RTC показания даты и времени и возвращает их в виде
+<a href="../../doc/kernel/time/rtc/struct.Date.html">структуры</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[derive(Clone, Copy, Default, Display, Eq, PartialEq)]
+#[display(
+    fmt = &quot;{:04}-{:02}-{:02} {:02}:{:02}:{:02}&quot;,
+    year,
+    month,
+    day,
+    hour,
+    minute,
+    second
+)]
+struct Date {
+    year: u16,
+    month: u8,
+    day: u8,
+    hour: u8,
+    minute: u8,
+    second: u8,
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>Метод называется <code>...inconsistent()</code>, потому что может вернуть некорректное значение
+<a href="../../doc/kernel/time/rtc/struct.Date.html"><code>Date</code></a>,
+если во время его работы произошёл тик RTC и микросхема конкурентно
+обновляла содержимое соответствующих полей в своей памяти.</p>
+<p>Реализуйте и используйте вспомогательный <a href="../../doc/kernel/time/rtc/fn.parse_value.html">метод</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn kernel::time::rtc::parse_value(
+    x: u8,
+    format: RegisterB,
+) -&gt; u8
+<span class="boring">}
+</span></code></pre></pre>
+<p>Он переводит значение <code>x</code> из формата, в котором микросхема хранит время в двоичный.
+Дело в том, что время может храниться как в обычном
+<a href="https://en.wikipedia.org/wiki/Binary_number">двоичном коде</a>,
+если в <code>format</code> установлен флаг
+<a href="../../doc/kernel/time/rtc/struct.RegisterB.html#associatedconstant.USE_BINARY_FORMAT"><code>RegisterB::USE_BINARY_FORMAT</code></a>.
+Так и в <a href="https://en.wikipedia.org/wiki/Binary-coded_decimal">двоично–десятичном</a>, если этот флаг не установлен.</p>
+<p>Реализуйте и используйте вспомогательный <a href="../../doc/kernel/time/rtc/fn.parse_hour.html">метод</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn kernel::time::rtc::parse_hour(
+    hour: u8,
+    format: RegisterB,
+) -&gt; u8
+<span class="boring">}
+</span></code></pre></pre>
+<p>Он переводит значение текущего часа <code>hour</code> из формата, в котором микросхема хранит время в двоичный 24-часовой.
+Кроме <a href="https://en.wikipedia.org/wiki/Binary-coded_decimal">двоично–десятичного</a> варианта, тут возможен ещё и
+<a href="https://en.wikipedia.org/wiki/12-hour_clock">12-часовой формат</a>.
+Если в <code>format</code> установлен бит
+<a href="../../doc/kernel/time/rtc/struct.RegisterB.html#associatedconstant.USE_24_HOUR_FORMAT"><code>RegisterB::USE_24_HOUR_FORMAT</code></a>,
+то формат времени <a href="https://en.wikipedia.org/wiki/24-hour_clock">24-часовой</a>.
+Обратите внимание на
+<a href="https://en.wikipedia.org/wiki/12-hour_clock#Confusion_at_noon_and_midnight">путаницу в значениях 12am и 12pm</a>
+для <a href="https://en.wikipedia.org/wiki/12-hour_clock">12-часового формата</a>.
+Наш вариант — “digital watches”.
+<a href="https://wiki.osdev.org/CMOS#Format_of_Bytes">Подробнее про формат времени в RTC</a>.</p>
+<p>Вам могут пригодиться:</p>
+<ul>
+<li>Конфигурация микросхемы в глобальной переменной <a href="../../doc/kernel/time/rtc/static.SETTINGS.html"><code>kernel::time::rtc::SETTINGS</code></a>. Из неё можно узнать формат в котором она хранит время.</li>
+<li>Функция <a href="../../doc/kernel/time/rtc/fn.rtc_read.html"><code>kernel::time::rtc::rtc_read(address)</code></a>, которая читает из микросхемы один байт <a href="https://doc.rust-lang.org/nightly/core/primitive.u8.html"><code>u8</code></a>, расположенный по адресу <code>address</code> в памяти микросхемы RTC. Адрес <code>address</code> не имеет отношения к основной памяти компьютера, он адресует внутреннюю память микросхемы RTC.</li>
+<li><a href="http://www.bioscentral.com/misc/cmosmap.htm">Таблица адресов памяти RTC</a> или её <a href="https://wiki.osdev.org/CMOS#Getting_Current_Date_and_Time_from_RTC">подходящий фрагмент</a>. Либо вы можете найти эту таблицу в первоисточнике — <a href="https://pdf1.alldatasheet.com/datasheet-pdf/view/122156/MOTOROLA/MC146818.html">спецификации микросхемы Motorola MC146818</a>.</li>
+<li>Метод <a href="https://doc.rust-lang.org/nightly/core/primitive.u16.html#impl-From%3Cu8%3E-for-u16"><code>u16::from(u8)</code></a> для перевода значения типа <a href="https://doc.rust-lang.org/nightly/core/primitive.u8.html"><code>u8</code></a> в значение типа <a href="https://doc.rust-lang.org/nightly/core/primitive.u16.html"><code>u16</code></a>.</li>
+</ul>
+<blockquote>
+<h5 id="Путаница-в-значениях-12am-и-12pm"><a class="header" href="#Путаница-в-значениях-12am-и-12pm"><a href="https://en.wikipedia.org/wiki/12-hour_clock#Confusion_at_noon_and_midnight">Путаница в значениях 12am и 12pm</a></a></h5>
+<p>Функция <a href="../../doc/kernel/time/rtc/fn.parse_hour.html"><code>parse_hour()</code></a>
+проверяется тестом <code>different_rtc_formats()</code> в файле
+<a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/tests/1-time-1-rtc.rs"><code>kernel/tests/1-time-1-rtc.rs</code></a>.
+Можно вручную убедиться, что тест
+<a href="https://en.wikipedia.org/wiki/12-hour_clock#Confusion_at_noon_and_midnight">не путает 12am и 12pm</a>,
+а также проверить что вы реализовали <a href="https://en.wikipedia.org/wiki/12-hour_clock">12-ти часовой</a> формат правильно.
+Для этого включите 12-ти часовой формат в
+<a href="../../doc/kernel/time/rtc/fn.init.html"><code>rtc::init()</code></a>
+и установите время, например на <code>11:59:55 am</code>:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>interrupts::without_interrupts(|| {
+    // ...
+
+    new_settings =
+        (old_settings &amp; !RegisterB::DAYLIGHT_SAVING &amp; !RegisterB::USE_24_HOUR_FORMAT) |
+        RegisterB::UPDATE_ENDED_INTERRUPT;
+
+    rtc_write(DISABLE_NMI | REGISTER_B, (new_settings | RegisterB::SET_CLOCK).bits());
+
+    if new_settings.contains(RegisterB::USE_BINARY_FORMAT) {
+        rtc_write(4, 11);
+        rtc_write(2, 59);
+        rtc_write(0, 55);
+    } else {
+        rtc_write(4, 1 * 16 + 1);
+        rtc_write(2, 5 * 16 + 9);
+        rtc_write(0, 5 * 16 + 5);
+    }
+
+    rtc_write(DISABLE_NMI | REGISTER_B, new_settings.bits());
+    acknowledged_settings = RegisterB::from_bits(rtc_read(DISABLE_NMI | REGISTER_B)).unwrap();
+
+    // ...
+});
+<span class="boring">}
+</span></code></pre></pre>
+<p>После этого запустите</p>
+<pre><code class="language-console">$ (cd kernel; cargo run)
+</code></pre>
+<p>В логе время печатается в
+<a href="https://en.wikipedia.org/wiki/24-hour_clock">24-часовом</a>
+формате, вне зависимости от настроек RTC.
+В нём вы увидите как <code>11:59:59</code> сменяется на <code>12:00:00</code>:</p>
+<pre><code class="language-console">$ cat kernel/serial.out
+...
+11:59:59.985 0 D time_precision = 933.673 ns
+11:59:59.989 0 D interrupt stats; number = 32; mnemonic = #TI; count = 85
+11:59:59.993 0 D interrupt stats; number = 40; mnemonic = #RT; count = 4
+12:00:00.001 0 D CPU frequency measured by PIT; frequency = 3.471 GHz
+12:00:00.005 0 D CPU frequency measured by RTC; frequency = 3.437 GHz
+12:00:00.009 0 D time_precision = 814.689 ns
+...
+</code></pre>
+<p>Если же установить время на <code>11:59:55 pm</code>, то в логе <code>23:59:59</code> сменяется на <code>00:00:00</code>:</p>
+<pre><code class="language-console">$ cat kernel/serial.out
+...
+23:59:59.969 0 D time_precision = 1.375 us
+23:59:59.973 0 D interrupt stats; number = 32; mnemonic = #TI; count = 84
+23:59:59.979 0 D interrupt stats; number = 40; mnemonic = #RT; count = 4
+00:00:00.001 0 D CPU frequency measured by PIT; frequency = 3.471 GHz
+00:00:00.005 0 D CPU frequency measured by RTC; frequency = 3.428 GHz
+00:00:00.009 0 D time_precision = 1.222 us
+...
+</code></pre>
+<p>При неверной реализации функции
+<a href="../../doc/kernel/time/rtc/fn.parse_hour.html"><code>parse_hour()</code></a>
+показания времени в логе после перехода через полдень или полночь будут вести себя гораздо интереснее.</p>
+<blockquote>
+<p>В качестве дополнительного упражнения, посмотрите как 12-часовой формат реализован в Linux.</p>
+</blockquote>
+</blockquote>
+<h4 id="Консистентное-чтение-даты-и-времени-из-микросхемы-rtc"><a class="header" href="#Консистентное-чтение-даты-и-времени-из-микросхемы-rtc">Консистентное чтение даты и времени из микросхемы RTC</a></h4>
+<p>Реализуйте статический <a href="../../doc/kernel/time/rtc/struct.Date.html#method.read">метод</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn Date::read() -&gt; Option&lt;Date&gt;
+<span class="boring">}
+</span></code></pre></pre>
+<p>Он
+<a href="https://wiki.osdev.org/CMOS#RTC_Update_In_Progress">пытается несколько раз прочитать данные из микросхемы RTC</a>
+уже реализованным вами методом
+<a href="../../doc/kernel/time/rtc/struct.Date.html#method.read_inconsistent"><code>Date::read_inconsistent()</code></a>.
+Перед каждым чтением он в цикле ждёт, пока в регистре <code>A</code> микросхемы RTC флаг
+<a href="../../doc/kernel/time/rtc/struct.RegisterA.html#associatedconstant.UPDATE_IN_PROGRESS"><code>kernel::time::rtc::RegisterA::UPDATE_IN_PROGRESS</code></a>
+установлен, то есть пока микросхема обновляет данные в своей памяти.</p>
+<p>Если</p>
+<ul>
+<li>Два чтения подряд вернут одинаковое значение структуры <a href="../../doc/kernel/time/rtc/struct.Date.html"><code>Date</code></a>.</li>
+<li>Перед чтениями флаг <a href="../../doc/kernel/time/rtc/struct.RegisterA.html#associatedconstant.UPDATE_IN_PROGRESS"><code>RegisterA::UPDATE_IN_PROGRESS</code></a> был сброшен.</li>
+<li>Предполагаем, что микросхема обновляет поля всегда в одном порядке.</li>
+<li>Чтение одного <a href="https://doc.rust-lang.org/nightly/core/primitive.u8.html"><code>u8</code></a> из её памяти атомарно.</li>
+</ul>
+<p>То можно считать совпавшее значение структуры
+<a href="../../doc/kernel/time/rtc/struct.Date.html"><code>Date</code></a>
+консистентным и вернуть его,
+<a href="https://doc.rust-lang.ru/book/ch06-01-defining-an-enum.html#%D0%9F%D0%B5%D1%80%D0%B5%D1%87%D0%B8%D1%81%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5-option-%D0%B8-%D0%B5%D0%B3%D0%BE-%D0%BF%D1%80%D0%B5%D0%B8%D0%BC%D1%83%D1%89%D0%B5%D1%81%D1%82%D0%B2%D0%B0-%D0%BF%D0%B5%D1%80%D0%B5%D0%B4-null-%D0%B7%D0%BD%D0%B0%D1%87%D0%B5%D0%BD%D0%B8%D1%8F%D0%BC%D0%B8">обернув</a> в
+<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#variant.Some"><code>core::option::Option::Some</code></a>:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>return Some(date);
+<span class="boring">}
+</span></code></pre></pre>
+<p>Если же за несколько попыток прочитать дважды одинаковые значения
+<a href="../../doc/kernel/time/rtc/struct.Date.html"><code>Date</code></a>
+не получилось,
+стоит сдаться и вернуть
+<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#variant.None"><code>core::option::Option::None</code></a>:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>return None;
+<span class="boring">}
+</span></code></pre></pre>
+<p>Вам могут пригодиться:</p>
+<ul>
+<li>Метод <a href="../../doc/kernel/time/rtc/struct.Date.html#method.default"><code>Date::default()</code></a>, который возвращает <a href="../../doc/kernel/time/rtc/struct.Date.html"><code>Date</code></a>, заполненную нулями. Что не соответствует разумной дате настоящего времени.</li>
+<li>Функция <a href="https://doc.rust-lang.org/nightly/core/hint/fn.spin_loop.html"><code>core::hint::spin_loop()</code></a>, которая сообщает процессору, что он находится в цикле ожидания внешнего события. И может, например, снизить частоту и энергопотребление.</li>
+<li>Операторы равенства <code>==</code> и неравенства <code>!=</code> для <a href="../../doc/kernel/time/rtc/struct.Date.html"><code>Date</code></a>.</li>
+</ul>
+<p>В этом методе нужно писать код очень внимательно, так как он не покрывается тестами.
+А использование в будущем лога с неконсистентной датой при отладке может привести к потере времени.</p>
+<blockquote>
+<p>Полные пути <code>core::option::Option::</code> можно не указывать, так как <code>Option</code>, <code>None</code>, <code>Some</code> и другие стандартные вещи
+импортируются по умолчанию прелюдией
+<a href="https://doc.rust-lang.org/nightly/core/prelude/index.html"><code>core::prelude</code></a>.
+У нас <a href="https://doc.rust-lang.org/edition-guide/rust-2021/index.html">редакция 2021</a>,
+соответствующая прелюдия —
+<a href="https://doc.rust-lang.org/nightly/core/prelude/rust_2021/index.html"><code>core::prelude::rust_2021</code></a>.
+А она перекладывает основную работу на
+<a href="https://doc.rust-lang.org/nightly/core/prelude/v1/index.html"><code>core::prelude::v1</code></a>,
+где и импортируются <code>Option</code>, <code>None</code>, <code>Some</code> и многое другое.</p>
+<p>Метод <a href="../../doc/kernel/time/rtc/struct.Date.html#method.default"><code>Date::default()</code></a> определён в
+<a href="https://doc.rust-lang.ru/book/ch10-02-traits.html">типаже</a>
+<a href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default"><code>core::default::Default</code></a>,
+который реализован для <a href="../../doc/kernel/time/rtc/struct.Date.html"><code>Date</code></a> автоматически за счёт атрибута
+<a href="https://doc.rust-lang.ru/book/appendix-03-derivable-traits.html"><code>derive</code></a> —
+<a href="https://doc.rust-lang.ru/book/appendix-03-derivable-traits.html#default-%D0%B4%D0%BB%D1%8F-%D0%B7%D0%BD%D0%B0%D1%87%D0%B5%D0%BD%D0%B8%D0%B9-%D0%BF%D0%BE-%D1%83%D0%BC%D0%BE%D0%BB%D1%87%D0%B0%D0%BD%D0%B8%D1%8E"><code>#[derive(Default)]</code></a>.
+Всю соответствующую работу выполняет макрос
+<a href="https://doc.rust-lang.org/nightly/core/prelude/v1/macro.derive.html"><code>core::prelude::v1::derive</code></a>.</p>
+<p>Операторы равенства и неравенства для <a href="../../doc/kernel/time/rtc/struct.Date.html"><code>Date</code></a> определены в
+<a href="https://doc.rust-lang.ru/book/ch10-02-traits.html">типажах</a>
+<a href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html"><code>core::cmp::PartialEq</code></a> и
+<a href="https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html"><code>core::cmp::Eq</code></a>,
+которые реализованы для <a href="../../doc/kernel/time/rtc/struct.Date.html"><code>Date</code></a> автоматически за счёт атрибута
+<a href="https://doc.rust-lang.ru/book/appendix-03-derivable-traits.html#partialeq-%D0%B8-eq-%D0%B4%D0%BB%D1%8F-%D1%81%D1%80%D0%B0%D0%B2%D0%BD%D0%B5%D0%BD%D0%B8%D1%8F-%D1%80%D0%B0%D0%B2%D0%B5%D0%BD%D1%81%D1%82%D0%B2%D0%B0"><code>#[derive(..., Eq, PartialEq)]</code></a>.
+Типаж <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html"><code>core::cmp::PartialEq</code></a> определяет методы
+<a href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq"><code>PartialEq::eq()</code></a> и
+<a href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne"><code>PartialEq::ne()</code></a>
+для проверки на равенство или неравенство соответственно.
+Rust рассахаривает операторы <code>==</code> и <code>!=</code> в обращения к этим методам.
+А дополнительный типаж
+<a href="https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html"><code>core::cmp::Eq</code></a>
+сигнализирует, что операции <code>PartialEq</code> для
+<a href="../../doc/kernel/time/rtc/struct.Date.html"><code>Date</code></a> задают
+<a href="https://en.wikipedia.org/wiki/Equivalence_relation">отношение эквивалентности</a>, то есть
+<a href="https://en.wikipedia.org/wiki/Reflexive_relation">рефлексивное</a>,
+<a href="https://en.wikipedia.org/wiki/Symmetric_relation">симметричное</a> и
+<a href="https://en.wikipedia.org/wiki/Transitive_relation">транзитивное</a>.</p>
+</blockquote>
+<h3 id="Запуск-тестов"><a class="header" href="#Запуск-тестов">Запуск тестов</a></h3>
+<p>Тесты можно запустить командой <code>cargo test --test 1-time-1-rtc</code> в директории <code>kernel</code> репозитория.
+Вы увидите сборку, запуск эмулятора <a href="https://en.wikipedia.org/wiki/QEMU"><code>qemu</code></a>, логи инициализации ядра и логи тестов:</p>
+<pre><code class="language-console">$ (cd kernel; cargo test --test 1-time-1-rtc)
+...
+Running: `qemu-system-x86_64 -drive format=raw,file=/home/sergey/shad-os/target/kernel/debug/deps/bootimage-time-8696ef78d2ec023a.bin -no-reboot -m size=50M -smp cpus=4 -device isa-debug-exit,iobase=0xF4,iosize=0x04 -serial stdio -display none`
+00:00:00 0 I RTC init; acknowledged_settings = USE_24_HOUR_FORMAT | USE_BINARY_FORMAT | UPDATE_ENDED_INTERRUPT
+00:00:00 0 I time init
+00:00:00 0 I Nikka booted; now = 1970-01-01 00:00:00 UTC; tsc = Tsc(5345850832)
+00:00:00 0 I GDT init
+00:00:00 0 I interrupts init
+running 4 tests
+
+time::rtc_read_inconsistent---------------------------------
+00:00:00 0 D start = 1970-01-01 00:00:00 UTC
+panicked at 'the RTC date does not pass the sanity check', kernel/tests/time.rs:43:5
+--------------------------------------------------- [failed]
+00:00:00 0 I exit qemu; exit_code = FAILURE
+error: test failed, to rerun pass '--test time'
+</code></pre>
+<p>Если запустить тест из корня репозитория, то вы столкнётесь ошибкой:</p>
+<pre><code class="language-console">error: language item required, but not found: `eh_personality`
+  |
+  = note: this can occur when a binary crate with `#![no_std]` is compiled for a target where `eh_personality` is defined in the standard library
+  = help: you may be able to compile for a target that doesn't need `eh_personality`, specify a target with `--target` or in `.cargo/config`
+</code></pre>
+<p>Это ожидаемо, запускайте тест из директории <code>kernel</code>.</p>
+<p>До решения задачи тест <code>fn rtc_read_inconsistent()</code> из файла
+<a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/tests/time.rs"><code>kernel/tests/time.rs</code></a>
+падает:</p>
+<pre><code class="language-console">time::rtc_read_inconsistent---------------------------------
+00:00:00 0 D start = 1970-01-01 00:00:00 UTC
+panicked at 'the RTC date does not pass the sanity check', kernel/tests/time.rs:43:5
+--------------------------------------------------- [failed]
+</code></pre>
+<p>А после выполнения задачи он должен проходить:</p>
+<pre><code class="language-console">$ (cd kernel; cargo test --test 1-time-1-rtc)
+...
+time::rtc_read_inconsistent---------------------------------
+10:25:26 0 D start = 2022-09-17 10:25:26 UTC
+10:25:27 0 D now = 2022-09-17 10:25:27 UTC
+10:25:28 0 D now = 2022-09-17 10:25:28 UTC
+10:25:29 0 D now = 2022-09-17 10:25:29 UTC
+10:25:30 0 D now = 2022-09-17 10:25:30 UTC
+10:25:31 0 D now = 2022-09-17 10:25:31 UTC
+10:25:32 0 D now = 2022-09-17 10:25:32 UTC
+10:25:33 0 D now = 2022-09-17 10:25:33 UTC
+10:25:34 0 D now = 2022-09-17 10:25:34 UTC
+10:25:35 0 D now = 2022-09-17 10:25:35 UTC
+time::rtc_read_inconsistent------------------------ [passed]
+</code></pre>
+<h3 id="Ориентировочный-объём-работ-этой-части-лабораторки"><a class="header" href="#Ориентировочный-объём-работ-этой-части-лабораторки">Ориентировочный объём работ этой части лабораторки</a></h3>
+<pre><code class="language-console"> kernel/src/time/rtc.rs |   65 ++++++++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 59 insertions(+), 6 deletions(-)
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="1-time-0-intro.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next" href="1-time-2-tsc.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="1-time-0-intro.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" href="1-time-2-tsc.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </body>
+</html>

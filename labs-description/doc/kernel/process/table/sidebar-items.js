@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":[["Slot",""]],"fn":[["forge_static_lifetime",""]],"struct":[["TABLE",""],["Table",""]]};

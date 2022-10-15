@@ -1,0 +1,20 @@
+digraph diagram {
+    rankdir = LR
+    ranksep = 2.5
+    nodesep = 1
+
+    fontname="Helvetica,Arial,sans-serif"
+
+    node [fontname = "Helvetica,Arial,sans-serif"; width = 2.0; height = 1.0; style = filled; fillcolor = "#CCCCCC"]
+    edge [arrowhead = vee; fontname="Helvetica,Arial,sans-serif"]
+
+    Virt
+    VirtAddr [label = "x86_64::VirtAddr"]
+    Page
+
+    Page -> Virt [constraint = false; label = "Page::address()"]
+    VirtAddr -> Virt [label = "from()"]
+
+    Virt -> Page [label = "Page::new()"]
+    Virt -> VirtAddr [constraint = false; label = "into()"]
+}

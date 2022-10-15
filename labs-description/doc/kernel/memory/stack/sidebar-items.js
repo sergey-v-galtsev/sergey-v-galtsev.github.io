@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":[["GUARD_ZONE_SIZE",""],["STACK_SIZE",""]],"macro":[["make_static_stack",""]],"struct":[["EXCEPTION_STACKS",""],["ExceptionStacks","Выделенные стеки для непредвиденных исключений."],["Stack",""]]};

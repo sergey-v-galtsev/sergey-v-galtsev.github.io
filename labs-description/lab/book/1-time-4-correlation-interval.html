@@ -1,0 +1,440 @@
+<!DOCTYPE HTML>
+<html lang="ru" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Измерение частоты процессора и повышение разрешения часов - Лабораторные работы</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="0-intro-1-nikka.html">Введение в лабораторные работы</a></li><li class="chapter-item expanded affix "><a href="0-intro-2-rust.html">Почему Rust</a></li><li class="chapter-item expanded affix "><a href="0-intro-3-dirs.html">Структура кода</a></li><li class="chapter-item expanded affix "><a href="0-intro-4-install.html">Компиляция и запуск тестов</a></li><li class="chapter-item expanded affix "><a href="0-intro-5-gdb.html">Запуск с отладчиком gdb</a></li><li class="chapter-item expanded affix "><a href="0-intro-6-log.html">Логирование и логи</a></li><li class="chapter-item expanded affix "><a href="0-intro-7-vscode.html">Настройка VSCode</a></li><li class="chapter-item expanded affix "><li class="part-title">Лабораторная работа №1</li><li class="chapter-item expanded "><a href="1-time-0-intro.html"><strong aria-hidden="true">1.</strong> Время</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="1-time-1-rtc.html"><strong aria-hidden="true">1.1.</strong> Часы реального времени</a></li><li class="chapter-item expanded "><a href="1-time-2-tsc.html"><strong aria-hidden="true">1.2.</strong> Счётчик тактов процессора</a></li><li class="chapter-item expanded "><a href="1-time-3-correlation-point.html"><strong aria-hidden="true">1.3.</strong> Счётчики тиков</a></li><li class="chapter-item expanded "><a href="1-time-4-correlation-interval.html" class="active"><strong aria-hidden="true">1.4.</strong> Измерение частоты процессора и повышение разрешения часов</a></li><li class="chapter-item expanded "><a href="1-time-5-interrupts.html"><strong aria-hidden="true">1.5.</strong> Обработка прерываний RTC</a></li><li class="chapter-item expanded "><a href="1-time-6-info.html"><strong aria-hidden="true">1.6.</strong> Информация о системе</a></li><li class="chapter-item expanded "><a href="1-time-7-summary.html"><strong aria-hidden="true">1.7.</strong> Собираем всё вместе</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №2</li><li class="chapter-item expanded "><a href="2-mm-0-intro.html"><strong aria-hidden="true">2.</strong> Память</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="2-mm-1-types.html"><strong aria-hidden="true">2.1.</strong> Типы</a></li><li class="chapter-item expanded "><a href="2-mm-2-mapping.html"><strong aria-hidden="true">2.2.</strong> Страничные отображения</a></li><li class="chapter-item expanded "><a href="2-mm-3-diagrams.html"><strong aria-hidden="true">2.3.</strong> Диаграммы преобразований</a></li><li class="chapter-item expanded "><a href="2-mm-4-plan.html"><strong aria-hidden="true">2.4.</strong> План</a></li><li class="chapter-item expanded "><a href="2-mm-5-boot-frame-allocator.html"><strong aria-hidden="true">2.5.</strong> Временный аллокатор фреймов</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space.html"><strong aria-hidden="true">2.6.</strong> Виртуальное адресное пространство</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="2-mm-6-address-space-1-allocation.html"><strong aria-hidden="true">2.6.1.</strong> Аллокатор виртуальных страниц адресного пространства</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space-2-translate.html"><strong aria-hidden="true">2.6.2.</strong> Отображение виртуальных страниц в физические фреймы</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space-3-map.html"><strong aria-hidden="true">2.6.3.</strong> Высокоуровневый интерфейс управления адресным пространством</a></li></ol></li><li class="chapter-item expanded "><a href="2-mm-7-main-frame-allocator.html"><strong aria-hidden="true">2.7.</strong> Основной аллокатор фреймов</a></li><li class="chapter-item expanded "><a href="2-mm-8-tests.html"><strong aria-hidden="true">2.8.</strong> Проверьте себя</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №3</li><li class="chapter-item expanded "><a href="3-user-0-intro.html"><strong aria-hidden="true">3.</strong> Процессы</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="3-user-1-elf.html"><strong aria-hidden="true">3.1.</strong> Загрузка процесса в память</a></li><li class="chapter-item expanded "><a href="3-user-2-permission-checks.html"><strong aria-hidden="true">3.2.</strong> Проверки доступа процесса к памяти</a></li><li class="chapter-item expanded "><a href="3-user-3-user-mode.html"><strong aria-hidden="true">3.3.</strong> Переход в режим пользователя</a></li><li class="chapter-item expanded "><a href="3-user-4-syscall.html"><strong aria-hidden="true">3.4.</strong> Поддержка системных вызовов</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №4</li><li class="chapter-item expanded "><a href="4-concurrency-0-intro.html"><strong aria-hidden="true">4.</strong> Конкурентное выполнение задач</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="4-concurrency-1-smp-0-intro.html"><strong aria-hidden="true">4.1.</strong> Поддержка нескольких процессоров (SMP)</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="4-concurrency-1-smp-1-local-apic.html"><strong aria-hidden="true">4.1.1.</strong> Работа с local APIC</a></li><li class="chapter-item expanded "><a href="4-concurrency-1-smp-2-cpus.html"><strong aria-hidden="true">4.1.2.</strong> Состояние каждого процессора</a></li><li class="chapter-item expanded "><a href="4-concurrency-1-smp-3-ap-init.html"><strong aria-hidden="true">4.1.3.</strong> Загрузка Application Processor</a></li></ol></li><li class="chapter-item expanded "><a href="4-concurrency-2-table.html"><strong aria-hidden="true">4.2.</strong> Таблица процессов</a></li><li class="chapter-item expanded "><a href="4-concurrency-3-preemption.html"><strong aria-hidden="true">4.3.</strong> Вытесняющая многозадачность</a></li><li class="chapter-item expanded "><a href="4-concurrency-4-scheduler.html"><strong aria-hidden="true">4.4.</strong> Планировщик</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №5</li><li class="chapter-item expanded "><a href="5-um-0-intro.html"><strong aria-hidden="true">5.</strong> Продвинутая работа с памятью в пространстве пользователя</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="5-um-1-ring-buffer.html"><strong aria-hidden="true">5.1.</strong> Разделяемая память</a></li><li class="chapter-item expanded "><a href="5-um-2-memory.html"><strong aria-hidden="true">5.2.</strong> Системные вызовы для работы с виртуальной памятью</a></li><li class="chapter-item expanded "><a href="5-um-3-eager-fork.html"><strong aria-hidden="true">5.3.</strong> Eager fork</a></li><li class="chapter-item expanded "><a href="5-um-4-traps.html"><strong aria-hidden="true">5.4.</strong> Обработка исключений в режиме пользователя</a></li><li class="chapter-item expanded "><a href="5-um-5-cow-fork.html"><strong aria-hidden="true">5.5.</strong> Copy-on-write fork</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Лабораторные работы</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="Измерение-частоты-процессора-и-повышение-разрешения-часов"><a class="header" href="#Измерение-частоты-процессора-и-повышение-разрешения-часов">Измерение частоты процессора и повышение разрешения часов</a></h2>
+<p>Структура
+<a href="../../doc/ku/time/correlation_interval/struct.CorrelationInterval.html"><code>ku::time::correlation_interval::CorrelationInterval</code></a>
+из файла <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/ku/src/time/correlation_interval.rs"><code>ku/src/time/correlation_interval.rs</code></a>
+предназначена для соотнесения частоты процессора и другого источника времени.
+Она содержит поля:</p>
+<ul>
+<li><a href="../../doc/ku/time/correlation_interval/struct.CorrelationInterval.html#structfield.base"><code>CorrelationInterval::base</code></a> со знакомым нам <a href="../../doc/ku/time/correlation_point/struct.CorrelationPoint.html"><code>CorrelationPoint</code></a> в некоторый базовый момент времени, когда тикнули отслеживаемые <a href="../../doc/ku/time/correlation_interval/struct.CorrelationInterval.html"><code>CorrelationInterval</code></a> часы.</li>
+<li><a href="../../doc/ku/time/correlation_interval/struct.CorrelationInterval.html#structfield.prev"><code>CorrelationInterval::prev</code></a> с <a href="../../doc/ku/time/correlation_point/struct.CorrelationPoint.html"><code>CorrelationPoint</code></a> на момент последнего тика отслеживаемых часов.</li>
+</ul>
+<p><a href="../../doc/ku/time/correlation_interval/struct.CorrelationInterval.html#structfield.base"><code>CorrelationInterval::base</code></a> и
+<a href="../../doc/ku/time/correlation_interval/struct.CorrelationInterval.html#structfield.prev"><code>CorrelationInterval::prev</code></a>
+содержат количество тиков отслеживаемых часов и номер такта процессора тактов в соответствующие моменты времени.
+Частота отслеживаемых часов задаётся как константный параметр <code>TICKS_PER_SECOND</code> для типа
+<a href="../../doc/ku/time/correlation_interval/struct.CorrelationInterval.html"><code>struct CorrelationInterval&lt;const TICKS_PER_SECOND: i64&gt;</code></a>.</p>
+<p>По этой информации можно:</p>
+<ul>
+<li>Вычислить частоту процессора с точки зрения отслеживаемых часов.</li>
+<li>Пересчитать произвольное значение счётчика тактов процессора <a href="../../doc/ku/time/tsc/struct.Tsc.html"><code>ku::time::tsc::Tsc</code></a> в показания времени отслеживаемых часов. При этом мы фактически повышаем разрешение отслеживаемых часов до частоты процессора. Разумеется, погрешность при этом превышает разрешение.</li>
+</ul>
+<p>Для часов реального времени
+<a href="../../doc/ku/time/rtc/struct.Rtc.html"><code>ku::time::rtc::Rtc</code></a>,
+количество тиков в каждом поле
+<a href="../../doc/ku/time/correlation_point/struct.CorrelationPoint.html#structfield.count"><code>CorrelationPoint::count</code></a>
+содержит количество секунд с начала Unix–эпохи.
+Методы
+<a href="../../doc/ku/time/correlation_interval/struct.CorrelationInterval.html"><code>CorrelationInterval</code></a>
+будут опираться на это при привязке своих
+<a href="../../doc/ku/time/correlation_point/struct.CorrelationPoint.html"><code>CorrelationPoint</code></a>
+к реальному времени.</p>
+<p>Структура
+<a href="../../doc/ku/time/correlation_interval/struct.AtomicCorrelationInterval.html"><code>ku::time::correlation_interval::AtomicCorrelationInterval</code></a>
+содержит аналогичные два поля типа
+<a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html"><code>AtomicCorrelationPoint</code></a>.
+Она находится в таких же отношениях с
+<a href="../../doc/ku/time/correlation_interval/struct.CorrelationInterval.html"><code>CorrelationInterval</code></a>,
+как
+<a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html"><code>AtomicCorrelationPoint</code></a>
+с
+<a href="../../doc/ku/time/correlation_point/struct.CorrelationPoint.html"><code>CorrelationPoint</code></a>.
+То есть,
+<a href="../../doc/ku/time/correlation_interval/struct.CorrelationInterval.html"><code>CorrelationInterval</code></a>
+является значением, а
+<a href="../../doc/ku/time/correlation_interval/struct.AtomicCorrelationInterval.html"><code>AtomicCorrelationInterval</code></a>
+его конкурентным хранилищем в памяти.</p>
+<blockquote>
+<p>Подумайте, почему при этом
+<a href="../../doc/ku/time/correlation_interval/struct.AtomicCorrelationInterval.html"><code>AtomicCorrelationInterval</code></a>
+устроен гораздо проще чем
+<a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html"><code>AtomicCorrelationPoint</code></a>
+с его <a href="https://en.wikipedia.org/wiki/Seqlock">sequence lock</a>.</p>
+</blockquote>
+<p>Основной <a href="../../doc/ku/time/correlation_interval/struct.CorrelationInterval.html#method.datetime">метод</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn CorrelationInterval::datetime&lt;const PARTS_PER_SECOND: i64&gt;(
+    atomic_correlation_interval: &amp;AtomicCorrelationInterval&lt;TICKS_PER_SECOND&gt;,
+    tsc: Tsc,
+) -&gt; DateTime&lt;Utc&gt;
+<span class="boring">}
+</span></code></pre></pre>
+<p>должен для часов, к которым привязан <code>atomic_correlation_interval</code>, выдать время, соответствующее
+такту процессора, записанному в <code>tsc</code>.
+Время он возвращает в типе
+<a href="../../doc/chrono/struct.DateTime.html"><code>chrono::DateTime</code></a>.
+Он считает, что заданные ему часы показывают количество секунд, прошедших с начала Unix–эпохи в UTC —
+<a href="../../doc/chrono/offset/struct.Utc.html"><code>chrono::offset::Utc</code></a>.</p>
+<p>Функции
+<a href="../../doc/ku/time/fn.datetime.html"><code>ku::time::datetime()</code></a>
+<a href="../../doc/ku/time/fn.datetime_ms.html"><code>ku::time::datetime_ms()</code></a>
+используя этот метод повышают разрешение часов реального времени
+<a href="../../doc/ku/time/rtc/struct.Rtc.html"><code>ku::time::rtc::Rtc</code></a>:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub fn datetime(tsc: Tsc) -&gt; DateTime&lt;Utc&gt; {
+    Rtc::datetime::&lt;NSECS_PER_SEC&gt;(tsc)
+}
+
+pub fn datetime_ms(tsc: Tsc) -&gt; DateTime&lt;Utc&gt; {
+    Rtc::datetime::&lt;MSECS_PER_SEC&gt;(tsc)
+}
+
+const MSECS_PER_SEC: i64 = 1_000;
+const NSECS_PER_SEC: i64 = 1_000_000_000;
+<span class="boring">}
+</span></code></pre></pre>
+<p>Метод
+<a href="../../doc/ku/time/correlation_interval/struct.CorrelationInterval.html#method.datetime"><code>CorrelationInterval::datetime()</code></a>
+читает переданный ему на вход <code>atomic_correlation_interval</code>, проверяет что в результирующем
+<a href="../../doc/ku/time/correlation_interval/struct.CorrelationInterval.html"><code>CorrelationInterval</code></a>
+оба поля —
+<a href="../../doc/ku/time/correlation_interval/struct.CorrelationInterval.html#structfield.base"><code>CorrelationInterval::base</code></a> и
+<a href="../../doc/ku/time/correlation_interval/struct.CorrelationInterval.html#structfield.prev"><code>CorrelationInterval::prev</code></a> —
+валидны и задают разные тики базовых часов.
+Если это так, он перекладывает основную работу на вспомогательный
+<a href="../../doc/ku/time/correlation_interval/struct.CorrelationInterval.html#method.datetime_with_resolution">метод</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn CorrelationInterval::datetime_with_resolution&lt;const PARTS_PER_SECOND: i64&gt;(
+    &amp;self,
+    tsc: Tsc,
+) -&gt; NaiveDateTime
+<span class="boring">}
+</span></code></pre></pre>
+<p>В тех редких случаях, когда в <code>atomic_correlation_interval</code> ещё не прошло два тика часов, метод
+<a href="../../doc/ku/time/correlation_interval/struct.CorrelationInterval.html#method.datetime"><code>CorrelationInterval::datetime()</code></a>
+возвращает момент времени
+<a href="../../doc/ku/time/correlation_interval/struct.CorrelationInterval.html#structfield.prev"><code>CorrelationInterval::prev</code></a>
+в виде
+<a href="../../doc/chrono/struct.DateTime.html"><code>DateTime</code></a>.
+Мы заметим это на старте системы по низкому — секундному — разрешению в записях лога.</p>
+<h3 id="Задача-3--реализация-основного-метода-повышения-разрешения-часов"><a class="header" href="#Задача-3--реализация-основного-метода-повышения-разрешения-часов">Задача 3 — реализация основного метода повышения разрешения часов</a></h3>
+<p>Для этой задачи понадобится готовое решение <a href="../../lab/book/1-time-1-rtc.html#%D0%97%D0%B0%D0%B4%D0%B0%D1%87%D0%B0-1--%D1%87%D1%82%D0%B5%D0%BD%D0%B8%D0%B5-%D1%80%D0%B5%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%D0%B3%D0%BE-%D0%B2%D1%80%D0%B5%D0%BC%D0%B5%D0%BD%D0%B8-%D0%B8%D0%B7-%D0%BC%D0%B8%D0%BA%D1%80%D0%BE%D1%81%D1%85%D0%B5%D0%BC%D1%8B-rtc">задачи 1</a>.</p>
+<p>Реализуйте метод
+<a href="../../doc/ku/time/correlation_interval/struct.CorrelationInterval.html#method.datetime_with_resolution"><code>fn CorrelationInterval::datetime_with_resolution()</code></a>.</p>
+<ul>
+<li>Считайте, что <code>self.base.count()</code> и <code>self.prev.count()</code> задают разные секунды с начала Unix–эпохи.</li>
+<li>Необходимо вернуть реальное время, которое соответствует тику номер <code>tsc.get()</code> процессора. Он может быть как больше <code>self.prev.tsc()</code>, так и меньше <code>self.base.tsc()</code>, а может лежать где-то между ними. Чтобы все эти варианты можно было поддержать, тики процессора хранятся в знаковом типе <a href="https://doc.rust-lang.org/nightly/core/primitive.i64.html"><code>i64</code></a>.</li>
+<li>Результат возвращается в типе <a href="../../doc/chrono/naive/struct.NaiveDateTime.html"><code>chrono::naive::NaiveDateTime</code></a>, который не содержит данных о часовом поясе. Идентификатор часового пояса добавит вызывающая функция.</li>
+<li>Запрошенное разрешение <code>PARTS_PER_SECOND</code> задаётся в единицах в секунду, например для миллисекунд <code>PARTS_PER_SECOND = 1_000</code>. Оно не будет выше наносекунд — <code>PARTS_PER_SECOND = 1_000_000_000</code>, — которые поддерживает <a href="../../doc/chrono/naive/struct.NaiveDateTime.html"><code>NaiveDateTime</code></a>.</li>
+<li><a href="https://en.wikipedia.org/wiki/Leap_second">Високосные секунды</a> не поддерживаем.</li>
+</ul>
+<h4 id="Зависание-при-логировании"><a class="header" href="#Зависание-при-логировании">Зависание при логировании</a></h4>
+<p>Если попробовать добавить логирование в метод
+<a href="../../doc/ku/time/correlation_interval/struct.CorrelationInterval.html#method.datetime_with_resolution"><code>CorrelationInterval::datetime_with_resolution()</code></a>,
+то код зависнет.
+Логирование само использует
+<a href="../../doc/ku/time/correlation_interval/struct.CorrelationInterval.html#method.datetime_with_resolution"><code>CorrelationInterval::datetime_with_resolution()</code></a>,
+поэтому можно было бы ожидать, что возникнет бесконечная рекурсия:</p>
+<ul>
+<li><code>debug!()</code> или другой макрос логирования вызывает <code>datetime_with_resolution()</code>.</li>
+<li>Который вызывает <code>debug!()</code> или другой макрос логирования.</li>
+<li>Который вызывает <code>datetime_with_resolution()</code>.</li>
+<li>…</li>
+<li>В конце-концов произошло бы исчерпание стека и падение ядра по Page Fault.</li>
+</ul>
+<p>Бесконечной рекурсии не происходит из-за дополнительной блокировки в логировании — поле
+<a href="../../doc/kernel/log/struct.LogCollector.html#structfield.log"><code>kernel::log::LogCollector::log</code></a>
+имеет тип
+<a href="../../doc/spin/type.Mutex.html"><code>spin::Mutex</code></a><code>&lt;</code><a href="../../doc/kernel/log/struct.Log.html"><code>kernel::log::Log</code></a><code>&gt;</code>.
+Основное предназначение этой блокировки —
+предотвратить перемешивание кусков сообщений от разных процессоров в системе.</p>
+<p>А вот бесконечную рекурсию она переводит во <a href="https://en.wikipedia.org/wiki/Deadlock">взаимоблокировку</a>.
+Когда происходит вызов логирования, блокировка захватывается.
+С захваченной блокировкой происходит вызов
+<a href="../../doc/ku/time/correlation_interval/struct.CorrelationInterval.html#method.datetime_with_resolution"><code>CorrelationInterval::datetime_with_resolution()</code></a>.
+Если он сам вызывает логирование, то происходит попытка рекурсивного захвата уже захваченной блокировки.
+Она не поддерживает рекурсивный захват, поэтому происходит
+<a href="https://en.wikipedia.org/wiki/Deadlock">взаимоблокировка</a>,
+которая и проявляется как зависание.
+Факт <a href="https://en.wikipedia.org/wiki/Deadlock">взаимоблокировки</a>,
+какую конкретно блокировку и какая строка кода пытается захватить,
+легко узнать из <code>(gdb) backtrace</code>, прервав зависший код из <code>gdb</code> комбинацией <code>&lt;Ctrl-C&gt;</code>:</p>
+<pre><code>...
+0x000000000000fff0 in ?? ()
+(gdb) continue
+Continuing.
+^C
+Thread 1 received signal SIGINT, Interrupt.
+0x00000000002ecd9c in core::sync::atomic::atomic_load&lt;u8&gt; (dst=0x320b40 &lt;kernel::log::LOG_COLLECTOR+8&gt;, order=core::sync::atomic::Ordering::Relaxed) at src/sync/atomic.rs:2960
+2960	        match order {
+(gdb) backtrace
+#0  0x00000000002ecd9c in core::sync::atomic::atomic_load&lt;u8&gt; (dst=0x320b40 &lt;kernel::log::LOG_COLLECTOR+8&gt;, 
+    order=core::sync::atomic::Ordering::Relaxed) at src/sync/atomic.rs:2960
+#1  0x000000000022a11f in core::sync::atomic::AtomicBool::load (self=0x320b40 &lt;kernel::log::LOG_COLLECTOR+8&gt;, 
+    order=core::sync::atomic::Ordering::Relaxed)
+    at /home/sergey/.rustup/toolchains/nightly-2022-08-30-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/sync/atomic.rs:456
+#2  0x000000000025d49f in spin::mutex::spin::SpinMutex&lt;kernel::log::Log, spin::relax::Spin&gt;::is_locked&lt;kernel::log::Log, spin::relax::Spin&gt; (self=0x320b40 &lt;kernel::log::LOG_COLLECTOR+8&gt;)
+    at /home/sergey/.cargo/registry/src/github.com-1ecc6299db9ec823/spin-0.9.4/src/mutex/spin.rs:192
+#3  spin::mutex::spin::SpinMutex&lt;kernel::log::Log, spin::relax::Spin&gt;::lock&lt;kernel::log::Log, spin::relax::Spin&gt; (
+    self=0x320b40 &lt;kernel::log::LOG_COLLECTOR+8&gt;)
+    at /home/sergey/.cargo/registry/src/github.com-1ecc6299db9ec823/spin-0.9.4/src/mutex/spin.rs:171
+#4  spin::mutex::Mutex&lt;kernel::log::Log, spin::relax::Spin&gt;::lock&lt;kernel::log::Log, spin::relax::Spin&gt; (
+    self=0x320b40 &lt;kernel::log::LOG_COLLECTOR+8&gt;)
+    at /home/sergey/.cargo/registry/src/github.com-1ecc6299db9ec823/spin-0.9.4/src/mutex.rs:170
+#5  kernel::log::{impl#4}::event (self=0x320b38 &lt;kernel::log::LOG_COLLECTOR&gt;, event=0x10000200c10)
+    at kernel/src/log.rs:241
+...
+#11 0x00000000002b85a2 in ku::time::correlation_interval::CorrelationInterval&lt;1&gt;::datetime_with_resolution&lt;1, 1000&gt; (
+    self=0x10000200fa8, tsc=...) at ku/src/time/correlation_interval.rs:61
+#12 0x00000000002b8059 in ku::time::correlation_interval::CorrelationInterval&lt;1&gt;::datetime&lt;1, 1000&gt; (
+    atomic_correlation_interval=0x344030 &lt;kernel::SYSTEM_INFO+48&gt;, tsc=...) at ku/src/time/correlation_interval.rs:46
+#13 0x00000000002b4d08 in ku::time::rtc::Rtc::datetime&lt;1000&gt; (tsc=...) at ku/src/time/rtc.rs:22
+#14 0x00000000002b4656 in ku::time::datetime_ms (tsc=...) at ku/src/time/mod.rs:49
+#15 0x000000000025cb47 in kernel::log::Log::log_metadata (self=0x320b41 &lt;kernel::log::LOG_COLLECTOR+9&gt;, 
+    level=0x30c030 &lt;kernel::kernel_main::CALLSITE::META+32&gt;, metadata=...) at kernel/src/log.rs:144
+#16 0x000000000025cabe in kernel::log::Log::log_event (self=0x320b41 &lt;kernel::log::LOG_COLLECTOR+9&gt;, 
+    event=0x100002012b0, tsc=...) at kernel/src/log.rs:133
+#17 0x000000000025d512 in kernel::log::{impl#4}::event (self=0x320b38 &lt;kernel::log::LOG_COLLECTOR&gt;, 
+    event=0x100002012b0) at kernel/src/log.rs:241
+...
+</code></pre>
+<p>Фрейм <code>#2</code> сообщает нам, что код крутится в <code>SpinMutex&lt;kernel::log::Log&gt;</code>, принадлежащей
+<a href="../../doc/kernel/log/static.LOG_COLLECTOR.html"><code>kernel::log::LOG_COLLECTOR</code></a>:</p>
+<pre><code>#2  0x000000000025d49f in spin::mutex::spin::SpinMutex&lt;kernel::log::Log, spin::relax::Spin&gt;::is_locked&lt;kernel::log::Log, spin::relax::Spin&gt; (self=0x320b40 &lt;kernel::log::LOG_COLLECTOR+8&gt;)
+</code></pre>
+<p>Фрейм <code>#5</code> сообщает где вызывается повторный захват блокировки — в строке <code>kernel/src/log.rs:241</code> метода <code>event()</code>:</p>
+<pre><code>#5  kernel::log::{impl#4}::event (self=0x320b38 &lt;kernel::log::LOG_COLLECTOR&gt;, event=0x10000200c10)
+    at kernel/src/log.rs:241
+</code></pre>
+<p>А по фрейму <code>#17</code> видно, что блокировка уже была захвачена той же строкой кода:</p>
+<pre><code>#17 0x000000000025d512 in kernel::log::{impl#4}::event (self=0x320b38 &lt;kernel::log::LOG_COLLECTOR&gt;, 
+    event=0x100002012b0) at kernel/src/log.rs:241
+</code></pre>
+<p>Отладить метод
+<a href="../../doc/ku/time/correlation_interval/struct.CorrelationInterval.html#method.datetime_with_resolution"><code>fn CorrelationInterval::datetime_with_resolution()</code></a>.
+с помощью логирования можно разорвав бесконечную рекурсию.
+Например, не вызывая функции времени из логирования.
+Для этого служит формат
+<a href="../../doc/kernel/log/enum.Format.html#variant.Timeless"><code>kernel::log::Format::Timeless</code></a>.
+Чтобы воспользоваться им, измените строку инициализации
+<a href="../../doc/kernel/log/static.LOG_COLLECTOR.html"><code>kernel::log::LOG_COLLECTOR</code></a>
+в конце файла
+<a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/log.rs"><code>kernel/src/log.rs</code></a>:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>static LOG_COLLECTOR: LogCollector = LogCollector::new(Format::Timeless, Level::DEBUG);
+<span class="boring">}
+</span></code></pre></pre>
+<p>Также иногда можно убирать
+<a href="../../doc/spin/type.Mutex.html"><code>Mutex</code></a>
+из поля
+<a href="../../doc/kernel/log/struct.LogCollector.html#structfield.log"><code>kernel::log::LogCollector::log</code></a>.
+Если на нём возникает <a href="https://en.wikipedia.org/wiki/Deadlock">взаимоблокировка</a>.
+А перемешивание записей логов не мешает отладке или вообще не возникает при использования только одного процессора.</p>
+<h3 id="Запуск-тестов"><a class="header" href="#Запуск-тестов">Запуск тестов</a></h3>
+<p>Тесты можно запустить командой <code>cargo test --test 1-time-3-high-resolution-date</code> в директории <code>kernel</code> репозитория.</p>
+<p>После выполнения задачи должен проходить тест <code>high_resolution_date()</code>
+в файле
+<a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/tests/time.rs"><code>kernel/tests/time.rs</code></a>:</p>
+<pre><code class="language-console">$ (cd kernel; cargo test --test 1-time-3-high-resolution-date)
+...
+time::high_resolution_date----------------------------------
+10:39:50.562 0 D waiting for the RTC to tick twice
+10:39:52.001 0 D measuring; timer_ticks = 102
+10:39:57.015 0 D measured; samples = 100; min = PT0.049911511S; max = PT0.050046701S; mean = PT0.049999155S; deviation = PT0.000020516S
+10:39:57.024 0 D restrictions; min_delta = PT0.040S; max_delta = PT0.060S; min_mean = PT0.049500S; max_mean = PT0.050500S; min_deviation = PT0.000000100S; max_deviation = PT0.005S
+time::high_resolution_date------------------------- [passed]
+</code></pre>
+<h3 id="Ориентировочный-объём-работ-этой-части-лабораторки"><a class="header" href="#Ориентировочный-объём-работ-этой-части-лабораторки">Ориентировочный объём работ этой части лабораторки</a></h3>
+<pre><code class="language-console"> ku/src/time/correlation_interval.rs |   26 ++++++++++++++++++++++++--
+ 1 file changed, 24 insertions(+), 2 deletions(-)
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="1-time-3-correlation-point.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next" href="1-time-5-interrupts.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="1-time-3-correlation-point.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" href="1-time-5-interrupts.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </body>
+</html>

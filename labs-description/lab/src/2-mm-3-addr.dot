@@ -1,0 +1,27 @@
+digraph diagram {
+    rankdir = LR
+    ranksep = 1.5
+    nodesep = 1
+
+    fontname="Helvetica,Arial,sans-serif"
+
+    node [fontname = "Helvetica,Arial,sans-serif"; width = 2.0; height = 1.0; style = filled; fillcolor = "#CCCCCC"]
+    edge [arrowhead = vee; fontname="Helvetica,Arial,sans-serif"]
+
+    usize
+    u64
+    Addr
+    Frage
+
+    usize -> u64 [label = "ku::memory::size::into_u64()"]
+    u64 -> usize [label = "ku::memory::size::into_usize()"]
+
+    usize -> Addr [label = "Addr::new()"]
+    u64 -> Addr [label = "Addr::new_u64()"]
+
+    Addr -> usize [constraint = false; label = "Addr::into_usize()"]
+    Addr -> u64 [constraint = false; label = "Addr::into_u64()"]
+
+    Addr -> Frage [label = "Frage::new()"]
+    Frage -> Addr [constraint = false; label = "Frage::address()"]
+}

@@ -1,0 +1,182 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/sergey/.cargo/registry/src/github.com-1ecc6299db9ec823/x86-0.51.0/src/bits64/task.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>task.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../x86/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../../x86/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../x86/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<span id="2">2</span>
+<span id="3">3</span>
+<span id="4">4</span>
+<span id="5">5</span>
+<span id="6">6</span>
+<span id="7">7</span>
+<span id="8">8</span>
+<span id="9">9</span>
+<span id="10">10</span>
+<span id="11">11</span>
+<span id="12">12</span>
+<span id="13">13</span>
+<span id="14">14</span>
+<span id="15">15</span>
+<span id="16">16</span>
+<span id="17">17</span>
+<span id="18">18</span>
+<span id="19">19</span>
+<span id="20">20</span>
+<span id="21">21</span>
+<span id="22">22</span>
+<span id="23">23</span>
+<span id="24">24</span>
+<span id="25">25</span>
+<span id="26">26</span>
+<span id="27">27</span>
+<span id="28">28</span>
+<span id="29">29</span>
+<span id="30">30</span>
+<span id="31">31</span>
+<span id="32">32</span>
+<span id="33">33</span>
+<span id="34">34</span>
+<span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
+<span id="38">38</span>
+<span id="39">39</span>
+<span id="40">40</span>
+<span id="41">41</span>
+<span id="42">42</span>
+<span id="43">43</span>
+<span id="44">44</span>
+<span id="45">45</span>
+<span id="46">46</span>
+<span id="47">47</span>
+<span id="48">48</span>
+<span id="49">49</span>
+<span id="50">50</span>
+<span id="51">51</span>
+<span id="52">52</span>
+<span id="53">53</span>
+<span id="54">54</span>
+<span id="55">55</span>
+<span id="56">56</span>
+<span id="57">57</span>
+<span id="58">58</span>
+<span id="59">59</span>
+<span id="60">60</span>
+<span id="61">61</span>
+<span id="62">62</span>
+<span id="63">63</span>
+<span id="64">64</span>
+<span id="65">65</span>
+<span id="66">66</span>
+<span id="67">67</span>
+<span id="68">68</span>
+<span id="69">69</span>
+<span id="70">70</span>
+<span id="71">71</span>
+<span id="72">72</span>
+<span id="73">73</span>
+<span id="74">74</span>
+<span id="75">75</span>
+<span id="76">76</span>
+<span id="77">77</span>
+<span id="78">78</span>
+<span id="79">79</span>
+<span id="80">80</span>
+<span id="81">81</span>
+<span id="82">82</span>
+<span id="83">83</span>
+<span id="84">84</span>
+<span id="85">85</span>
+<span id="86">86</span>
+<span id="87">87</span>
+<span id="88">88</span>
+<span id="89">89</span>
+<span id="90">90</span>
+</pre><pre class="rust"><code><span class="doccomment">//! Helpers to program the task state segment.
+//! See Intel 3a, Chapter 7, Section 7
+
+</span><span class="kw">use </span><span class="kw">crate</span>::Ring;
+
+<span class="doccomment">/// Although hardware task-switching is not supported in 64-bit mode,
+/// a 64-bit task state segment (TSS) must exist.
+///
+/// The TSS holds information important to 64-bit mode and that is not
+/// directly related to the task-switch mechanism. This information includes:
+///
+/// # RSPn
+/// The full 64-bit canonical forms of the stack pointers (RSP) for privilege levels 0-2.
+/// RSPx is loaded in whenever an interrupt causes the CPU to change RPL to x.
+/// Note on a syscall entry this field is not used to load a stack, setting the stack there
+/// is the handler&#39;s responsibility (however when using the int instruction in user-space,
+/// we load the stack from RSPn).
+///
+/// # ISTn
+/// The full 64-bit canonical forms of the interrupt stack table (IST) pointers.
+/// You can set an interrupt vector to use an IST entry in the Interrupt Descriptor
+/// Table by giving it a number from 0 - 7. If 0 is selected, then the IST mechanism
+/// is not used. If any other number is selected then when that interrupt vector is
+/// called the CPU will load RSP from the corresponding IST entry. This is useful for
+/// handling things like double faults, since you don&#39;t have to worry about switching
+/// stacks; the CPU will do it for you.
+///
+/// # I/O map base address
+/// The 16-bit offset to the I/O permission bit map from the 64-bit TSS base.
+///
+/// The operating system must create at least one 64-bit TSS after activating IA-32e mode.
+/// It must execute the LTR instruction (in 64-bit mode) to load the TR register with a
+/// pointer to the 64-bit TSS responsible for both 64-bitmode programs and
+/// compatibility-mode programs ([load_tr](crate::task::load_tr)).
+</span><span class="attribute">#[derive(Clone, Copy, Debug, Default)]
+#[repr(C, packed)]
+</span><span class="kw">pub struct </span>TaskStateSegment {
+    <span class="kw">pub </span>reserved: u32,
+    <span class="doccomment">/// The full 64-bit canonical forms of the stack pointers (RSP) for privilege levels 0-2.
+    </span><span class="kw">pub </span>rsp: [u64; <span class="number">3</span>],
+    <span class="kw">pub </span>reserved2: u64,
+    <span class="doccomment">/// The full 64-bit canonical forms of the interrupt stack table (IST) pointers.
+    </span><span class="kw">pub </span>ist: [u64; <span class="number">7</span>],
+    <span class="kw">pub </span>reserved3: u64,
+    <span class="kw">pub </span>reserved4: u16,
+    <span class="doccomment">/// The 16-bit offset to the I/O permission bit map from the 64-bit TSS base.
+    </span><span class="kw">pub </span>iomap_base: u16,
+}
+
+<span class="kw">impl </span>TaskStateSegment {
+    <span class="doccomment">/// Creates a new empty TSS.
+    </span><span class="kw">pub const fn </span>new() -&gt; TaskStateSegment {
+        TaskStateSegment {
+            reserved: <span class="number">0</span>,
+            rsp: [<span class="number">0</span>; <span class="number">3</span>],
+            reserved2: <span class="number">0</span>,
+            ist: [<span class="number">0</span>; <span class="number">7</span>],
+            reserved3: <span class="number">0</span>,
+            reserved4: <span class="number">0</span>,
+            iomap_base: <span class="number">0</span>,
+        }
+    }
+
+    <span class="doccomment">/// Sets the stack pointer (`stack_ptr`) to be used for when
+    /// an interrupt causes the CPU to change RPL to `pl`.
+    </span><span class="kw">pub fn </span>set_rsp(<span class="kw-2">&amp;mut </span><span class="self">self</span>, pl: Ring, stack_ptr: u64) {
+        <span class="kw">match </span>pl {
+            Ring::Ring0 =&gt; <span class="self">self</span>.rsp[<span class="number">0</span>] = stack_ptr,
+            Ring::Ring1 =&gt; <span class="self">self</span>.rsp[<span class="number">1</span>] = stack_ptr,
+            Ring::Ring2 =&gt; <span class="self">self</span>.rsp[<span class="number">2</span>] = stack_ptr,
+            Ring::Ring3 =&gt; <span class="macro">unreachable!</span>(<span class="string">&quot;Can&#39;t set stack for PL3&quot;</span>),
+        }
+    }
+
+    <span class="doccomment">/// Sets the stack pointer (`stack_ptr`) to be used when
+    /// an interrupt with a corresponding IST entry in the Interrupt
+    /// Descriptor table pointing to the given `index` is raised.
+    </span><span class="kw">pub fn </span>set_ist(<span class="kw-2">&amp;mut </span><span class="self">self</span>, index: usize, stack_ptr: u64) {
+        <span class="kw">match </span>index {
+            <span class="number">0 </span>=&gt; <span class="self">self</span>.ist[<span class="number">0</span>] = stack_ptr,
+            <span class="number">1 </span>=&gt; <span class="self">self</span>.ist[<span class="number">1</span>] = stack_ptr,
+            <span class="number">2 </span>=&gt; <span class="self">self</span>.ist[<span class="number">2</span>] = stack_ptr,
+            <span class="number">3 </span>=&gt; <span class="self">self</span>.ist[<span class="number">3</span>] = stack_ptr,
+            <span class="number">4 </span>=&gt; <span class="self">self</span>.ist[<span class="number">4</span>] = stack_ptr,
+            <span class="number">5 </span>=&gt; <span class="self">self</span>.ist[<span class="number">5</span>] = stack_ptr,
+            <span class="number">6 </span>=&gt; <span class="self">self</span>.ist[<span class="number">6</span>] = stack_ptr,
+            <span class="kw">_ </span>=&gt; <span class="macro">unreachable!</span>(<span class="string">&quot;Can&#39;t set IST for this index (out of bounds).&quot;</span>),
+        }
+    }
+}
+</code></pre></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="x86" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (bc4b39c27 2022-08-29)" ></div></body></html>

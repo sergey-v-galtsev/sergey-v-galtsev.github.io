@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":[["COLUMNS",""],["ROWS",""],["SIZE",""],["TAB_WIDTH",""]],"fn":[["is_graphical",""],["round_up",""]],"struct":[["Cell",""],["Grid",""]],"type":[["Buffer",""]]};

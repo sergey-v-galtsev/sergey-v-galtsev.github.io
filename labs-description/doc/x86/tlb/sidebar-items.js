@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":[["flush","Invalidate the given address in the TLB using the `invlpg` instruction."],["flush_all","Invalidate the TLB completely by reloading the CR3 register."]]};

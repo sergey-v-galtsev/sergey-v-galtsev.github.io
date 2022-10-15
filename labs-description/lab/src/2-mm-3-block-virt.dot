@@ -1,0 +1,32 @@
+digraph diagram {
+    rankdir = LR
+    ranksep = 2.5
+    nodesep = 1
+
+    fontname="Helvetica,Arial,sans-serif"
+
+    node [fontname = "Helvetica,Arial,sans-serif"; width = 2.0; height = 1.0; style = filled; fillcolor = "#CCCCCC"]
+    edge [arrowhead = vee; fontname="Helvetica,Arial,sans-serif"]
+
+    Virt [label = "Virt / Block::<Virt> / Block::<Page>"]
+
+    const_ptr [label = "*const T"]
+    const_ref [label = "&T"]
+    left_blank [style = invis]
+
+    const_ref -> left_blank [constraint = false; style = invis]
+
+    mut_ptr [label = "*mut T"]
+    mut_ref [label = "&mut T"]
+    mut_slice [label = "&mut [T]"]
+
+    const_ptr -> Virt [label = "from_ptr<T>()"]
+    const_ref -> Virt [label = "from_ref<T>()"]
+    left_blank -> Virt [style = invis]
+
+    Virt -> const_ptr [constraint = false; label = "try_into_ptr<T>()?"]
+    Virt -> const_ref [constraint = false; label = "try_into_ref<T>()?"]
+    Virt -> mut_ptr [label = "try_into_mut_ptr<T>()?"]
+    Virt -> mut_ref [label = "try_into_mut<T>()?"]
+    Virt -> mut_slice [label = "try_into_mut_slice<T>()?"]
+}

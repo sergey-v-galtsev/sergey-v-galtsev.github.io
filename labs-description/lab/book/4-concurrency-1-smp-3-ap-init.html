@@ -1,0 +1,340 @@
+<!DOCTYPE HTML>
+<html lang="ru" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Загрузка Application Processor - Лабораторные работы</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="0-intro-1-nikka.html">Введение в лабораторные работы</a></li><li class="chapter-item expanded affix "><a href="0-intro-2-rust.html">Почему Rust</a></li><li class="chapter-item expanded affix "><a href="0-intro-3-dirs.html">Структура кода</a></li><li class="chapter-item expanded affix "><a href="0-intro-4-install.html">Компиляция и запуск тестов</a></li><li class="chapter-item expanded affix "><a href="0-intro-5-gdb.html">Запуск с отладчиком gdb</a></li><li class="chapter-item expanded affix "><a href="0-intro-6-log.html">Логирование и логи</a></li><li class="chapter-item expanded affix "><a href="0-intro-7-vscode.html">Настройка VSCode</a></li><li class="chapter-item expanded affix "><li class="part-title">Лабораторная работа №1</li><li class="chapter-item expanded "><a href="1-time-0-intro.html"><strong aria-hidden="true">1.</strong> Время</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="1-time-1-rtc.html"><strong aria-hidden="true">1.1.</strong> Часы реального времени</a></li><li class="chapter-item expanded "><a href="1-time-2-tsc.html"><strong aria-hidden="true">1.2.</strong> Счётчик тактов процессора</a></li><li class="chapter-item expanded "><a href="1-time-3-correlation-point.html"><strong aria-hidden="true">1.3.</strong> Счётчики тиков</a></li><li class="chapter-item expanded "><a href="1-time-4-correlation-interval.html"><strong aria-hidden="true">1.4.</strong> Измерение частоты процессора и повышение разрешения часов</a></li><li class="chapter-item expanded "><a href="1-time-5-interrupts.html"><strong aria-hidden="true">1.5.</strong> Обработка прерываний RTC</a></li><li class="chapter-item expanded "><a href="1-time-6-info.html"><strong aria-hidden="true">1.6.</strong> Информация о системе</a></li><li class="chapter-item expanded "><a href="1-time-7-summary.html"><strong aria-hidden="true">1.7.</strong> Собираем всё вместе</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №2</li><li class="chapter-item expanded "><a href="2-mm-0-intro.html"><strong aria-hidden="true">2.</strong> Память</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="2-mm-1-types.html"><strong aria-hidden="true">2.1.</strong> Типы</a></li><li class="chapter-item expanded "><a href="2-mm-2-mapping.html"><strong aria-hidden="true">2.2.</strong> Страничные отображения</a></li><li class="chapter-item expanded "><a href="2-mm-3-diagrams.html"><strong aria-hidden="true">2.3.</strong> Диаграммы преобразований</a></li><li class="chapter-item expanded "><a href="2-mm-4-plan.html"><strong aria-hidden="true">2.4.</strong> План</a></li><li class="chapter-item expanded "><a href="2-mm-5-boot-frame-allocator.html"><strong aria-hidden="true">2.5.</strong> Временный аллокатор фреймов</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space.html"><strong aria-hidden="true">2.6.</strong> Виртуальное адресное пространство</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="2-mm-6-address-space-1-allocation.html"><strong aria-hidden="true">2.6.1.</strong> Аллокатор виртуальных страниц адресного пространства</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space-2-translate.html"><strong aria-hidden="true">2.6.2.</strong> Отображение виртуальных страниц в физические фреймы</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space-3-map.html"><strong aria-hidden="true">2.6.3.</strong> Высокоуровневый интерфейс управления адресным пространством</a></li></ol></li><li class="chapter-item expanded "><a href="2-mm-7-main-frame-allocator.html"><strong aria-hidden="true">2.7.</strong> Основной аллокатор фреймов</a></li><li class="chapter-item expanded "><a href="2-mm-8-tests.html"><strong aria-hidden="true">2.8.</strong> Проверьте себя</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №3</li><li class="chapter-item expanded "><a href="3-user-0-intro.html"><strong aria-hidden="true">3.</strong> Процессы</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="3-user-1-elf.html"><strong aria-hidden="true">3.1.</strong> Загрузка процесса в память</a></li><li class="chapter-item expanded "><a href="3-user-2-permission-checks.html"><strong aria-hidden="true">3.2.</strong> Проверки доступа процесса к памяти</a></li><li class="chapter-item expanded "><a href="3-user-3-user-mode.html"><strong aria-hidden="true">3.3.</strong> Переход в режим пользователя</a></li><li class="chapter-item expanded "><a href="3-user-4-syscall.html"><strong aria-hidden="true">3.4.</strong> Поддержка системных вызовов</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №4</li><li class="chapter-item expanded "><a href="4-concurrency-0-intro.html"><strong aria-hidden="true">4.</strong> Конкурентное выполнение задач</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="4-concurrency-1-smp-0-intro.html"><strong aria-hidden="true">4.1.</strong> Поддержка нескольких процессоров (SMP)</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="4-concurrency-1-smp-1-local-apic.html"><strong aria-hidden="true">4.1.1.</strong> Работа с local APIC</a></li><li class="chapter-item expanded "><a href="4-concurrency-1-smp-2-cpus.html"><strong aria-hidden="true">4.1.2.</strong> Состояние каждого процессора</a></li><li class="chapter-item expanded "><a href="4-concurrency-1-smp-3-ap-init.html" class="active"><strong aria-hidden="true">4.1.3.</strong> Загрузка Application Processor</a></li></ol></li><li class="chapter-item expanded "><a href="4-concurrency-2-table.html"><strong aria-hidden="true">4.2.</strong> Таблица процессов</a></li><li class="chapter-item expanded "><a href="4-concurrency-3-preemption.html"><strong aria-hidden="true">4.3.</strong> Вытесняющая многозадачность</a></li><li class="chapter-item expanded "><a href="4-concurrency-4-scheduler.html"><strong aria-hidden="true">4.4.</strong> Планировщик</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №5</li><li class="chapter-item expanded "><a href="5-um-0-intro.html"><strong aria-hidden="true">5.</strong> Продвинутая работа с памятью в пространстве пользователя</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="5-um-1-ring-buffer.html"><strong aria-hidden="true">5.1.</strong> Разделяемая память</a></li><li class="chapter-item expanded "><a href="5-um-2-memory.html"><strong aria-hidden="true">5.2.</strong> Системные вызовы для работы с виртуальной памятью</a></li><li class="chapter-item expanded "><a href="5-um-3-eager-fork.html"><strong aria-hidden="true">5.3.</strong> Eager fork</a></li><li class="chapter-item expanded "><a href="5-um-4-traps.html"><strong aria-hidden="true">5.4.</strong> Обработка исключений в режиме пользователя</a></li><li class="chapter-item expanded "><a href="5-um-5-cow-fork.html"><strong aria-hidden="true">5.5.</strong> Copy-on-write fork</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Лабораторные работы</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="Загрузка-application-processor"><a class="header" href="#Загрузка-application-processor">Загрузка Application Processor</a></h2>
+<p>Перед тем как приступить к запуску AP, процессор BSP должен собрать всю информацию о системе: общее число CPU, их APIC ID и адреса, по которым располагаются MMIO для LAPIC.
+Эту информацию собирает BIOS, а ядро получает её от него в таблицах
+<a href="https://en.wikipedia.org/wiki/Advanced_Configuration_and_Power_Interface">Advanced Configuration and Power Interface</a> (ACPI).
+Чтение таблицы конфигурации процессоров реализовано с помощью внешней библиотеки
+<a href="../../doc/acpi/index.html"><code>acpi</code></a> и находится в методе
+<a href="../../doc/kernel/smp/acpi_info/struct.AcpiInfo.html#method.new"><code>kernel::smp::acpi_info::AcpiInfo::new()</code></a>
+в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/smp/acpi_info.rs"><code>kernel/src/smp/acpi_info.rs</code></a>.</p>
+<p>Непосредственно запуск AP из BSP происходит в функции
+<a href="../../doc/kernel/smp/ap_init/fn.boot_ap.html"><code>kernel::smp::ap_init::boot_ap()</code></a>
+в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/smp/ap_init.rs"><code>kernel/src/smp/ap_init.rs</code></a>.
+BSP указывает адрес, c которого начинать выполнение кода загрузки AP, передавая его в
+<a href="https://en.wikipedia.org/wiki/Inter-processor_interrupt">inter-processor interrupt</a> (IPI)
+с помощью метода
+<a href="../../doc/kernel/smp/local_apic/struct.LocalApic.html#method.send_init"><code>kernel::smp::local_apic::LocalApic::send_init()</code></a>.
+BSP должен передать AP код загрузчика, слепок которого находится в функции
+<a href="../../doc/kernel/smp/ap_init/fn.switch_from_real_mode_to_long_mode.html"><code>kernel::smp::ap_init::switch_from_real_mode_to_long_mode()</code></a>
+в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/smp/ap_init.rs"><code>kernel/src/smp/ap_init.rs</code></a>.
+Проблема в том, что AP ещё находится в <a href="https://en.wikipedia.org/wiki/Real_mode">16-битном реальном режиме</a>, в котором может адресовать только 1 мегабайт памяти.
+Поэтому код загрузчика нужно перенести туда, откуда AP сможет его прочитать.
+В Nikka выбран фиксированный физический адрес
+<a href="../../doc/kernel/smp/ap_init/constant.BOOT_CODE.html"><code>kernel::smp::ap_init::BOOT_CODE</code></a>.</p>
+<p>В конец того же фрейма памяти записывается стек с дополнительной информацией для загрузки AP.
+Через этот стек в
+<a href="../../doc/kernel/smp/ap_init/fn.switch_from_real_mode_to_long_mode.html"><code>switch_from_real_mode_to_long_mode()</code></a>
+передаётся дополнительная информация, необходимая для загрузки AP.
+Например, дескриптор описывающий GDT, который можно передать инструкции <code>lgdt</code> как есть.
+Или адрес корневой таблицы страниц, который можно как есть записать в <code>CR3</code>.
+Это сделано, чтобы:</p>
+<ul>
+<li>Не нужно было в функции <a href="../../doc/kernel/smp/ap_init/fn.switch_from_real_mode_to_long_mode.html"><code>switch_from_real_mode_to_long_mode()</code></a> на 16-битном ассемблере строить GDT, таблицы страниц и т.д. То есть для максимального упрощения ассемблерной части кода.</li>
+<li>Содержимое системных регистров процессора на всех AP совпадало с аналогичными регистрами BSP. То есть, чтобы можно было один раз правильно настроить системные регистры BSP, и автоматически получить правильные и консистентные по системе в целом настройки всех процессоров. Естественно, исключая те системные регистры, которые должны быть разными и настраиваются в предыдущих задачах в <a href="../../doc/kernel/smp/cpu/struct.Cpu.html"><code>kernel::smp::cpu::Cpu</code></a>.</li>
+</ul>
+<p>Вся эта информация передаётся в виде структуры
+<a href="../../doc/kernel/smp/ap_init/struct.BootStack.html"><code>kernel::smp::ap_init::BootStack</code></a>,
+которая определена в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/smp/ap_init.rs"><code>kernel/src/smp/ap_init.rs</code></a>.</p>
+<p>Подготовку кода и стека выполняет функция
+<a href="../../doc/kernel/smp/ap_init/fn.prepare_boot_code.html"><code>kernel::smp::ap_init::prepare_boot_code()</code></a>.
+Копирование кода она делегирует функции
+<a href="../../doc/kernel/smp/ap_init/fn.copy_switch_mode_code.html"><code>kernel::smp::ap_init::copy_switch_mode_code()</code></a>,
+а подготовку стека — методу
+<a href="../../doc/kernel/smp/ap_init/struct.BootStack.html#method.new"><code>kernel::smp::ap_init::BootStack::new()</code></a>.</p>
+<p>После подготовки кода и данных загрузчика,
+<a href="../../doc/kernel/smp/ap_init/fn.boot_ap.html"><code>boot_ap()</code></a>
+с помощью
+<a href="../../doc/kernel/smp/local_apic/struct.LocalApic.html#method.send_init"><code>LocalApic::send_init()</code></a>
+посылает AP специальное прерывание
+<a href="../../doc/kernel/smp/local_apic/struct.InterruptCommand.html#associatedconstant.START_UP"><code>kernel::smp::local_apic::InterruptCommand::START_UP</code></a>
+вместе с указанием, с какого адреса начинать исполнение — в нашем случае
+<a href="../../doc/kernel/smp/ap_init/constant.BOOT_CODE.html"><code>BOOT_CODE</code></a>.
+Код загрузчика
+<a href="../../doc/kernel/smp/ap_init/fn.switch_from_real_mode_to_long_mode.html"><code>switch_from_real_mode_to_long_mode()</code></a>
+переводит процессор в защищённый режим, настраивает сегменты кода и данных ядра и виртуальную память, необходимую для перехода к выполнению кода на языке Rust.
+После этого она переключается с временного стека в стек ядра, который мы подготовили в
+<a href="../../lab/book/4-concurrency-1-smp-2-cpus.html#%D0%97%D0%B0%D0%B4%D0%B0%D1%87%D0%B0-5--%D0%98%D0%BD%D0%B8%D1%86%D0%B8%D0%B0%D0%BB%D0%B8%D0%B7%D0%B0%D1%86%D0%B8%D1%8F-%D0%B2%D0%B5%D0%BA%D1%82%D0%BE%D1%80%D0%B0-%D1%81%D1%82%D1%80%D1%83%D0%BA%D1%82%D1%83%D1%80-kernelsmpcpucpu">задаче 5</a>.
+И переходит в функцию
+<a href="../../doc/kernel/smp/ap_init/fn.init_ap.html"><code>kernel::smp::ap_init::init_ap()</code></a>
+из <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/smp/acpi_info.rs"><code>kernel/src/smp/acpi_info.rs</code></a>,
+которая станет первой функцией на Rust, запущенной на AP.</p>
+<p>Функция
+<a href="../../doc/kernel/smp/ap_init/fn.init_ap.html"><code>init_ap()</code></a>
+завершает инициализацию AP:</p>
+<ul>
+<li>Загружает основную <code>GDT</code> ядра. И переключает сегментные регистры на неё.</li>
+<li>Инициализирует его local APIC методом <a href="../../doc/kernel/smp/local_apic/struct.LocalApic.html#method.init"><code>LocalApic::init()</code></a>.</li>
+<li>Инициализирует регистры <code>FS</code> и <code>TSS</code> методами <a href="../../doc/kernel/smp/cpu/struct.Cpu.html#method.set_fs"><code>Cpu::set_fs()</code></a> и <a href="../../doc/kernel/smp/cpu/struct.Cpu.html#method.set_tss"><code>Cpu::set_tss()</code></a>.</li>
+<li>Инициализирует регистр <code>IDTR</code> и включает прерывания.</li>
+</ul>
+<p>Все AP запускаются по очереди.
+Функция
+<a href="../../doc/kernel/smp/fn.init_smp.html"><code>kernel::smp::init_smp()</code></a>
+из файла <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/smp/mod.rs"><code>kernel/src/smp/mod.rs</code></a> в цикле запускает
+<a href="../../doc/kernel/smp/ap_init/fn.init_ap.html"><code>init_ap()</code></a>
+для каждого из найденных в системе AP —
+<a href="../../doc/kernel/smp/acpi_info/fn.usable_aps.html"><code>kernel::smp::acpi_info::usable_aps()</code></a>.
+А функция
+<a href="../../doc/kernel/smp/ap_init/fn.init_ap.html"><code>init_ap()</code></a>
+перед выходом ждёт когда запущенный им AP завершит свою инициализацию и сигнализирует об этом через
+<a href="https://doc.rust-lang.org/nightly/core/sync/atomic/struct.AtomicBool.html"><code>core::sync::atomic::AtomicBool</code></a>.
+Этот
+<a href="https://doc.rust-lang.org/nightly/core/sync/atomic/struct.AtomicBool.html"><code>AtomicBool</code></a>
+хранится на стеке функции
+<a href="../../doc/kernel/smp/ap_init/fn.init_ap.html"><code>init_ap()</code></a>.
+За ожидание на нём отвечает функция
+<a href="../../doc/kernel/smp/ap_init/fn.wait_initialized.html"><code>kernel::smp::ap_init::wait_initialized()</code></a>,
+а AP сигнализирует об окончании своей загрузки с помощью функции
+<a href="../../doc/kernel/smp/ap_init/fn.signal_initialized.html"><code>kernel::smp::ap_init::signal_initialized()</code></a>.</p>
+<h3 id="Задача-6--переключение-ap-в-64-битный-режим"><a class="header" href="#Задача-6--переключение-ap-в-64-битный-режим">Задача 6 — переключение AP в 64-битный режим</a></h3>
+<p>Реализуйте <a href="../../doc/kernel/smp/ap_init/fn.switch_from_real_mode_to_long_mode.html">функцию</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn switch_from_real_mode_to_long_mode() -&gt; !
+<span class="boring">}
+</span></code></pre></pre>
+<p>Она:</p>
+<ul>
+<li>Запускается в <a href="https://en.wikipedia.org/wiki/Real_mode">16-битном реальном режиме</a> и в процессе работы переключается в <a href="https://en.wikipedia.org/wiki/Long_mode">64-битный режим</a> напрямую, минуя <a href="https://en.wikipedia.org/wiki/Protected_mode">32-х битный защищённый режим</a>. Это делается аналогично <a href="https://wiki.osdev.org/Entering_Long_Mode_Directly">статье</a>, но гораздо проще, так как все нужные структуры и значения регистров код на Rust копирует с BSP.</li>
+<li>Должна настроить сегментные регистры и переключиться на временный стек по адресу записанному в константе <a href="../../doc/kernel/smp/ap_init/constant.BOOT_STACK.html"><code>kernel::smp::ap_init::BOOT_STACK</code></a>.</li>
+<li>Инициализирует системные регистры, переданные через временный стек. В частности, страничное отображение и GDT.</li>
+<li>После инициализации GDT, переинициализирует сегментные регистры селекторами новой GDT. Для переинициализации <code>CS</code> можно использовать <code>far ret</code>. Использовать <code>far jmp</code> не получится, так как для него селектор сегмента кода должен быть константой, а нам хочется передать селектор кода переменной. Она записана в поле <a href="../../doc/kernel/smp/ap_init/struct.BootStack.html#structfield.kernel_code"><code>BootStack::kernel_code</code></a>.</li>
+<li>Далее, забирает с временного стека аргументы для функции <a href="../../doc/kernel/smp/ap_init/fn.init_ap.html"><code>init_ap()</code></a>. И помещает их в регистры, в соответствии с <a href="https://wiki.osdev.org/System_V_ABI#x86-64">x86-64 C ABI</a>.</li>
+<li>Финальным аккордом переключается в выделенный данному CPU в <a href="../../lab/book/4-concurrency-1-smp-2-cpus.html#%D0%97%D0%B0%D0%B4%D0%B0%D1%87%D0%B0-5--%D0%98%D0%BD%D0%B8%D1%86%D0%B8%D0%B0%D0%BB%D0%B8%D0%B7%D0%B0%D1%86%D0%B8%D1%8F-%D0%B2%D0%B5%D0%BA%D1%82%D0%BE%D1%80%D0%B0-%D1%81%D1%82%D1%80%D1%83%D0%BA%D1%82%D1%83%D1%80-kernelsmpcpucpu">задаче 5</a> стек ядра и передаёт управление в функцию <a href="../../doc/kernel/smp/ap_init/fn.init_ap.html"><code>init_ap()</code></a>.</li>
+</ul>
+<p>Поля в
+<a href="../../doc/kernel/smp/ap_init/struct.BootStack.html"><code>BootStack</code></a>
+организованы в удобном для референсного кода порядке.
+В частности, поля с селектором кода
+<a href="../../doc/kernel/smp/ap_init/struct.BootStack.html#structfield.kernel_code"><code>BootStack::kernel_code</code></a>
+и релоцированным адресом
+<a href="../../doc/kernel/smp/ap_init/struct.BootStack.html#structfield.set_cs_rip_to_64bit"><code>BootStack::set_cs_rip_to_64bit</code></a>
+метки <code>set_cs_rip_to_64bit:</code> лежат так, что образуют
+<a href="https://en.wikipedia.org/wiki/Far_pointer">far pointer</a>
+<code>kernel_code:set_cs_rip_to_64bit</code>, который может быть использован инструкцией <code>far ret</code> как есть.</p>
+<p>Для передачи управления в функцию
+<a href="../../doc/kernel/smp/ap_init/fn.init_ap.html"><code>init_ap()</code></a>
+стоит использовать косвенный <code>jmp</code> по её абсолютному адресу.
+Так как код вызывающей функции
+<a href="../../doc/kernel/smp/ap_init/fn.switch_from_real_mode_to_long_mode.html"><code>switch_from_real_mode_to_long_mode()</code></a>
+будет релоцирован по адресу
+<a href="../../doc/kernel/smp/ap_init/constant.BOOT_CODE.html"><code>BOOT_CODE</code></a>,
+относительные адреса в нём работать не будут.
+А <code>jmp</code> предпочтительнее чем <code>call</code>, так как возвращаться функция
+<a href="../../doc/kernel/smp/ap_init/fn.init_ap.html"><code>init_ap()</code></a>
+не будет.
+Это видно по возвращаемому <a href="https://doc.rust-lang.ru/book/ch19-04-advanced-types.html#%D0%A2%D0%B8%D0%BF-never-%D0%BA%D0%BE%D1%82%D0%BE%D1%80%D1%8B%D0%B9-%D0%BD%D0%B8%D0%BA%D0%BE%D0%B3%D0%B4%D0%B0-%D0%BD%D0%B5-%D0%B2%D0%BE%D0%B7%D0%B2%D1%80%D0%B0%D1%89%D0%B0%D0%B5%D1%82%D1%81%D1%8F">типу <em>никогда</em></a> в её сигнатуре.
+А значит, адрес возврата просто съел бы место в стеке ядра.
+Для получения абсолютного адреса определённой в том же исходном файле метки, и в том числе функции,
+в ассемблере можно использовать выражение <code>OFFSET init_ap</code>.</p>
+<p>При желании вы можете отступить от предложенной схемы загрузки AP и реализовать любой другой работающий вариант.
+Также, можно передать через
+<a href="../../doc/kernel/smp/ap_init/struct.BootStack.html"><code>BootStack</code></a>
+какую-либо дополнительную информацию.</p>
+<p>Учтите, что дело осложняется тем, что до завершения инициализации AP, ни логирования, ни обработки исключений, ни других удобных для отладки вещей доступно не будет.
+И, например, в случае возникновения любого исключения до вызова <code>IDT.load()</code>, вся система просто перезагрузится.
+К счастью, мы запускаем Nikka в эмуляторе, и перезагрузится эмулируемая машина.
+Кроме того, эмулятор <a href="../../lab/book/0-intro-5-gdb.html">позволяет подключиться к ядру отладчиком</a> и выполнять код функции
+<a href="../../doc/kernel/smp/ap_init/fn.switch_from_real_mode_to_long_mode.html"><code>switch_from_real_mode_to_long_mode()</code></a>
+пошагово.</p>
+<p>Однако, будьте готовы к тому что на написание и отладку этой задачи может потребоваться много времени.</p>
+<h3 id="Ориентировочный-объём-работ-этой-части-лабораторки"><a class="header" href="#Ориентировочный-объём-работ-этой-части-лабораторки">Ориентировочный объём работ этой части лабораторки</a></h3>
+<pre><code class="language-console"> kernel/src/smp/ap_init.rs |   42 ++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 40 insertions(+), 2 deletions(-)
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="4-concurrency-1-smp-2-cpus.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next" href="4-concurrency-2-table.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="4-concurrency-1-smp-2-cpus.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" href="4-concurrency-2-table.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </body>
+</html>

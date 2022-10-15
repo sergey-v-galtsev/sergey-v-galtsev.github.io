@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":[["State",""]],"mod":[["test_scaffolding",""]],"struct":[["Process",""],["TrapContext",""]]};

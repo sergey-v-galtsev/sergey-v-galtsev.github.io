@@ -1,0 +1,17 @@
+digraph diagram {
+    rankdir = LR
+    ranksep = 1.5
+
+    fontname="Helvetica,Arial,sans-serif"
+
+    node [fontname = "Helvetica,Arial,sans-serif"; width = 2.0; height = 1.0; style = filled; fillcolor = "#CCCCCC"]
+    edge [arrowhead = vee; fontname="Helvetica,Arial,sans-serif"]
+
+    Phys
+
+    Frame
+
+    Frame -> Phys [label = "Frame::address()"]
+
+    Phys -> Frame [constraint = false; label = "Frame::new()"]
+}

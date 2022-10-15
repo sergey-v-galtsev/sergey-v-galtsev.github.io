@@ -1,0 +1,747 @@
+<!DOCTYPE HTML>
+<html lang="ru" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Счётчики тиков - Лабораторные работы</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="0-intro-1-nikka.html">Введение в лабораторные работы</a></li><li class="chapter-item expanded affix "><a href="0-intro-2-rust.html">Почему Rust</a></li><li class="chapter-item expanded affix "><a href="0-intro-3-dirs.html">Структура кода</a></li><li class="chapter-item expanded affix "><a href="0-intro-4-install.html">Компиляция и запуск тестов</a></li><li class="chapter-item expanded affix "><a href="0-intro-5-gdb.html">Запуск с отладчиком gdb</a></li><li class="chapter-item expanded affix "><a href="0-intro-6-log.html">Логирование и логи</a></li><li class="chapter-item expanded affix "><a href="0-intro-7-vscode.html">Настройка VSCode</a></li><li class="chapter-item expanded affix "><li class="part-title">Лабораторная работа №1</li><li class="chapter-item expanded "><a href="1-time-0-intro.html"><strong aria-hidden="true">1.</strong> Время</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="1-time-1-rtc.html"><strong aria-hidden="true">1.1.</strong> Часы реального времени</a></li><li class="chapter-item expanded "><a href="1-time-2-tsc.html"><strong aria-hidden="true">1.2.</strong> Счётчик тактов процессора</a></li><li class="chapter-item expanded "><a href="1-time-3-correlation-point.html" class="active"><strong aria-hidden="true">1.3.</strong> Счётчики тиков</a></li><li class="chapter-item expanded "><a href="1-time-4-correlation-interval.html"><strong aria-hidden="true">1.4.</strong> Измерение частоты процессора и повышение разрешения часов</a></li><li class="chapter-item expanded "><a href="1-time-5-interrupts.html"><strong aria-hidden="true">1.5.</strong> Обработка прерываний RTC</a></li><li class="chapter-item expanded "><a href="1-time-6-info.html"><strong aria-hidden="true">1.6.</strong> Информация о системе</a></li><li class="chapter-item expanded "><a href="1-time-7-summary.html"><strong aria-hidden="true">1.7.</strong> Собираем всё вместе</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №2</li><li class="chapter-item expanded "><a href="2-mm-0-intro.html"><strong aria-hidden="true">2.</strong> Память</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="2-mm-1-types.html"><strong aria-hidden="true">2.1.</strong> Типы</a></li><li class="chapter-item expanded "><a href="2-mm-2-mapping.html"><strong aria-hidden="true">2.2.</strong> Страничные отображения</a></li><li class="chapter-item expanded "><a href="2-mm-3-diagrams.html"><strong aria-hidden="true">2.3.</strong> Диаграммы преобразований</a></li><li class="chapter-item expanded "><a href="2-mm-4-plan.html"><strong aria-hidden="true">2.4.</strong> План</a></li><li class="chapter-item expanded "><a href="2-mm-5-boot-frame-allocator.html"><strong aria-hidden="true">2.5.</strong> Временный аллокатор фреймов</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space.html"><strong aria-hidden="true">2.6.</strong> Виртуальное адресное пространство</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="2-mm-6-address-space-1-allocation.html"><strong aria-hidden="true">2.6.1.</strong> Аллокатор виртуальных страниц адресного пространства</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space-2-translate.html"><strong aria-hidden="true">2.6.2.</strong> Отображение виртуальных страниц в физические фреймы</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space-3-map.html"><strong aria-hidden="true">2.6.3.</strong> Высокоуровневый интерфейс управления адресным пространством</a></li></ol></li><li class="chapter-item expanded "><a href="2-mm-7-main-frame-allocator.html"><strong aria-hidden="true">2.7.</strong> Основной аллокатор фреймов</a></li><li class="chapter-item expanded "><a href="2-mm-8-tests.html"><strong aria-hidden="true">2.8.</strong> Проверьте себя</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №3</li><li class="chapter-item expanded "><a href="3-user-0-intro.html"><strong aria-hidden="true">3.</strong> Процессы</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="3-user-1-elf.html"><strong aria-hidden="true">3.1.</strong> Загрузка процесса в память</a></li><li class="chapter-item expanded "><a href="3-user-2-permission-checks.html"><strong aria-hidden="true">3.2.</strong> Проверки доступа процесса к памяти</a></li><li class="chapter-item expanded "><a href="3-user-3-user-mode.html"><strong aria-hidden="true">3.3.</strong> Переход в режим пользователя</a></li><li class="chapter-item expanded "><a href="3-user-4-syscall.html"><strong aria-hidden="true">3.4.</strong> Поддержка системных вызовов</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №4</li><li class="chapter-item expanded "><a href="4-concurrency-0-intro.html"><strong aria-hidden="true">4.</strong> Конкурентное выполнение задач</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="4-concurrency-1-smp-0-intro.html"><strong aria-hidden="true">4.1.</strong> Поддержка нескольких процессоров (SMP)</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="4-concurrency-1-smp-1-local-apic.html"><strong aria-hidden="true">4.1.1.</strong> Работа с local APIC</a></li><li class="chapter-item expanded "><a href="4-concurrency-1-smp-2-cpus.html"><strong aria-hidden="true">4.1.2.</strong> Состояние каждого процессора</a></li><li class="chapter-item expanded "><a href="4-concurrency-1-smp-3-ap-init.html"><strong aria-hidden="true">4.1.3.</strong> Загрузка Application Processor</a></li></ol></li><li class="chapter-item expanded "><a href="4-concurrency-2-table.html"><strong aria-hidden="true">4.2.</strong> Таблица процессов</a></li><li class="chapter-item expanded "><a href="4-concurrency-3-preemption.html"><strong aria-hidden="true">4.3.</strong> Вытесняющая многозадачность</a></li><li class="chapter-item expanded "><a href="4-concurrency-4-scheduler.html"><strong aria-hidden="true">4.4.</strong> Планировщик</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №5</li><li class="chapter-item expanded "><a href="5-um-0-intro.html"><strong aria-hidden="true">5.</strong> Продвинутая работа с памятью в пространстве пользователя</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="5-um-1-ring-buffer.html"><strong aria-hidden="true">5.1.</strong> Разделяемая память</a></li><li class="chapter-item expanded "><a href="5-um-2-memory.html"><strong aria-hidden="true">5.2.</strong> Системные вызовы для работы с виртуальной памятью</a></li><li class="chapter-item expanded "><a href="5-um-3-eager-fork.html"><strong aria-hidden="true">5.3.</strong> Eager fork</a></li><li class="chapter-item expanded "><a href="5-um-4-traps.html"><strong aria-hidden="true">5.4.</strong> Обработка исключений в режиме пользователя</a></li><li class="chapter-item expanded "><a href="5-um-5-cow-fork.html"><strong aria-hidden="true">5.5.</strong> Copy-on-write fork</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Лабораторные работы</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="Счётчики-тиков-различных-источников-времени"><a class="header" href="#Счётчики-тиков-различных-источников-времени">Счётчики тиков различных источников времени</a></h2>
+<p>Структура
+<a href="../../doc/ku/time/correlation_point/struct.CorrelationPoint.html"><code>ku::time::correlation_point::CorrelationPoint</code></a>
+из файла <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/ku/src/time/correlation_point.rs"><code>ku/src/time/correlation_point.rs</code></a>
+предназначена для привязки тактов процессора к другим часам в один момент времени.
+Она содержит поля:</p>
+<ul>
+<li><a href="../../doc/ku/time/correlation_point/struct.CorrelationPoint.html#structfield.tsc"><code>CorrelationPoint::tsc</code></a> со значением счётчика тактов процессора.</li>
+<li><a href="../../doc/ku/time/correlation_point/struct.CorrelationPoint.html#structfield.count"><code>CorrelationPoint::count</code></a> со значением счётчика тиков другого источника времени в тот же момент.</li>
+</ul>
+<p>Если значение
+<a href="../../doc/ku/time/correlation_point/struct.CorrelationPoint.html#structfield.tsc"><code>CorrelationPoint::tsc</code></a>
+равно нулю, то структура в целом считается невалидной —
+<a href="../../doc/ku/time/correlation_point/struct.CorrelationPoint.html#method.invalid"><code>CorrelationPoint::invalid()</code></a>.
+Это означает, что
+<a href="../../doc/ku/time/correlation_point/struct.CorrelationPoint.html#structfield.count"><code>CorrelationPoint::count</code></a>
+не привязан ни к какому значению
+<a href="../../doc/ku/time/correlation_point/struct.CorrelationPoint.html#structfield.tsc"><code>CorrelationPoint::tsc</code></a>.
+И значение структуры относится не к самому тику, а к промежутку после тика
+<a href="../../doc/ku/time/correlation_point/struct.CorrelationPoint.html#structfield.count"><code>CorrelationPoint::count</code></a>
+и до следующего.
+При этом значение
+<a href="../../doc/ku/time/correlation_point/struct.CorrelationPoint.html#structfield.count"><code>CorrelationPoint::count</code></a>
+может быть использовано как текущее время с низким разрешением — частотой соответствующих часов.</p>
+<p>Посмотрите код реализации структуры
+<a href="../../doc/ku/time/correlation_point/struct.CorrelationPoint.html"><code>ku::time::correlation_point::CorrelationPoint</code></a>,
+он достаточно прост.</p>
+<p>Более интересная структура
+<a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html"><code>ku::time::correlation_point::AtomicCorrelationPoint</code></a>
+из файла <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/ku/src/time/correlation_point.rs"><code>ku/src/time/correlation_point.rs</code></a> предназначена для конкурентного доступа к значениям
+<a href="../../doc/ku/time/correlation_point/struct.CorrelationPoint.html"><code>CorrelationPoint</code></a>.
+То есть <a href="../../doc/ku/time/correlation_point/struct.CorrelationPoint.html"><code>CorrelationPoint</code></a> и
+<a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html"><code>AtomicCorrelationPoint</code></a>
+соотносятся также как примитивный тип
+<a href="https://doc.rust-lang.org/nightly/core/primitive.i64.html"><code>i64</code></a>
+и атомарный
+<a href="https://doc.rust-lang.org/nightly/core/sync/atomic/struct.AtomicI64.html"><code>core::sync::atomic::AtomicI64</code></a>.</p>
+<p>Атомарность нужна для того, чтобы конкурентно</p>
+<ul>
+<li>в обработчике прерывания обновлять счётчики <a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html"><code>AtomicCorrelationPoint</code></a>;</li>
+<li>а в обычном коде читать эти счётчики, чтобы “посмотреть на часы”.</li>
+</ul>
+<p>В <a href="../../doc/ku/time/correlation_point/struct.CorrelationPoint.html"><code>CorrelationPoint</code></a> два числа типа
+<a href="https://doc.rust-lang.org/nightly/core/primitive.i64.html"><code>i64</code></a>,
+а в
+<a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html"><code>AtomicCorrelationPoint</code></a> два соответствующих им
+<a href="https://doc.rust-lang.org/nightly/core/sync/atomic/struct.AtomicI64.html"><code>AtomicI64</code></a>.
+Нам нужно читать и записывать эти два значения согласованно, поэтому и возникают небольшие сложности.</p>
+<p>Можно было бы завести блокировку на доступ к полям
+<a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html"><code>AtomicCorrelationPoint</code></a>,
+но это потребовало бы захватывать её из прерывания.
+Это практически гарантированно приведёт к проблемам:</p>
+<ul>
+<li>Захват этой блокировки должен ещё и запрещать прерывания. Иначе возможна <a href="https://en.wikipedia.org/wiki/Deadlock">взаимоблокировка</a>, подумайте почему. А Nikka предпочитает не отключать прерывания на потенциально длительное время удержания какой-нибудь блокировки.</li>
+<li>Иногда прерывание будет ждать другой код, пока он не отпустит эту блокировку. Обычно прерывания являются более приоритетной деятельностью, поэтому возникнет нежелательная <a href="https://en.wikipedia.org/wiki/Priority_inversion">инверсия приоритетов</a>.</li>
+<li>Писать мы хотим из прерывания в режиме ядра, а читать — из режима пользователя. При этом с одной стороны, ядро должно обеспечить консистентность чтения коду пользователя. А с другой — оно не должно допустить чтобы злонамеренный код из пользовательского режима мог заблокировать ядро, в том числе навечно.</li>
+</ul>
+<p>Вообще, захват блокировок из прерываний — очень плохая идея.</p>
+<p>Поэтому реализуем
+<a href="https://en.wikipedia.org/wiki/Non-blocking_algorithm">неблокирующую синхронизацию</a>
+для согласованного доступа к полям
+<a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html"><code>AtomicCorrelationPoint</code></a>.
+Которая будет отдавать предпочтение писателю, так как это обработчик прерывания в ядре, —
+он всегда сможет завершить работу по обновлению структуры за фиксированное и достаточно небольшое количество тактов.
+И никогда не будет ждать читателей, которые могут быть запущены как в режиме ядра, так и в режиме пользователя.
+А вот читатели будут максимально пессимизированы —
+они будут вынуждены ждать пока писатель завершит свою работу, если им не повезло запуститься конкурентно с писателем.
+Впрочем, для них это не будет страшно, так как:</p>
+<ul>
+<li>Писатель запускается редко, один раз в секунду для микросхемы RTC. Или двадцать раз в секунду для микросхемы PIT <a href="https://en.wikipedia.org/wiki/Intel_8253">Intel 8253/8254</a> — это сконфигурированная в Nikka частота, её можно поменять. Эти два писателя пишут в разные экземпляры структуры, поэтому они никогда не конфликтуют между собой.</li>
+<li>Писатель отрабатывает очень быстро, всего за несколько инструкций процессора.</li>
+</ul>
+<p>В качестве инструмента такой неблокирующей синхронизации предлагается использовать упрощённый
+<a href="https://en.wikipedia.org/wiki/Seqlock">sequence lock</a>.
+В нашем случае его идея в следующем.
+Мы храним в поле
+<a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html#structfield.sequence_number"><code>AtomicCorrelationPoint::sequence_number</code></a>
+удвоенный номер операции обновления.
+А в его младшем бите хранится признак, что сейчас структура
+<a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html"><code>AtomicCorrelationPoint</code></a>
+находится в неконсистентном состоянии из-за текущей активности писателя.
+То есть:</p>
+<ul>
+<li>Нечётное значение в <a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html#structfield.sequence_number"><code>AtomicCorrelationPoint::sequence_number</code></a> означает, что писатель начал обновлять структуру <a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html"><code>AtomicCorrelationPoint</code></a>, но ещё не закончил. Если читатель обнаруживает структуру в таком состоянии, он должен подождать пока писатель закончит обновление.</li>
+<li>Чётное значение в <a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html#structfield.sequence_number"><code>AtomicCorrelationPoint::sequence_number</code></a> означает, что значение структуры <a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html"><code>AtomicCorrelationPoint</code></a> консистентно и читатель может его использовать.</li>
+</ul>
+<p>В нашем случае писатель один, что дополнительно упрощает дело.
+Алгоритм его действий:</p>
+<ul>
+<li>Раз он один, значит до начала им обновления структуры <a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html"><code>AtomicCorrelationPoint</code></a>, её значение заведомо консистентно. А <a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html#structfield.sequence_number"><code>AtomicCorrelationPoint::sequence_number</code></a> содержит чётное число.</li>
+<li>Писатель атомарно инкрементирует поле <a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html#structfield.sequence_number"><code>AtomicCorrelationPoint::sequence_number</code></a>. Оно становится нечётным, символизируя что идёт обновление.</li>
+<li>После этого писатель заполняет поля <a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html#structfield.count"><code>AtomicCorrelationPoint::count</code></a> и <a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html#structfield.tsc"><code>AtomicCorrelationPoint::tsc</code></a>.</li>
+<li>Последним действием писатель атомарно инкрементирует поле <a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html#structfield.sequence_number"><code>AtomicCorrelationPoint::sequence_number</code></a>. Это действие сигнализирует всем читателям, что обновление завершено и структура находится в консистентном состоянии.</li>
+</ul>
+<p>Алгоритм действий читателя чуть сложнее:</p>
+<ul>
+<li>Читатель атомарно загружает значения поля <a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html#structfield.sequence_number"><code>AtomicCorrelationPoint::sequence_number</code></a>.</li>
+<li>Далее он читает значение полей <a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html#structfield.count"><code>AtomicCorrelationPoint::count</code></a> и <a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html#structfield.tsc"><code>AtomicCorrelationPoint::tsc</code></a>.</li>
+<li>После чего он повторно атомарно загружает значение поля <a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html#structfield.sequence_number"><code>AtomicCorrelationPoint::sequence_number</code></a>.</li>
+<li>Если при обеих загрузках значения поля <a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html#structfield.sequence_number"><code>AtomicCorrelationPoint::sequence_number</code></a> совпадают и являются чётными, то структура <a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html"><code>AtomicCorrelationPoint</code></a> была прочитана в консистентном состоянии. Читатель возвращает значение получившейся структуры <a href="../../doc/ku/time/correlation_point/struct.CorrelationPoint.html"><code>CorrelationPoint</code></a> в вызывающую функцию.</li>
+<li>Если же это не так, читатель повторяет все действия с самого начала.</li>
+</ul>
+<p>Перекос сложности в сторону читателя и наличие в нём цикла ожидания, чего нет в писателе, —
+проявление большего приоритета писателя.</p>
+<blockquote>
+<p>Обобщённая реализация <a href="https://en.wikipedia.org/wiki/Seqlock">sequence lock</a>
+с несколькими писателями и произвольной защищаемой структурой данных была бы сложнее.
+Например, можете посмотреть на:</p>
+<ul>
+<li><a href="https://pitdicker.github.io/Writing-a-seqlock-in-Rust/">Writing a seqlock in Rust.</a></li>
+<li><a href="https://www.hpl.hp.com/techreports/2012/HPL-2012-68.pdf">Can Seqlocks Get Along With Programming Language Memory Models?</a></li>
+<li><a href="https://docs.rs/seqlock/0.1.2/seqlock/">Crate seqlock.</a></li>
+</ul>
+</blockquote>
+<h3 id="Задача-2--реализация-atomiccorrelationpoint"><a class="header" href="#Задача-2--реализация-atomiccorrelationpoint">Задача 2 — реализация <a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html"><code>AtomicCorrelationPoint</code></a></a></h3>
+<p>Реализуйте описанные алгоритмы чтения и записи.
+Читает из структуры
+<a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html"><code>AtomicCorrelationPoint</code></a>
+её <a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html#method.load">метод</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn AtomicCorrelationPoint::load(&amp;self) -&gt; CorrelationPoint
+<span class="boring">}
+</span></code></pre></pre>
+<p>Точнее вам достаточно реализовать вспомогательный <a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html#method.try_load">метод</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn AtomicCorrelationPoint::try_load(&amp;self) -&gt; Option&lt;CorrelationPoint&gt;
+<span class="boring">}
+</span></code></pre></pre>
+<p>Он пытается прочитать значение только один раз.
+И возвращает его, завернув в
+<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#variant.Some"><code>core::option::Option::Some</code></a>,
+если оно было прочитано консистентно.</p>
+<p>Пишут в
+<a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html"><code>AtomicCorrelationPoint</code></a>
+два других метода.
+<a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html#method.store">Метод</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn AtomicCorrelationPoint::store(&amp;self, counter: CorrelationPoint)
+<span class="boring">}
+</span></code></pre></pre>
+<p>записывает заданное <code>counter</code> значение. А
+<a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html#method.inc">метод</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn AtomicCorrelationPoint::inc(&amp;self, tsc: i64)
+<span class="boring">}
+</span></code></pre></pre>
+<p>инкрементирует поле
+<a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html#structfield.count"><code>AtomicCorrelationPoint::count</code></a>
+и записывает в поле
+<a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html#structfield.tsc"><code>AtomicCorrelationPoint::tsc</code></a>
+значение аргумента <code>tsc</code>.</p>
+<p>Методом
+<a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html#method.store"><code>AtomicCorrelationPoint::store()</code></a>
+пользуется обработчик прерываний RTC.
+С его помощью он сохраняет текущее значение секунд, прошедших с начала Unix–эпохи.
+А методом
+<a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html#method.inc"><code>AtomicCorrelationPoint::inc()</code></a> —
+обработчик прерываний PIT.
+Он сохраняет просто счётчик своих тиков, который никак не привязан к реальному времени.
+Поэтому ему достаточно инкрементировать логическое значение своего счётчика при каждом прерывании.</p>
+<p>Используйте поле
+<a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html#structfield.sequence_number"><code>AtomicCorrelationPoint::sequence_number</code></a>
+как атомарную переменную, синхронизующую между собой
+<a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html#method.load"><code>load()</code></a> и
+<a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html#method.store"><code>store()</code></a>/<a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html#method.inc"><code>inc()</code></a>.
+То есть, правильно расставьте сами атомарные операции доступа к обоим полям и
+<a href="https://doc.rust-lang.org/nightly/core/sync/atomic/enum.Ordering.html"><code>core::sync::atomic::Ordering</code></a>
+в них.
+К сожалению, тест не может проверить корректность расстановки
+<a href="https://doc.rust-lang.org/nightly/core/sync/atomic/enum.Ordering.html"><code>Ordering</code></a>.
+Поэтому ей стоит уделить повышенное внимание.</p>
+<p>Обратите внимание, что
+<a href="https://doc.rust-lang.org/nightly/core/sync/atomic/enum.Ordering.html#variant.SeqCst"><code>Ordering::SeqCst</code></a>
+использовать не рекомендуется.
+Так как мнение “использовать
+<a href="https://doc.rust-lang.org/nightly/core/sync/atomic/enum.Ordering.html#variant.SeqCst"><code>Ordering::SeqCst</code></a>
+гарантированно безопасно” неверно.
+Режим
+<a href="https://doc.rust-lang.org/nightly/core/sync/atomic/enum.Ordering.html#variant.SeqCst"><code>Ordering::SeqCst</code></a>
+позволяет делать довольно специфические вещи, которые реально нужны довольно редко.
+<a href="https://github.com/rust-lang/nomicon/issues/166">А вот гарантий корректности не даёт, это заблуждение</a>.</p>
+<p>Если в алгоритме синхронизации вам понадобилось написать что-нибудь вроде</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let end_sequence_number = sequence_number.load(Ordering::Release);
+<span class="boring">}
+</span></code></pre></pre>
+<p>Компилятор выдаст ошибку:</p>
+<pre><code class="language-console">error: atomic loads cannot have `Release` or `AcqRel` ordering
+  --&gt; kernel/tests/1-time-2-correlation-point.rs:38:52
+   |
+38 |     let end_sequence_number = sequence_number.load(Ordering::Release);
+   |                                                    ^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[deny(invalid_atomic_ordering)]` on by default
+   = help: consider using ordering modes `Acquire`, `SeqCst` or `Relaxed`
+</code></pre>
+<p>А если её подавить с помощью <code>#[allow(invalid_atomic_ordering)]</code>, то уже при запуске будет
+<a href="https://doc.rust-lang.org/nightly/core/sync/atomic/struct.AtomicI64.html#panics">паника</a>:</p>
+<pre><code>1_time_2_correlation_point::wrong_ordering------------------
+panicked at 'there is no such thing as a release load', .../src/rust/library/core/src/sync/atomic.rs:2964:24
+--------------------------------------------------- [failed]
+</code></pre>
+<p>Если в этом месте поменять
+<a href="https://doc.rust-lang.org/nightly/core/sync/atomic/enum.Ordering.html#variant.Release"><code>Ordering::Release</code></a>
+на
+<a href="https://doc.rust-lang.org/nightly/core/sync/atomic/enum.Ordering.html#variant.SeqCst"><code>Ordering::SeqCst</code></a>,
+не меняя остальную часть алгоритма синхронизации,
+то компиляция пройдёт и паники не будет.
+Но код скорее всего будет <strong>некорректен</strong>, — простая замена на
+<a href="https://doc.rust-lang.org/nightly/core/sync/atomic/enum.Ordering.html#variant.SeqCst"><code>Ordering::SeqCst</code></a>
+не исправит сам алгоритм синхронизации.
+То есть, использование
+<a href="https://doc.rust-lang.org/nightly/core/sync/atomic/enum.Ordering.html#variant.SeqCst"><code>Ordering::SeqCst</code></a>
+скроет ошибку в алгоритме синхронизации, о наличии которой заботливо предупреждали компилятор и паника.
+К такому же эффекту приведёт смена
+<a href="https://doc.rust-lang.org/nightly/core/sync/atomic/enum.Ordering.html#variant.Release"><code>Ordering::Release</code></a>
+на
+<a href="https://doc.rust-lang.org/nightly/core/sync/atomic/enum.Ordering.html#variant.Relaxed"><code>Ordering::Relaxed</code></a>.
+Но <a href="https://doc.rust-lang.org/nightly/core/sync/atomic/enum.Ordering.html#variant.Relaxed"><code>Ordering::Relaxed</code></a>
+хотя бы бросается в глаза в коде.</p>
+<p>Также учтите, что нам точно не нужен
+<a href="https://www.hpl.hp.com/techreports/2012/HPL-2012-68.pdf">приём “read-dont-modify-write”</a>.
+Его может хотеться использовать в читателе.
+Но читатель потенциально будет выполняться в режиме пользователя.
+А значит, не сможет выполнять запись в общесистемную структуру
+<a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html"><code>AtomicCorrelationPoint</code></a>,
+хранящую показания RTC.
+Так как она доступна в режиме пользователя только на чтение.
+Другими словами, если вы используете “read-dont-modify-write”, то в будущих лабораторках вылезет ошибка.
+Не говоря уж о совершенно лишнем захвате кеш–линии в эксклюзивное использование при чтении
+<a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html"><code>AtomicCorrelationPoint</code></a>.</p>
+<p>Вы можете опираться на тот факт, что писатель один и методы записи —
+<a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html#method.store"><code>AtomicCorrelationPoint::store()</code></a> и
+<a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html#method.inc"><code>AtomicCorrelationPoint::inc()</code></a> —
+гарантированно не вызываются конкурентно ни каждый сам с собой, ни друг с другом.</p>
+<h3 id="Запуск-тестов"><a class="header" href="#Запуск-тестов">Запуск тестов</a></h3>
+<p>Тесты можно запустить командой <code>cargo test --test 1-time-2-correlation-point</code> в директории <code>kernel</code> репозитория.</p>
+<p>После выполнения задачи должны проходить тесты <code>correlation_point_reader()</code> и <code>correlation_point_writer()</code>
+в файле
+<a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/tests/time.rs"><code>kernel/tests/time.rs</code></a>:</p>
+<pre><code class="language-console">$ (cd kernel; cargo test --test 1-time-2-correlation-point)
+...
+time::correlation_point_reader------------------------------
+10:35:25 0 D same = 0; different = 1; point = CorrelationPoint { count: 1000, tsc: 1000 }
+10:35:26 0 D same = 1082; different = 542; point = CorrelationPoint { count: 1082000, tsc: 1082000 }
+10:35:27 0 D same = 2166; different = 1084; point = CorrelationPoint { count: 2166000, tsc: 2166000 }
+10:35:28 0 D same = 3253; different = 1627; point = CorrelationPoint { count: 3253000, tsc: 3253000 }
+10:35:29 0 D same = 4340; different = 2170; point = CorrelationPoint { count: 4338000, tsc: 4338000 }
+10:35:30 0 D same = 5422; different = 2712; point = CorrelationPoint { count: 5422000, tsc: 5422000 }
+10:35:31 0 D same = 6506; different = 3254; point = CorrelationPoint { count: 6506000, tsc: 6506000 }
+10:35:32 0 D same = 7594; different = 3798; point = CorrelationPoint { count: 7594000, tsc: 7594000 }
+10:35:33 0 D same = 8678; different = 4340; point = CorrelationPoint { count: 8678000, tsc: 8678000 }
+10:35:34 0 D same = 9762; different = 4882; point = CorrelationPoint { count: 9762000, tsc: 9762000 }
+10:35:35 0 D same = 10848; different = 5425; point = CorrelationPoint { count: 10849000, tsc: 10849000 }
+10:35:36 0 D same = 11936; different = 5968; point = CorrelationPoint { count: 11934000, tsc: 11934000 }
+10:35:37 0 D same = 13022; different = 6512; point = CorrelationPoint { count: 13022000, tsc: 13022000 }
+10:35:38 0 D same = 14108; different = 7055; point = CorrelationPoint { count: 14109000, tsc: 14109000 }
+10:35:39 0 D same = 15184; different = 7593; point = CorrelationPoint { count: 15185000, tsc: 15185000 }
+10:35:40 0 D same = 16270; different = 8135; point = CorrelationPoint { count: 16269000, tsc: 16269000 }
+10:35:41 0 D same = 17356; different = 8679; point = CorrelationPoint { count: 17357000, tsc: 17357000 }
+10:35:42 0 D same = 18438; different = 9220; point = CorrelationPoint { count: 18438000, tsc: 18438000 }
+10:35:43 0 D same = 19520; different = 9761; point = CorrelationPoint { count: 19521000, tsc: 19521000 }
+time::correlation_point_reader--------------------- [passed]
+
+time::correlation_point_writer------------------------------
+10:35:43 0 D iteration = 0; failure_count = 0; success_count = 0; point = CorrelationPoint { count: 0, tsc: 0 }
+10:35:44 0 D iteration = 840; failure_count = 90828; success_count = 220580; point = CorrelationPoint { count: 840, tsc: 840 }
+10:35:45 0 D iteration = 2396; failure_count = 258876; success_count = 628295; point = CorrelationPoint { count: 2396, tsc: 2396 }
+10:35:46 0 D iteration = 3958; failure_count = 427572; success_count = 1037519; point = CorrelationPoint { count: 3958, tsc: 3958 }
+10:35:47 0 D iteration = 5345; failure_count = 570102; success_count = 1472279; point = CorrelationPoint { count: 5345, tsc: 5345 }
+10:35:48 0 D iteration = 6383; failure_count = 660408; success_count = 1958120; point = CorrelationPoint { count: 6383, tsc: 6383 }
+10:35:49 0 D iteration = 7433; failure_count = 751845; success_count = 2449799; point = CorrelationPoint { count: 7434, tsc: 7434 }
+10:35:50 0 D iteration = 8485; failure_count = 843282; success_count = 2941927; point = CorrelationPoint { count: 8485, tsc: 8485 }
+10:35:51 0 D iteration = 9529; failure_count = 934110; success_count = 3430565; point = CorrelationPoint { count: 9529, tsc: 9529 }
+10:35:51 0 D iteration = 10000; failure_count = 975087; success_count = 3650638
+time::correlation_point_writer--------------------- [passed]
+</code></pre>
+<blockquote>
+<h3 id="Как-устроен-тест"><a class="header" href="#Как-устроен-тест">Как устроен тест</a></h3>
+<p>Для того чтобы проверить корректность реализации
+<a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html"><code>AtomicCorrelationPoint</code></a>
+было бы здорово запустить стресс–тест с писателем и читателем на разных процессорах.
+И желательно на процессорах со
+<a href="https://en.wikipedia.org/wiki/Memory_ordering#In_symmetric_multiprocessing_(SMP)_microprocessor_systems">слабой моделью памяти</a>,
+в которых возможно больше интересных эффектов, чем в архитектуре
+<a href="https://en.wikipedia.org/wiki/X86-64">x86-64</a>.
+А в случае архитектуры
+<a href="https://en.wikipedia.org/wiki/Non-uniform_memory_access">NUMA</a>,
+в которой процессоры организованы в сложную иерархию,
+стоило бы запустить этот тест несколько раз на наборе неэквивалентных с точки зрения архитектуры пар процессоров —
+читатель и писатель в одном NUMA–домене, в разных NUMA–доменах и т.д.</p>
+<p>Но в Nikka поддержана только
+архитектура <a href="https://en.wikipedia.org/wiki/X86-64">x86-64</a>.
+А поддержку нескольких процессоров мы сделаем только в
+<a href="../../lab/book/4-concurrency-1-smp-0-intro.html">будущей лабе</a>.
+И пока нам не доступна возможность запустить стресс–тест даже на двух процессорах в симметричной системе.</p>
+<p>Но можно вспомнить про то, что
+<a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html"><code>AtomicCorrelationPoint</code></a>
+реализуется конкурентной ради прерываний,
+которые являются одной из конкурентных активностей в компьютере.
+Тогда в голову приходит вариант запустить стресс–тест,
+в котором писатель будет работать в прерывании, а читатель — в обычном коде, прерываемом периодически этим прерыванием.
+Собственно
+<a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html"><code>AtomicCorrelationPoint</code></a>
+предназначен именно для такого сценария использования, в котором прерывание поступает от источника времени — RTC или PIT.
+Тики RTC, происходящие раз в секунду, точно не подходят для стресс–теста.
+Можно было бы сконфигурировать PIT на его максимальную частоту — 1.193(18) MHz, но это всё ещё не очень много.</p>
+<p>Зато есть интересный режим работы процессора —
+<a href="https://en.wikipedia.org/wiki/Stepping_(debugging)">режим трассировки</a>.
+От предназначен для пошаговой отладки программ.
+В этом режиме процессор генерирует прерывание с номером
+<a href="../../doc/kernel/interrupts/constant.DEBUG.html"><code>kernel::interrupts::DEBUG</code></a>
+на каждой исполняемой им инструкции программы.
+Задаётся такой режим работы включением
+<a href="https://en.wikipedia.org/wiki/Trap_flag">флага трассировки</a> в
+<a href="https://en.wikipedia.org/wiki/FLAGS_register">регистре флагов</a> процессора.</p>
+<p>То есть, идея состоит в том, чтобы запустить читателя “под пошаговой отладкой”.
+А писателя использовать вместо отладчика.
+Тогда между каждыми двумя инструкциями кода читателя будет запускаться код писателя.
+Правда, так как читатель работает в цикле ожидания корректности структуры
+<a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html"><code>AtomicCorrelationPoint</code></a>,
+если писатель будет обновлять её на каждом прерывании — между каждыми двумя инструкциями читателя,
+то читатель никогда не дождётся своего условия выхода из цикла и зависнет.
+Поэтому писатель должен будет на значительное количество итераций такой
+пошаговой отладки прекращать обновление
+<a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html"><code>AtomicCorrelationPoint</code></a>.</p>
+<p>В коде теста это выглядит так:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[test_case]
+fn correlation_point_reader() {
+    interrupts::test_scaffolding::set_debug_handler(writer);
+
+    reader();
+
+    static POINT: AtomicCorrelationPoint = AtomicCorrelationPoint::new();
+
+    ...
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>Функция <code>interrupts::test_scaffolding::set_debug_handler()</code> устанавливает заданный обработчик
+прерывания
+<a href="../../doc/kernel/interrupts/constant.DEBUG.html"><code>kernel::interrupts::DEBUG</code></a>,
+который содержит процедуру писателя <code>writer()</code>.
+Дальше запускается читатель <code>reader()</code>.
+Конкурировать они будут за переменную <code>POINT</code>. Она сделана статической для удобства доступа из
+обработчика прерываний, которому мы не можем передать произвольный набор аргументов.
+По той же причине его внутренне состояние, которое нужно сохранять между вызовами обработчика,
+тоже записывается в статические переменные.
+Переменные, которые использует, в том числе, обработчик прерывания, дополнительно сделаны атомарными,
+так как формально к ним есть конкурентный доступ.
+Плюс Rust не даст работать с изменяемой статической переменной без <code>unsafe</code>,
+как раз, чтобы защищать от непредумышленных гонок.
+А вот атомарные типы
+<a href="https://doc.rust-lang.org/nightly/core/sync/atomic/struct.AtomicUsize.html#impl-Sync-for-AtomicUsize">помечены</a>
+типажём
+<a href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html"><code>core::marker::Sync</code></a>,
+<a href="https://doc.rust-lang.org/nomicon/send-and-sync.html">что означает</a>
+корректность их конкурентного использования.
+К сожалению, это приводит к страшно выглядящему коду.</p>
+<p>Писатель имеет внутренний счётчик запусков <code>VALUE</code>, который и определяет, что делать:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>extern &quot;x86-interrupt&quot; fn writer(_: InterruptContext) {
+    static VALUE: AtomicUsize = AtomicUsize::new(0);
+
+    let value = VALUE.fetch_add(1, Ordering::Relaxed);
+
+    match (value / 1_000) % 4 {
+        0 =&gt; POINT.store(time::test_scaffolding::equal_point(value as i64 + 1)),
+        2 =&gt; POINT.inc(POINT.load().count() + 1),
+        _ =&gt; {},
+    }
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>Сигнатуру <code>extern &quot;x86-interrupt&quot; fn writer(_: InterruptContext)</code>
+<a href="../../lab/book/1-time-5-interrupts.html">обсудим чуть позже</a>.</p>
+<p>Каждую тысячу своих запусков писатель переключается между режимами:</p>
+<ul>
+<li>Записи в <code>POINT</code> через вызов <a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html#method.store"><code>AtomicCorrelationPoint::store()</code></a>.</li>
+<li>Бездействия, чтобы дать шанс читателю увидеть <a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html#method.store"><code>AtomicCorrelationPoint::store()</code></a> в одном и том же состоянии на протяжении всего цикла своей работы.</li>
+<li>Записи в <code>POINT</code> через вызов <a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html#method.inc"><code>AtomicCorrelationPoint::inc()</code></a>.</li>
+<li>Очередного бездействия.</li>
+</ul>
+<p>При этом писатель и читатель придерживаются соглашения, что консистентными состояниями
+<a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html"><code>AtomicCorrelationPoint</code></a>
+являются только состояния с одинаковыми значениями полей
+<a href="../../doc/ku/time/correlation_point/struct.CorrelationPoint.html#structfield.tsc"><code>CorrelationPoint::tsc</code></a> и
+<a href="../../doc/ku/time/correlation_point/struct.CorrelationPoint.html#structfield.count"><code>CorrelationPoint::count</code></a>.
+Поэтому в циклах обновления писатель меняет оба поля на одинаковые значения, отличающиеся от значений при предыдущей записи.
+В частности функция
+<code>time::test_scaffolding::equal_point()</code>
+создаёт
+<a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html"><code>AtomicCorrelationPoint</code></a>
+с одинаковыми
+<a href="../../doc/ku/time/correlation_point/struct.CorrelationPoint.html#structfield.tsc"><code>CorrelationPoint::tsc</code></a> и
+<a href="../../doc/ku/time/correlation_point/struct.CorrelationPoint.html#structfield.count"><code>CorrelationPoint::count</code></a>,
+равными заданному значению.
+Это имеет смысл только для тестов, поэтому она убрана в модуль <code>test_scaffolding</code>.</p>
+<p>Читатель устроен так:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn reader() {
+    ...
+    while ... {
+        switch_trap_flag();
+        let point = POINT.load();
+        switch_trap_flag();
+        ...
+        assert!(point.count() == point.tsc(), &quot;{:?} is inconsistent&quot;, point);
+        ...
+    }
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>Он включает режим трассировки функцией <code>switch_trap_flag()</code>, которая просто переключает состояние
+<a href="https://en.wikipedia.org/wiki/Trap_flag">флага трассировки</a>
+процессора.
+После этого запускает тестируемый алгоритм чтения
+<a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html#method.load"><code>AtomicCorrelationPoint::load()</code></a>.
+Который должен вернуть управление, только когда писатель прекратит обновлять <code>POINT</code> и перейдёт в режим бездействия.
+После чего читатель отключает трассировку повторным переключением флаг <code>switch_trap_flag()</code> —
+когда она включена он работает очень медленно.
+И проверяет консистентность полученного от
+<a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html#method.load"><code>AtomicCorrelationPoint::load()</code></a>
+значения
+<a href="../../doc/ku/time/correlation_point/struct.CorrelationPoint.html"><code>CorrelationPoint</code></a>.</p>
+<p>Нетрудно догадаться, что в этом тесте мы никогда не прерываем писателя и каждый вызов
+<a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html#method.store"><code>AtomicCorrelationPoint::store()</code></a> или
+<a href="../../doc/ku/time/correlation_point/struct.AtomicCorrelationPoint.html#method.inc"><code>AtomicCorrelationPoint::inc()</code></a>
+выполняется атомарно с точки зрения читателя.
+А значит, их корректность мы не проверили.
+Это делает другой тест:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[test_case]
+fn correlation_point_writer() {
+    interrupts::test_scaffolding::set_debug_handler(reader);
+
+    writer();
+    ...
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>Он аналогичен рассмотренному <code>correlation_point_reader()</code>, только меняет ролями читателя и писателя.
+Теперь писатель запускается “под пошаговой отладкой”, а в обработчике прерывания работает читатель.</p>
+<p>Видно, что никак не проверяется случай, когда в едином конкурентном исполнении и читатель прерывается писателем, и наоборот, писатель прерывается читателем.
+Также видно, что такой тест не сможет проверить правильность расстановки <code>Ordering</code> в них,
+так как с точки зрения пошаговой отладки все инструкции процессора атомарны с наиболее строгой гарантией консистентности.</p>
+<blockquote>
+<p>Теперь вы можете исследовать код, запуская его в пошаговом режиме.
+Например:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[test_case]
+fn down_the_rabbit_hole() {
+    use ku::memory::{Block, Virt};
+
+    interrupts::test_scaffolding::set_debug_handler(collect_statistics);
+
+    switch_trap_flag();
+    debug!(&quot;how many instructions does it take to log something?&quot;);
+    switch_trap_flag();
+
+    let max_rsp = MAX_RSP.load(Ordering::Relaxed);
+    let min_rsp = cmp::min(max_rsp, MIN_RSP.load(Ordering::Relaxed));
+    let rip = RIP.load(Ordering::Relaxed);
+
+    debug!(
+        instruction_count = INSTRUCTION_COUNT.load(Ordering::Relaxed),
+        used_stack_space = ?Block::&lt;Virt&gt;::from_index(min_rsp, max_rsp),
+        last_traced_insruction_address = ?Virt::new(rip),
+    );
+
+    static INSTRUCTION_COUNT: AtomicUsize = AtomicUsize::new(0);
+    static MAX_RSP: AtomicUsize = AtomicUsize::new(usize::MIN);
+    static MIN_RSP: AtomicUsize = AtomicUsize::new(usize::MAX);
+    static RIP: AtomicUsize = AtomicUsize::new(0);
+
+    extern &quot;x86-interrupt&quot; fn collect_statistics(context: InterruptContext) {
+        let context = context.get().mini_context();
+        let rip = context.rip().into_usize();
+        let rsp = context.rsp().into_usize();
+
+        let max_rsp = cmp::max(rsp, MAX_RSP.load(Ordering::Relaxed));
+        let min_rsp = cmp::min(rsp, MIN_RSP.load(Ordering::Relaxed));
+
+        INSTRUCTION_COUNT.fetch_add(1, Ordering::Relaxed);
+        MAX_RSP.store(max_rsp, Ordering::Relaxed);
+        MIN_RSP.store(min_rsp, Ordering::Relaxed);
+        RIP.store(rip, Ordering::Relaxed);
+    }
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>В отладочной сборке на логирование одной строки ушло 112209 инструкций процессора,
+последняя из них располагалась по адресу <code>0v216D07</code>.
+А также было потрачено 5.742 KiB стека по адресам <code>[0x100002001c8, 0x100002018c0)</code></p>
+<pre><code class="language-console">$ (cd kernel; cargo test --test 1-time-2-correlation-point)
+...
+time::down_the_rabbit_hole----------------------------------
+21:10:12 0 D waiting for the RTC to tick twice
+21:10:14.001 0 D how many instructions does it take to log something?
+21:10:14.022 0 D how many instructions does it take to log something?
+21:10:14.436 0 D instruction_count = 121954; used_stack_space = Ok([0x100001ffbd8, 0x100002012d0), size 5.742 KiB); last_traced_insruction_address = Ok(Virt(0v2180F7))
+21:10:14.460 0 D time_to_log_a_message = 2.198 ms; time_to_log_a_message_in_the_stepping_mode = 432.808 ms; stepping_slowdown_ratio = 196.9484863163476
+time::down_the_rabbit_hole------------------------- [passed]
+</code></pre>
+<p>Возможно вы заметили, что второе сообщение <code>how many ...</code>, которое печаталось под трассировкой, появлялось на экране медленнее.</p>
+<p>В релизной сборке на логирование одной строки ушло 6874 инструкций и 1.141 KiB стека:</p>
+<pre><code class="language-console">$ (cd kernel; cargo test --test 1-time-2-correlation-point --release)
+...
+time::down_the_rabbit_hole----------------------------------
+21:09:33 0 D waiting for the RTC to tick twice
+21:09:35.001 0 D how many instructions does it take to log something?
+21:09:35.001 0 D how many instructions does it take to log something?
+21:09:35.011 0 D instruction_count = 7624; used_stack_space = Ok([0x10000201890, 0x10000201d20), size 1.141 KiB); last_traced_insruction_address = Ok(Virt(0v20AA12))
+21:09:35.014 0 D time_to_log_a_message = 549.737 us; time_to_log_a_message_in_the_stepping_mode = 10.388 ms; stepping_slowdown_ratio = 18.89630272070954
+time::down_the_rabbit_hole------------------------- [passed]
+</code></pre>
+<blockquote>
+<p>Теперь вы можете, например, построить гистограмму количества раз, сколько исполнялись инструкции по разным адресам.
+И найти самые горячие циклы кода.</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<h3 id="theory-and-practice-of-concurrency"><a class="header" href="#theory-and-practice-of-concurrency">Theory and Practice of Concurrency</a></h3>
+<p>Более подробно познакомиться с конкурентностью, атомарными переменными, синхронизациями, моделями памяти и т.п.,
+вы можете на курсе Ромы Липовского “Theory and Practice of Concurrency”:</p>
+<ul>
+<li>Публичный доступ:
+<ul>
+<li><a href="https://youtube.com/playlist?list=PL4_hYwCyhAva37lNnoMuBcKRELso5nvBm">Плейлист с лекциями</a>.</li>
+<li><a href="https://gitlab.com/Lipovsky/concurrency-course">Репозиторий курса</a>.</li>
+</ul>
+</li>
+<li><a href="https://lk.yandexdataschool.ru/courses/2022-spring/7.1013-theory-and-practice-of-concurrency/about/">Личный кабинет ШАД, весна 2022</a>.</li>
+<li><a href="https://wiki.yandex-team.ru/hr/volnoslushateli/lekcii-shad/chetvertyjj-semestr/#zapis2020goda9">Wiki yandex-team, запись 2020 года</a>.</li>
+</ul>
+<h3 id="Ориентировочный-объём-работ-этой-части-лабораторки"><a class="header" href="#Ориентировочный-объём-работ-этой-части-лабораторки">Ориентировочный объём работ этой части лабораторки</a></h3>
+<pre><code class="language-console"> ku/src/time/correlation_point.rs |   40 +++++++++++++++++++++++++++++++--------
+ 1 file changed, 32 insertions(+), 8 deletions(-)
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="1-time-2-tsc.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next" href="1-time-4-correlation-interval.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="1-time-2-tsc.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" href="1-time-4-correlation-interval.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </body>
+</html>

@@ -1,0 +1,3 @@
+(function() {var implementors = {
+"kernel":[["impl <a class=\"trait\" href=\"rsdp/handler/trait.AcpiHandler.html\" title=\"trait rsdp::handler::AcpiHandler\">AcpiHandler</a> for <a class=\"struct\" href=\"kernel/smp/acpi_info/struct.AcpiMapper.html\" title=\"struct kernel::smp::acpi_info::AcpiMapper\">AcpiMapper</a>"]]
+};if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

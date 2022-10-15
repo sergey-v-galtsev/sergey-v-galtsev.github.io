@@ -1,0 +1,423 @@
+<!DOCTYPE HTML>
+<html lang="ru" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Проверьте себя - Лабораторные работы</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="0-intro-1-nikka.html">Введение в лабораторные работы</a></li><li class="chapter-item expanded affix "><a href="0-intro-2-rust.html">Почему Rust</a></li><li class="chapter-item expanded affix "><a href="0-intro-3-dirs.html">Структура кода</a></li><li class="chapter-item expanded affix "><a href="0-intro-4-install.html">Компиляция и запуск тестов</a></li><li class="chapter-item expanded affix "><a href="0-intro-5-gdb.html">Запуск с отладчиком gdb</a></li><li class="chapter-item expanded affix "><a href="0-intro-6-log.html">Логирование и логи</a></li><li class="chapter-item expanded affix "><a href="0-intro-7-vscode.html">Настройка VSCode</a></li><li class="chapter-item expanded affix "><li class="part-title">Лабораторная работа №1</li><li class="chapter-item expanded "><a href="1-time-0-intro.html"><strong aria-hidden="true">1.</strong> Время</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="1-time-1-rtc.html"><strong aria-hidden="true">1.1.</strong> Часы реального времени</a></li><li class="chapter-item expanded "><a href="1-time-2-tsc.html"><strong aria-hidden="true">1.2.</strong> Счётчик тактов процессора</a></li><li class="chapter-item expanded "><a href="1-time-3-correlation-point.html"><strong aria-hidden="true">1.3.</strong> Счётчики тиков</a></li><li class="chapter-item expanded "><a href="1-time-4-correlation-interval.html"><strong aria-hidden="true">1.4.</strong> Измерение частоты процессора и повышение разрешения часов</a></li><li class="chapter-item expanded "><a href="1-time-5-interrupts.html"><strong aria-hidden="true">1.5.</strong> Обработка прерываний RTC</a></li><li class="chapter-item expanded "><a href="1-time-6-info.html"><strong aria-hidden="true">1.6.</strong> Информация о системе</a></li><li class="chapter-item expanded "><a href="1-time-7-summary.html"><strong aria-hidden="true">1.7.</strong> Собираем всё вместе</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №2</li><li class="chapter-item expanded "><a href="2-mm-0-intro.html"><strong aria-hidden="true">2.</strong> Память</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="2-mm-1-types.html"><strong aria-hidden="true">2.1.</strong> Типы</a></li><li class="chapter-item expanded "><a href="2-mm-2-mapping.html"><strong aria-hidden="true">2.2.</strong> Страничные отображения</a></li><li class="chapter-item expanded "><a href="2-mm-3-diagrams.html"><strong aria-hidden="true">2.3.</strong> Диаграммы преобразований</a></li><li class="chapter-item expanded "><a href="2-mm-4-plan.html"><strong aria-hidden="true">2.4.</strong> План</a></li><li class="chapter-item expanded "><a href="2-mm-5-boot-frame-allocator.html"><strong aria-hidden="true">2.5.</strong> Временный аллокатор фреймов</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space.html"><strong aria-hidden="true">2.6.</strong> Виртуальное адресное пространство</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="2-mm-6-address-space-1-allocation.html"><strong aria-hidden="true">2.6.1.</strong> Аллокатор виртуальных страниц адресного пространства</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space-2-translate.html"><strong aria-hidden="true">2.6.2.</strong> Отображение виртуальных страниц в физические фреймы</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space-3-map.html"><strong aria-hidden="true">2.6.3.</strong> Высокоуровневый интерфейс управления адресным пространством</a></li></ol></li><li class="chapter-item expanded "><a href="2-mm-7-main-frame-allocator.html"><strong aria-hidden="true">2.7.</strong> Основной аллокатор фреймов</a></li><li class="chapter-item expanded "><a href="2-mm-8-tests.html" class="active"><strong aria-hidden="true">2.8.</strong> Проверьте себя</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №3</li><li class="chapter-item expanded "><a href="3-user-0-intro.html"><strong aria-hidden="true">3.</strong> Процессы</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="3-user-1-elf.html"><strong aria-hidden="true">3.1.</strong> Загрузка процесса в память</a></li><li class="chapter-item expanded "><a href="3-user-2-permission-checks.html"><strong aria-hidden="true">3.2.</strong> Проверки доступа процесса к памяти</a></li><li class="chapter-item expanded "><a href="3-user-3-user-mode.html"><strong aria-hidden="true">3.3.</strong> Переход в режим пользователя</a></li><li class="chapter-item expanded "><a href="3-user-4-syscall.html"><strong aria-hidden="true">3.4.</strong> Поддержка системных вызовов</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №4</li><li class="chapter-item expanded "><a href="4-concurrency-0-intro.html"><strong aria-hidden="true">4.</strong> Конкурентное выполнение задач</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="4-concurrency-1-smp-0-intro.html"><strong aria-hidden="true">4.1.</strong> Поддержка нескольких процессоров (SMP)</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="4-concurrency-1-smp-1-local-apic.html"><strong aria-hidden="true">4.1.1.</strong> Работа с local APIC</a></li><li class="chapter-item expanded "><a href="4-concurrency-1-smp-2-cpus.html"><strong aria-hidden="true">4.1.2.</strong> Состояние каждого процессора</a></li><li class="chapter-item expanded "><a href="4-concurrency-1-smp-3-ap-init.html"><strong aria-hidden="true">4.1.3.</strong> Загрузка Application Processor</a></li></ol></li><li class="chapter-item expanded "><a href="4-concurrency-2-table.html"><strong aria-hidden="true">4.2.</strong> Таблица процессов</a></li><li class="chapter-item expanded "><a href="4-concurrency-3-preemption.html"><strong aria-hidden="true">4.3.</strong> Вытесняющая многозадачность</a></li><li class="chapter-item expanded "><a href="4-concurrency-4-scheduler.html"><strong aria-hidden="true">4.4.</strong> Планировщик</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №5</li><li class="chapter-item expanded "><a href="5-um-0-intro.html"><strong aria-hidden="true">5.</strong> Продвинутая работа с памятью в пространстве пользователя</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="5-um-1-ring-buffer.html"><strong aria-hidden="true">5.1.</strong> Разделяемая память</a></li><li class="chapter-item expanded "><a href="5-um-2-memory.html"><strong aria-hidden="true">5.2.</strong> Системные вызовы для работы с виртуальной памятью</a></li><li class="chapter-item expanded "><a href="5-um-3-eager-fork.html"><strong aria-hidden="true">5.3.</strong> Eager fork</a></li><li class="chapter-item expanded "><a href="5-um-4-traps.html"><strong aria-hidden="true">5.4.</strong> Обработка исключений в режиме пользователя</a></li><li class="chapter-item expanded "><a href="5-um-5-cow-fork.html"><strong aria-hidden="true">5.5.</strong> Copy-on-write fork</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Лабораторные работы</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="Проверьте-себя"><a class="header" href="#Проверьте-себя">Проверьте себя</a></h2>
+<p>После того как вы полностью реализуете работу с памятью, проверьте себя.
+Запустите интеграционные тесты командой <code>cargo test --test 2-mm-*</code>
+в директории <code>kernel</code> репозитория.
+Вы должны увидеть что-то вроде</p>
+<pre><code class="language-console">$ (cd kernel; cargo test --test 2-mm-*)
+    Finished test [unoptimized + debuginfo] target(s) in 0.08s
+     Running tests/2-mm-1-block.rs (/home/sergey/tmp/shad-os/target/kernel/debug/deps/2_mm_1_block-f2c7db20fb3d2656)
+Building bootloader
+   Compiling bootloader v0.9.22 (/home/sergey/.cargo/registry/src/github.com-1ecc6299db9ec823/bootloader-0.9.22)
+    Finished release [optimized + debuginfo] target(s) in 0.95s
+Running: `qemu-system-x86_64 -drive format=raw,file=/home/sergey/tmp/shad-os/target/kernel/debug/deps/bootimage-2_mm_1_block-f2c7db20fb3d2656.bin -no-reboot -m size=128M -smp cpus=4 -device isa-debug-exit,iobase=0xF4,iosize=0x04 -serial stdio -display none`
+19:38:12 0 I RTC init; acknowledged_settings = USE_24_HOUR_FORMAT | UPDATE_ENDED_INTERRUPT
+19:38:12 0 I time init
+19:38:12 0 I Nikka booted; now = 2022-10-09 19:38:12 UTC; tsc = Tsc(2295235227)
+19:38:12 0 I GDT init
+19:38:12 0 I interrupts init
+running 1 tests
+
+2_mm_1_block::block-----------------------------------------
+19:38:12 0 D start = 0; end = 0; block = [0v0, 0v0), size 0 B
+19:38:12 0 D start = 0; end = 33; block = [0v0, 0v21), size 33 B
+19:38:12 0 D start = 0; end = 66; block = [0v0, 0v42), size 66 B
+19:38:12 0 D start = 0; end = 99; block = [0v0, 0v63), size 99 B
+19:38:12 0 D start = 25; end = 33; block = [0v19, 0v21), size 8 B
+19:38:12 0 D start = 25; end = 66; block = [0v19, 0v42), size 41 B
+19:38:12 0 D start = 25; end = 99; block = [0v19, 0v63), size 74 B
+19:38:13 0 D start = 50; end = 66; block = [0v32, 0v42), size 16 B
+19:38:13 0 D start = 50; end = 99; block = [0v32, 0v63), size 49 B
+19:38:13 0 D start = 50; end = 132; block = [0v32, 0v84), size 82 B
+19:38:13 0 D start = 75; end = 99; block = [0v4B, 0v63), size 24 B
+19:38:13 0 D start = 75; end = 132; block = [0v4B, 0v84), size 57 B
+19:38:13 0 D start = 75; end = 165; block = [0v4B, 0vA5), size 90 B
+2_mm_1_block::block-------------------------------- [passed]
+19:38:13 0 I exit qemu; exit_code = SUCCESS
+     Running tests/2-mm-1-boot-frame-allocator.rs (/home/sergey/tmp/shad-os/target/kernel/debug/deps/2_mm_1_boot_frame_allocator-687c8353e5574705)
+Building bootloader
+   Compiling bootloader v0.9.22 (/home/sergey/.cargo/registry/src/github.com-1ecc6299db9ec823/bootloader-0.9.22)
+    Finished release [optimized + debuginfo] target(s) in 0.96s
+Running: `qemu-system-x86_64 -drive format=raw,file=/home/sergey/tmp/shad-os/target/kernel/debug/deps/bootimage-2_mm_1_boot_frame_allocator-687c8353e5574705.bin -no-reboot -m size=128M -smp cpus=4 -device isa-debug-exit,iobase=0xF4,iosize=0x04 -serial stdio -display none`
+19:38:15 0 I RTC init; acknowledged_settings = USE_24_HOUR_FORMAT | UPDATE_ENDED_INTERRUPT
+19:38:15 0 I time init
+19:38:15 0 I Nikka booted; now = 2022-10-09 19:38:15 UTC; tsc = Tsc(2230097572)
+19:38:15 0 I GDT init
+19:38:15 0 I interrupts init
+19:38:15 0 I phys2virt = Page(4503595332403200 @ 0vFFFFF00000000000)
+19:38:15 0 I init; frame_allocator = &quot;boot&quot;; block = [0p5AB000, 0p7FE0000), size 122.207 MiB; free_frame_count = 31285
+19:38:15 0 I memory init; duration = 17.297 ms
+running 3 tests
+
+2_mm_1_boot_frame_allocator::sanity_check-------------------
+19:38:15 0 D free_frames = 31285; min_free_frames = 28672; qemu_memory_frames = 32768
+19:38:15 0 D managed = 31285; used = 0
+2_mm_1_boot_frame_allocator::sanity_check---------- [passed]
+
+2_mm_1_boot_frame_allocator::allocate-----------------------
+19:38:15 0 D frames = [Frame(32735 @ 0p7FDF000), Frame(32734 @ 0p7FDE000)]
+2_mm_1_boot_frame_allocator::allocate-------------- [passed]
+
+2_mm_1_boot_frame_allocator::allocated_frames_are_unique----
+19:38:15 0 D free_frames = 31283
+19:38:15 0 D prev_frame = 32733 @ 0p7FDD000; frame = 32732 @ 0p7FDC000
+19:38:15 0 D prev_frame = 22733 @ 0p58CD000; frame = 22732 @ 0p58CC000
+19:38:16 0 D prev_frame = 12733 @ 0p31BD000; frame = 12732 @ 0p31BC000
+19:38:16 0 D prev_frame = 2733 @ 0pAAD000; frame = 2732 @ 0pAAC000
+2_mm_1_boot_frame_allocator::allocated_frames_are_unique [passed]
+19:38:16 0 I exit qemu; exit_code = SUCCESS
+     Running tests/2-mm-2-page-allocator.rs (/home/sergey/tmp/shad-os/target/kernel/debug/deps/2_mm_2_page_allocator-0d16673aec3ec8e4)
+Building bootloader
+   Compiling bootloader v0.9.22 (/home/sergey/.cargo/registry/src/github.com-1ecc6299db9ec823/bootloader-0.9.22)
+    Finished release [optimized + debuginfo] target(s) in 0.97s
+Running: `qemu-system-x86_64 -drive format=raw,file=/home/sergey/tmp/shad-os/target/kernel/debug/deps/bootimage-2_mm_2_page_allocator-0d16673aec3ec8e4.bin -no-reboot -m size=128M -smp cpus=4 -device isa-debug-exit,iobase=0xF4,iosize=0x04 -serial stdio -display none`
+19:38:17 0 I RTC init; acknowledged_settings = USE_24_HOUR_FORMAT | UPDATE_ENDED_INTERRUPT
+19:38:17 0 I time init
+19:38:17 0 I Nikka booted; now = 2022-10-09 19:38:17 UTC; tsc = Tsc(2240178158)
+19:38:17 0 I GDT init
+19:38:17 0 I interrupts init
+19:38:17 0 I phys2virt = Page(4503595332403200 @ 0vFFFFF00000000000)
+19:38:17 0 I init; frame_allocator = &quot;boot&quot;; block = [0p5AA000, 0p7FE0000), size 122.211 MiB; free_frame_count = 31286
+19:38:17 0 I page allocator init; free_page_count = 33957085184; block = [0v18000000000, 0v10000000000000000), size 126.500 TiB
+19:38:17 0 I init; address_space = &quot;base&quot; @ 0p1000
+19:38:17 0 I drop; address_space = &quot;invalid&quot; @ 0p0
+19:38:17 0 I memory init; duration = 32.639 ms
+running 4 tests
+
+2_mm_2_page_allocator::sanity_check-------------------------
+19:38:17 0 D page_allocator_block = [0v18000000000, 0v7FFFFFFFF000), size 126.500 TiB, Page[~1.500 TiB, ~128.000 TiB)
+2_mm_2_page_allocator::sanity_check---------------- [passed]
+
+2_mm_2_page_allocator::allocate_page------------------------
+19:38:17 0 D page = Page(34359738366 @ 0v7FFFFFFFE000)
+2_mm_2_page_allocator::allocate_page--------------- [passed]
+
+2_mm_2_page_allocator::allocate_two_pages-------------------
+19:38:17 0 D pages = [Page(34359738365 @ 0v7FFFFFFFD000), Page(34359738364 @ 0v7FFFFFFFC000)]
+2_mm_2_page_allocator::allocate_two_pages---------- [passed]
+
+2_mm_2_page_allocator::allocate_block-----------------------
+19:38:17 0 D requested_size = 38.000 KiB; block = [0v7FFFFFFF2000, 0v7FFFFFFFC000), size 40.000 KiB, Page[~128.000 TiB, ~128.000 TiB)
+2_mm_2_page_allocator::allocate_block-------------- [passed]
+19:38:17 0 I exit qemu; exit_code = SUCCESS
+     Running tests/2-mm-3-mapping.rs (/home/sergey/tmp/shad-os/target/kernel/debug/deps/2_mm_3_mapping-792b889b8b2abc13)
+Building bootloader
+   Compiling bootloader v0.9.22 (/home/sergey/.cargo/registry/src/github.com-1ecc6299db9ec823/bootloader-0.9.22)
+    Finished release [optimized + debuginfo] target(s) in 0.94s
+Running: `qemu-system-x86_64 -drive format=raw,file=/home/sergey/tmp/shad-os/target/kernel/debug/deps/bootimage-2_mm_3_mapping-792b889b8b2abc13.bin -no-reboot -m size=128M -smp cpus=4 -device isa-debug-exit,iobase=0xF4,iosize=0x04 -serial stdio -display none`
+19:38:19 0 I RTC init; acknowledged_settings = USE_24_HOUR_FORMAT | UPDATE_ENDED_INTERRUPT
+19:38:19 0 I time init
+19:38:19 0 I Nikka booted; now = 2022-10-09 19:38:19 UTC; tsc = Tsc(2260321974)
+19:38:19 0 I GDT init
+19:38:19 0 I interrupts init
+19:38:19 0 I phys2virt = Page(4503595332403200 @ 0vFFFFF00000000000)
+19:38:19 0 I init; frame_allocator = &quot;boot&quot;; block = [0p5AA000, 0p7FE0000), size 122.211 MiB; free_frame_count = 31286
+19:38:19 0 I page allocator init; free_page_count = 33957085184; block = [0v18000000000, 0v10000000000000000), size 126.500 TiB
+19:38:19 0 I init; address_space = &quot;base&quot; @ 0p1000
+19:38:19 0 I drop; address_space = &quot;invalid&quot; @ 0p0
+19:38:19 0 I memory init; duration = 17.655 ms
+running 2 tests
+
+2_mm_3_mapping::translate-----------------------------------
+19:38:19 0 D pte = PageTableEntry(2613347)
+19:38:19 0 D read_ptr = 0xfffff0000027e420; write_ptr = 0x10000201420
+19:38:19 0 D write_value = 0; read_value = 0; variable = 0
+19:38:19 0 D write_value = 1; read_value = 1; variable = 1
+19:38:19 0 D write_value = 2; read_value = 2; variable = 2
+19:38:19 0 D write_value = 3; read_value = 3; variable = 3
+19:38:19 0 D write_value = 4; read_value = 4; variable = 4
+2_mm_3_mapping::translate-------------------------- [passed]
+
+2_mm_3_mapping::map_intermediate----------------------------
+19:38:19 0 D page = Page(34359738366 @ 0v7FFFFFFFE000)
+19:38:19 0 D pte = PageTableEntry(0)
+2_mm_3_mapping::map_intermediate------------------- [passed]
+19:38:19 0 I exit qemu; exit_code = SUCCESS
+     Running tests/2-mm-4-interface.rs (/home/sergey/tmp/shad-os/target/kernel/debug/deps/2_mm_4_interface-eb5fc3d25a039e4c)
+Building bootloader
+   Compiling bootloader v0.9.22 (/home/sergey/.cargo/registry/src/github.com-1ecc6299db9ec823/bootloader-0.9.22)
+    Finished release [optimized + debuginfo] target(s) in 0.93s
+Running: `qemu-system-x86_64 -drive format=raw,file=/home/sergey/tmp/shad-os/target/kernel/debug/deps/bootimage-2_mm_4_interface-eb5fc3d25a039e4c.bin -no-reboot -m size=128M -smp cpus=4 -device isa-debug-exit,iobase=0xF4,iosize=0x04 -serial stdio -display none`
+19:38:21 0 I RTC init; acknowledged_settings = USE_24_HOUR_FORMAT | UPDATE_ENDED_INTERRUPT
+19:38:21 0 I time init
+19:38:21 0 I Nikka booted; now = 2022-10-09 19:38:21 UTC; tsc = Tsc(2289679569)
+19:38:21 0 I GDT init
+19:38:21 0 I interrupts init
+19:38:21 0 I phys2virt = Page(4503595332403200 @ 0vFFFFF00000000000)
+19:38:21 0 I init; frame_allocator = &quot;boot&quot;; block = [0p5A9000, 0p7FE0000), size 122.215 MiB; free_frame_count = 31287
+19:38:21 0 I page allocator init; free_page_count = 33957085184; block = [0v18000000000, 0v10000000000000000), size 126.500 TiB
+19:38:21 0 I init; address_space = &quot;base&quot; @ 0p1000
+19:38:21 0 I drop; address_space = &quot;invalid&quot; @ 0p0
+19:38:21 0 I memory init; duration = 32.833 ms
+running 1 tests
+
+2_mm_4_interface::map_slice---------------------------------
+19:38:22 0 D slice = [0v7FFFFEFFF000, 0v7FFFFFFFF000), size 16.000 MiB, Virt[~128.000 TiB, ~128.000 TiB)
+2_mm_4_interface::map_slice------------------------ [passed]
+19:38:25.077 0 I exit qemu; exit_code = SUCCESS
+     Running tests/2-mm-5-main-frame-allocator.rs (/home/sergey/tmp/shad-os/target/kernel/debug/deps/2_mm_5_main_frame_allocator-5e980c813edc491b)
+Building bootloader
+   Compiling bootloader v0.9.22 (/home/sergey/.cargo/registry/src/github.com-1ecc6299db9ec823/bootloader-0.9.22)
+    Finished release [optimized + debuginfo] target(s) in 0.94s
+Running: `qemu-system-x86_64 -drive format=raw,file=/home/sergey/tmp/shad-os/target/kernel/debug/deps/bootimage-2_mm_5_main_frame_allocator-5e980c813edc491b.bin -no-reboot -m size=128M -smp cpus=4 -device isa-debug-exit,iobase=0xF4,iosize=0x04 -serial stdio -display none`
+19:38:26 0 I RTC init; acknowledged_settings = USE_24_HOUR_FORMAT | UPDATE_ENDED_INTERRUPT
+19:38:26 0 I time init
+19:38:26 0 I Nikka booted; now = 2022-10-09 19:38:26 UTC; tsc = Tsc(2328791295)
+19:38:26 0 I GDT init
+19:38:26 0 I interrupts init
+19:38:26 0 I phys2virt = Page(4503595332403200 @ 0vFFFFF00000000000)
+19:38:26 0 I init; frame_allocator = &quot;boot&quot;; block = [0p5C2000, 0p7FE0000), size 122.117 MiB; free_frame_count = 31262
+19:38:26 0 I page allocator init; free_page_count = 33957085184; block = [0v18000000000, 0v10000000000000000), size 126.500 TiB
+19:38:26 0 I init; address_space = &quot;base&quot; @ 0p1000
+19:38:26 0 I drop; address_space = &quot;invalid&quot; @ 0p0
+19:38:26 0 I available memory; total = 127.875 MiB; usable = 123.621 MiB; total_frames = 32736; usable_frames = 31647
+19:38:26 0 D frame info mapped; frame_allocator = &quot;main&quot;; duration = 21.447 ms
+19:38:26 0 D frame info init; frame_allocator = &quot;main&quot;; duration = 64.325 ms
+19:38:26 0 D move free frames from the boot frame allocator; frame_allocator = &quot;main&quot;; free_frame_count = 31067
+19:38:26 0 I drop; frame_allocator = &quot;boot&quot;; block = [0p5C2000, 0p5C2000), size 0 B; leaked_frame_count = 0
+19:38:26 0 D moved all free frames; frame_allocator = &quot;main&quot;; duration = 93.900 ms
+19:38:27 0 I init; frame_allocator = &quot;main&quot;; free_frame_count = 31452; duration = 205.386 ms
+19:38:27 0 I memory init; duration = 237.945 ms
+running 5 tests
+
+2_mm_5_main_frame_allocator::sanity_check-------------------
+19:38:27 0 D free_frames = 31452; min_free_frames = 28672; qemu_memory_frames = 32768
+2_mm_5_main_frame_allocator::sanity_check---------- [passed]
+
+2_mm_5_main_frame_allocator::basic_frame_allocator_functions
+19:38:27 0 D frames = [Frame(32540 @ 0p7F1C000), Frame(32539 @ 0p7F1B000)]
+19:38:27 0 D reallocate_last_freed_frame = Frame(32540 @ 0p7F1C000)
+2_mm_5_main_frame_allocator::basic_frame_allocator_functions [passed]
+
+2_mm_5_main_frame_allocator::allocated_frames_are_unique----
+19:38:27 0 D free_frames = 31390
+19:38:27 0 D free_frames = 0
+19:38:29.579 0 D free_frames = 31390
+2_mm_5_main_frame_allocator::allocated_frames_are_unique [passed]
+
+2_mm_5_main_frame_allocator::shared_memory------------------
+19:38:29.613 0 D frame = Frame(32479 @ 0p7EDF000)
+19:38:29.617 0 D pages = [Page(34359738111 @ 0v7FFFFFEFF000), Page(34359738112 @ 0v7FFFFFF00000)]
+19:38:29.627 0 D write_ptr = 0x7ffffff00000; read_ptr = 0x7fffffeff000
+19:38:29.633 0 D write_value = 0; read_value = 0
+19:38:29.639 0 D write_value = 1; read_value = 1
+19:38:29.643 0 D write_value = 2; read_value = 2
+2_mm_5_main_frame_allocator::shared_memory--------- [passed]
+
+2_mm_5_main_frame_allocator::duplicate_and_drop_mapping-----
+19:38:29.695 0 I page allocator init; free_page_count = 33822867456; block = [0v18000000000, 0v7F8000000000), size 126.000 TiB
+19:38:29.703 0 I duplicate; address_space = &quot;process&quot; @ 0p7EDF000
+19:38:29.709 0 D ptes = [PageTableEntry(2613347), PageTableEntry(2613347)]
+19:38:29.715 0 D pte_addresses = [Virt(0vFFFFF000005BB008), Virt(0vFFFFF00007EE7008)]
+19:38:29.725 0 I drop; address_space = &quot;process&quot; @ 0p7EDF000
+2_mm_5_main_frame_allocator::duplicate_and_drop_mapping [passed]
+19:38:29.761 0 I exit qemu; exit_code = SUCCESS
+</code></pre>
+<p>В случае ошибки вы увидите что-нибудь вроде</p>
+<pre><code class="language-console">...
+panicked at 'called `Result::unwrap()` on an `Err` value: NoFrame', src/memory/main_frame_allocator.rs:49:14
+--------------------------------------------------- [failed]
+21:41:55 0 I exit qemu; exit_code = FAILURE
+error: test failed, to rerun pass '--bin kernel'
+</code></pre>
+<p>Но учтите, что тесты не могут покрывать всё.
+Так что даже если они прошли успешно, возможно код содержит ошибки,
+которые проявят себя позже в следующих лабораторных работах.
+Чтобы повысить свою уверенность, что этого не произойдёт,
+добавьте собственные тесты, а также внимательно перечитайте свой код и код вокруг.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="2-mm-7-main-frame-allocator.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next" href="3-user-0-intro.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="2-mm-7-main-frame-allocator.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" href="3-user-0-intro.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </body>
+</html>

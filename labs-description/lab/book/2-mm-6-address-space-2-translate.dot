@@ -1,0 +1,354 @@
+digraph translate {
+    rankdir = TD
+    ranksep = 1.5
+    nodesep = 1
+
+    stylesheet = "lab.css"
+
+    fontname="Helvetica,Arial,sans-serif"
+
+    node [shape = record; width = 2.2; fontname="Helvetica,Arial,sans-serif"]
+    edge [arrowhead = vee; fontname="Helvetica,Arial,sans-serif"]
+
+    virt [
+        shape = plaintext
+        label = <
+            <table border='1' cellborder='0' cellspacing='4'>
+                <tr><td colspan='2' port='l3start'>Битовое представление виртуального адреса (Virt)</td></tr>
+                <tr>
+                    <td><table border='0' cellborder='1' cellpadding='5' cellspacing='0'>
+                    <tr>
+                        <td> 16 бит знаковое расширение </td>
+                        <td bgcolor='#E8DFF5' port='k3'> 9 бит индекс в L3 </td>
+                        <td bgcolor='#FCE1E4' port='k2'> 9 бит индекс в L2 </td>
+                        <td bgcolor='#FCF4DD' port='k1'> 9 бит индекс в L1 </td>
+                        <td bgcolor='#DDFDEA' port='k0'> 9 бит индекс в L0 </td>
+                        <td bgcolor='#CADAF6' port='off'> 12 бит смещение внутри фрейма </td>
+                    </tr>
+                    </table></td>
+                </tr>
+            </table>
+        >
+    ]
+
+    subgraph page_table {
+        label = "Page table\n"
+        labelloc = "t"
+
+        subgraph cluster_l3 {
+            label = "Root L3 PageTable\n"
+            labelloc = "t"
+
+            l3 [
+                shape = plaintext
+                label = <
+                    <table border='1' cellborder='0' cellspacing='4'>
+                        <tr><td colspan='2' port='l3start'>Root L3 PageTable</td></tr>
+                        <tr>
+                            <td><table border='0' cellborder='0' cellspacing='0'>
+                                <tr><td align='right' port='l30'>0</td></tr>
+                                <tr><td align='right'></td> </tr>
+                                <tr><td align='right'></td> </tr>
+                                <tr><td align='right'></td> </tr>
+                                <tr><td align='right'></td> </tr>
+                                <tr><td align='right'></td> </tr>
+                                <tr><td align='right' port='l3t'> </td></tr>
+                                <tr><td align='right'></td> </tr>
+                                <tr><td align='right'></td> </tr>
+                                <tr><td align='right'></td> </tr>
+                                <tr><td align='right'></td> </tr>
+                                <tr><td align='right'></td> </tr>
+                                <tr><td align='right'>511</td></tr>
+                            </table></td>
+                            <td><table border='0' cellborder='1' cellpadding='5' cellspacing='0'>
+                                <tr><td> PageTableEntry </td></tr>
+                                <tr><td>...</td></tr>
+                                <tr><td>...</td></tr>
+                                <tr><td bgcolor='#E8DFF5' port='l3pte'> PageTableEntry </td></tr>
+                                <tr><td>...</td></tr>
+                                <tr><td>...</td></tr>
+                                <tr><td> PageTableEntry </td></tr>
+                            </table></td>
+                        </tr>
+                    </table>
+                >
+            ]
+        }
+
+        subgraph cluster_l2 {
+            label = "L2 PageTable\n"
+            labelloc = "t"
+
+            l2 [
+                shape = plaintext
+                label = <
+                    <table border='1' cellborder='0' cellspacing='4'>
+                        <tr><td colspan='2' port='l2start'>L2 PageTable</td></tr>
+                        <tr>
+                            <td><table border='0' cellborder='0' cellspacing='0'>
+                                <tr><td align='right' port='l20'>0</td></tr>
+                                <tr><td align='right'></td> </tr>
+                                <tr><td align='right'></td> </tr>
+                                <tr><td align='right'></td> </tr>
+                                <tr><td align='right'></td> </tr>
+                                <tr><td align='right'></td> </tr>
+                                <tr><td align='right' port='l2t'> </td></tr>
+                                <tr><td align='right'></td> </tr>
+                                <tr><td align='right'></td> </tr>
+                                <tr><td align='right'></td> </tr>
+                                <tr><td align='right'></td> </tr>
+                                <tr><td align='right'></td> </tr>
+                                <tr><td align='right'>511</td></tr>
+                            </table></td>
+                            <td><table border='0' cellborder='1' cellpadding='5' cellspacing='0'>
+                                <tr><td> PageTableEntry </td></tr>
+                                <tr><td>...</td></tr>
+                                <tr><td bgcolor='#FCE1E4' port='l2pte'> PageTableEntry </td></tr>
+                                <tr><td>...</td></tr>
+                                <tr><td>...</td></tr>
+                                <tr><td>...</td></tr>
+                                <tr><td> PageTableEntry </td></tr>
+                            </table></td>
+                        </tr>
+                    </table>
+                >
+            ]
+        }
+
+        subgraph cluster_l1 {
+            label = "L1 PageTable\n"
+            labelloc = "t"
+
+            l1 [
+                shape = plaintext
+                label = <
+                    <table border='1' cellborder='0' cellspacing='4'>
+                        <tr><td colspan='2' port='l1start'>L1 PageTable</td></tr>
+                        <tr>
+                            <td><table border='0' cellborder='0' cellspacing='0'>
+                                <tr><td align='right' port='l10'>0</td></tr>
+                                <tr><td align='right'></td> </tr>
+                                <tr><td align='right'></td> </tr>
+                                <tr><td align='right'></td> </tr>
+                                <tr><td align='right'></td> </tr>
+                                <tr><td align='right'></td> </tr>
+                                <tr><td align='right' port='l1t'> </td></tr>
+                                <tr><td align='right'></td> </tr>
+                                <tr><td align='right'></td> </tr>
+                                <tr><td align='right'></td> </tr>
+                                <tr><td align='right'></td> </tr>
+                                <tr><td align='right'></td> </tr>
+                                <tr><td align='right'>511</td></tr>
+                            </table></td>
+                            <td><table border='0' cellborder='1' cellpadding='5' cellspacing='0'>
+                                <tr><td> PageTableEntry </td></tr>
+                                <tr><td>...</td></tr>
+                                <tr><td>...</td></tr>
+                                <tr><td>...</td></tr>
+                                <tr><td bgcolor='#FCF4DD' port='l1pte'> PageTableEntry </td></tr>
+                                <tr><td>...</td></tr>
+                                <tr><td> PageTableEntry </td></tr>
+                            </table></td>
+                        </tr>
+                    </table>
+                >
+            ]
+        }
+
+        subgraph cluster_l0 {
+            label = "Leaf L0 PageTable\n"
+            labelloc = "t"
+
+            l0 [
+                shape = plaintext
+                label = <
+                    <table border='1' cellborder='0' cellspacing='4'>
+                        <tr><td colspan='2' port='l0start'>Leaf L0 PageTable</td></tr>
+                        <tr>
+                            <td><table border='0' cellborder='0' cellspacing='0'>
+                                <tr><td align='right' port='l00'>0</td></tr>
+                                <tr><td align='right'></td> </tr>
+                                <tr><td align='right'></td> </tr>
+                                <tr><td align='right'></td> </tr>
+                                <tr><td align='right'></td> </tr>
+                                <tr><td align='right'></td> </tr>
+                                <tr><td align='right' port='l0t'> </td></tr>
+                                <tr><td align='right'></td> </tr>
+                                <tr><td align='right'></td> </tr>
+                                <tr><td align='right'></td> </tr>
+                                <tr><td align='right'></td> </tr>
+                                <tr><td align='right'></td> </tr>
+                                <tr><td align='right'>511</td></tr>
+                            </table></td>
+                            <td><table border='0' cellborder='1' cellpadding='5' cellspacing='0'>
+                                <tr><td> PageTableEntry </td></tr>
+                                <tr><td>...</td></tr>
+                                <tr><td>...</td></tr>
+                                <tr><td bgcolor='#DDFDEA' port='l0pte'> PageTableEntry </td></tr>
+                                <tr><td>...</td></tr>
+                                <tr><td>...</td></tr>
+                                <tr><td> PageTableEntry </td></tr>
+                            </table></td>
+                        </tr>
+                    </table>
+                >
+            ]
+        }
+
+    }
+
+    subgraph cluster_phys_memory {
+        label = "Физическая память\n"
+        labelloc = "t"
+
+            frame1 [
+                shape = plaintext
+                label = <
+                    <table border='1' cellborder='0' cellspacing='4'>
+                        <tr><td colspan='2' port='fstart'>Фрейм</td></tr>
+                        <tr><td><table border='0' cellborder='0' cellspacing='0'>
+                            <tr><td align='right' port='f0'>0</td></tr>
+                            <tr><td align='right'> </td></tr>
+                            <tr><td align='right'> </td></tr>
+                            <tr><td align='right'> </td></tr>
+                            <tr><td align='right'> </td></tr>
+                            <tr><td align='right'> </td></tr>
+                            <tr><td align='right'>4095</td></tr>
+                        </table></td>
+
+                        <td><table border='0' cellborder='1' cellspacing='0'>
+                            <tr><td port='f0'> </td></tr>
+                            <tr><td> </td></tr>
+                            <tr><td> </td></tr>
+                            <tr><td port='fm'> </td></tr>
+                            <tr><td> </td></tr>
+                            <tr><td> </td></tr>
+                            <tr><td> </td></tr>
+                        </table></td></tr>
+                    </table>
+                >
+            ]
+
+            frame [
+                shape = plaintext
+                label = <
+                    <table border='1' cellborder='0' cellspacing='4'>
+                        <tr><td colspan='2' port='fstart'>Фрейм</td></tr>
+                        <tr><td><table border='0' cellborder='0' cellspacing='0'>
+                            <tr><td align='right' port='f0'>0</td></tr>
+                            <tr><td align='right'> </td></tr>
+                            <tr><td align='right'> </td></tr>
+                            <tr><td align='right'> </td></tr>
+                            <tr><td align='right'> </td></tr>
+                            <tr><td align='right'> </td></tr>
+                            <tr><td align='right'>4095</td></tr>
+                        </table></td>
+
+                        <td><table border='0' cellborder='1' cellspacing='0'>
+                            <tr><td port='f0'> </td></tr>
+                            <tr><td> </td></tr>
+                            <tr><td> </td></tr>
+                            <tr><td> </td></tr>
+                            <tr><td bgcolor='#CADAF6' port='fm'> </td></tr>
+                            <tr><td> </td></tr>
+                            <tr><td> </td></tr>
+                        </table></td></tr>
+                    </table>
+                >
+            ]
+
+            frame2 [
+                shape = plaintext
+                label = <
+                    <table border='1' cellborder='0' cellspacing='4'>
+                        <tr><td colspan='2' port='fstart'>Фрейм</td></tr>
+                        <tr><td><table border='0' cellborder='0' cellspacing='0'>
+                            <tr><td align='right' port='f0'>0</td></tr>
+                            <tr><td align='right'> </td></tr>
+                            <tr><td align='right'> </td></tr>
+                            <tr><td align='right'> </td></tr>
+                            <tr><td align='right'> </td></tr>
+                            <tr><td align='right'> </td></tr>
+                            <tr><td align='right'>4095</td></tr>
+                        </table></td>
+
+                        <td><table border='0' cellborder='1' cellspacing='0'>
+                            <tr><td port='f0'> </td></tr>
+                            <tr><td> </td></tr>
+                            <tr><td> </td></tr>
+                            <tr><td port='fm'> </td></tr>
+                            <tr><td> </td></tr>
+                            <tr><td> </td></tr>
+                            <tr><td> </td></tr>
+                        </table></td></tr>
+                    </table>
+                >
+            ]
+
+            frame3 [
+                shape = plaintext
+                label = <
+                    <table border='1' cellborder='0' cellspacing='4'>
+                        <tr><td colspan='2' port='fstart'>Фрейм</td></tr>
+                        <tr><td><table border='0' cellborder='0' cellspacing='0'>
+                            <tr><td align='right' port='f0'>0</td></tr>
+                            <tr><td align='right'> </td></tr>
+                            <tr><td align='right'> </td></tr>
+                            <tr><td align='right'> </td></tr>
+                            <tr><td align='right'> </td></tr>
+                            <tr><td align='right'> </td></tr>
+                            <tr><td align='right'>4095</td></tr>
+                        </table></td>
+
+                        <td><table border='0' cellborder='1' cellspacing='0'>
+                            <tr><td port='f0'> </td></tr>
+                            <tr><td> </td></tr>
+                            <tr><td> </td></tr>
+                            <tr><td port='fm'> </td></tr>
+                            <tr><td> </td></tr>
+                            <tr><td> </td></tr>
+                            <tr><td> </td></tr>
+                        </table></td></tr>
+                    </table>
+                >
+            ]
+    }
+
+            phys [
+                shape = plaintext
+                label = <
+                    <table border='1' cellborder='0' cellspacing='4'>
+                        <tr><td colspan='2'>Битовое представление целевого физического адреса (Phys)</td></tr>
+                        <tr>
+                            <td><table border='0' cellborder='1' cellpadding='5' cellspacing='0'>
+                            <tr>
+                                <td> 12 нулевых бит </td>
+                                <td port='l0phys'> 40 значимых бит </td>
+                                <td bgcolor='#CADAF6' port='off'> 12 бит смещение внутри фрейма </td>
+                            </tr>
+                            </table></td>
+                        </tr>
+                    </table>
+                >
+            ]
+
+    { rank = same l3:l30 l2:l20 l1:l10 l0:l00 }
+
+    virt -> CR3 [style = invis]
+
+    CR3 -> l3:n
+    l3:l3pte -> l2:n
+    l2:l2pte -> l1:n
+    l1:l1pte -> l0:n
+    l0:l0pte -> phys:l0phys:n [arrowhead = none]
+    phys:l0phys:s -> frame:n
+
+    l0:l0pte -> phys:n [style = invis]
+    phys:s -> frame:fm:w
+
+    virt:k3:s -> l3:l3pte:w [arrowhead = none, style = "dotted"]
+    virt:k2:s -> l2:l2pte:w [arrowhead = none, style = "dotted"]
+    virt:k1:s -> l1:l1pte:w [arrowhead = none, style = "dotted"]
+    virt:k0:s -> l0:l0pte:w [arrowhead = none, style = "dotted"]
+    virt:off:s -> frame:fm:e [arrowhead = none, style = "dotted"]
+}

@@ -1,0 +1,334 @@
+<!DOCTYPE HTML>
+<html lang="ru" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Переход в режим пользователя - Лабораторные работы</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="0-intro-1-nikka.html">Введение в лабораторные работы</a></li><li class="chapter-item expanded affix "><a href="0-intro-2-rust.html">Почему Rust</a></li><li class="chapter-item expanded affix "><a href="0-intro-3-dirs.html">Структура кода</a></li><li class="chapter-item expanded affix "><a href="0-intro-4-install.html">Компиляция и запуск тестов</a></li><li class="chapter-item expanded affix "><a href="0-intro-5-gdb.html">Запуск с отладчиком gdb</a></li><li class="chapter-item expanded affix "><a href="0-intro-6-log.html">Логирование и логи</a></li><li class="chapter-item expanded affix "><a href="0-intro-7-vscode.html">Настройка VSCode</a></li><li class="chapter-item expanded affix "><li class="part-title">Лабораторная работа №1</li><li class="chapter-item expanded "><a href="1-time-0-intro.html"><strong aria-hidden="true">1.</strong> Время</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="1-time-1-rtc.html"><strong aria-hidden="true">1.1.</strong> Часы реального времени</a></li><li class="chapter-item expanded "><a href="1-time-2-tsc.html"><strong aria-hidden="true">1.2.</strong> Счётчик тактов процессора</a></li><li class="chapter-item expanded "><a href="1-time-3-correlation-point.html"><strong aria-hidden="true">1.3.</strong> Счётчики тиков</a></li><li class="chapter-item expanded "><a href="1-time-4-correlation-interval.html"><strong aria-hidden="true">1.4.</strong> Измерение частоты процессора и повышение разрешения часов</a></li><li class="chapter-item expanded "><a href="1-time-5-interrupts.html"><strong aria-hidden="true">1.5.</strong> Обработка прерываний RTC</a></li><li class="chapter-item expanded "><a href="1-time-6-info.html"><strong aria-hidden="true">1.6.</strong> Информация о системе</a></li><li class="chapter-item expanded "><a href="1-time-7-summary.html"><strong aria-hidden="true">1.7.</strong> Собираем всё вместе</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №2</li><li class="chapter-item expanded "><a href="2-mm-0-intro.html"><strong aria-hidden="true">2.</strong> Память</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="2-mm-1-types.html"><strong aria-hidden="true">2.1.</strong> Типы</a></li><li class="chapter-item expanded "><a href="2-mm-2-mapping.html"><strong aria-hidden="true">2.2.</strong> Страничные отображения</a></li><li class="chapter-item expanded "><a href="2-mm-3-diagrams.html"><strong aria-hidden="true">2.3.</strong> Диаграммы преобразований</a></li><li class="chapter-item expanded "><a href="2-mm-4-plan.html"><strong aria-hidden="true">2.4.</strong> План</a></li><li class="chapter-item expanded "><a href="2-mm-5-boot-frame-allocator.html"><strong aria-hidden="true">2.5.</strong> Временный аллокатор фреймов</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space.html"><strong aria-hidden="true">2.6.</strong> Виртуальное адресное пространство</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="2-mm-6-address-space-1-allocation.html"><strong aria-hidden="true">2.6.1.</strong> Аллокатор виртуальных страниц адресного пространства</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space-2-translate.html"><strong aria-hidden="true">2.6.2.</strong> Отображение виртуальных страниц в физические фреймы</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space-3-map.html"><strong aria-hidden="true">2.6.3.</strong> Высокоуровневый интерфейс управления адресным пространством</a></li></ol></li><li class="chapter-item expanded "><a href="2-mm-7-main-frame-allocator.html"><strong aria-hidden="true">2.7.</strong> Основной аллокатор фреймов</a></li><li class="chapter-item expanded "><a href="2-mm-8-tests.html"><strong aria-hidden="true">2.8.</strong> Проверьте себя</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №3</li><li class="chapter-item expanded "><a href="3-user-0-intro.html"><strong aria-hidden="true">3.</strong> Процессы</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="3-user-1-elf.html"><strong aria-hidden="true">3.1.</strong> Загрузка процесса в память</a></li><li class="chapter-item expanded "><a href="3-user-2-permission-checks.html"><strong aria-hidden="true">3.2.</strong> Проверки доступа процесса к памяти</a></li><li class="chapter-item expanded "><a href="3-user-3-user-mode.html" class="active"><strong aria-hidden="true">3.3.</strong> Переход в режим пользователя</a></li><li class="chapter-item expanded "><a href="3-user-4-syscall.html"><strong aria-hidden="true">3.4.</strong> Поддержка системных вызовов</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №4</li><li class="chapter-item expanded "><a href="4-concurrency-0-intro.html"><strong aria-hidden="true">4.</strong> Конкурентное выполнение задач</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="4-concurrency-1-smp-0-intro.html"><strong aria-hidden="true">4.1.</strong> Поддержка нескольких процессоров (SMP)</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="4-concurrency-1-smp-1-local-apic.html"><strong aria-hidden="true">4.1.1.</strong> Работа с local APIC</a></li><li class="chapter-item expanded "><a href="4-concurrency-1-smp-2-cpus.html"><strong aria-hidden="true">4.1.2.</strong> Состояние каждого процессора</a></li><li class="chapter-item expanded "><a href="4-concurrency-1-smp-3-ap-init.html"><strong aria-hidden="true">4.1.3.</strong> Загрузка Application Processor</a></li></ol></li><li class="chapter-item expanded "><a href="4-concurrency-2-table.html"><strong aria-hidden="true">4.2.</strong> Таблица процессов</a></li><li class="chapter-item expanded "><a href="4-concurrency-3-preemption.html"><strong aria-hidden="true">4.3.</strong> Вытесняющая многозадачность</a></li><li class="chapter-item expanded "><a href="4-concurrency-4-scheduler.html"><strong aria-hidden="true">4.4.</strong> Планировщик</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №5</li><li class="chapter-item expanded "><a href="5-um-0-intro.html"><strong aria-hidden="true">5.</strong> Продвинутая работа с памятью в пространстве пользователя</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="5-um-1-ring-buffer.html"><strong aria-hidden="true">5.1.</strong> Разделяемая память</a></li><li class="chapter-item expanded "><a href="5-um-2-memory.html"><strong aria-hidden="true">5.2.</strong> Системные вызовы для работы с виртуальной памятью</a></li><li class="chapter-item expanded "><a href="5-um-3-eager-fork.html"><strong aria-hidden="true">5.3.</strong> Eager fork</a></li><li class="chapter-item expanded "><a href="5-um-4-traps.html"><strong aria-hidden="true">5.4.</strong> Обработка исключений в режиме пользователя</a></li><li class="chapter-item expanded "><a href="5-um-5-cow-fork.html"><strong aria-hidden="true">5.5.</strong> Copy-on-write fork</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Лабораторные работы</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="Переход-в-режим-пользователя"><a class="header" href="#Переход-в-режим-пользователя">Переход в режим пользователя</a></h2>
+<p>После того как мы загрузили пользовательский процесс в память,
+можно запустить его.
+Для это требуется не только перейти на его точку входа, но и переключить процессор в непривилегированный режим — в
+<a href="https://en.wikipedia.org/wiki/Protection_ring">кольцо защиты</a> 3.
+Иначе пользовательский процесс сможет испортить код или данные ядра и других процессов.
+Есть <a href="https://wiki.osdev.org/Getting_to_Ring_3">несколько вариантов</a> сделать это.
+Воспользуемся инструкцией <code>iret</code>.</p>
+<h3 id="Состояние-регистров-пользовательского-процесса"><a class="header" href="#Состояние-регистров-пользовательского-процесса">Состояние регистров пользовательского процесса</a></h3>
+<p>Состояние регистров пользовательского процесса хранится в структуре
+<a href="../../doc/kernel/process/registers/struct.Registers.html"><code>kernel::process::registers::Registers</code></a>.
+Для использования <code>iret</code> нам понадобится её поле
+<a href="../../doc/kernel/process/registers/struct.Registers.html#structfield.user_context"><code>Registers::user_context</code></a>.
+Оно является структурой
+<a href="../../doc/kernel/process/registers/struct.ModeContext.html"><code>kernel::process::registers::ModeContext</code></a>:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[repr(C)]
+pub(crate) struct ModeContext {
+    rip: Virt,
+    cs: usize,
+    rflags: RFlags,
+    rsp: Virt,
+    ss: usize,
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>имеющей в памяти ровно такое представление, какого требует инструкция <code>iret</code>.
+Если регистр <code>RSP</code> указывает на адрес
+<a href="../../doc/kernel/process/registers/struct.ModeContext.html"><code>ModeContext</code></a>
+в момент выполнения инструкции <code>iret</code>,
+процессор загрузит</p>
+<ul>
+<li>поле <a href="../../doc/kernel/process/registers/struct.ModeContext.html#structfield.rip"><code>ModeContext::rip</code></a> в регистр адреса команды <code>RIP</code>,</li>
+<li>поле <a href="../../doc/kernel/process/registers/struct.ModeContext.html#structfield.cs"><code>ModeContext::cs</code></a> в регистр сегмента кода <code>CS</code>,</li>
+<li>поле <a href="../../doc/kernel/process/registers/struct.ModeContext.html#structfield.cs"><code>ModeContext::rflags</code></a> в регистр флагов <code>RFLAGS</code>,</li>
+<li>поле <a href="../../doc/kernel/process/registers/struct.ModeContext.html#structfield.cs"><code>ModeContext::rsp</code></a> в регистр адреса стека <code>RSP</code>,</li>
+<li>поле <a href="../../doc/kernel/process/registers/struct.ModeContext.html#structfield.cs"><code>ModeContext::ss</code></a> в регистр сегмента стека <code>SS</code>.</li>
+</ul>
+<p>Слово mode в <a href="../../doc/kernel/process/registers/struct.ModeContext.html"><code>ModeContext</code></a>
+символизирует тот факт, что эта структура позволяет переключаться между режимами пользователя и ядра.</p>
+<p>С помощью метода
+<a href="../../doc/kernel/process/registers/struct.ModeContext.html#method.user_code"><code>ModeContext::user_context()</code></a>
+заполним эти поля так:</p>
+<ul>
+<li>Поле <a href="../../doc/kernel/process/registers/struct.ModeContext.html#structfield.rip"><code>ModeContext::rip</code></a> будет содержать точку входа в программу пользователя, которую возвращает функция <a href="../../doc/kernel/process/elf/fn.load.html"><code>load()</code></a>.</li>
+<li>Поле <a href="../../doc/kernel/process/registers/struct.ModeContext.html#structfield.cs"><code>ModeContext::cs</code></a> — селектор кода пользователя, который возвращает метод <a href="../../doc/kernel/memory/gdt/struct.SmpGdt.html#method.user_code"><code>kernel::memory::gdt::Gdt::user_code()</code></a>.</li>
+<li>Поле <a href="../../doc/kernel/process/registers/struct.ModeContext.html#structfield.cs"><code>ModeContext::rflags</code></a> будет содержать единственный включённый флаг — <a href="../../doc/kernel/process/registers/struct.RFlags.html#associatedconstant.INTERRUPT_FLAG"><code>RFlags::INTERRUPT_FLAG</code></a>. Это требуется чтобы по прерыванию, например, от таймера, процессор вернулся в ядро. И пользовательский код не смог его монополизировать.</li>
+<li>Поле <a href="../../doc/kernel/process/registers/struct.ModeContext.html#structfield.cs"><code>ModeContext::rsp</code></a> будет содержать адрес конца стека пользователя — в <a href="https://en.wikipedia.org/wiki/X86-64">x86-64</a> стек растёт от старших адресов к младшим. Стек для пользовательского процесса выделяет функция <a href="../../doc/kernel/process/fn.create.html"><code>kernel::process::create()</code></a> с помощью метода <a href="../../doc/kernel/memory/stack/struct.Stack.html#method.new"><code>kernel::memory::stack::Stack::new()</code></a>. Метод <a href="../../doc/kernel/memory/stack/struct.Stack.html#method.new"><code>Stack::new()</code></a> аллоцирует <a href="../../doc/kernel/memory/stack/constant.STACK_SIZE.html"><code>kernel::memory::stack::STACK_SIZE</code></a> байт памяти и запрещает доступ к младшим <a href="../../doc/kernel/memory/stack/constant.GUARD_ZONE_SIZE.html"><code>kernel::memory::stack::GUARD_ZONE_SIZE</code></a> байтам из них, чтобы отлавливать переполнение стека. Начальное значение указателя стека возвращает метод <a href="../../doc/kernel/memory/stack/struct.Stack.html#method.pointer"><code>Stack::pointer()</code></a>.</li>
+<li>Поле <a href="../../doc/kernel/process/registers/struct.ModeContext.html#structfield.cs"><code>ModeContext::ss</code></a> — селектор данных пользователя, который возвращает метод <a href="../../doc/kernel/memory/gdt/struct.SmpGdt.html#method.user_data"><code>kernel::memory::gdt::Gdt::user_data()</code></a>.</li>
+</ul>
+<p>Конкретные значения остальных полей структуры
+<a href="../../doc/kernel/process/registers/struct.Registers.html"><code>Registers</code></a>,
+в которых хранятся регистры общего назначения нас пока не интересуют.</p>
+<h3 id="Задача-7--переключение-процессора-в-режим-пользователя-и-возврат-из-него"><a class="header" href="#Задача-7--переключение-процессора-в-режим-пользователя-и-возврат-из-него">Задача 7 — переключение процессора в режим пользователя и возврат из него</a></h3>
+<p>Само переключение выполняет <a href="../../doc/kernel/process/registers/struct.Registers.html#method.switch_to">метод</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>unsafe fn Registers::switch_to(registers: *const Registers)
+<span class="boring">}
+</span></code></pre></pre>
+<p>Для его реализации придётся использовать ассемблер, например прибегнуть к макросу
+<a href="https://doc.rust-lang.org/core/arch/macro.asm.html"><code>asm!()</code></a>,
+документацию на который можно посмотреть в
+<a href="https://doc.rust-lang.org/nightly/rust-by-example/unsafe/asm.html">Rust By Example</a> и
+<a href="https://doc.rust-lang.org/nightly/reference/inline-assembly.html">The Rust Reference</a>.</p>
+<p>Мы не будем явно сохранять контекст ядра.
+Пусть это сделает за нас компилятор.
+Мы просто укажем ему, что испортили состояние всех регистров, с помощью конструкции <code>lateout(...) _</code>:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>asm!(
+    &quot;
+    ...
+    &quot;,
+    ...
+    lateout(&quot;rax&quot;) _,
+    ...
+);
+<span class="boring">}
+</span></code></pre></pre>
+<p>Есть надежда, что компилятор тогда не будет сохранять <a href="https://en.wikipedia.org/wiki/X86_calling_conventions#Callee-saved_%28non-volatile%29_registers">callee-saved</a> регистры нестандартизированного Rust ABI.
+Единственное что, он не согласится на порчу регистров <code>RBX</code> и <code>RBP</code>.
+Эти регистры мы должны будем сохранить на стеке ядра и восстановить вручную.</p>
+<p>Таким образом для переключения в режим пользователя метод
+<a href="../../doc/kernel/process/registers/struct.Registers.html#method.switch_to"><code>Registers::switch_to()</code></a>
+должен:</p>
+<ul>
+<li>Сохранить регистры <code>RBX</code> и <code>RBP</code> в стеке ядра.</li>
+<li>Сохранить адрес <code>registers</code> в стеке.</li>
+<li>Записать текущее состояние стека ядра.</li>
+<li>Переключить стек, то есть регистр <code>RSP</code>, на заданный ему на вход адрес <code>registers</code>.</li>
+<li>Восстановить из стека, то есть на самом деле из структуры <a href="../../doc/kernel/process/registers/struct.Registers.html"><code>Registers</code></a>, на которую он переключил свой стек, регистры общего назначения с <code>RAX</code> по <code>R15</code>.</li>
+<li>Выполнить инструкцию <code>iretq</code>, чтобы переключиться в процесс пользователя заданный полем <a href="../../doc/kernel/process/registers/struct.Registers.html#structfield.user_context"><code>Registers::user_context</code></a>.</li>
+</ul>
+<p>Последующие инструкции метода
+<a href="../../doc/kernel/process/registers/struct.Registers.html#method.switch_to"><code>Registers::switch_to()</code></a>
+будут выполняться при возвращении в режим ядра.
+Начало этой части метода
+<a href="../../doc/kernel/process/registers/struct.Registers.html#method.switch_to"><code>Registers::switch_to()</code></a>
+помечено меткой <code>store_user_mode_context:</code>.
+Парный метод
+<a href="../../doc/kernel/process/registers/struct.Registers.html#method.switch_from"><code>Registers::switch_from()</code></a>
+просто прыгает на эту метку:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>    pub(super) unsafe extern &quot;C&quot; fn switch_from() -&gt; ! {
+        asm!(
+            &quot;jmp store_user_mode_context&quot;,
+            options(noreturn),
+        );
+    }
+<span class="boring">}
+</span></code></pre></pre>
+<p>Когда пользовательский код выполнит системный вызов и процессор окажется в режиме ядра, мы сможем вызвать
+<a href="../../doc/kernel/process/registers/struct.Registers.html#method.switch_from"><code>Registers::switch_from()</code></a>
+для прекращения исполнения кода пользователя и возврата ровно в тот контекст ядра, который выполнил вызов
+<a href="../../doc/kernel/process/registers/struct.Registers.html#method.switch_to"><code>Registers::switch_to()</code></a>.
+Например, это может быть контекст планировщика, который продолжит свой цикл исполнения, выберет следующий процесс и переключится уже в него.</p>
+<p>Итак, после метки <code>store_user_mode_context:</code> метод
+<a href="../../doc/kernel/process/registers/struct.Registers.html#method.switch_to"><code>Registers::switch_to()</code></a>
+должен:</p>
+<ul>
+<li>Вспомнить состояние стека ядра.</li>
+<li>Восстановить из него сохранённый адрес <code>registers</code>.</li>
+<li>Переключить стек на это адрес плюс суммарный размер регистров общего назначения <code>user_registers_size = const mem::size_of::&lt;Registers&gt;() - mem::size_of::&lt;ModeContext&gt;()</code>.</li>
+<li>Записать в стек, то есть на самом деле в заданную на вход структуру <a href="../../doc/kernel/process/registers/struct.Registers.html"><code>Registers</code></a>, регистры общего назначения с <code>R15</code> по <code>RAX</code>. В обратном порядке, так как инструкции <code>push</code> и <code>pop</code> должны образовывать правильную скобочную последовательность с именами регистров в качестве типов скобок.</li>
+<li>Переключить регистр <code>RSP</code> на стек ядра.</li>
+<li>Вытолкнуть из стека ядра сохранённый там адрес <code>registers</code>. Неважно куда, он больше не понадобится.</li>
+<li>Восстановить регистры <code>RBX</code> и <code>RBP</code>, помня про правильную скобочную последовательность.</li>
+</ul>
+<p>При желании вы можете отступить от предложенной схемы и реализовать любой другой работающий вариант.
+Например, регистры общего назначения можно сохранять и восстанавливать командами <code>mov</code>.</p>
+<h3 id="Ориентировочный-объём-работ-этой-части-лабораторки"><a class="header" href="#Ориентировочный-объём-работ-этой-части-лабораторки">Ориентировочный объём работ этой части лабораторки</a></h3>
+<pre><code class="language-console"> kernel/src/process/registers.rs |   63 ++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 60 insertions(+), 3 deletions(-)
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="3-user-2-permission-checks.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next" href="3-user-4-syscall.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="3-user-2-permission-checks.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" href="3-user-4-syscall.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </body>
+</html>

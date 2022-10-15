@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":[["text_buffer",""]],"macro":[["make_attribute",""],["print",""],["println",""]],"mod":[["cursor",""],["grid",""]],"struct":[["Attribute",""],["Colour",""],["TEXT",""],["Text",""]],"type":[["VgaText",""]]};

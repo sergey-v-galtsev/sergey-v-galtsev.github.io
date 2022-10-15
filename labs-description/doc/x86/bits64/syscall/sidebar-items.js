@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":[["syscall0","Invoke a syscall."],["syscall1","Invoke a syscall."],["syscall2","Invoke a syscall."],["syscall3","Invoke a syscall."],["syscall4","Invoke a syscall."],["syscall5","Invoke a syscall."],["syscall6","Invoke a syscall."]]};

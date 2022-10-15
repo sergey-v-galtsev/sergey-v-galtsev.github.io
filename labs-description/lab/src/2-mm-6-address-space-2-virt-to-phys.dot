@@ -1,0 +1,29 @@
+digraph virt_to_phys {
+    rankdir = LR
+    ranksep = 2.5
+
+    fontname="Helvetica,Arial,sans-serif"
+
+    node [shape = record, width = 2.2; fontname="Helvetica,Arial,sans-serif"]
+    edge [arrowhead = vee; fontname="Helvetica,Arial,sans-serif"]
+
+    subgraph cluster_virt_memory {
+        label = "Виртуальная память\n&T, *T, Virt, Page"
+        labelloc = "t"
+
+        virt [label = "{{страница_0\l | страница_1\l | страница_2\l | ...\l | ...\l | ...\l | страница_k\l | ...\l | ...\l | ...\l | страница_N\l} | {<p0> Present = 0\l | <p1> Present = 1, Write = 1, User = 0\l | <p2> Present = 1, Write = 1, User = 0\l | | | | <pk> Present = 1, Write = 0, User = 1\l | | | | }}"]
+    }
+
+    subgraph cluster_phys_memory {
+        label = "Физическая память\nPhys, Frame"
+        labelloc = "t"
+
+        phys [label = "<f0> фрейм_0 | <f1> фрейм_1 | <f2> фрейм_2 | <f3> фрейм_3 | ... | <fm>... | ... | фрейм_M"]
+    }
+
+    virt:p1 -> phys:fm [constraint = false]
+    virt:p2 -> phys:f1 [constraint = false, taillabel = "    запись, ядро    "]
+    virt:pk -> phys:f1 [constraint = false, taillabel = "    чтение, пользователь    "]
+
+    virt:p0 -> phys:f0 [style = invis]
+}

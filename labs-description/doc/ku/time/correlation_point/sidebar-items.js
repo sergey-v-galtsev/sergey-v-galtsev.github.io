@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":[["AtomicCorrelationPoint","Предназначена для конкурентного доступа к значениям [`CorrelationPoint`]."],["CorrelationPoint","Предназначена для привязки тактов процессора к другим часам в один момент времени."]]};

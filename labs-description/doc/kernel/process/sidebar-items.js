@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":[["Pid",""]],"fn":[["create",""],["init",""],["map_log",""],["map_process_info",""],["map_system_info",""]],"mod":[["elf",""],["process",""],["registers",""],["scheduler",""],["syscall",""],["table",""],["test_scaffolding",""]],"struct":[["Process",""],["Scheduler",""],["Table",""]]};

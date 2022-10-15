@@ -1,0 +1,575 @@
+<!DOCTYPE HTML>
+<html lang="ru" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Отображение виртуальных страниц в физические фреймы - Лабораторные работы</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="0-intro-1-nikka.html">Введение в лабораторные работы</a></li><li class="chapter-item expanded affix "><a href="0-intro-2-rust.html">Почему Rust</a></li><li class="chapter-item expanded affix "><a href="0-intro-3-dirs.html">Структура кода</a></li><li class="chapter-item expanded affix "><a href="0-intro-4-install.html">Компиляция и запуск тестов</a></li><li class="chapter-item expanded affix "><a href="0-intro-5-gdb.html">Запуск с отладчиком gdb</a></li><li class="chapter-item expanded affix "><a href="0-intro-6-log.html">Логирование и логи</a></li><li class="chapter-item expanded affix "><a href="0-intro-7-vscode.html">Настройка VSCode</a></li><li class="chapter-item expanded affix "><li class="part-title">Лабораторная работа №1</li><li class="chapter-item expanded "><a href="1-time-0-intro.html"><strong aria-hidden="true">1.</strong> Время</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="1-time-1-rtc.html"><strong aria-hidden="true">1.1.</strong> Часы реального времени</a></li><li class="chapter-item expanded "><a href="1-time-2-tsc.html"><strong aria-hidden="true">1.2.</strong> Счётчик тактов процессора</a></li><li class="chapter-item expanded "><a href="1-time-3-correlation-point.html"><strong aria-hidden="true">1.3.</strong> Счётчики тиков</a></li><li class="chapter-item expanded "><a href="1-time-4-correlation-interval.html"><strong aria-hidden="true">1.4.</strong> Измерение частоты процессора и повышение разрешения часов</a></li><li class="chapter-item expanded "><a href="1-time-5-interrupts.html"><strong aria-hidden="true">1.5.</strong> Обработка прерываний RTC</a></li><li class="chapter-item expanded "><a href="1-time-6-info.html"><strong aria-hidden="true">1.6.</strong> Информация о системе</a></li><li class="chapter-item expanded "><a href="1-time-7-summary.html"><strong aria-hidden="true">1.7.</strong> Собираем всё вместе</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №2</li><li class="chapter-item expanded "><a href="2-mm-0-intro.html"><strong aria-hidden="true">2.</strong> Память</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="2-mm-1-types.html"><strong aria-hidden="true">2.1.</strong> Типы</a></li><li class="chapter-item expanded "><a href="2-mm-2-mapping.html"><strong aria-hidden="true">2.2.</strong> Страничные отображения</a></li><li class="chapter-item expanded "><a href="2-mm-3-diagrams.html"><strong aria-hidden="true">2.3.</strong> Диаграммы преобразований</a></li><li class="chapter-item expanded "><a href="2-mm-4-plan.html"><strong aria-hidden="true">2.4.</strong> План</a></li><li class="chapter-item expanded "><a href="2-mm-5-boot-frame-allocator.html"><strong aria-hidden="true">2.5.</strong> Временный аллокатор фреймов</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space.html"><strong aria-hidden="true">2.6.</strong> Виртуальное адресное пространство</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="2-mm-6-address-space-1-allocation.html"><strong aria-hidden="true">2.6.1.</strong> Аллокатор виртуальных страниц адресного пространства</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space-2-translate.html" class="active"><strong aria-hidden="true">2.6.2.</strong> Отображение виртуальных страниц в физические фреймы</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space-3-map.html"><strong aria-hidden="true">2.6.3.</strong> Высокоуровневый интерфейс управления адресным пространством</a></li></ol></li><li class="chapter-item expanded "><a href="2-mm-7-main-frame-allocator.html"><strong aria-hidden="true">2.7.</strong> Основной аллокатор фреймов</a></li><li class="chapter-item expanded "><a href="2-mm-8-tests.html"><strong aria-hidden="true">2.8.</strong> Проверьте себя</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №3</li><li class="chapter-item expanded "><a href="3-user-0-intro.html"><strong aria-hidden="true">3.</strong> Процессы</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="3-user-1-elf.html"><strong aria-hidden="true">3.1.</strong> Загрузка процесса в память</a></li><li class="chapter-item expanded "><a href="3-user-2-permission-checks.html"><strong aria-hidden="true">3.2.</strong> Проверки доступа процесса к памяти</a></li><li class="chapter-item expanded "><a href="3-user-3-user-mode.html"><strong aria-hidden="true">3.3.</strong> Переход в режим пользователя</a></li><li class="chapter-item expanded "><a href="3-user-4-syscall.html"><strong aria-hidden="true">3.4.</strong> Поддержка системных вызовов</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №4</li><li class="chapter-item expanded "><a href="4-concurrency-0-intro.html"><strong aria-hidden="true">4.</strong> Конкурентное выполнение задач</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="4-concurrency-1-smp-0-intro.html"><strong aria-hidden="true">4.1.</strong> Поддержка нескольких процессоров (SMP)</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="4-concurrency-1-smp-1-local-apic.html"><strong aria-hidden="true">4.1.1.</strong> Работа с local APIC</a></li><li class="chapter-item expanded "><a href="4-concurrency-1-smp-2-cpus.html"><strong aria-hidden="true">4.1.2.</strong> Состояние каждого процессора</a></li><li class="chapter-item expanded "><a href="4-concurrency-1-smp-3-ap-init.html"><strong aria-hidden="true">4.1.3.</strong> Загрузка Application Processor</a></li></ol></li><li class="chapter-item expanded "><a href="4-concurrency-2-table.html"><strong aria-hidden="true">4.2.</strong> Таблица процессов</a></li><li class="chapter-item expanded "><a href="4-concurrency-3-preemption.html"><strong aria-hidden="true">4.3.</strong> Вытесняющая многозадачность</a></li><li class="chapter-item expanded "><a href="4-concurrency-4-scheduler.html"><strong aria-hidden="true">4.4.</strong> Планировщик</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №5</li><li class="chapter-item expanded "><a href="5-um-0-intro.html"><strong aria-hidden="true">5.</strong> Продвинутая работа с памятью в пространстве пользователя</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="5-um-1-ring-buffer.html"><strong aria-hidden="true">5.1.</strong> Разделяемая память</a></li><li class="chapter-item expanded "><a href="5-um-2-memory.html"><strong aria-hidden="true">5.2.</strong> Системные вызовы для работы с виртуальной памятью</a></li><li class="chapter-item expanded "><a href="5-um-3-eager-fork.html"><strong aria-hidden="true">5.3.</strong> Eager fork</a></li><li class="chapter-item expanded "><a href="5-um-4-traps.html"><strong aria-hidden="true">5.4.</strong> Обработка исключений в режиме пользователя</a></li><li class="chapter-item expanded "><a href="5-um-5-cow-fork.html"><strong aria-hidden="true">5.5.</strong> Copy-on-write fork</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Лабораторные работы</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="Отображение-виртуальных-страниц-в-физические-фреймы"><a class="header" href="#Отображение-виртуальных-страниц-в-физические-фреймы">Отображение виртуальных страниц в физические фреймы</a></h2>
+<p>За это отображение отвечает структура
+<a href="../../doc/kernel/memory/mapping/struct.Mapping.html"><code>kernel::memory::mapping::Mapping</code></a>.
+Фактически она реализует дерево большой арности — 512, если закрыть глаза на возможность сослаться в узле на любой узел.
+Такая возможность используется только в специфических случаях, например для реализации <a href="https://wiki.osdev.org/Page_Tables#Recursive_mapping">рекурсивного отображения</a>.</p>
+<p><a href="../../doc/kernel/memory/mapping/struct.Mapping.html"><code>Mapping</code></a> содержит уже немного знакомые нам поля:</p>
+<ul>
+<li><a href="../../doc/kernel/memory/mapping/struct.Mapping.html#structfield.page_directory"><code>Mapping::page_directory</code></a> типа <a href="../../doc/ku/memory/mmu/type.PageTable.html"><code>PageTable</code></a> — таблица страниц самого верхнего уровня, корневая в дереве.</li>
+<li><a href="../../doc/kernel/memory/mapping/struct.Mapping.html#structfield.phys2virt"><code>Mapping::phys2virt</code></a> типа <a href="../../doc/ku/memory/frage/type.Page.html"><code>Page</code></a> — начало “окна”, в которое отображена вся физическая память.</li>
+</ul>
+<p><a href="../../doc/kernel/memory/mapping/struct.Mapping.html#structfield.phys2virt"><code>Mapping::phys2virt</code></a>
+нужен, чтобы с помощью функции</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn phys2virt_map(phys2virt: Page, address: Phys) -&gt; Virt
+<span class="boring">}
+</span></code></pre></pre>
+<p>по заданному физическому адресу, найти куда он отображён в “окне”.
+Это потребуется когда нам нужно будет записать в какую-нибудь
+<a href="../../doc/ku/memory/mmu/type.PageTable.html"><code>PageTable</code></a>.
+Так как в
+<a href="../../doc/ku/memory/mmu/struct.PageTableEntry.html"><code>PageTableEntry</code></a> таблица
+<a href="../../doc/ku/memory/mmu/type.PageTable.html"><code>PageTable</code></a> следующего вниз уровня
+задаётся именно физическим адресом.</p>
+<blockquote>
+<p>Подумайте, а можно ли было бы в
+<a href="../../doc/ku/memory/mmu/struct.PageTableEntry.html"><code>PageTableEntry</code></a>
+хранить виртуальный адрес
+<a href="../../doc/ku/memory/mmu/type.PageTable.html"><code>PageTable</code></a>,
+на которую ссылается данная
+<a href="../../doc/ku/memory/mmu/struct.PageTableEntry.html"><code>PageTableEntry</code></a>?</p>
+</blockquote>
+<p>Отображение виртуальных страниц на физические фреймы:</p>
+<p><img src="2-mm-6-address-space-2-virt-to-phys.svg" alt="" /></p>
+<p>Про отображение страниц можно почитать на сайте <a href="https://wiki.osdev.org/">osdev</a>, нас интересует 64-битный вариант для x86-64:</p>
+<ul>
+<li><a href="https://wiki.osdev.org/Memory_management">Memory management</a>.</li>
+<li><a href="https://wiki.osdev.org/Paging">Paging</a>.</li>
+</ul>
+<p>Ещё более подробный и обстоятельный разбор есть в блоге <a href="https://os.phil-opp.com/">Writing an OS in Rust</a>:</p>
+<ul>
+<li><a href="https://os.phil-opp.com/paging-introduction/">Introduction to Paging</a>, <a href="https://habr.com/ru/post/436606/">перевод</a>.</li>
+<li><a href="https://os.phil-opp.com/paging-implementation/">Paging Implementation</a>, <a href="https://habr.com/ru/post/445618/">перевод</a>.</li>
+</ul>
+<h3 id="Задача-5--mapping"><a class="header" href="#Задача-5--mapping">Задача 5 — <a href="../../doc/kernel/memory/mapping/struct.Mapping.html"><code>Mapping</code></a></a></h3>
+<h4 id="Отображение-виртуальных-страниц-на-физические-фреймы"><a class="header" href="#Отображение-виртуальных-страниц-на-физические-фреймы">Отображение виртуальных страниц на физические фреймы</a></h4>
+<p>Страничное преобразование устроено как показано на схеме.
+Стрелки ведут из физических адресов, хранящихся в регистре
+<a href="https://wiki.osdev.org/CPU_Registers_x86#CR3"><code>CR3</code></a>
+и в элементах
+<a href="../../doc/ku/memory/mmu/struct.PageTableEntry.html"><code>ku::memory::mmu::PageTableEntry</code></a>
+таблиц
+<a href="../../doc/ku/memory/mmu/type.PageTable.html"><code>ku::memory::mmu::PageTable</code></a>,
+в целевые фреймы и целевой байт.
+А пунктиром показано какая часть битового представления виртуального адреса
+(<a href="../../doc/ku/memory/addr/type.Virt.html"><code>Virt</code></a>)
+используется как индекс в одной из таблиц
+<a href="../../doc/ku/memory/mmu/type.PageTable.html"><code>PageTable</code></a>,
+либо как смещение внутри целевого фрейма.
+Каждая <a href="../../doc/ku/memory/mmu/type.PageTable.html"><code>PageTable</code></a> занимает ровно один фрейм физической памяти.</p>
+<p><img src="2-mm-6-address-space-2-translate.svg" alt="" /></p>
+<p>Вооружившись этими знаниями, реализуйте <a href="../../doc/kernel/memory/mapping/struct.Mapping.html#method.translate">метод</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>unsafe fn Mapping::translate(
+    &amp;mut self,
+    virt: Virt,
+    mut frame_allocator: Option&lt;&amp;mut FrameAllocator&gt;,
+    flags: PageTableFlags,
+) -&gt; Result&lt;&amp;mut PageTableEntry&gt;
+<span class="boring">}
+</span></code></pre></pre>
+<p>в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/memory/mapping.rs"><code>kernel/src/memory/mapping.rs</code></a>.
+Он принимает на вход</p>
+<ul>
+<li>Виртуальный адрес <code>virt</code>, который нужно транслировать.</li>
+<li>Опциональный аллокатор фреймов <code>frame_allocator</code>.</li>
+<li>Флаги <code>flags</code> для промежуточных записей таблиц страниц, если их придётся создавать.</li>
+</ul>
+<p>И возвращает ссылку на запись
+<a href="../../doc/ku/memory/mmu/struct.PageTableEntry.html"><code>PageTableEntry</code></a>
+в
+<a href="../../doc/ku/memory/mmu/type.PageTable.html"><code>PageTable</code></a>
+листьевого уровня (L0 на схеме),
+соответствующую входному виртуальному адресу <code>virt</code>.
+Возвращается ссылка на изменяемую
+<a href="../../doc/ku/memory/mmu/struct.PageTableEntry.html"><code>PageTableEntry</code></a>,
+а не например
+<a href="../../doc/ku/memory/addr/type.Phys.html"><code>Phys</code></a>.
+Чтобы вызывающая функция могла потом как-либо модифицировать отображение <code>virt</code> — удалить это отображение, изменить его флаги, поменять физический адрес.
+Получить же целевой
+<a href="../../doc/ku/memory/addr/type.Phys.html"><code>Phys</code></a>
+из возвращённой
+<a href="../../doc/ku/memory/mmu/struct.PageTableEntry.html"><code>PageTableEntry</code></a>
+можно в одно действие —
+<a href="../../doc/ku/memory/mmu/struct.PageTableEntry.html#method.phys"><code>PageTableEntry::phys()</code></a>.</p>
+<p><a href="../../doc/kernel/memory/mapping/struct.Mapping.html#method.translate"><code>Mapping::translate()</code></a>
+должен пройти от корневой L3 до листьевой L0 по физическим фреймам, которые возвращает метод
+<a href="../../doc/ku/memory/mmu/struct.PageTableEntry.html#method.frame"><code>fn PageTableEntry::frame() -&gt; Result&lt;Frame&gt;</code></a>
+для промежуточных
+<a href="../../doc/ku/memory/mmu/struct.PageTableEntry.html"><code>PageTableEntry</code></a>.
+Если какая-то из этих промежуточных
+<a href="../../doc/ku/memory/mmu/struct.PageTableEntry.html"><code>PageTableEntry</code></a>
+не отображена на физическую память, то есть два варианта:</p>
+<ul>
+<li>Входной <code>frame_allocator</code> равен <a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#variant.None"><code>None</code></a>, тогда <a href="../../doc/kernel/memory/mapping/struct.Mapping.html#method.translate"><code>Mapping::translate()</code></a> сразу выходит, возвращая ошибку <a href="../../doc/kernel/error/enum.Error.html#variant.NoPage"><code>Error::NoPage</code></a>.</li>
+<li>Входной <code>frame_allocator</code> равен <a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#variant.Some"><code>Some</code></a>
+, тогда <a href="../../doc/kernel/memory/mapping/struct.Mapping.html#method.translate"><code>Mapping::translate()</code></a> аллоцирует с его помощью фрейм для недостающей промежуточной <a href="../../doc/ku/memory/mmu/type.PageTable.html"><code>PageTable</code></a>. И очищает её — все записи в ней должны быть равны значению, которое возвращает метод <a href="../../doc/ku/memory/mmu/struct.PageTableEntry.html#method.default"><code>PageTableEntry::default()</code></a>.</li>
+</ul>
+<p>Вам может пригодиться конструкция <code>frame_allocator.as_mut().ok_or(NoPage)?</code>. В ней
+<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.as_mut"><code>Option::as_mut()</code></a>
+преобразует <code>&amp;mut Option&lt;FrameAllocator&gt;</code> в <code>Option&lt;&amp;mut FrameAllocator&gt;</code>.
+Далее, уже встречавшаяся нам <code>Option::ok_or(NoPage)</code> преобразует
+<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#variant.None"><code>Option::None</code></a>
+в
+<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#variant.Err"><code>Result::Err(NoPage)</code></a>
+а
+<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#variant.Some"><code>Option::Some(frame_allocator)</code></a>
+в
+<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#variant.Ok"><code>Result::Ok(frame_allocator)</code></a>.
+Последним штрихом <code>?</code> разворачивает
+<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#variant.Ok"><code>Result::Ok(frame_allocator)</code></a>
+в содержащийся внутри <code>&amp;mut FrameAllocator</code>, а
+<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#variant.Err"><code>Result::Err</code></a>
+прокидывает в вызывающую функцию.
+Именно изменяемый <code>&amp;mut FrameAllocator</code> нужен нам чтобы аллоцировать из него фреймы для промежуточных таблиц
+<a href="../../doc/ku/memory/mmu/type.PageTable.html"><code>PageTable</code></a>,
+если это понадобится.
+Если во
+<a href="../../doc/kernel/memory/enum.FrameAllocator.html"><code>FrameAllocator</code></a>
+не окажется свободных фреймов, он вернёт ошибку
+<a href="../../doc/kernel/error/enum.Error.html#variant.NoFrame"><code>Error::NoFrame</code></a>,
+как мы реализовали в
+<a href="../../lab/book/2-mm-5-boot-frame-allocator.html#%D0%97%D0%B0%D0%B4%D0%B0%D1%87%D0%B0-2--%D0%B0%D0%BB%D0%BB%D0%BE%D0%BA%D0%B0%D1%86%D0%B8%D1%8F-%D1%84%D1%80%D0%B5%D0%B9%D0%BC%D0%BE%D0%B2">задаче 2</a>.
+Заметьте, что:</p>
+<ul>
+<li>Если в <a href="../../doc/kernel/memory/mapping/struct.Mapping.html#method.translate"><code>Mapping::translate()</code></a>
+не передали <a href="../../doc/kernel/memory/enum.FrameAllocator.html"><code>FrameAllocator</code></a>, она возвращает <a href="../../doc/kernel/error/enum.Error.html#variant.NoPage"><code>Error::NoPage</code></a>. Это означает “виртуальная страница для данного <code>virt</code> не отображена в физическую память”.</li>
+<li>А если передали, но он не смог выделить свободный физический фрейм, то <a href="../../doc/kernel/memory/mapping/struct.Mapping.html#method.translate"><code>Mapping::translate()</code></a> вернёт ошибку <a href="../../doc/kernel/error/enum.Error.html#variant.NoFrame"><code>kernel::error::Error::NoFrame</code></a>. Это означает “во время исполнения операции понадобилось выделить дополнительный физический фрейм, но свободных фреймов не осталось”.</li>
+</ul>
+<p>У этих двух ситуаций разный смысл, поэтому
+<a href="../../doc/kernel/memory/mapping/struct.Mapping.html#method.translate"><code>Mapping::translate()</code></a>
+возвращает для них разные значения ошибок.</p>
+<p>Если в промежуточной таблице встретилась запись, в которой
+<a href="../../doc/ku/memory/mmu/struct.PageTableEntry.html#method.flags"><code>PageTableEntry::flags()</code></a>
+содержит флаг
+<a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.HUGE_PAGE"><code>PageTableFlags::HUGE_PAGE</code></a>,
+верните
+<a href="../../doc/kernel/error/enum.Error.html#variant.Unimplemented"><code>Error::Unimplemented</code></a>.
+Такая запись не является промежуточной, а задаёт большую страницу, —
+<a href="https://en.wikipedia.org/wiki/X86-64#Virtual_address_space_details">x86-64 поддерживает</a> страницы
+<a href="https://en.wikipedia.org/wiki/Page_(computer_memory)#Multiple_page_sizes">размеров <code>4 KiB</code>, <code>2 MiB</code> и <code>1 GiB</code></a>.
+Мы не будем их поддерживать.
+Но они нам будут попадаться, потому что с их помощью
+<a href="../../doc/bootloader/index.html">bootloader</a>
+отображает всю физическую память в “окно” в виртуальной.
+Делается это для экономии физических фреймов на само отображение.</p>
+<p>Кроме того, есть ещё такой момент.
+Если вызывающая функция захочет отобразить <code>virt</code>, например, с возможностью записи, и установит
+соответствующий флаг
+<a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.WRITABLE"><code>PageTableFlags::WRITABLE</code></a>
+только в том элементе
+<a href="../../doc/ku/memory/mmu/struct.PageTableEntry.html"><code>PageTableEntry</code></a>
+таблицы L0, которую вернёт
+<a href="../../doc/kernel/memory/mapping/struct.Mapping.html#method.translate"><code>Mapping::translate()</code></a>,
+этого может оказаться недостаточно.
+Дело в том, что процессор пересечёт флаги <a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.WRITABLE"><code>PageTableFlags::WRITABLE</code></a>
+из всех промежуточных
+<a href="../../doc/ku/memory/mmu/struct.PageTableEntry.html"><code>PageTableEntry</code></a>
+по схеме <code>И</code>.
+И если в какой-то из промежуточных
+<a href="../../doc/ku/memory/mmu/struct.PageTableEntry.html"><code>PageTableEntry</code></a>
+флаг
+<a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.WRITABLE"><code>PageTableFlags::WRITABLE</code></a>
+будет сброшен, то запись по виртуальному адресу <code>virt</code> будет запрещена,
+несмотря на то что в
+<a href="../../doc/ku/memory/mmu/struct.PageTableEntry.html"><code>PageTableEntry</code></a>
+таблицы L0, она разрешена.
+Поэтому в промежуточных
+<a href="../../doc/ku/memory/mmu/struct.PageTableEntry.html"><code>PageTableEntry</code></a>
+функция
+<a href="../../doc/kernel/memory/mapping/struct.Mapping.html#method.translate"><code>Mapping::translate()</code></a>
+должна будет включить флаги, заданные ей в аргументе <code>flags</code>.
+И никакие флаги промежуточных
+<a href="../../doc/ku/memory/mmu/struct.PageTableEntry.html"><code>PageTableEntry</code></a>
+она не должна случайно сбросить при этой операции.
+Альтернативой было бы либо сразу включать все доступы в промежуточных
+<a href="../../doc/ku/memory/mmu/struct.PageTableEntry.html"><code>PageTableEntry</code></a>,
+либо возвращать из
+<a href="../../doc/kernel/memory/mapping/struct.Mapping.html#method.translate"><code>Mapping::translate()</code></a>
+весь набор промежуточных
+<a href="../../doc/ku/memory/mmu/struct.PageTableEntry.html"><code>PageTableEntry</code></a>.
+Также заметьте, что включать нужно только флаги доступа, они задаются константой
+<a href="../../doc/ku/memory/mmu/constant.FULL_ACCESS.html"><code>ku::memory::mmu::FULL_ACCESS</code></a>.
+То есть, включать нужно флаги которые есть в пересечении — <code>flags &amp; FULL_ACCESS</code>.</p>
+<p>Выделение физического фрейма под отсутствующую промежуточную таблицу
+<a href="../../doc/ku/memory/mmu/type.PageTable.html"><code>PageTable</code></a>
+рекомендуется вынести во вспомогательную <a href="../../doc/kernel/memory/mapping/struct.Mapping.html#method.map_intermediate">функцию</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn Mapping::map_intermediate(
+    pte: &amp;mut PageTableEntry,
+    flags: PageTableFlags,
+    phys2virt: Page,
+    frame_allocator: &amp;mut FrameAllocator,
+) -&gt; Result&lt;()&gt;
+<span class="boring">}
+</span></code></pre></pre>
+<p>в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/memory/mapping.rs"><code>kernel/src/memory/mapping.rs</code></a>.</p>
+<p>Запись <code>()</code> в её результате означает пустой <a href="https://doc.rust-lang.ru/book/ch03-02-data-types.html#%D0%9A%D0%BE%D1%80%D1%82%D0%B5%D0%B6%D0%B8">кортеж</a>, — это аналог <code>void</code> языка C++.
+То есть, функция либо возвращает <code>Ok(())</code>, если она отработала успешно, либо ошибку.
+Функция <a href="../../doc/kernel/memory/mapping/struct.Mapping.html#method.map_intermediate"><code>Mapping::map_intermediate()</code></a> статическая, она не принимает <code>self</code>.
+Чтобы её вызвать нужно явно указать <code>Self::</code> или <code>Mapping::</code>.</p>
+<p>При реализации <code>Mapping::translate()</code> и <code>Mapping::map_intermediate()</code> вам также могут пригодиться:</p>
+<ul>
+<li>Поле <a href="../../doc/kernel/memory/mapping/struct.Mapping.html#structfield.page_directory"><code>Mapping::page_directory</code></a>, оно содержит адрес фрейма корневой таблицы L3, то есть фактически копию регистра <a href="https://wiki.osdev.org/CPU_Registers_x86#CR3"><code>CR3</code></a>.</li>
+<li>Константа <a href="../../doc/ku/memory/mmu/constant.PAGE_TABLE_ROOT_LEVEL.html"><code>ku::memory::mmu::PAGE_TABLE_ROOT_LEVEL</code></a> — та самая 3 из обозначения L3 для корневой таблицы страниц — третий уровень считая с нуля.</li>
+<li>Константа <a href="../../doc/ku/memory/mmu/constant.PAGE_TABLE_LEAF_LEVEL.html"><code>ku::memory::mmu::PAGE_TABLE_LEAF_LEVEL</code></a> — та самая 0 из обозначения L0 для листьевой таблицы страниц.</li>
+<li>Конструкция <code>unsafe { virt_addr.try_into_mut::&lt;PageTable&gt;()? }</code>, которая превращает <a href="../../doc/ku/memory/addr/type.Virt.html"><code>Virt</code></a> в <code>&amp;mut PageTable</code>.</li>
+<li>Метод <a href="https://doc.rust-lang.org/nightly/core/primitive.slice.html#method.fill"><code>fill()</code></a> срезов.</li>
+<li>Цикл, чтобы обойти уровни таблицы. Для уменьшения потенциальных возможностей совершить ошибку, можно было бы сделать таблицы страниц разных уровней не совместимыми в системе типов, <a href="https://os.phil-opp.com/page-tables/#some-clever-solution">как здесь</a>. Тогда компилятор не дал бы их перепутать в коде. Но такой подход, к сожалению, не даст написать обычный цикл по уровням, только рекурсию на обобщённых функциях или копипасту. Поэтому в Nikka выбор сделан в пользу одного и того же типа для узлов всех уровней.</li>
+<li>Итерирование в обратном порядке: <code>for i in (5..10).rev()</code>, или же <code>for i in (5..=10).rev()</code> если <code>10</code> должно быть включительно.</li>
+<li>Сохранение в самом начале функции <a href="../../doc/kernel/memory/mapping/struct.Mapping.html#method.translate"><code>Mapping::translate()</code></a> значения <code>self.phys2virt</code> в отдельную переменную и использование уже новой переменной, если столкнётесь с излишней консервативностью borrow checker’а, подобного вида:</li>
+</ul>
+<pre><code class="language-console">error[E0503]: cannot use `self.phys2virt` because it was mutably borrowed
+  --&gt; src/memory/mapping.rs:58:65
+   |
+55 |             let ... = self...;
+   |                       ---- borrow of `*self` occurs here
+...
+58 |                 Self::map_intermediate(..., self.phys2virt, frame_allocator.as_mut().ok_or(NoPage)?)?;
+   |                                             ^^^^^^^^^^^^^^ use of borrowed `*self`
+...
+61 |             if ... {
+   |                --- borrow later used here
+</code></pre>
+<p>Теперь должен проходить тест</p>
+<pre><code class="language-console">$ (cd kernel; cargo test --test 2-mm-3-translate)
+...
+2_mm_3_mapping::translate-----------------------------------
+18:27:12 0 D pte = PageTableEntry(2613347)
+18:27:12 0 D read_ptr = 0xfffff0000027e420; write_ptr = 0x10000201420
+18:27:12 0 D write_value = 0; read_value = 0; variable = 0
+18:27:12 0 D write_value = 1; read_value = 1; variable = 1
+18:27:12 0 D write_value = 2; read_value = 2; variable = 2
+18:27:12 0 D write_value = 3; read_value = 3; variable = 3
+18:27:12 0 D write_value = 4; read_value = 4; variable = 4
+2_mm_3_mapping::translate-------------------------- [passed]
+
+2_mm_3_mapping::map_intermediate----------------------------
+18:27:12 0 D page = Page(34359738366 @ 0v7FFFFFFFE000)
+18:27:12 0 D pte = PageTableEntry(0)
+2_mm_3_mapping::map_intermediate------------------- [passed]
+18:27:12 0 I exit qemu; exit_code = SUCCESS
+</code></pre>
+<p>А вот для проверки копирования и удаления виртуальных отображений
+нам понадобится основной аллокатор физических фреймов.
+Поэтому тесты для них придётся отложить.</p>
+<h4 id="Создание-полной-копии-виртуального-отображения"><a class="header" href="#Создание-полной-копии-виртуального-отображения">Создание полной копии виртуального отображения</a></h4>
+<p>В будущем, при создании нового процесса, нам понадобится скопировать существующий
+<a href="../../doc/kernel/memory/mapping/struct.Mapping.html"><code>Mapping</code></a>
+в новый.
+Это делает метод
+<a href="../../doc/kernel/memory/mapping/struct.Mapping.html#method.duplicate"><code>Mapping::duplicate()</code></a>:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn duplicate(&amp;self) -&gt; Result&lt;Self&gt; {
+    let mut result = Self::new(Frame::zero(), self.phys2virt);
+    result.page_directory = Self::duplicate_page_table(&amp;mut result, self, self.page_directory, PAGE_TABLE_ROOT_LEVEL)?;
+    Ok(result)
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>Основную работу он перекладывает на рекурсивный метод
+<a href="../../doc/kernel/memory/mapping/struct.Mapping.html#method.duplicate_page_table"><code>Mapping::duplicate_page_table()</code></a>,
+запуская корневой вызов рекурсии.</p>
+<p>Реализуйте <a href="../../doc/kernel/memory/mapping/struct.Mapping.html#method.duplicate_page_table">метод</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn Mapping::duplicate_page_table(
+    &amp;self,
+    dst: &amp;mut Mapping,
+    src_frame: Frame,
+    level: u32,
+) -&gt; Result&lt;Frame&gt;
+<span class="boring">}
+</span></code></pre></pre>
+<p>в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/memory/mapping.rs"><code>kernel/src/memory/mapping.rs</code></a>
+сейчас, пока помните как устроено страничное отображение.
+Он принимает на вход:</p>
+<ul>
+<li>Новое отображение <code>dst</code>, которое мы создаём как копию исходного.</li>
+<li>Исходное отображение <code>self</code>.</li>
+<li>Исходный узел <code>PageTable</code> таблицы страниц в виде содержащего его фрейма <code>src_frame</code>.</li>
+<li>Уровень этого узла <code>level</code> от <a href="../../doc/ku/memory/mmu/constant.PAGE_TABLE_ROOT_LEVEL.html"><code>PAGE_TABLE_ROOT_LEVEL = 3</code></a>
+до <a href="../../doc/ku/memory/mmu/constant.PAGE_TABLE_LEAF_LEVEL.html"><code>PAGE_TABLE_LEAF_LEVEL = 0</code></a>.</li>
+</ul>
+<p>И должен создать копию заданного <code>src_frame</code> узла.
+Возвращает он либо эту копию, либо возникшую в процессе работы ошибку.
+Этот метод копирует только страничное отображение, то есть все <code>PageTable</code> уровней L3–L0,
+но не пользовательские фреймы, на которые указывает это отображение.
+То есть, должно получиться отображение,
+которое переводит те же виртуальные адреса в те же физические адреса.
+Разделяя таким образом пользовательскую часть физической память,
+но дублируя физическую память под само страничное отображение (<code>PageTable</code> уровней L3–L0).
+Если бы <code>PageTable</code> разделяли ту же физическую память, то уже после того как копирование отработало,
+модификации исходного <code>self</code> приводили бы к модификации <code>dst</code> и наоборот.
+А это не то что нам нужно.
+Это означает, что</p>
+<ul>
+<li><code>PageTable</code> уровней L3–L1 включительно нужно пересоздать, заполняя их <code>PageTableEntry</code> результатами рекурсивных вызовов <code>Mapping::duplicate_page_table()</code>.</li>
+<li>А вот <code>PageTable</code> уровня L0 нужно просто скопировать как есть, их записи <code>PageTableEntry</code> должны вести в те же физические фреймы, что и в исходном отображении <code>self</code>. Но только если соответствующая запись ведёт на страницу, принадлежащую ядру. Ссылки уровня L0 на страницы, принадлежащие пользователю — <code>PageTableFlags::USER_ACCESSIBLE</code>, — копировать не нужно.</li>
+<li>На этот раз <code>PageTableFlags::HUGE_PAGE</code> нужно корректно обработать. Это означает, что рекурсивно спускаться в записи <code>PageTableEntry</code> для которых этот флаг включён не нужно. С этими записями нужно поступить как с записями на уровне L0, — скопировать в точности из <code>self</code>.</li>
+</ul>
+<p>Для физических фреймов, на которые указывают скопированные записи листьевого уровня L0, нужно вызвать
+<a href="../../doc/kernel/memory/enum.FrameAllocator.html#method.reference"><code>FrameAllocator::reference()</code></a>.
+Этот метод увеличивает число ссылок на физический фрейм.
+И позволяет понять, что физический фрейм нельзя считать свободным пока оба отображения <code>self</code> и <code>dst</code> существуют.
+А ведь именно указанные фреймы мы разделяем, используя сразу в обоих отображениях.</p>
+<p>Для выделения новых физических фреймов используйте
+<a href="../../doc/kernel/memory/enum.FrameAllocator.html#method.allocate"><code>FrameAllocator::allocate()</code></a>.
+В обоих случаях обращайтесь к глобальному
+<a href="../../doc/kernel/memory/struct.FRAME_ALLOCATOR.html"><code>FRAME_ALLOCATOR</code></a>.</p>
+<p>Также вам могут пригодиться методы</p>
+<ul>
+<li><a href="../../doc/kernel/memory/mapping/struct.Mapping.html#method.page_table_ref"><code>unsafe fn Mapping::page_table_ref(&amp;self, frame: Frame) -&gt; &amp;PageTable</code></a> и</li>
+<li><a href="../../doc/kernel/memory/mapping/struct.Mapping.html#method.page_table_mut"><code>unsafe fn Mapping::page_table_mut(&amp;mut self, frame: Frame) -&gt; &amp;mut PageTable</code></a>.</li>
+</ul>
+<p>Они позволяют интерпретировать заданный физический фрейм <code>frame</code> как узел <code>PageTable</code> таблицы страниц.
+И различаются только возможностью менять эту таблицу.</p>
+<p>Учтите, что в рекурсивный вызов передаётся изменяемая ссылка <code>dst: &amp;mut Mapping</code>.
+А значит, в момент рекурсивного вызова не должно быть живых локальных переменных ссылающихся на <code>dst</code> прямо или косвенно.
+Rust не даст скомпилировать такой код из-за нарушения <a href="https://doc.rust-lang.ru/book/ch04-00-understanding-ownership.html">владения</a> <code>dst</code>, —
+только одна из функций, вызывающая или вызываемая, может эксклюзивно заимствовать <code>dst</code> в каждый момент времени.
+А <a href="https://doc.rust-lang.ru/book/ch04-02-references-and-borrowing.html#%D0%98%D0%B7%D0%BC%D0%B5%D0%BD%D1%8F%D0%B5%D0%BC%D1%8B%D0%B5-%D1%81%D1%81%D1%8B%D0%BB%D0%BE%D1%87%D0%BD%D1%8B%D0%B5-%D0%BF%D0%B5%D1%80%D0%B5%D0%BC%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5">изменяемая ссылка и означает эксклюзивность заимствования</a>.</p>
+<h4 id="Удаление-виртуального-отображения"><a class="header" href="#Удаление-виртуального-отображения">Удаление виртуального отображения</a></h4>
+<p>Раз есть способ создать новое отображение, которое расходует физические фреймы, значит должен быть и способ удалить его, вернув эти фреймы в систему.
+Это делает реализация типажа <a href="https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html"><code>core::ops::Drop</code></a>:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>impl Drop for Mapping {
+    fn drop(&amp;mut self) {
+        assert!(Self::current_page_directory() != self.page_directory);
+
+        if self.is_valid() {
+            self.drop_page_table(self.page_directory, PAGE_TABLE_ROOT_LEVEL);
+        }
+    }
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>В строчке <code>assert!(Self::current_page_directory() != self.page_directory)</code> проверяется, что мы не пытаемся удалить отображение, которое в данный момент загружено в регистр
+<a href="https://wiki.osdev.org/CPU_Registers_x86#CR3"><code>CR3</code></a>
+и является активным виртуальным пространством.
+Далее вся работа перекладывается на рекурсивный метод
+<a href="../../doc/kernel/memory/mapping/struct.Mapping.html#method.drop_page_table"><code>Mapping::drop_page_table()</code></a>.</p>
+<p>Реализуйте <a href="../../doc/kernel/memory/mapping/struct.Mapping.html#method.drop_page_table">метод</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn Mapping::drop_page_table(
+    &amp;mut self,
+    src_frame: Frame,
+    level: u32,
+)
+<span class="boring">}
+</span></code></pre></pre>
+<p>в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/memory/mapping.rs"><code>kernel/src/memory/mapping.rs</code></a>.</p>
+<p>Для освобождения фреймов используйте
+<a href="../../doc/kernel/memory/enum.FrameAllocator.html#method.deallocate"><code>FrameAllocator::deallocate()</code></a>,
+он уменьшит количество ссылок на фрейм и освободит его, когда ссылок не останется.
+Перед освобождением фрейма, занятого под одну из <code>PageTable</code>, то есть из записей <code>PageTableEntry</code> уровней L3–L1,
+нужно спуститься в этот фрейм, рекурсивно вызвав <code>Mapping::drop_page_table()</code>.
+Пользовательские фреймы нужно освобождать так же как и фреймы, занятые под <code>PageTable</code>.
+А вот с записями у которых включён флаг <code>PageTableFlags::HUGE_PAGE</code> делать ничего не нужно — ни освобождать, ни спускаться в них рекурсивно.</p>
+<h3 id="Ориентировочный-объём-работ-этой-части-лабораторки"><a class="header" href="#Ориентировочный-объём-работ-этой-части-лабораторки">Ориентировочный объём работ этой части лабораторки</a></h3>
+<pre><code class="language-console"> kernel/src/memory/mapping.rs |   88 +++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 84 insertions(+), 4 deletions(-)
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="2-mm-6-address-space-1-allocation.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next" href="2-mm-6-address-space-3-map.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="2-mm-6-address-space-1-allocation.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" href="2-mm-6-address-space-3-map.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </body>
+</html>

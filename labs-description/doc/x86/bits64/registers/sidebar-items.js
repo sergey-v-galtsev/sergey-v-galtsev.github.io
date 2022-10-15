@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":[["rbp","Read the RBP register (base pointer register)."],["rip","Read the RIP register (instruction pointer)."],["rsp","Read the RSP register (stack pointer register)."]]};

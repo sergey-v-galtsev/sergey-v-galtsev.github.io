@@ -1,0 +1,170 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/sergey/.cargo/registry/src/github.com-1ecc6299db9ec823/acpi-4.1.1/src/mcfg.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mcfg.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../acpi/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../acpi/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../acpi/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<span id="2">2</span>
+<span id="3">3</span>
+<span id="4">4</span>
+<span id="5">5</span>
+<span id="6">6</span>
+<span id="7">7</span>
+<span id="8">8</span>
+<span id="9">9</span>
+<span id="10">10</span>
+<span id="11">11</span>
+<span id="12">12</span>
+<span id="13">13</span>
+<span id="14">14</span>
+<span id="15">15</span>
+<span id="16">16</span>
+<span id="17">17</span>
+<span id="18">18</span>
+<span id="19">19</span>
+<span id="20">20</span>
+<span id="21">21</span>
+<span id="22">22</span>
+<span id="23">23</span>
+<span id="24">24</span>
+<span id="25">25</span>
+<span id="26">26</span>
+<span id="27">27</span>
+<span id="28">28</span>
+<span id="29">29</span>
+<span id="30">30</span>
+<span id="31">31</span>
+<span id="32">32</span>
+<span id="33">33</span>
+<span id="34">34</span>
+<span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
+<span id="38">38</span>
+<span id="39">39</span>
+<span id="40">40</span>
+<span id="41">41</span>
+<span id="42">42</span>
+<span id="43">43</span>
+<span id="44">44</span>
+<span id="45">45</span>
+<span id="46">46</span>
+<span id="47">47</span>
+<span id="48">48</span>
+<span id="49">49</span>
+<span id="50">50</span>
+<span id="51">51</span>
+<span id="52">52</span>
+<span id="53">53</span>
+<span id="54">54</span>
+<span id="55">55</span>
+<span id="56">56</span>
+<span id="57">57</span>
+<span id="58">58</span>
+<span id="59">59</span>
+<span id="60">60</span>
+<span id="61">61</span>
+<span id="62">62</span>
+<span id="63">63</span>
+<span id="64">64</span>
+<span id="65">65</span>
+<span id="66">66</span>
+<span id="67">67</span>
+<span id="68">68</span>
+<span id="69">69</span>
+<span id="70">70</span>
+<span id="71">71</span>
+<span id="72">72</span>
+<span id="73">73</span>
+<span id="74">74</span>
+<span id="75">75</span>
+<span id="76">76</span>
+<span id="77">77</span>
+<span id="78">78</span>
+<span id="79">79</span>
+<span id="80">80</span>
+<span id="81">81</span>
+<span id="82">82</span>
+<span id="83">83</span>
+<span id="84">84</span>
+</pre><pre class="rust"><code><span class="kw">use crate</span>::{sdt::SdtHeader, AcpiError, AcpiHandler, AcpiTable, AcpiTables};
+<span class="kw">use </span>alloc::vec::Vec;
+<span class="kw">use </span>core::{mem, slice};
+
+<span class="doccomment">/// Describes a set of regions of physical memory used to access the PCIe configuration space. A
+/// region is created for each entry in the MCFG. Given the segment group, bus, device number, and
+/// function of a PCIe device, the `physical_address` method on this will give you the physical
+/// address of the start of that device function&#39;s configuration space (each function has 4096
+/// bytes of configuration space in PCIe).
+</span><span class="attribute">#[derive(Clone, Debug)]
+</span><span class="kw">pub struct </span>PciConfigRegions {
+    regions: Vec&lt;McfgEntry&gt;,
+}
+
+<span class="kw">impl </span>PciConfigRegions {
+    <span class="kw">pub fn </span>new&lt;H&gt;(tables: <span class="kw-2">&amp;</span>AcpiTables&lt;H&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;PciConfigRegions, AcpiError&gt;
+    <span class="kw">where
+        </span>H: AcpiHandler,
+    {
+        <span class="kw">let </span>mcfg = <span class="kw">unsafe </span>{
+            tables
+                .get_sdt::&lt;Mcfg&gt;(<span class="kw">crate</span>::sdt::Signature::MCFG)<span class="question-mark">?
+                </span>.ok_or(AcpiError::TableMissing(<span class="kw">crate</span>::sdt::Signature::MCFG))<span class="question-mark">?
+        </span>};
+        <span class="prelude-val">Ok</span>(PciConfigRegions { regions: mcfg.entries().iter().copied().collect() })
+    }
+
+    <span class="doccomment">/// Get the physical address of the start of the configuration space for a given PCIe device
+    /// function. Returns `None` if there isn&#39;t an entry in the MCFG that manages that device.
+    </span><span class="kw">pub fn </span>physical_address(<span class="kw-2">&amp;</span><span class="self">self</span>, segment_group_no: u16, bus: u8, device: u8, function: u8) -&gt; <span class="prelude-ty">Option</span>&lt;u64&gt; {
+        <span class="comment">// First, find the memory region that handles this segment and bus. This method is fine
+        // because there should only be one region that handles each segment group + bus
+        // combination.
+        </span><span class="kw">let </span>region = <span class="self">self</span>.regions.iter().find(|region| {
+            region.pci_segment_group == segment_group_no
+                &amp;&amp; (region.bus_number_start..=region.bus_number_end).contains(<span class="kw-2">&amp;</span>bus)
+        })<span class="question-mark">?</span>;
+
+        <span class="prelude-val">Some</span>(
+            region.base_address
+                + ((u64::from(bus - region.bus_number_start) &lt;&lt; <span class="number">20</span>)
+                    | (u64::from(device) &lt;&lt; <span class="number">15</span>)
+                    | (u64::from(function) &lt;&lt; <span class="number">12</span>)),
+        )
+    }
+}
+
+<span class="attribute">#[repr(C, packed)]
+</span><span class="kw">pub struct </span>Mcfg {
+    header: SdtHeader,
+    _reserved: u64,
+    <span class="comment">// Followed by `n` entries with format `McfgEntry`
+</span>}
+
+<span class="kw">impl </span>AcpiTable <span class="kw">for </span>Mcfg {
+    <span class="kw">fn </span>header(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>SdtHeader {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.header
+    }
+}
+
+<span class="kw">impl </span>Mcfg {
+    <span class="kw">fn </span>entries(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[McfgEntry] {
+        <span class="kw">let </span>length = <span class="self">self</span>.header.length <span class="kw">as </span>usize - mem::size_of::&lt;Mcfg&gt;();
+
+        <span class="comment">// Intentionally round down in case length isn&#39;t an exact multiple of McfgEntry size
+        // (see rust-osdev/acpi#58)
+        </span><span class="kw">let </span>num_entries = length / mem::size_of::&lt;McfgEntry&gt;();
+
+        <span class="kw">unsafe </span>{
+            <span class="kw">let </span>pointer = (<span class="self">self </span><span class="kw">as </span><span class="kw-2">*const </span>Mcfg <span class="kw">as </span><span class="kw-2">*const </span>u8).add(mem::size_of::&lt;Mcfg&gt;()) <span class="kw">as </span><span class="kw-2">*const </span>McfgEntry;
+            slice::from_raw_parts(pointer, num_entries)
+        }
+    }
+}
+
+<span class="attribute">#[derive(Clone, Copy, Debug)]
+#[repr(C, packed)]
+</span><span class="kw">pub struct </span>McfgEntry {
+    base_address: u64,
+    pci_segment_group: u16,
+    bus_number_start: u8,
+    bus_number_end: u8,
+    _reserved: u32,
+}
+</code></pre></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="acpi" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (bc4b39c27 2022-08-29)" ></div></body></html>
