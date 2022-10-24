@@ -592,6 +592,21 @@
 <span id="592">592</span>
 <span id="593">593</span>
 <span id="594">594</span>
+<span id="595">595</span>
+<span id="596">596</span>
+<span id="597">597</span>
+<span id="598">598</span>
+<span id="599">599</span>
+<span id="600">600</span>
+<span id="601">601</span>
+<span id="602">602</span>
+<span id="603">603</span>
+<span id="604">604</span>
+<span id="605">605</span>
+<span id="606">606</span>
+<span id="607">607</span>
+<span id="608">608</span>
+<span id="609">609</span>
 </pre><pre class="rust"><code><span class="attribute">#![warn(missing_docs)]
 #![warn(clippy::missing_docs_in_private_items)]
 
@@ -953,9 +968,9 @@
 }
 
 
-<span class="kw">impl</span>&lt;T: Tag&gt; IntoIterator <span class="kw">for </span>Block&lt;Frage&lt;T&gt;&gt; {
-    <span class="kw">type </span>Item = Frage&lt;T&gt;;
-    <span class="kw">type </span>IntoIter = IntoIter&lt;Frage&lt;T&gt;&gt;;
+<span class="kw">impl</span>&lt;T: Memory&gt; IntoIterator <span class="kw">for </span>Block&lt;T&gt; {
+    <span class="kw">type </span>Item = T;
+    <span class="kw">type </span>IntoIter = IntoIter&lt;T&gt;;
 
 
     <span class="kw">fn </span>into_iter(<span class="self">self</span>) -&gt; <span class="self">Self</span>::IntoIter {
@@ -969,15 +984,15 @@
 /// В качестве итератора нельзя использовать сам [`Block`], так как он реализует типаж [`Copy`].
 /// А делать итератор копируемым чревато ошибками.
 </span><span class="attribute">#[derive(Clone)]
-</span><span class="kw">pub struct </span>IntoIter&lt;T&gt;(Range&lt;usize&gt;, PhantomData&lt;T&gt;);
+</span><span class="kw">pub struct </span>IntoIter&lt;T: Memory&gt;(Range&lt;usize&gt;, PhantomData&lt;T&gt;);
 
 
-<span class="kw">impl</span>&lt;T: Tag&gt; Iterator <span class="kw">for </span>IntoIter&lt;Frage&lt;T&gt;&gt; {
-    <span class="kw">type </span>Item = Frage&lt;T&gt;;
+<span class="kw">impl</span>&lt;T: Memory&gt; Iterator <span class="kw">for </span>IntoIter&lt;T&gt; {
+    <span class="kw">type </span>Item = T;
 
 
     <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
-        <span class="self">self</span>.<span class="number">0</span>.next().and_then(|index| Frage::from_index(index).ok())
+        <span class="self">self</span>.<span class="number">0</span>.next().and_then(|index| T::from_index(index).ok())
     }
 }
 
@@ -1003,6 +1018,11 @@
     /// - `Addr::new(index)` для `Addr`;
     /// - `Frage::address_by_index(index)` для `Frage`.
     </span><span class="kw">fn </span>address_by_index(index: usize) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::Address&gt;;
+
+    <span class="doccomment">/// Возвращает базовый элемент по его индексу `index`:
+    /// - `Addr::new(index)` для `Addr`;
+    /// - `Frage::from_index(index)` для `Frage`.
+    </span><span class="kw">fn </span>from_index(index: usize) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt;;
 
     <span class="doccomment">/// Возвращает индекс базового элемента `element`:
     /// - `element.into_usize()` для `Addr`;
@@ -1034,6 +1054,11 @@
     }
 
 
+    <span class="kw">fn </span>from_index(index: usize) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
+        <span class="self">Self</span>::new(index)
+    }
+
+
     <span class="kw">fn </span>index(element: <span class="self">Self</span>) -&gt; usize {
         element.into_usize()
     }
@@ -1059,6 +1084,11 @@
 
     <span class="kw">fn </span>address_by_index(index: usize) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::Address&gt; {
         Frage::&lt;T&gt;::address_by_index(index)
+    }
+
+
+    <span class="kw">fn </span>from_index(index: usize) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
+        <span class="self">Self</span>::from_index(index)
     }
 
 

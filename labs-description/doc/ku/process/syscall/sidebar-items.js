@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":[["ExitCode",""],["ResultCode",""],["Syscall",""]]};
+window.SIDEBAR_ITEMS = {"struct":[["ExitCode",""],["ResultCode",""],["Syscall",""],["SyscallResult",""]]};

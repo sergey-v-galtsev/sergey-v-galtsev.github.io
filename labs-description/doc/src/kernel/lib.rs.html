@@ -211,7 +211,20 @@
 <span id="211">211</span>
 <span id="212">212</span>
 <span id="213">213</span>
+<span id="214">214</span>
+<span id="215">215</span>
+<span id="216">216</span>
+<span id="217">217</span>
+<span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
+<span id="221">221</span>
+<span id="222">222</span>
 </pre><pre class="rust"><code><span class="attribute">#![allow(dead_code)]
+#![allow(unused_imports)]
+#![allow(unused_variables)]
+
+#![allow(dead_code)]
 #![allow(unused_imports)]
 #![allow(unused_variables)]
 
@@ -286,8 +299,13 @@
 
         <span class="kw">const </span>MEMORY = <span class="self">Self</span>::PHYS_MEMORY.bits | <span class="self">Self</span>::VIRT_MEMORY.bits | <span class="self">Self</span>::MAIN_FRAME_ALLOCATOR.bits;
 
-        <span class="kw">const </span>SMP = <span class="number">1 </span>&lt;&lt; <span class="number">3</span>;
-        <span class="kw">const </span>PROCESS = <span class="number">1 </span>&lt;&lt; <span class="number">4</span>;
+        <span class="kw">const </span>SYSCALL = <span class="number">1 </span>&lt;&lt; <span class="number">4</span>;
+        <span class="kw">const </span>PROCESS_TABLE = <span class="number">1 </span>&lt;&lt; <span class="number">5</span>;
+        <span class="kw">const </span>SCHEDULER = <span class="number">1 </span>&lt;&lt; <span class="number">6</span>;
+
+        <span class="kw">const </span>PROCESS = <span class="self">Self</span>::SYSCALL.bits | <span class="self">Self</span>::PROCESS_TABLE.bits | <span class="self">Self</span>::SCHEDULER.bits;
+
+        <span class="kw">const </span>SMP = <span class="number">1 </span>&lt;&lt; <span class="number">7</span>;
     }
 }
 
@@ -320,8 +338,8 @@
         smp::init(boot_info);
     }
 
-    <span class="kw">if </span>subsystems.contains(Subsystems::PROCESS) {
-        process::init();
+    <span class="kw">if </span>subsystems &amp; Subsystems::PROCESS != Subsystems::empty() {
+        process::init(subsystems);
     }
 }
 

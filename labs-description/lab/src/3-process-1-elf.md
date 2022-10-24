@@ -143,38 +143,38 @@ fn kernel::process::elf::memory_block(
 
 ### Проверьте себя
 
-Должны заработать тесты `create_process()` и `create_process_failure()` в файле [`kernel/src/tests/process.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/tests/process.rs):
+Запустите тест `3-process-1-elf` из файле [`kernel/src/tests/3-process-1-elf.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/tests/3-process-1-elf.rs):
 
 ```console
-kernel::tests::process::create_process----------------------
-14:11:20 0 I page allocator init; free_page_count = 33688649728; block = [2.000 TiB, 127.500 TiB), size 125.500 TiB
-14:11:20 0 I duplicate; address_space = "process" @ 0p30B0000
-14:11:20 0 I switch to; address_space = "process" @ 0p30B0000
-14:11:20 0 D extend mapping; block = [0x10000000, 0x10004e86), size 19.631 KiB; page_block = [0x10000, 0x10005), size 20.000 KiB; flags =   R; page_flags = PRESENT | WRITABLE | USER_ACCESSIBLE
-14:11:20 0 D elf loadable program header; file_block = [0x20290e, 0x207794), size 19.631 KiB; memory_block = [0x10000000, 0x10004e86), size 19.631 KiB; flags =   R
-14:11:20 0 D extend mapping; block = [0x10005000, 0x1002dde6), size 163.475 KiB; page_block = [0x10005, 0x1002e), size 164.000 KiB; flags = X R; page_flags = PRESENT | WRITABLE | USER_ACCESSIBLE
-14:11:20 0 D elf loadable program header; file_block = [0x20779e, 0x2306f4), size 163.834 KiB; memory_block = [0x10004e90, 0x1002dde6), size 163.834 KiB; flags = X R
-14:11:20 0 D elf loadable program header; file_block = [0x2306f6, 0x2307e6), size 240 B; memory_block = [0x1002dde8, 0x1002ded8), size 240 B; flags =  WR
-14:11:20 0 D extend mapping; block = [0x1002e000, 0x10030970), size 10.359 KiB; page_block = [0x1002e, 0x10031), size 12.000 KiB; flags =  WR; page_flags = PRESENT | WRITABLE | USER_ACCESSIBLE
-14:11:20 0 D elf loadable program header; file_block = [0x2307e6, 0x233256), size 10.609 KiB; memory_block = [0x1002ded8, 0x10030970), size 10.648 KiB; flags =  WR
-14:11:20 0 I switch to; address_space = "base" @ 0p1000
-14:11:20 0 I loaded ELF file; context = { rip: 0v10004F40, rsp: 0v7F7FFFFFF000 }; file_size = 408.516 KiB; process = { pid: <current>, address_space: "process" @ 0p30B0000, { rip: 0v10004F40, rsp: 0v7F7FFFFFF000 } }
-14:11:20 0 I switch to; address_space = "0:0" @ 0p30B0000
-14:11:20 0 I allocate; slot = Process { pid: 0:0, address_space: "0:0" @ 0p30B0000, { rip: 0v10004F40, rsp: 0v7F7FFFFFF000 } }; process_count = 1
-14:11:20 0 I user process page table entry; entry_point = 0v10004F40; frame = Frame(12487 @ 0p30C7000); flags = PRESENT | WRITABLE | USER_ACCESSIBLE | ACCESSED | DIRTY
-14:11:20 0 D process_frames = 90
-14:11:20 0 I free; slot = Process { pid: 0:0, address_space: "0:0" @ 0p30B0000, { rip: 0v10004F40, rsp: 0v7F7FFFFFF000 } }; process_count = 0
-14:11:20 0 I drop; address_space = "0:0" @ 0p30B0000
-kernel::tests::process::create_process------------- [passed]
+$ (cd kernel; cargo test --test 3-process-1-elf)
+...
+3_process_1_elf::create_process--------------------------------
+18:36:10 0 I page allocator init; free_page_count = 33822867456; block = [0v18000000000, 0v7F8000000000), size 126.000 TiB
+18:36:10 0 I duplicate; address_space = "process" @ 0p7F1C000
+18:36:10 0 I switch to; address_space = "process" @ 0p7F1C000
+18:36:10 0 D extend mapping; block = [0v10000000, 0v10006E04), size 27.504 KiB; page_block = [0v10000000, 0v10007000), size 28.000 KiB; flags =   R; page_flags = PRESENT | WRITABLE | USER_ACCESSIBLE
+18:36:10 0 D elf loadable program header; file_block = [0v2017A0, 0v2085A4), size 27.504 KiB; memory_block = [0v10000000, 0v10006E04), size 27.504 KiB; flags =   R
+18:36:10 0 D extend mapping; block = [0v10007000, 0v1004EBA2), size 286.908 KiB; page_block = [0v10007000, 0v1004F000), size 288.000 KiB; flags = X R; page_flags = PRESENT | WRITABLE | USER_ACCESSIBLE
+18:36:10 0 D elf loadable program header; file_block = [0v2085B0, 0v250342), size 287.393 KiB; memory_block = [0v10006E10, 0v1004EBA2), size 287.393 KiB; flags = X R
+18:36:10 0 D elf loadable program header; file_block = [0v250348, 0v250438), size 240 B; memory_block = [0v1004EBA8, 0v1004EC98), size 240 B; flags =  WR
+18:36:10 0 D extend mapping; block = [0v1004F000, 0v10054980), size 22.375 KiB; page_block = [0v1004F000, 0v10055000), size 24.000 KiB; flags =  WR; page_flags = PRESENT | WRITABLE | USER_ACCESSIBLE
+18:36:10 0 D elf loadable program header; file_block = [0v250438, 0v2560F8), size 23.188 KiB; memory_block = [0v1004EC98, 0v10054980), size 23.227 KiB; flags =  WR
+18:36:10 0 I switch to; address_space = "base" @ 0p1000
+18:36:10 0 I loaded ELF file; context = { rip: 0v10006EC0, rsp: 0v7F7FFFFFF000 }; file_size = 5.279 MiB; process = { pid: <current>, address_space: "process" @ 0p7F1C000, { rip: 0v10006EC0, rsp: 0v7F7FFFFFF000 } }
+18:36:10 0 I user process page table entry; entry_point = 0v10006EC0; frame = Frame(32512 @ 0p7F00000); flags = PRESENT | WRITABLE | USER_ACCESSIBLE | ACCESSED | DIRTY
+18:36:10 0 D process_frames = 126
+18:36:10 0 I drop; address_space = "process" @ 0p7F1C000
+3_process_1_elf::create_process----------------------- [passed]
 
-kernel::tests::process::create_process_failure--------------
-14:11:20 0 I page allocator init; free_page_count = 33688649728; block = [2.000 TiB, 127.500 TiB), size 125.500 TiB
-14:11:20 0 I duplicate; address_space = "process" @ 0p30B0000
-14:11:20 0 I switch to; address_space = "process" @ 0p30B0000
-14:11:20 0 I switch to; address_space = "base" @ 0p1000
-14:11:20 0 I drop the current address space; address_space = "process" @ 0p30B0000; switch_to = "base" @ 0p1000
-14:11:20 0 I expected a process creation failure; error = Elf("File is shorter than the first ELF header part")
-kernel::tests::process::create_process_failure----- [passed]
+3_process_1_elf::create_process_failure------------------------
+18:36:11 0 I page allocator init; free_page_count = 33822867456; block = [0v18000000000, 0v7F8000000000), size 126.000 TiB
+18:36:11 0 I duplicate; address_space = "process" @ 0p7F1C000
+18:36:11 0 I switch to; address_space = "process" @ 0p7F1C000
+18:36:11 0 I switch to; address_space = "base" @ 0p1000
+18:36:11 0 I drop the current address space; address_space = "process" @ 0p7F1C000; switch_to = "base" @ 0p1000
+18:36:11 0 I expected a process creation failure; error = Elf("File is shorter than the first ELF header part")
+3_process_1_elf::create_process_failure--------------- [passed]
+18:36:11 0 I exit qemu; exit_code = SUCCESS
 ```
 
 

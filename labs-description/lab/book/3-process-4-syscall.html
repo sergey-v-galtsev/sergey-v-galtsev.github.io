@@ -1,0 +1,564 @@
+<!DOCTYPE HTML>
+<html lang="ru" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Поддержка системных вызовов - Лабораторные работы</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="0-intro-1-nikka.html">Введение в лабораторные работы</a></li><li class="chapter-item expanded affix "><a href="0-intro-2-rust.html">Почему Rust</a></li><li class="chapter-item expanded affix "><a href="0-intro-3-dirs.html">Структура кода</a></li><li class="chapter-item expanded affix "><a href="0-intro-4-install.html">Компиляция и запуск тестов</a></li><li class="chapter-item expanded affix "><a href="0-intro-5-gdb.html">Запуск с отладчиком gdb</a></li><li class="chapter-item expanded affix "><a href="0-intro-6-log.html">Логирование и логи</a></li><li class="chapter-item expanded affix "><a href="0-intro-7-vscode.html">Настройка VSCode</a></li><li class="chapter-item expanded affix "><li class="part-title">Лабораторная работа №1</li><li class="chapter-item expanded "><a href="1-time-0-intro.html"><strong aria-hidden="true">1.</strong> Время</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="1-time-1-rtc.html"><strong aria-hidden="true">1.1.</strong> Часы реального времени</a></li><li class="chapter-item expanded "><a href="1-time-2-tsc.html"><strong aria-hidden="true">1.2.</strong> Счётчик тактов процессора</a></li><li class="chapter-item expanded "><a href="1-time-3-correlation-point.html"><strong aria-hidden="true">1.3.</strong> Счётчики тиков</a></li><li class="chapter-item expanded "><a href="1-time-4-correlation-interval.html"><strong aria-hidden="true">1.4.</strong> Измерение частоты процессора и повышение разрешения часов</a></li><li class="chapter-item expanded "><a href="1-time-5-interrupts.html"><strong aria-hidden="true">1.5.</strong> Обработка прерываний RTC</a></li><li class="chapter-item expanded "><a href="1-time-6-info.html"><strong aria-hidden="true">1.6.</strong> Информация о системе</a></li><li class="chapter-item expanded "><a href="1-time-7-summary.html"><strong aria-hidden="true">1.7.</strong> Собираем всё вместе</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №2</li><li class="chapter-item expanded "><a href="2-mm-0-intro.html"><strong aria-hidden="true">2.</strong> Память</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="2-mm-1-types.html"><strong aria-hidden="true">2.1.</strong> Типы</a></li><li class="chapter-item expanded "><a href="2-mm-2-mapping.html"><strong aria-hidden="true">2.2.</strong> Страничные отображения</a></li><li class="chapter-item expanded "><a href="2-mm-3-diagrams.html"><strong aria-hidden="true">2.3.</strong> Диаграммы преобразований</a></li><li class="chapter-item expanded "><a href="2-mm-4-plan.html"><strong aria-hidden="true">2.4.</strong> План</a></li><li class="chapter-item expanded "><a href="2-mm-5-boot-frame-allocator.html"><strong aria-hidden="true">2.5.</strong> Временный аллокатор фреймов</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space.html"><strong aria-hidden="true">2.6.</strong> Виртуальное адресное пространство</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="2-mm-6-address-space-1-allocation.html"><strong aria-hidden="true">2.6.1.</strong> Аллокатор виртуальных страниц адресного пространства</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space-2-translate.html"><strong aria-hidden="true">2.6.2.</strong> Отображение виртуальных страниц в физические фреймы</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space-3-map.html"><strong aria-hidden="true">2.6.3.</strong> Высокоуровневый интерфейс управления адресным пространством</a></li></ol></li><li class="chapter-item expanded "><a href="2-mm-7-main-frame-allocator.html"><strong aria-hidden="true">2.7.</strong> Основной аллокатор фреймов</a></li><li class="chapter-item expanded "><a href="2-mm-8-tests.html"><strong aria-hidden="true">2.8.</strong> Проверьте себя</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №3</li><li class="chapter-item expanded "><a href="3-process-0-intro.html"><strong aria-hidden="true">3.</strong> Процессы</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="3-process-1-elf.html"><strong aria-hidden="true">3.1.</strong> Загрузка процесса в память</a></li><li class="chapter-item expanded "><a href="3-process-2-permission-checks.html"><strong aria-hidden="true">3.2.</strong> Проверки доступа процесса к памяти</a></li><li class="chapter-item expanded "><a href="3-process-3-user-mode.html"><strong aria-hidden="true">3.3.</strong> Переход в режим пользователя</a></li><li class="chapter-item expanded "><a href="3-process-4-syscall.html" class="active"><strong aria-hidden="true">3.4.</strong> Поддержка системных вызовов</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №4</li><li class="chapter-item expanded "><a href="4-concurrency-0-intro.html"><strong aria-hidden="true">4.</strong> Конкурентное выполнение задач</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="4-concurrency-1-smp-0-intro.html"><strong aria-hidden="true">4.1.</strong> Поддержка нескольких процессоров (SMP)</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="4-concurrency-1-smp-1-local-apic.html"><strong aria-hidden="true">4.1.1.</strong> Работа с local APIC</a></li><li class="chapter-item expanded "><a href="4-concurrency-1-smp-2-cpus.html"><strong aria-hidden="true">4.1.2.</strong> Состояние каждого процессора</a></li><li class="chapter-item expanded "><a href="4-concurrency-1-smp-3-ap-init.html"><strong aria-hidden="true">4.1.3.</strong> Загрузка Application Processor</a></li></ol></li><li class="chapter-item expanded "><a href="4-concurrency-2-table.html"><strong aria-hidden="true">4.2.</strong> Таблица процессов</a></li><li class="chapter-item expanded "><a href="4-concurrency-3-preemption.html"><strong aria-hidden="true">4.3.</strong> Вытесняющая многозадачность</a></li><li class="chapter-item expanded "><a href="4-concurrency-4-scheduler.html"><strong aria-hidden="true">4.4.</strong> Планировщик</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №5</li><li class="chapter-item expanded "><a href="5-um-0-intro.html"><strong aria-hidden="true">5.</strong> Продвинутая работа с памятью в пространстве пользователя</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="5-um-1-ring-buffer.html"><strong aria-hidden="true">5.1.</strong> Разделяемая память</a></li><li class="chapter-item expanded "><a href="5-um-2-memory.html"><strong aria-hidden="true">5.2.</strong> Системные вызовы для работы с виртуальной памятью</a></li><li class="chapter-item expanded "><a href="5-um-3-eager-fork.html"><strong aria-hidden="true">5.3.</strong> Eager fork</a></li><li class="chapter-item expanded "><a href="5-um-4-traps.html"><strong aria-hidden="true">5.4.</strong> Обработка исключений в режиме пользователя</a></li><li class="chapter-item expanded "><a href="5-um-5-cow-fork.html"><strong aria-hidden="true">5.5.</strong> Copy-on-write fork</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Лабораторные работы</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="Поддержка-системных-вызовов"><a class="header" href="#Поддержка-системных-вызовов">Поддержка системных вызовов</a></h2>
+<p>Для системных вызовов Nikka использует инструкции
+<a href="https://wiki.osdev.org/SYSENTER#AMD:_SYSCALL.2FSYSRET"><code>syscall</code> и <code>sysret</code></a>,
+<a href="https://en.wikipedia.org/wiki/X86_instruction_listings#Added_with_AMD_K6">добавленные AMD</a>
+специально для <a href="https://en.wikipedia.org/wiki/Long_mode">64-битного режима</a>.
+Они <a href="https://en.wikipedia.org/wiki/X86-64#Recent_implementations">работают в этом режиме и на процессорах Intel</a>:</p>
+<blockquote>
+<p>Intel 64 allows SYSCALL/SYSRET only in 64-bit mode (not in compatibility mode), and allows SYSENTER/SYSEXIT in both modes.
+AMD64 lacks SYSENTER/SYSEXIT in both sub-modes of long mode.</p>
+</blockquote>
+<p>То есть, в <a href="https://en.wikipedia.org/wiki/Long_mode">64-битном режиме</a>
+инструкции <a href="https://wiki.osdev.org/SYSENTER#AMD:_SYSCALL.2FSYSRET"><code>syscall</code> и <code>sysret</code></a>
+переносимы, в отличие от похожих инструкций
+<a href="https://wiki.osdev.org/SYSENTER#INTEL:_SYSENTER.2FSYSEXIT"><code>sysenter</code> и <code>sysexit</code></a>.</p>
+<h3 id="Задача-4--поддержка-системных-вызовов"><a class="header" href="#Задача-4--поддержка-системных-вызовов">Задача 4 — поддержка системных вызовов</a></h3>
+<h4 id="Инициализация-системных-вызовов"><a class="header" href="#Инициализация-системных-вызовов">Инициализация системных вызовов</a></h4>
+<p>Реализуйте <a href="../../doc/kernel/process/syscall/fn.init.html">функцию</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn kernel::process::syscall::init()
+<span class="boring">}
+</span></code></pre></pre>
+<p>в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/process/syscall.rs"><code>kernel/src/process/syscall.rs</code></a>.</p>
+<p>Она подготавливает процессор к выполнению инструкций
+<a href="https://wiki.osdev.org/SYSENTER#AMD:_SYSCALL.2FSYSRET"><code>syscall</code> и <code>sysret</code></a>:</p>
+<ul>
+<li>Включает бит <a href="../../doc/x86_64/registers/model_specific/struct.EferFlags.html#associatedconstant.SYSTEM_CALL_EXTENSIONS"><code>x86_64::registers::model_specific::EferFlags::SYSTEM_CALL_EXTENSIONS</code></a> в регистре <a href="../../doc/x86_64/registers/model_specific/struct.Efer.html"><code>x86_64::registers::model_specific::Efer</code></a>, оставляя остальные биты в исходном состоянии.</li>
+<li>Записывает в регистр <a href="../../doc/x86_64/registers/model_specific/struct.Star.html"><code>x86_64::registers::model_specific::Star</code></a> методом <a href="../../doc/x86_64/registers/model_specific/struct.Star.html#method.write"><code>Star::write()</code></a> селекторы кода и данных для режимов пользователя и ядра — <code>Gdt::user_code()</code>, <code>Gdt::user_data()</code>, <code>Gdt::kernel_code()</code>, <code>Gdt::kernel_data()</code>.</li>
+<li>Записывает в регистр <a href="../../doc/x86_64/registers/model_specific/struct.LStar.html"><code>x86_64::registers::model_specific::LStar</code></a> виртуальный адрес функции <a href="../../doc/kernel/process/syscall/fn.syscall_trampoline.html"><code>kernel::process::syscall::syscall_trampoline()</code></a>.</li>
+<li>Записывает в регистр <a href="../../doc/x86_64/registers/model_specific/struct.SFMask.html"><code>x86_64::registers::model_specific::SFMask</code></a> маску для регистра флагов <code>RFLAGS</code>, которая определяет какие флаги в <code>RFLAGS</code> будут сброшены при входе в системный вызов. Нужно сбросить флаг прерываний. Так как если прерывание возникнет сразу после переключения в ядро и до того как ядро переключится в собственный стек, процессор сохранит контекст прерывания на пользовательский стек. А ему как мы помним доверять нельзя. Также предлагается сбросить все остальные флаги, просто для определённости состояния <code>RFLAGS</code> в момент системного вызова.</li>
+</ul>
+<h4 id="Диспетчеризация-системных-вызовов"><a class="header" href="#Диспетчеризация-системных-вызовов">Диспетчеризация системных вызовов</a></h4>
+<p>Реализуйте на ассемблере <a href="../../doc/kernel/process/syscall/fn.syscall_trampoline.html">функцию</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>extern &quot;C&quot; fn syscall_trampoline() -&gt; !
+<span class="boring">}
+</span></code></pre></pre>
+<p>в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/process/syscall.rs"><code>kernel/src/process/syscall.rs</code></a>.</p>
+<p>Она получает управление при выполнении инструкции <code>syscall</code> и должна передать управление в
+<a href="../../doc/kernel/process/syscall/fn.syscall.html">функцию</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[no_mangle]
+extern &quot;C&quot; fn kernel::process::syscall::syscall(
+    // https://wiki.osdev.org/System_V_ABI#x86-64:
+    // Parameters to functions are passed in the registers rdi, rsi, rdx, rcx, r8, r9, and further values are passed on the stack in reverse order.
+    number: usize, // rdi
+    arg0: usize,   // rsi
+    arg1: usize,   // rdx
+    rip: Virt,     // rcx
+    rsp: Virt,     // r8
+    arg2: usize,   // r9
+    // Stack, push in reverse order.
+    arg3: usize,
+    arg4: usize,
+) -&gt; !
+<span class="boring">}
+</span></code></pre></pre>
+<p>написанную на Rust.
+<a href="https://doc.rust-lang.ru/book/ch19-01-unsafe-rust.html#%D0%98%D1%81%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5-extern-%D1%84%D1%83%D0%BD%D0%BA%D1%86%D0%B8%D0%B9-%D0%B4%D0%BB%D1%8F-%D0%B2%D1%8B%D0%B7%D0%BE%D0%B2%D0%B0-%D0%B2%D0%BD%D0%B5%D1%88%D0%BD%D0%B5%D0%B3%D0%BE-%D0%BA%D0%BE%D0%B4%D0%B0"><code>extern &quot;C&quot;</code></a>
+в её сигнатуре означает, что она подчиняется соглашениям
+<a href="https://wiki.osdev.org/System_V_ABI#x86-64">C ABI</a> текущей архитектуры.
+Подробно про них можно посмотреть в
+<a href="https://github.com/hjl-tools/x86-psABI/wiki/x86-64-psABI-draft.pdf">System V Application Binary InterfaceAMD64 Architecture Processor Supplement</a>.</p>
+<p>Аннотация
+<a href="https://doc.rust-lang.org/reference/abi.html#the-no_mangle-attribute"><code>#[no_mangle]</code></a>
+означает, что имя функции, доступное в ассемблере будет как написано в коде — <code>syscall</code>.
+Иначе оно будет искажено для уникализации, — чтобы не совпадать с таким же именем в другом модуле.
+(В C++ искажение имени учитывает ещё и типы аргументов для реализации перегрузки функций.)
+Например, имя функции <code>syscall_trampoline()</code>, у которой такой аннотации нет, в ассемблере будет
+<code>_ZN6kernel7process7syscall7syscall17hc1ae395af68eb49cE</code>.
+Программа <code>rustfilt</code> позволяет восстановить искажённое имя:</p>
+<pre><code class="language-console">$ rustfilt _ZN6kernel7process7syscall7syscall17hc1ae395af68eb49cE
+kernel::process::syscall::syscall
+</code></pre>
+<p>Чтобы не писать в ассемблере что-нибудь вроде
+<code>call _ZN6kernel7process7syscall7syscall17hc1ae395af68eb49cE</code>,
+просто используем аннотацию
+<a href="https://doc.rust-lang.org/reference/abi.html#the-no_mangle-attribute"><code>#[no_mangle]</code></a>,
+но тогда мы сами должны гарантировать уникальность имени, как в ассемблере или C.</p>
+<p>На момент входа в <a href="../../doc/kernel/process/syscall/fn.syscall_trampoline.html"><code>syscall_trampoline()</code></a>
+регистр <code>RSP</code> указывает на стек пользователя.
+Мы не можем ему доверять, — код режима пользователя мог его переполнить, неправильно выровнять, поместить на недоступный для пользователя адрес, например внутрь данных ядра.
+Поэтому прежде чем пользоваться стеком,
+<a href="../../doc/kernel/process/syscall/fn.syscall_trampoline.html"><code>syscall_trampoline()</code></a>
+переключается в стек ядра.
+Адрес пользовательского стека — старое значение <code>RSP</code> — она должна передать в функцию
+<a href="../../doc/kernel/process/syscall/fn.syscall.html"><code>syscall()</code></a>
+в соответствующем <a href="https://wiki.osdev.org/System_V_ABI#x86-64">x86-64 C ABI</a> регистре.</p>
+<p>Помните, что благодаря маске в регистре
+<a href="../../doc/x86_64/registers/model_specific/struct.SFMask.html"><code>x86_64::registers::model_specific::SFMask</code></a>,
+процессор выключил прерывания в момент выполнения инструкции
+<a href="https://www.felixcloutier.com/x86/syscall"><code>SYSCALL</code></a>?
+Nikka сама по себе не сломается от получения прерывания в момент выполнения системного вызова,
+и мы уже на стеке ядра — самое время включить прерывания с помощью инструкции
+<a href="https://www.felixcloutier.com/x86/sti"><code>STI</code></a>.
+Если же не включить прерывания, можно например пропустить очередной тик RTC, пока будет выполняться системный вызов.
+И тогда в логе может быть неверное время.
+Например тут последовательные строки логирования выглядят как будто между ними прошло 15-16 секунд:</p>
+<pre><code class="language-console">10:48:24 0 D entering the user mode; pid = 0:4; registers = { rax: 0x0, rdi: 0x7F7FFFFAD000, rsi: 0x0, { mode: user, cs:rip: 0x0023:0v10007550, ss:rsp: 0x001B:0v7F7FFFFFF000, rflags: IF } }
+10:48:40.001 0 D leaving the user mode; pid = 0:4
+</code></pre>
+<p>А на самом деле было пропущено много RTC прерываний.
+Вообще, после инициализации RTC было получено только первое прерывание в 10:48:24.
+И подсистема времени всё ещё ориентируется на одну единственную базовую точку в
+<a href="../../doc/ku/info/struct.SystemInfo.html#structfield.rtc"><code>SystemInfo::rtc</code></a>,
+которая этому первому прерыванию соответствует.
+И только в 10:48:40 было получено второе прерывание.
+А все промежуточные пропали из-за того, что во время исполнения системных вызовов прерывания были отключены.</p>
+<p>Запрещённость прерываний до переключения стека проверяется в тесте <code>3-process-4-syscalls</code> из файла
+<a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/tests/3-process-4-syscalls.rs"><code>kernel/src/tests/3-process-4-syscalls.rs</code></a>
+следующим образом.
+Код пользователя из файла
+<a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/user/exit/src/main.rs"><code>user/exit/src/main.rs</code></a>
+запускается при запрещённых прерываниях.
+Он ждёт 100 миллисекунд, этого должно быть достаточно чтобы накопилось несколько тиков
+<a href="https://en.wikipedia.org/wiki/Programmable_interval_timer">PIT</a>:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Wait for some PIT ticks so an interrupt will be pending on the return to the kernel mode.
+// This test is run with interrupts disabled.
+// If the kernel enables interrupts before switching the stack it will receive a Page Fault.
+time::delay(Duration::milliseconds(100));
+<span class="boring">}
+</span></code></pre></pre>
+<p>А значит, появился сигнал о прерывании.
+После этого код пользователя записывает <code>0</code> в <code>RSP</code> и делает системный вызов.
+Начинает исполнятся код ядра.
+И как только он разрешит прерывания, то сразу же получит прерывание от
+<a href="https://en.wikipedia.org/wiki/Programmable_interval_timer">PIT</a>.</p>
+<p>Если стек ещё не был переключён, это приведёт к Page Fault из-за того что код пользователя испортил <code>RSP</code>:</p>
+<pre><code class="language-console">$ (cd kernel; cargo test --test 3-process-4-syscalls)
+...
+3_process_4_syscalls::syscall_exit-----------------------------
+...
+19:32:14 0 D entering the user mode; pid = 0:0; registers = { rax: 0x0, rdi: 0x7F7FFFFEB000, rsi: 0x0, { mode: user, cs:rip: 0x0023:0v10007BA0, ss:rsp: 0x001B:0v7F7FFFFFF000, rflags:  } }
+19:32:14 0 D trap = &quot;Page Fault&quot;; context = { mode: kernel, cs:rip: 0x0008:0v8648E4, ss:rsp: 0x0010:0v0, rflags: IF }; info = { code: 0b11 = protection violation | write | kernel, address: 0vFFFFFFFFFFFFFFF8 }
+19:32:14 0 E kernel mode trap; trap = &quot;Page Fault&quot;; number = 14; info = { code: 0b11 = protection violation | write | kernel, address: 0vFFFFFFFFFFFFFFF8 }; context = { mode: kernel, cs:rip: 0x0008:0v8648E4, ss:rsp: 0x0010:0v0, rflags: IF }
+panicked at 'kernel mode trap #14 - Page Fault, context: { mode: kernel, cs:rip: 0x0008:0v8648E4, ss:rsp: 0x0010:0v0, rflags: IF }', kernel/src/interrupts.rs:411:13
+--------------------------------------------------- [failed]
+</code></pre>
+<p>После переключения стека, аргументы функции
+<a href="../../doc/kernel/process/syscall/fn.syscall.html"><code>syscall()</code></a>,
+которые по <a href="https://wiki.osdev.org/System_V_ABI#x86-64">x86-64 C ABI</a>
+должны передаваться через стек,
+<a href="../../doc/kernel/process/syscall/fn.syscall_trampoline.html"><code>syscall_trampoline()</code></a>
+должна записать в стек.
+После этого она должна вызвать функцию
+<a href="../../doc/kernel/process/syscall/fn.syscall.html"><code>syscall()</code></a>.
+Так как
+<a href="../../doc/kernel/process/syscall/fn.syscall.html"><code>syscall()</code></a>
+не возвращается, сохранять адрес возврата в стеке инструкцией <a href="https://www.felixcloutier.com/x86/call"><code>call</code></a> не обязательно, можно сделать <a href="https://www.felixcloutier.com/x86/jmp"><code>jmp</code></a>.
+Но если вы предпочли вариант с <a href="https://www.felixcloutier.com/x86/jmp"><code>jmp</code></a>, то скорректируйте значение регистра <code>RSP</code>, так как вызываемая функция при
+поиске части аргументов передаваемых через стек пропускает в нём адрес возврата, считая что он был сохранён инструкцией <a href="https://www.felixcloutier.com/x86/call"><code>call</code></a>.</p>
+<p>Реализуйте функцию <a href="../../doc/kernel/process/syscall/fn.syscall.html"><code>syscall()</code></a>.
+Она выполняет диспетчеризацию системных вызовов по аргументу <code>number</code>,
+передавая в реализующие конкретные системные вызовы функции нужную часть аргументов <code>arg0</code>–<code>arg4</code>.
+Пока что нам хватит системных вызовов</p>
+<ul>
+<li><a href="../../doc/kernel/process/syscall/fn.exit.html"><code>kernel::process::syscall::exit()</code></a> с номером <a href="../../doc/ku/process/syscall/struct.Syscall.html#associatedconstant.EXIT"><code>ku::process::syscall::Syscall::EXIT</code></a> и</li>
+<li><a href="../../doc/kernel/process/syscall/fn.log_value.html"><code>kernel::process::syscall::log_value()</code></a> с номером <a href="../../doc/ku/process/syscall/struct.Syscall.html#associatedconstant.TRAINING_WHEELS"><code>ku::process::syscall::Syscall::TRAINING_WHEELS</code></a>.</li>
+</ul>
+<p>После выполнения функции, реализующей нужный системный вызов,
+<a href="../../doc/kernel/process/syscall/fn.syscall.html"><code>syscall()</code></a>
+передаёт управление в функцию
+<a href="../../doc/kernel/process/syscall/fn.sysret.html"><code>kernel::process::syscall::sysret()</code></a>.</p>
+<h4 id="Возврат-из-системного-вызова"><a class="header" href="#Возврат-из-системного-вызова">Возврат из системного вызова</a></h4>
+<p>Реализуйте на ассемблере <a href="../../doc/kernel/process/syscall/fn.sysret.html">функцию</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn kernel::process::syscall::sysret(
+    context: MiniContext,
+    result: Result&lt;SyscallResult&gt;,
+) -&gt; !
+<span class="boring">}
+</span></code></pre></pre>
+<p>в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/process/syscall.rs"><code>kernel/src/process/syscall.rs</code></a>.</p>
+<p>Она</p>
+<ul>
+<li>Записывает результат системного вызова <code>result</code> в регистры общего назначения, например в <code>RAX</code>, <code>RDI</code>, <code>RSI</code>, и т.д. Обратите внимание, что признак и код ошибки, если <code>result</code> содержит ошибку, нужно записать в один из регистров — пользовательскому процессу он тоже важен.</li>
+<li>Записывает в регистр <code>R11</code> состояние регистра флагов, которое должно быть в пространстве пользователя. Как минимум должен быть установлен <a href="../../doc/ku/process/registers/struct.RFlags.html#associatedconstant.INTERRUPT_FLAG"><code>RFlags::INTERRUPT_FLAG</code></a>, чтобы процесс не мог монополизировать процессор. Но пока что включение прерываний приведёт к нестабильности теста <code>3_process_4_syscalls::syscall_log_value</code>. Поэтому предлагается отложить включение <a href="../../doc/ku/process/registers/struct.RFlags.html#associatedconstant.INTERRUPT_FLAG"><code>RFlags::INTERRUPT_FLAG</code></a> до следующей лабораторки, а пока выключить все флаги при возврате в режим пользователя — <a href="../../doc/ku/process/registers/struct.RFlags.html#method.default"><code>RFlags::default()</code></a>.</li>
+<li>Записывает адрес возврата в код пользователя в регистр <code>RCX</code>. Функции <a href="../../doc/kernel/process/syscall/fn.syscall_trampoline.html"><code>syscall_trampoline()</code></a>/<a href="../../doc/kernel/process/syscall/fn.syscall.html"><code>syscall()</code></a> получили этот адрес в этом же регистре. И должны были его передать вместе с адресом стека пользователя в аргументе <code>context</code>.</li>
+<li>Переключает регистр <code>RSP</code> на стек пользователя.</li>
+<li>Зануляет все неиспользованные выше регистры общего назначения, чтобы предотвратить утечку информации из режима ядра в режим пользователя.</li>
+<li>Выполняет инструкцию <a href="https://www.felixcloutier.com/x86/sysret"><code>sysretq</code></a>, которая передаёт управление в код пользователя в соответствии с настройками в регистрах <code>Star</code>, <code>R11</code> и <code>RCX</code>. Обратите внимание на суффикс <code>q</code> у <a href="https://www.felixcloutier.com/x86/sysret"><code>sysretq</code></a>. Если его не указать, ассемблер сгенерирует машинный код для другого режима работы процессора и до некоторого момента это будет не заметно, так как делать он будет почти то же самое. А потом в неожиданный момент всё сломается и найти такую ошибку будет тяжело.</li>
+</ul>
+<h4 id="Системный-вызов-exit"><a class="header" href="#Системный-вызов-exit">Системный вызов <code>exit</code></a></h4>
+<p>Реализуйте <a href="../../doc/kernel/process/syscall/fn.exit.html">функцию</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn kernel::process::syscall::exit(
+    process: MutexGuard&lt;Process&gt;,
+    code: usize,
+) -&gt; !
+<span class="boring">}
+</span></code></pre></pre>
+<p>в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/process/syscall.rs"><code>kernel/src/process/syscall.rs</code></a>.</p>
+<p>Она выполняет системный вызов <code>exit(code)</code> с одним аргументом <code>code</code>.
+Код можно, например, залогировать как
+<a href="../../doc/ku/process/syscall/struct.ExitCode.html"><code>ku::process::syscall::ExitCode</code></a>.
+Основная же работа этого системного вызова заключается в освобождении слота таблицы процессов методом
+<a href="../../doc/kernel/process/table/struct.Table.html#method.free"><code>kernel::process::table::Table::free()</code></a>
+и возврате в контекст ядра, из которого пользовательский процесс был запущен.
+Это делается статическим методом
+<a href="../../doc/kernel/process/process/struct.Process.html#method.leave_user_mode"><code>kernel::process::process::Process::leave_user_mode()</code></a>,
+который не возвращает управление, как и сама функция
+<a href="../../doc/kernel/process/syscall/fn.exit.html"><code>kernel::process::syscall::exit()</code></a>.</p>
+<h4 id="Системный-вызов-log_value"><a class="header" href="#Системный-вызов-log_value">Системный вызов <code>log_value</code></a></h4>
+<p>Реализуйте <a href="../../doc/kernel/process/syscall/fn.log_value.html">функцию</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn kernel::process::syscall::log_value(
+    process: MutexGuard&lt;Process&gt;,
+    str_start: usize,
+    str_end: usize,
+    value: usize,
+) -&gt; Result&lt;SyscallResult&gt;
+<span class="boring">}
+</span></code></pre></pre>
+<p>в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/process/syscall.rs"><code>kernel/src/process/syscall.rs</code></a>.</p>
+<p>Это системный вызов, который принимает три аргумента.
+В аргументах <code>str_start</code> и <code>str_end</code> передаётся начало и конец строки типа <a href="https://doc.rust-lang.org/nightly/core/primitive.str.html"><code>&amp;str</code></a>, а в <code>value</code> — произвольное число.</p>
+<p>Для проверки корректности пары <code>str_start</code> и <code>str_end</code> вам пригодятся функции
+<a href="../../doc/ku/memory/block/struct.Block.html#method.from_index"><code>ku::memory::block::Block::&lt;Virt&gt;::from_index()</code></a>,
+<a href="../../doc/kernel/memory/address_space/struct.AddressSpace.html#method.check_permission"><code>kernel::memory::address_space::AddressSpace::check_permission()</code></a> и
+<a href="https://doc.rust-lang.org/nightly/core/str/fn.from_utf8.html"><code>core::str::from_utf8()</code></a>.
+Если хотя бы одна из них вернула ошибку, прокиньте её оператором <code>?</code> в функцию
+<a href="../../doc/kernel/process/syscall/fn.syscall.html"><code>syscall()</code></a>,
+чтобы она через функцию
+<a href="../../doc/kernel/process/syscall/fn.sysret.html"><code>sysret()</code></a>
+вернула эту ошибку в код пользователя.
+Ошибку <a href="https://doc.rust-lang.org/nightly/core/str/struct.Utf8Error.html"><code>core::str::Utf8Error</code></a>
+можно преобразовать, например, в
+<a href="../../doc/ku/error/enum.Error.html#variant.InvalidArgument"><code>ku::error::Error::InvalidArgument</code></a></p>
+<p>Далее системный вызов
+<a href="../../doc/kernel/process/syscall/fn.log_value.html"><code>log_value()</code></a>
+делает свою основную работу — логирует получившуюся строку и <code>value</code>.
+После чего возвращает управление.</p>
+<p>С помощью этого системного вызова тест <code>3-process-4-syscalls</code> из файла
+<a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/tests/3-process-4-syscalls.rs"><code>kernel/src/tests/3-process-4-syscalls.rs</code></a>
+проверяет возможность чтения системного времени из непривилегированного режима пользователя.
+Код в файле
+<a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/user/log_value/src/main.rs"><code>user/log_value/src/main.rs</code></a>
+выполняет вызов <code>time::now()</code> и логирует полученное количество секунд с unix-эпохи:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let now = time::now();
+let timestamp = now.timestamp().try_into().unwrap();
+
+if syscall::log_value(&quot;user space can read the system time&quot;, timestamp).is_err() {
+    generate_page_fault();
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>Должно залогироваться что-то подобное:</p>
+<pre><code class="language-console">$ (cd kernel; cargo test --test 3-process-4-syscalls)
+...
+3_process_4_syscalls::syscall_log_value------------------------
+...
+04:30:41 0 D entering the user mode; pid = 0:0; registers = { rax: 0x0, rdi: 0x7F7FFFFEB000, rsi: 0x0, { mode: user, cs:rip: 0x0023:0v10008BD0, ss:rsp: 0x001B:0v7F7FFFFFF000, rflags:  } }
+04:30:41 0 I user space can read the system time; value = 1666585841; hex_value = 0x635614F1; pid = 0:0
+...
+</code></pre>
+<p>Если в первой лабораторке вы попытались воспользоваться
+<a href="https://www.hpl.hp.com/techreports/2012/HPL-2012-68.pdf">приёмом “read-dont-modify-write”</a>,
+то в режиме пользователя и вызов <code>time::delay()</code> из
+<a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/user/exit/src/main.rs"><code>user/exit/src/main.rs</code></a>
+и вызов <code>time::now()</code> из
+<a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/user/log_value/src/main.rs"><code>user/log_value/src/main.rs</code></a>
+получат Page Fault:</p>
+<pre><code class="language-console">$ (cd kernel; cargo test --test 3-process-4-syscalls)
+...
+3_process_4_syscalls::syscall_exit-----------------------------
+...
+04:55:08 0 D entering the user mode; pid = 0:0; registers = { rax: 0x0, rdi: 0x7F7FFFFEB000, rsi: 0x0, { mode: user, cs:rip: 0x0023:0v10007BB0, ss:rsp: 0x001B:0v7F7FFFFFF000, rflags:  } }
+04:55:08 0 D trap = &quot;Page Fault&quot;; context = { mode: user, cs:rip: 0x0023:0v1000E09C, ss:rsp: 0x001B:0v7F7FFFFFEA78, rflags: PF }; info = { code: 0b111 = protection violation | write | user, address: 0v7F7FFFFEC038 }
+04:55:08 0 D leaving the user mode; pid = 0:0
+panicked at 'if the Page Fault was in the kernel mode, probably the `syscall` instruction is not initialized or the kernel has not switched to its own stack; if it was in the user mode, maybe the time functions from the first lab use `read-dont-modify-write` construction', kernel/tests/3-process-4-syscalls.rs:71:5
+--------------------------------------------------- [failed]
+</code></pre>
+<h4 id="Пользовательская-сторона-системного-вызова"><a class="header" href="#Пользовательская-сторона-системного-вызова">Пользовательская сторона системного вызова</a></h4>
+<p>Реализуйте <a href="../../doc/lib/syscall/fn.syscall.html">функцию</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn lib::syscall::syscall(
+    number: usize,
+    arg0: usize,
+    arg1: usize,
+    arg2: usize,
+    arg3: usize,
+    arg4: usize,
+) -&gt; Result&lt;(usize, usize)&gt;
+<span class="boring">}
+</span></code></pre></pre>
+<p>в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/user/lib/src/syscall.rs"><code>user/lib/src/syscall.rs</code></a>.</p>
+<p>Она работает в режиме пользователя.
+Её задача:</p>
+<ul>
+<li>Сохранить регистры <code>RBX</code> и <code>RBP</code> на стеке.</li>
+<li>Передать свои аргументы через регистры, в которых их ожидают функции
+<a href="../../doc/kernel/process/syscall/fn.syscall_trampoline.html"><code>kernel::process::syscall::syscall_trampoline()</code></a> и
+<a href="../../doc/kernel/process/syscall/fn.syscall.html"><code>kernel::process::syscall::syscall()</code></a>.</li>
+<li>Запустить инструкцию <code>syscall</code>, которая выполнит требуемый системный вызов.</li>
+<li>Восстановить <code>RBX</code> и <code>RBP</code>.</li>
+<li>Вернуть наружу результаты системного вызова из регистров, в которые их сохранила функция <a href="../../doc/kernel/process/syscall/fn.sysret.html"><code>kernel::process::syscall::sysret()</code></a>.</li>
+<li>Неиспользованные регистры общего назначения она должна пометить как испорченные уже знакомой конструкцией <code>lateout(...) _,</code>.</li>
+</ul>
+<h3 id="Проверьте-себя"><a class="header" href="#Проверьте-себя">Проверьте себя</a></h3>
+<p>Запустите тест <code>3-process-4-syscalls</code> из файла
+<a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/tests/3-process-4-syscalls.rs"><code>kernel/src/tests/3-process-4-syscalls.rs</code></a>:</p>
+<pre><code class="language-console">$ (cd kernel; cargo test --test 3-process-4-syscalls)
+...
+3_process_4_syscalls::syscall_exit-----------------------------
+05:13:26 0 I page allocator init; free_page_count = 33822867456; block = [0v18000000000, 0v7F8000000000), size 126.000 TiB
+05:13:26 0 I duplicate; address_space = &quot;process&quot; @ 0p7F1B000
+05:13:26 0 I switch to; address_space = &quot;process&quot; @ 0p7F1B000
+05:13:26 0 D extend mapping; block = [0v10000000, 0v10007624), size 29.535 KiB; page_block = [0v10000000, 0v10008000), size 32.000 KiB; flags =   R; page_flags = PRESENT | WRITABLE | USER_ACCESSIBLE
+05:13:26 0 D elf loadable program header; file_block = [0v201741, 0v208D65), size 29.535 KiB; memory_block = [0v10000000, 0v10007624), size 29.535 KiB; flags =   R
+05:13:26 0 D extend mapping; block = [0v10008000, 0v100547AD), size 305.919 KiB; page_block = [0v10008000, 0v10055000), size 308.000 KiB; flags = X R; page_flags = PRESENT | WRITABLE | USER_ACCESSIBLE
+05:13:26 0 D elf loadable program header; file_block = [0v208D71, 0v255EEE), size 308.372 KiB; memory_block = [0v10007630, 0v100547AD), size 308.372 KiB; flags = X R
+05:13:26 0 D elf loadable program header; file_block = [0v255EF1, 0v255FE1), size 240 B; memory_block = [0v100547B0, 0v100548A0), size 240 B; flags =  WR
+05:13:26 0 D extend mapping; block = [0v10055000, 0v1005AAC0), size 22.688 KiB; page_block = [0v10055000, 0v1005B000), size 24.000 KiB; flags =  WR; page_flags = PRESENT | WRITABLE | USER_ACCESSIBLE
+05:13:26 0 D elf loadable program header; file_block = [0v255FE1, 0v25C1D9), size 24.492 KiB; memory_block = [0v100548A0, 0v1005AAC0), size 24.531 KiB; flags =  WR
+05:13:26 0 I switch to; address_space = &quot;base&quot; @ 0p1000
+05:13:26 0 I loaded ELF file; context = { rip: 0v10007BA0, rsp: 0v7F7FFFFFF000 }; file_size = 5.372 MiB; process = { pid: &lt;current&gt;, address_space: &quot;process&quot; @ 0p7F1B000, { rip: 0v10007BA0, rsp: 0v7F7FFFFFF000 } }
+05:13:26 0 I user process page table entry; entry_point = 0v10007BA0; frame = Frame(32507 @ 0p7EFB000); flags = PRESENT | WRITABLE | USER_ACCESSIBLE | ACCESSED | DIRTY
+05:13:26 0 I switch to; address_space = &quot;0:0&quot; @ 0p7F1B000
+05:13:26 0 D entering the user mode; pid = 0:0; registers = { rax: 0x0, rdi: 0x7F7FFFFEB000, rsi: 0x0, { mode: user, cs:rip: 0x0023:0v10007BA0, ss:rsp: 0x001B:0v7F7FFFFFF000, rflags:  } }
+05:13:26 0 I syscall = &quot;exit&quot;; pid = 0:0; code = 3141592653589793238; reason = None
+05:13:26 0 D leaving the user mode; pid = 0:0
+3_process_4_syscalls::syscall_exit-------------------- [passed]
+
+3_process_4_syscalls::syscall_log_value------------------------
+05:13:27 0 I page allocator init; free_page_count = 33822867456; block = [0v18000000000, 0v7F8000000000), size 126.000 TiB
+05:13:27 0 I duplicate; address_space = &quot;process&quot; @ 0p7E93000
+05:13:27 0 I switch to; address_space = &quot;process&quot; @ 0p7E93000
+05:13:27 0 D extend mapping; block = [0v10000000, 0v100073F4), size 28.988 KiB; page_block = [0v10000000, 0v10008000), size 32.000 KiB; flags =   R; page_flags = PRESENT | WRITABLE | USER_ACCESSIBLE
+05:13:27 0 D elf loadable program header; file_block = [0v760E00, 0v7681F4), size 28.988 KiB; memory_block = [0v10000000, 0v100073F4), size 28.988 KiB; flags =   R
+05:13:27 0 D extend mapping; block = [0v10008000, 0v10052422), size 297.033 KiB; page_block = [0v10008000, 0v10053000), size 300.000 KiB; flags = X R; page_flags = PRESENT | WRITABLE | USER_ACCESSIBLE
+05:13:27 0 D elf loadable program header; file_block = [0v768200, 0v7B3222), size 300.033 KiB; memory_block = [0v10007400, 0v10052422), size 300.033 KiB; flags = X R
+05:13:27 0 D elf loadable program header; file_block = [0v7B3228, 0v7B3318), size 240 B; memory_block = [0v10052428, 0v10052518), size 240 B; flags =  WR
+05:13:27 0 D extend mapping; block = [0v10053000, 0v10058680), size 21.625 KiB; page_block = [0v10053000, 0v10059000), size 24.000 KiB; flags =  WR; page_flags = PRESENT | WRITABLE | USER_ACCESSIBLE
+05:13:27 0 D elf loadable program header; file_block = [0v7B3318, 0v7B9458), size 24.312 KiB; memory_block = [0v10052518, 0v10058680), size 24.352 KiB; flags =  WR
+05:13:27 0 I switch to; address_space = &quot;base&quot; @ 0p1000
+05:13:27 0 I loaded ELF file; context = { rip: 0v10008BD0, rsp: 0v7F7FFFFFF000 }; file_size = 5.374 MiB; process = { pid: &lt;current&gt;, address_space: &quot;process&quot; @ 0p7E93000, { rip: 0v10008BD0, rsp: 0v7F7FFFFFF000 } }
+05:13:27 0 I drop; address_space = &quot;0:0&quot; @ 0p7F1B000
+05:13:27 0 I user process page table entry; entry_point = 0v10008BD0; frame = Frame(32370 @ 0p7E72000); flags = PRESENT | WRITABLE | USER_ACCESSIBLE | ACCESSED | DIRTY
+05:13:27 0 I switch to; address_space = &quot;0:0&quot; @ 0p7E93000
+05:13:27 0 D entering the user mode; pid = 0:0; registers = { rax: 0x0, rdi: 0x7F7FFFFEB000, rsi: 0x0, { mode: user, cs:rip: 0x0023:0v10008BD0, ss:rsp: 0x001B:0v7F7FFFFFF000, rflags:  } }
+05:13:27 0 I user space can read the system time; value = 1666588407; hex_value = 0x63561EF7; pid = 0:0
+05:13:27 0 I ; value = 0; hex_value = 0x0; pid = 0:0
+05:13:27 0 W syscall failed; syscall = Some(LOG_VALUE); number = 1; arg0 = 1; arg1 = 1; arg2 = 0; arg3 = 0; arg4 = 1099513729752; error = PermissionDenied
+05:13:27 0 W syscall failed; syscall = Some(LOG_VALUE); number = 1; arg0 = 0; arg1 = 0; arg2 = 0; arg3 = 0; arg4 = 1099513729752; error = Null
+05:13:27 0 W syscall failed; syscall = Some(LOG_VALUE); number = 1; arg0 = 268437376; arg1 = 1; arg2 = 0; arg3 = 0; arg4 = 1099513729752; error = InvalidArgument
+05:13:27 0 W syscall failed; syscall = Some(LOG_VALUE); number = 1; arg0 = 65536; arg1 = 18446744069414584320; arg2 = 0; arg3 = 0; arg4 = 1099513729752; error = InvalidArgument
+05:13:27 0 W syscall failed; syscall = Some(LOG_VALUE); number = 1; arg0 = 18446744073709486080; arg1 = 1048576; arg2 = 0; arg3 = 0; arg4 = 1099513729752; error = Overflow
+05:13:27 0 I syscall = &quot;exit&quot;; pid = 0:0; code = 0; reason = Some(OK)
+05:13:27 0 D leaving the user mode; pid = 0:0
+3_process_4_syscalls::syscall_log_value--------------- [passed]
+05:13:27 0 I exit qemu; exit_code = SUCCESS
+</code></pre>
+<h3 id="Ориентировочный-объём-работ-этой-части-лабораторки"><a class="header" href="#Ориентировочный-объём-работ-этой-части-лабораторки">Ориентировочный объём работ этой части лабораторки</a></h3>
+<pre><code class="language-console"> kernel/src/process/syscall.rs |  127 +++++++++++++++++++++++++++++++++++++++---
+ user/lib/src/syscall.rs       |   54 +++++++++++++++++
+ 2 files changed, 173 insertions(+), 8 deletions(-)
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="3-process-3-user-mode.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next" href="4-concurrency-0-intro.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="3-process-3-user-mode.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" href="4-concurrency-0-intro.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </body>
+</html>

@@ -188,6 +188,16 @@
 <span id="188">188</span>
 <span id="189">189</span>
 <span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
 </pre><pre class="rust"><code><span class="kw">use </span>alloc::vec::Vec;
 <span class="kw">use </span>core::{arch::asm, convert::TryInto, mem};
 
@@ -307,14 +317,20 @@
 
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>current_process() -&gt; <span class="prelude-ty">Result</span>&lt;Pid&gt; {
-        <span class="kw">let </span>cpu = <span class="kw">unsafe </span>{ <span class="self">Self</span>::get() };
-        cpu.current_process.ok_or(NoProcess)
+        <span class="kw">if </span><span class="kw">super</span>::test_scaffolding::is_initialized() {
+            <span class="kw">let </span>cpu = <span class="kw">unsafe </span>{ <span class="self">Self</span>::get() };
+            cpu.current_process.ok_or(NoProcess)
+        } <span class="kw">else </span>{
+            <span class="prelude-val">Ok</span>(Pid::Current)
+        }
     }
 
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>set_current_process(process: <span class="prelude-ty">Option</span>&lt;Pid&gt;) {
-        <span class="kw">let </span>cpu = <span class="kw">unsafe </span>{ <span class="self">Self</span>::get() };
-        cpu.current_process = process;
+        <span class="kw">if </span><span class="kw">super</span>::test_scaffolding::is_initialized() {
+            <span class="kw">let </span>cpu = <span class="kw">unsafe </span>{ <span class="self">Self</span>::get() };
+            cpu.current_process = process;
+        }
     }
 
 
@@ -333,8 +349,12 @@
 
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>take_user_context() -&gt; <span class="prelude-ty">Option</span>&lt;ModeContext&gt; {
-        <span class="kw">let </span>cpu = <span class="kw">unsafe </span>{ <span class="self">Self</span>::get() };
-        cpu.user_context.take()
+        <span class="kw">if </span><span class="kw">super</span>::test_scaffolding::is_initialized() {
+            <span class="kw">let </span>cpu = <span class="kw">unsafe </span>{ <span class="self">Self</span>::get() };
+            cpu.user_context.take()
+        } <span class="kw">else </span>{
+            <span class="prelude-val">None
+        </span>}
     }
 
 

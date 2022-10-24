@@ -11,7 +11,7 @@
 
 [`CorrelationInterval::base`](../../doc/ku/time/correlation_interval/struct.CorrelationInterval.html#structfield.base) и
 [`CorrelationInterval::prev`](../../doc/ku/time/correlation_interval/struct.CorrelationInterval.html#structfield.prev)
-содержат количество тиков отслеживаемых часов и номер такта процессора тактов в соответствующие моменты времени.
+содержат количество тиков отслеживаемых часов и номер такта процессора в соответствующие моменты времени.
 Частота отслеживаемых часов задаётся как константный параметр `TICKS_PER_SECOND` для типа
 [`struct CorrelationInterval<const TICKS_PER_SECOND: i64>`](../../doc/ku/time/correlation_interval/struct.CorrelationInterval.html).
 
@@ -123,7 +123,7 @@ fn CorrelationInterval::datetime_with_resolution<const PARTS_PER_SECOND: i64>(
 [`fn CorrelationInterval::datetime_with_resolution()`](../../doc/ku/time/correlation_interval/struct.CorrelationInterval.html#method.datetime_with_resolution).
 
 - Считайте, что `self.base.count()` и `self.prev.count()` задают разные секунды с начала Unix--эпохи.
-- Необходимо вернуть реальное время, которое соответствует тику номер `tsc.get()` процессора. Он может быть как больше `self.prev.tsc()`, так и меньше `self.base.tsc()`, а может лежать где-то между ними. Чтобы все эти варианты можно было поддержать, тики процессора хранятся в знаковом типе [`i64`](https://doc.rust-lang.org/nightly/core/primitive.i64.html).
+- Необходимо вернуть реальное время, которое соответствует такту номер `tsc.get()` процессора. Он может быть как больше `self.prev.tsc()`, так и меньше `self.base.tsc()`, а может лежать где-то между ними. Чтобы все эти варианты можно было поддержать, такты процессора хранятся в знаковом типе [`i64`](https://doc.rust-lang.org/nightly/core/primitive.i64.html).
 - Результат возвращается в типе [`chrono::naive::NaiveDateTime`](../../doc/chrono/naive/struct.NaiveDateTime.html), который не содержит данных о часовом поясе. Идентификатор часового пояса добавит вызывающая функция.
 - Запрошенное разрешение `PARTS_PER_SECOND` задаётся в единицах в секунду, например для миллисекунд `PARTS_PER_SECOND = 1_000`. Оно не будет выше наносекунд --- `PARTS_PER_SECOND = 1_000_000_000`, --- которые поддерживает [`NaiveDateTime`](../../doc/chrono/naive/struct.NaiveDateTime.html).
 - [Високосные секунды](https://en.wikipedia.org/wiki/Leap_second) не поддерживаем.

@@ -221,15 +221,15 @@
 <span id="221">221</span>
 <span id="222">222</span>
 <span id="223">223</span>
-<span id="224">224</span>
-<span id="225">225</span>
 </pre><pre class="rust"><code><span class="kw">use </span>core::{arch::asm, mem};
 
 <span class="kw">use </span>bitflags::bitflags;
 <span class="kw">use </span>static_assertions::const_assert;
 
-<span class="kw">use </span><span class="kw">crate</span>::error::{Error::NoFrame, <span class="prelude-ty">Result</span>};
-<span class="kw">use </span><span class="kw">crate</span>::log::warn;
+<span class="kw">use crate</span>::{
+    error::{Error::NoFrame, <span class="prelude-ty">Result</span>},
+    log::warn,
+};
 
 <span class="kw">use super</span>::{
     addr::Phys,
@@ -247,19 +247,16 @@
 
 <span class="kw">impl </span>PageTableEntry {
     <span class="doccomment">/// Маска адреса физического фрейма, на который указывает эта запись.
-    </span><span class="kw">const </span>ADDRESS_MASK: usize = (PAGE_TABLE_INDEX_MASK &lt;&lt;
-        (<span class="number">3 </span>* PAGE_TABLE_INDEX_BITS + PAGE_OFFSET_BITS)) |
-        (PAGE_TABLE_INDEX_MASK &lt;&lt; (<span class="number">2 </span>* PAGE_TABLE_INDEX_BITS + PAGE_OFFSET_BITS)) |
-        (PAGE_TABLE_INDEX_MASK &lt;&lt; (PAGE_TABLE_INDEX_BITS + PAGE_OFFSET_BITS)) |
-        (PAGE_TABLE_INDEX_MASK &lt;&lt; PAGE_OFFSET_BITS);
+    </span><span class="kw">const </span>ADDRESS_MASK: usize =
+        ((<span class="number">1 </span>&lt;&lt; ((PAGE_TABLE_ROOT_LEVEL + <span class="number">1</span>) * PAGE_TABLE_INDEX_BITS)) - <span class="number">1</span>) &lt;&lt; PAGE_OFFSET_BITS;
 
 
     <span class="doccomment">/// Физический фрейм, на который указывает эта запись.
     </span><span class="kw">pub fn </span>frame(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;Frame&gt; {
-        <span class="kw">if </span><span class="self">self</span>.<span class="number">0 </span>== <span class="number">0 </span>{
-            <span class="prelude-val">Err</span>(NoFrame)
-        } <span class="kw">else </span>{
+        <span class="kw">if </span><span class="self">self</span>.present() {
             <span class="prelude-val">Ok</span>(Frame::new(<span class="self">self</span>.phys()).unwrap())
+        } <span class="kw">else </span>{
+            <span class="prelude-val">Err</span>(NoFrame)
         }
     }
 
@@ -310,21 +307,20 @@
 
 <span class="doccomment">/// Читает из регистра `CR3` физический адрес корневого узла текущей таблицы страниц.
 </span><span class="kw">pub fn </span>read_cr3() -&gt; Frame {
-    <span class="kw">let </span>pte: usize;
+    <span class="kw">let </span>page_directory: usize;
 
     <span class="kw">unsafe </span>{
         <span class="macro">asm!</span>(
-            <span class="string">&quot;mov {pte}, cr3&quot;</span>,
-            pte = out(reg) pte,
+            <span class="string">&quot;mov {page_directory}, cr3&quot;</span>,
+            page_directory = out(reg) page_directory,
         );
     }
 
-    <span class="kw">let </span>pte = PageTableEntry(pte);
-    <span class="kw">let </span>page_directory = pte.frame().expect(<span class="string">&quot;no page directory present in CR3&quot;</span>);
-    <span class="kw">let </span>flags = pte.flags();
+    <span class="kw">let </span>flags = PageTableFlags::from_bits_truncate(page_directory);
+    <span class="kw">let </span>page_directory = Frame::containing(Phys::new(page_directory).unwrap());
 
     <span class="kw">if </span>!flags.is_empty() {
-        <span class="macro">warn!</span>(%page_directory, <span class="question-mark">?</span>flags, <span class="string">&quot;non empty flags for page directory is wrong probably&quot;</span>);
+        <span class="macro">warn!</span>(%page_directory, <span class="question-mark">?</span>flags, <span class="string">&quot;non empty flags for the page directory are wrong&quot;</span>);
     }
 
     page_directory

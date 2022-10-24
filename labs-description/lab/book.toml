@@ -15,5 +15,5 @@
 
 [output.linkcheck]
     exclude = ['index\.html\?search=Page']
-    follow-web-links = true
+#    follow-web-links = true
     traverse-parent-directories = true

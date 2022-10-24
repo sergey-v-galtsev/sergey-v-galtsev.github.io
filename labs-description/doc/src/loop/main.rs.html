@@ -41,6 +41,7 @@
 <span id="41">41</span>
 <span id="42">42</span>
 <span id="43">43</span>
+<span id="44">44</span>
 </pre><pre class="rust"><code><span class="attribute">#![allow(dead_code)]
 #![allow(unused_imports)]
 #![allow(unused_variables)]
@@ -62,6 +63,7 @@
     <span class="kw">unsafe </span>{
         <span class="macro">asm!</span>(
             <span class="string">&quot;
+            // Test that the kernel stores user-mode context properly.
             mov rax, 77701
             mov rbx, 77702
             mov rcx, 77703

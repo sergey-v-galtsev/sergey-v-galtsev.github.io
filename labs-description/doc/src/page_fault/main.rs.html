@@ -21,6 +21,39 @@
 <span id="21">21</span>
 <span id="22">22</span>
 <span id="23">23</span>
+<span id="24">24</span>
+<span id="25">25</span>
+<span id="26">26</span>
+<span id="27">27</span>
+<span id="28">28</span>
+<span id="29">29</span>
+<span id="30">30</span>
+<span id="31">31</span>
+<span id="32">32</span>
+<span id="33">33</span>
+<span id="34">34</span>
+<span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
+<span id="38">38</span>
+<span id="39">39</span>
+<span id="40">40</span>
+<span id="41">41</span>
+<span id="42">42</span>
+<span id="43">43</span>
+<span id="44">44</span>
+<span id="45">45</span>
+<span id="46">46</span>
+<span id="47">47</span>
+<span id="48">48</span>
+<span id="49">49</span>
+<span id="50">50</span>
+<span id="51">51</span>
+<span id="52">52</span>
+<span id="53">53</span>
+<span id="54">54</span>
+<span id="55">55</span>
+<span id="56">56</span>
 </pre><pre class="rust"><code><span class="attribute">#![allow(dead_code)]
 #![allow(unused_imports)]
 #![allow(unused_variables)]
@@ -29,7 +62,11 @@
 #![no_std]
 
 
-</span><span class="kw">use </span>core::ptr::NonNull;
+</span><span class="kw">use </span>core::arch::asm;
+
+<span class="kw">use </span>chrono::Duration;
+
+<span class="kw">use </span>ku::time;
 
 <span class="kw">use </span>lib::entry;
 
@@ -38,11 +75,40 @@
 
 
 <span class="kw">fn </span>main() {
-    <span class="kw">unsafe </span>{
-        NonNull::&lt;u8&gt;::dangling().as_ptr().read_volatile();
-    }
+    <span class="comment">// Wait for some PIT ticks so an interrupt will be pending on the return to the kernel mode.
+    // This test is run with interrupts disabled.
+    // If the kernel enables interrupts before switching the stack it will receive a Page Fault.
+    </span>time::delay(Duration::milliseconds(<span class="number">100</span>));
 
-    <span class="macro">unreachable!</span>();
+    <span class="kw">unsafe </span>{
+        <span class="macro">asm!</span>(
+            <span class="string">&quot;
+            // Test that the kernel stores the user mode context properly.
+            mov rax, 77701
+            mov rbx, 77702
+            mov rcx, 77703
+            mov rdx, 77704
+            mov rdi, 77705
+            mov rsi, 77706
+            mov rbp, 77707
+            mov r8, 77708
+            mov r9, 77709
+            mov r10, 77710
+            mov r11, 77711
+            mov r12, 77712
+            mov r13, 77713
+            mov r14, 77714
+            mov r15, 77715
+
+            // Test that the kernel switches into its own stack.
+            xor rsp, rsp
+
+            // Test that the user mode Page Fault is handled.
+            mov rsp, [rsp]
+            &quot;</span>,
+            options(noreturn),
+        );
+    }
 }
 </code></pre></div>
 </section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="page_fault" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (bc4b39c27 2022-08-29)" ></div></body></html>

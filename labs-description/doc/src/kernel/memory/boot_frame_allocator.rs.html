@@ -103,6 +103,15 @@
 <span id="103">103</span>
 <span id="104">104</span>
 <span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
+<span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
 </pre><pre class="rust"><code><span class="attribute">#![forbid(unsafe_code)]
 
 
@@ -196,8 +205,17 @@
 
 <span class="attribute">#[doc(hidden)]
 </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">mod </span>test_scaffolding {
-    <span class="kw">use super</span>::{<span class="kw">super</span>::Frame, BootFrameAllocator};
+    <span class="kw">use </span><span class="kw">crate</span>::error::Result;
 
+    <span class="kw">use super</span>::{
+        <span class="kw">super</span>::{Block, Frame},
+        BootFrameAllocator,
+    };
+
+
+    <span class="kw">pub fn </span>allocate_block(allocator: <span class="kw-2">&amp;mut </span>BootFrameAllocator, size: usize) -&gt; <span class="prelude-ty">Result</span>&lt;Block&lt;Frame&gt;&gt; {
+        allocator.allocate_block(size)
+    }
 
     <span class="kw">pub fn </span>is_managed(allocator: <span class="kw-2">&amp;</span>BootFrameAllocator, frame: Frame) -&gt; bool {
         allocator.is_managed(frame)

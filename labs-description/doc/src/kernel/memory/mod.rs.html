@@ -246,6 +246,41 @@
 <span id="246">246</span>
 <span id="247">247</span>
 <span id="248">248</span>
+<span id="249">249</span>
+<span id="250">250</span>
+<span id="251">251</span>
+<span id="252">252</span>
+<span id="253">253</span>
+<span id="254">254</span>
+<span id="255">255</span>
+<span id="256">256</span>
+<span id="257">257</span>
+<span id="258">258</span>
+<span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
+<span id="262">262</span>
+<span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
 </pre><pre class="rust"><code><span class="attribute">#![warn(missing_docs)]
 #![warn(clippy::missing_docs_in_private_items)]
 
@@ -299,7 +334,7 @@
 <span class="kw">pub use </span>address_space::{AddressSpace, BASE_ADDRESS_SPACE};
 <span class="kw">pub use </span>block::Block;
 <span class="kw">pub use </span>frage::{Frame, Page};
-<span class="kw">pub use </span>mmu::{KERNEL_RW, USER, USER_READ, USER_RW};
+<span class="kw">pub use </span>mmu::{KERNEL_READ, KERNEL_RW, USER, USER_READ, USER_RW};
 <span class="kw">pub use </span>size::{Size, SizeOf};
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">use </span>gdt::{Gdt, RealModePseudoDescriptor, GDT};
@@ -308,7 +343,12 @@
 
 <span class="comment">// Used in docs.
 </span><span class="attribute">#[allow(unused)]
-</span><span class="kw">use </span>{<span class="kw">crate</span>::error::Error, mapping::Mapping, page_allocator::PageAllocator, stack::ExceptionStacks};
+</span><span class="kw">use </span>{
+    <span class="kw">crate</span>::error::Error,
+    mapping::Mapping,
+    page_allocator::PageAllocator,
+    stack::ExceptionStacks,
+};
 
 
 <span class="doccomment">/// Инициализация подсистемы памяти.
@@ -321,6 +361,8 @@
 
     <span class="kw">let </span>phys2virt = phys2virt(boot_info);
     <span class="macro">info!</span>(<span class="question-mark">?</span>phys2virt);
+
+    test_scaffolding::set_total_frames(<span class="kw-2">&amp;</span>boot_info.memory_map);
 
     <span class="kw">if </span>subsystems.contains(Subsystems::PHYS_MEMORY) {
         <span class="kw-2">*</span>FRAME_ALLOCATOR.lock() =
@@ -451,9 +493,21 @@
 
 <span class="attribute">#[doc(hidden)]
 </span><span class="kw">pub mod </span>test_scaffolding {
+    <span class="kw">use </span>core::sync::atomic::{AtomicUsize, Ordering};
+
+    <span class="kw">use </span>bootloader::bootinfo::MemoryMap;
+
     <span class="kw">use </span><span class="kw">crate</span>::log::error;
 
-    <span class="kw">use super</span>::{BootFrameAllocator, FrameAllocator, Page, Phys, Virt, FRAME_ALLOCATOR};
+    <span class="kw">use super</span>::{
+        main_frame_allocator,
+        BootFrameAllocator,
+        FrameAllocator,
+        Page,
+        Phys,
+        Virt,
+        FRAME_ALLOCATOR,
+    };
 
     <span class="kw">pub use super</span>::{
         address_space::test_scaffolding::<span class="kw-2">*</span>,
@@ -493,6 +547,22 @@
     <span class="kw">pub fn </span>phys2virt_map(phys2virt: Page, address: Phys) -&gt; Virt {
         <span class="kw">super</span>::phys2virt_map(phys2virt, address)
     }
+
+
+    <span class="kw">pub fn </span>total_frames() -&gt; usize {
+        TOTAL_FRAMES.load(Ordering::Relaxed)
+    }
+
+
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>set_total_frames(memory_map: <span class="kw-2">&amp;</span>MemoryMap) {
+        TOTAL_FRAMES.store(
+            main_frame_allocator::test_scaffolding::total_frames(memory_map),
+            Ordering::Relaxed,
+        );
+    }
+
+
+    <span class="kw">static </span>TOTAL_FRAMES: AtomicUsize = AtomicUsize::new(<span class="number">0</span>);
 }
 </code></pre></div>
 </section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="kernel" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (bc4b39c27 2022-08-29)" ></div></body></html>

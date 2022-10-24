@@ -22,6 +22,7 @@ var sourcesIndex = JSON.parse('{\
 "lib":["",[["memory",[],["mod.rs"]]],["lib.rs","syscall.rs"]],\
 "lock_api":["",[],["lib.rs","mutex.rs","remutex.rs","rwlock.rs"]],\
 "log":["",[],["lib.rs","macros.rs"]],\
+"log_value":["",[],["main.rs"]],\
 "loop":["",[],["main.rs"]],\
 "memoffset":["",[],["lib.rs","offset_of.rs","raw_field.rs","span_of.rs"]],\
 "num_integer":["",[],["average.rs","lib.rs","roots.rs"]],\

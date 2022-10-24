@@ -309,7 +309,7 @@
 
 <span class="comment">// Inline is needed for the correctness of exofork().
 </span><span class="attribute">#[inline(always)]
-</span><span class="kw">fn </span>syscall(
+</span><span class="kw">pub fn </span>syscall(
     number: usize,
     arg0: usize,
     arg1: usize,

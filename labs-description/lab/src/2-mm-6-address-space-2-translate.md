@@ -45,7 +45,7 @@ fn phys2virt_map(phys2virt: Page, address: Phys) -> Virt
 - [Paging Implementation](https://os.phil-opp.com/paging-implementation/), [перевод](https://habr.com/ru/post/445618/).
 
 
-### Задача 5 --- [`Mapping`](../../doc/kernel/memory/mapping/struct.Mapping.html)
+### Задача 3 --- [`Mapping`](../../doc/kernel/memory/mapping/struct.Mapping.html)
 
 
 #### Отображение виртуальных страниц на физические фреймы

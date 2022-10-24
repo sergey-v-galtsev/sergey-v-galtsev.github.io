@@ -515,6 +515,32 @@
 <span id="515">515</span>
 <span id="516">516</span>
 <span id="517">517</span>
+<span id="518">518</span>
+<span id="519">519</span>
+<span id="520">520</span>
+<span id="521">521</span>
+<span id="522">522</span>
+<span id="523">523</span>
+<span id="524">524</span>
+<span id="525">525</span>
+<span id="526">526</span>
+<span id="527">527</span>
+<span id="528">528</span>
+<span id="529">529</span>
+<span id="530">530</span>
+<span id="531">531</span>
+<span id="532">532</span>
+<span id="533">533</span>
+<span id="534">534</span>
+<span id="535">535</span>
+<span id="536">536</span>
+<span id="537">537</span>
+<span id="538">538</span>
+<span id="539">539</span>
+<span id="540">540</span>
+<span id="541">541</span>
+<span id="542">542</span>
+<span id="543">543</span>
 </pre><pre class="rust"><code><span class="kw">use </span>core::{any, fmt, mem, mem::MaybeUninit, ptr};
 
 <span class="kw">use </span>lazy_static::lazy_static;
@@ -1012,10 +1038,28 @@
     <span class="kw">use </span><span class="kw">crate</span>::error::Result;
 
     <span class="kw">use super</span>::{
-        <span class="kw">super</span>::{page_allocator::test_scaffolding::block, Block, Page},
+        <span class="kw">super</span>::{mmu::PageTableFlags, page_allocator::test_scaffolding::block, Block, Page, Virt},
         AddressSpace,
         Mapping,
     };
+
+
+    <span class="kw">pub fn </span>check_permission&lt;T&gt;(
+        address_space: <span class="kw-2">&amp;mut </span>AddressSpace,
+        block: Block&lt;Virt&gt;,
+        flags: PageTableFlags,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>[T]&gt; {
+        address_space.check_permission(block, flags)
+    }
+
+
+    <span class="kw">pub fn </span>check_permission_mut&lt;T&gt;(
+        address_space: <span class="kw-2">&amp;mut </span>AddressSpace,
+        block: Block&lt;Virt&gt;,
+        flags: PageTableFlags,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span><span class="kw-2">mut </span>[T]&gt; {
+        address_space.check_permission_mut(block, flags)
+    }
 
 
     <span class="kw">pub fn </span>duplicate(address_space: <span class="kw-2">&amp;</span>AddressSpace) -&gt; <span class="prelude-ty">Result</span>&lt;AddressSpace&gt; {
@@ -1025,6 +1069,14 @@
 
     <span class="kw">pub fn </span>mapping(address_space: <span class="kw-2">&amp;mut </span>AddressSpace) -&gt; <span class="kw-2">&amp;mut </span>Mapping {
         <span class="kw-2">&amp;mut </span>address_space.mapping
+    }
+
+
+    <span class="kw">pub fn </span>page_allocator_allocate(
+        address_space: <span class="kw-2">&amp;mut </span>AddressSpace,
+        size: usize,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;Block&lt;Page&gt;&gt; {
+        address_space.page_allocator.allocate(size)
     }
 
 

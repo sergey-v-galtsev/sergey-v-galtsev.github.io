@@ -227,6 +227,29 @@
 <span id="227">227</span>
 <span id="228">228</span>
 <span id="229">229</span>
+<span id="230">230</span>
+<span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
+<span id="237">237</span>
+<span id="238">238</span>
+<span id="239">239</span>
+<span id="240">240</span>
+<span id="241">241</span>
+<span id="242">242</span>
+<span id="243">243</span>
+<span id="244">244</span>
+<span id="245">245</span>
+<span id="246">246</span>
+<span id="247">247</span>
+<span id="248">248</span>
+<span id="249">249</span>
+<span id="250">250</span>
+<span id="251">251</span>
+<span id="252">252</span>
 </pre><pre class="rust"><code><span class="kw">use </span>core::{
     marker::PhantomData,
     mem,
@@ -250,7 +273,7 @@
 
 <span class="doccomment">/// Continuous Ring Buffer
 </span><span class="kw">pub struct </span>RingBuffer {
-    buf: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span><span class="kw-2">mut </span>RingBufferRaw,
+    buf: Virt,
     head: AtomicUsize,
     tail: AtomicUsize,
     stats: [RingBufferStats; <span class="number">2</span>],
@@ -264,7 +287,17 @@
         <span class="self">Self</span>::check_continuous_mapping(buf);
 
         <span class="self">Self </span>{
-            buf,
+            buf: Virt::from_ref(buf),
+            head: AtomicUsize::new(<span class="number">0</span>),
+            tail: AtomicUsize::new(<span class="number">0</span>),
+            stats: [RingBufferStats::new(), RingBufferStats::new()],
+        }
+    }
+
+
+    <span class="kw">pub fn </span>zero() -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            buf: Virt::default(),
             head: AtomicUsize::new(<span class="number">0</span>),
             tail: AtomicUsize::new(<span class="number">0</span>),
             stats: [RingBufferStats::new(), RingBufferStats::new()],
@@ -273,7 +306,11 @@
 
 
     <span class="kw">pub fn </span>block(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Block&lt;Virt&gt; {
-        Block::from_ref(<span class="self">self</span>.buf)
+        <span class="kw">if </span><span class="self">self</span>.buf == Virt::default() {
+            Block::default()
+        } <span class="kw">else </span>{
+            Block::from_ref(<span class="kw">unsafe </span>{ <span class="self">self</span>.buf.try_into_ref::&lt;RingBufferRaw&gt;().unwrap() })
+        }
     }
 
 
@@ -294,6 +331,15 @@
 
     <span class="kw">pub fn </span>write_stats(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>RingBufferStats {
         <span class="kw-2">&amp;</span><span class="self">self</span>.stats[WriteTag::STATS_INDEX]
+    }
+
+
+    <span class="kw">fn </span>buf(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>RingBufferRaw {
+        <span class="kw">if </span><span class="self">self</span>.buf == Virt::default() {
+            <span class="macro">panic!</span>(<span class="string">&quot;the RingBuffer is not properly initialized&quot;</span>);
+        } <span class="kw">else </span>{
+            <span class="kw">unsafe </span>{ <span class="self">self</span>.buf.try_into_mut().unwrap() }
+        }
     }
 
 

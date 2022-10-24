@@ -216,13 +216,25 @@
 <span id="216">216</span>
 <span id="217">217</span>
 <span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
+<span id="221">221</span>
+<span id="222">222</span>
+<span id="223">223</span>
+<span id="224">224</span>
+<span id="225">225</span>
 </pre><pre class="rust"><code><span class="kw">use </span>core::{arch::asm, fmt, mem};
 
+<span class="kw">use </span>x86::msr::IA32_FS_BASE;
 <span class="kw">use </span>x86_64::structures::gdt::SegmentSelector;
 
 <span class="kw">use </span>ku::process::{registers::RFlags, MiniContext};
 
-<span class="kw">use crate</span>::{gdt::Gdt, memory::Virt, smp::KERNEL_RSP_OFFSET_IN_CPU};
+<span class="kw">use crate</span>::{
+    gdt::Gdt,
+    memory::Virt,
+    smp::{<span class="self">self</span>, KERNEL_RSP_OFFSET_IN_CPU},
+};
 
 
 <span class="attribute">#[derive(Clone, Copy, Debug)]
@@ -270,7 +282,9 @@
     <span class="attribute">#[allow(named_asm_labels)]
     #[inline(never)] </span><span class="comment">// For the named label to be a unique link symbol.
     </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">unsafe fn </span>switch_to(registers: <span class="kw-2">*const </span>Registers) {
-        <span class="macro">asm!</span>(
+        <span class="comment">// TODO: your code here.
+
+        </span><span class="macro">asm!</span>(
             <span class="string">&quot;
             // TODO: your code here.
 
@@ -357,7 +371,7 @@
             Gdt::kernel_code(),
             Gdt::kernel_data(),
             MiniContext::new(Virt::from_ptr(Registers::switch_from <span class="kw">as </span><span class="kw-2">*const </span>()), rsp),
-            RFlags::INTERRUPT_FLAG,
+            RFlags::default(),
         )
     }
 

@@ -91,6 +91,24 @@
 <span id="91">91</span>
 <span id="92">92</span>
 <span id="93">93</span>
+<span id="94">94</span>
+<span id="95">95</span>
+<span id="96">96</span>
+<span id="97">97</span>
+<span id="98">98</span>
+<span id="99">99</span>
+<span id="100">100</span>
+<span id="101">101</span>
+<span id="102">102</span>
+<span id="103">103</span>
+<span id="104">104</span>
+<span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
 </pre><pre class="rust"><code><span class="kw">use </span>core::{fmt, ops::Not};
 
 <span class="kw">use </span>derive_more::{BitAnd, BitAndAssign, BitOr, BitOrAssign, BitXor, BitXorAssign};
@@ -119,28 +137,42 @@
 
 
 <span class="kw">impl </span>RFlags {
-    <span class="kw">pub const </span>ALL: RFlags = RFlags(rflags::RFlags::all().bits() <span class="kw">as </span>usize);
+    <span class="doccomment">/// Все допустимые флаги.
+    </span><span class="kw">pub const </span>ALL: RFlags = RFlags(rflags::RFlags::all().bits() <span class="kw">as </span>usize);
 
-    <span class="kw">pub const </span>INTERRUPT_FLAG: RFlags = RFlags(rflags::RFlags::INTERRUPT_FLAG.bits() <span class="kw">as </span>usize);
-    <span class="kw">pub const </span>TRAP_FLAG: RFlags = RFlags(rflags::RFlags::TRAP_FLAG.bits() <span class="kw">as </span>usize);
+    <span class="doccomment">/// [Разрешает внешние прерывания](https://en.wikipedia.org/wiki/Interrupt_flag).
+    </span><span class="kw">pub const </span>INTERRUPT_FLAG: RFlags = RFlags(rflags::RFlags::INTERRUPT_FLAG.bits() <span class="kw">as </span>usize);
+
+    <span class="doccomment">/// [Включает режим трассировки](https://en.wikipedia.org/wiki/Trap_flag).
+    </span><span class="kw">pub const </span>TRAP_FLAG: RFlags = RFlags(rflags::RFlags::TRAP_FLAG.bits() <span class="kw">as </span>usize);
 
 
-    <span class="kw">pub fn </span>contains(<span class="kw-2">&amp;</span><span class="self">self</span>, flags: RFlags) -&gt; bool {
+    <span class="doccomment">/// Проверяет, что все указанные в `flags` флаги включены в `self`.
+    </span><span class="kw">pub fn </span>contains(<span class="kw-2">&amp;</span><span class="self">self</span>, flags: RFlags) -&gt; bool {
         <span class="self">self</span>.<span class="number">0 </span>&amp; flags.<span class="number">0 </span>== flags.<span class="number">0
     </span>}
 
 
-    <span class="kw">pub fn </span>into_usize(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+    <span class="doccomment">/// Возвращает [Input/Output Privilege level](https://en.wikipedia.org/wiki/Protection_ring#IOPL)
+    </span><span class="kw">pub fn </span>iopl(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+        (<span class="self">self</span>.<span class="number">0 </span>&gt;&gt; <span class="number">12</span>) &amp; <span class="number">0b11
+    </span>}
+
+
+    <span class="doccomment">/// Возвращает содержимое `self` в виде [`usize`].
+    </span><span class="kw">pub fn </span>into_usize(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="self">self</span>.<span class="number">0
     </span>}
 
 
-    <span class="kw">pub fn </span>read() -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Читает содержимое регистра флагов процессора.
+    </span><span class="kw">pub fn </span>read() -&gt; <span class="self">Self </span>{
         <span class="self">Self</span>(size::into_usize(rflags::read_raw()))
     }
 
 
-    <span class="kw">pub unsafe fn </span>write(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+    <span class="doccomment">/// Записывает `self` в регистр флагов процессора.
+    </span><span class="kw">pub unsafe fn </span>write(<span class="kw-2">&amp;</span><span class="self">self</span>) {
         rflags::write_raw(size::into_u64(<span class="self">self</span>.<span class="number">0</span>));
     }
 }
@@ -161,6 +193,10 @@
                 <span class="macro">write!</span>(formatter, <span class="string">&quot;{}{}&quot;</span>, separator, FLAGS[i])<span class="question-mark">?</span>;
                 separator = <span class="string">&quot; &quot;</span>;
             }
+        }
+
+        <span class="kw">if </span><span class="self">self</span>.iopl() != <span class="number">0 </span>{
+            <span class="macro">write!</span>(formatter, <span class="string">&quot;{}IOPL-{}&quot;</span>, separator, <span class="self">self</span>.iopl())<span class="question-mark">?</span>;
         }
 
         <span class="prelude-val">Ok</span>(())

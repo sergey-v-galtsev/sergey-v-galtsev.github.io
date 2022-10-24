@@ -687,6 +687,10 @@
 <span id="687">687</span>
 <span id="688">688</span>
 <span id="689">689</span>
+<span id="690">690</span>
+<span id="691">691</span>
+<span id="692">692</span>
+<span id="693">693</span>
 </pre><pre class="rust"><code><span class="kw">use </span>core::{
     convert::TryInto,
     fmt,
@@ -717,7 +721,7 @@
     log,
     log::{debug, error, info, trace, warn},
     memory::{mmu::PageTableFlags, size, Virt, DOUBLE_FAULT_IST_INDEX, PAGE_FAULT_IST_INDEX},
-    process::{ModeContext, Process, Table},
+    process::{ModeContext, Pid, Process, Table},
     smp::{Cpu, LocalApic},
     time::{pit8254, rtc},
 };
@@ -1043,12 +1047,16 @@
 
 
 <span class="kw">fn </span>generic_trap(context: <span class="kw-2">&amp;mut </span>InterruptContext, number: usize, info: Info, fatal: Fatal) {
-    <span class="macro">debug!</span>(trap = INTERRUPT_STATS[number].name, %context);
+    <span class="macro">debug!</span>(trap = INTERRUPT_STATS[number].name, %context, %info);
 
     INTERRUPT_STATS[number].inc();
 
     <span class="kw">if </span>context.is_user_mode() {
         <span class="kw">let </span>pid = Cpu::current_process().expect(<span class="string">&quot;user mode without a process&quot;</span>);
+        <span class="kw">if </span>pid == Pid::Current {
+            context.set(ModeContext::kernel_context(Virt::default()));
+            <span class="kw">return</span>;
+        }
         <span class="kw">let </span><span class="kw-2">mut </span>process =
             Table::get(pid).expect(<span class="string">&quot;failed to find the current process in the process table&quot;</span>);
 
@@ -1085,8 +1093,8 @@
 
         <span class="kw">if </span>fatal == Fatal::Yes {
             <span class="macro">panic!</span>(
-                <span class="string">&quot;kernel mode trap #{:?} - {}\n{:?}&quot;</span>,
-                number, INTERRUPT_STATS[number].name, context
+                <span class="string">&quot;kernel mode trap #{:?} - {}, context: {}&quot;</span>,
+                number, INTERRUPT_STATS[number].name, context,
             );
         }
     }

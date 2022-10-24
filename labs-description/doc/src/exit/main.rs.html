@@ -38,6 +38,13 @@
 <span id="38">38</span>
 <span id="39">39</span>
 <span id="40">40</span>
+<span id="41">41</span>
+<span id="42">42</span>
+<span id="43">43</span>
+<span id="44">44</span>
+<span id="45">45</span>
+<span id="46">46</span>
+<span id="47">47</span>
 </pre><pre class="rust"><code><span class="attribute">#![allow(dead_code)]
 #![allow(unused_imports)]
 #![allow(unused_variables)]
@@ -48,7 +55,9 @@
 
 </span><span class="kw">use </span>core::arch::asm;
 
-<span class="kw">use </span>ku::process::Syscall;
+<span class="kw">use </span>chrono::Duration;
+
+<span class="kw">use </span>ku::{process::Syscall, time};
 
 <span class="kw">use </span>lib::entry;
 
@@ -62,10 +71,15 @@
 
 
 <span class="kw">fn </span>exit(code: usize) -&gt; ! {
+    <span class="comment">// Wait for some PIT ticks so an interrupt will be pending on the return to the kernel mode.
+    // This test is run with interrupts disabled.
+    // If the kernel enables interrupts before switching the stack it will receive a Page Fault.
+    </span>time::delay(Duration::milliseconds(<span class="number">100</span>));
+
     <span class="kw">unsafe </span>{
         <span class="macro">asm!</span>(
             <span class="string">&quot;
-            /* Test that the kernel switches into its own stack. */
+            // Test that the kernel switches into its own stack.
             xor rsp, rsp
 
             syscall

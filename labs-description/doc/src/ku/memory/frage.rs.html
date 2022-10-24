@@ -230,8 +230,8 @@
 
     <span class="doccomment">/// Создаёт [`Frage`] --- [`Frame`] или [`Page`] ---
     /// по находящемуся внутри адресу `addr` --- [`Phys`] или [`Virt`] соответственно.
-    </span><span class="kw">pub fn </span>containing(addr: Addr&lt;T&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
-        <span class="self">Self</span>::new(Addr::new(addr.into_usize() &amp; !(<span class="self">Self</span>::SIZE - <span class="number">1</span>))<span class="question-mark">?</span>)
+    </span><span class="kw">pub fn </span>containing(addr: Addr&lt;T&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>(Addr::new(addr.into_usize() &amp; !(<span class="self">Self</span>::SIZE - <span class="number">1</span>)).unwrap())
     }
 
 

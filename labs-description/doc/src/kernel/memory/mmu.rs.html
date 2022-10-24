@@ -27,6 +27,9 @@
 <span id="27">27</span>
 <span id="28">28</span>
 <span id="29">29</span>
+<span id="30">30</span>
+<span id="31">31</span>
+<span id="32">32</span>
 </pre><pre class="rust"><code><span class="kw">use </span>x86::tlb;
 
 <span class="kw">pub use </span>ku::memory::mmu::{
@@ -53,7 +56,10 @@
 <span class="kw">use </span><span class="kw">super</span>::frage::Page;
 
 
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">unsafe fn </span>flush(page: Page) {
+<span class="doccomment">/// Сбрасывает кеш страничного преобразования процессора
+/// ([Translation Lookaside Buffer, TLB](https://en.wikipedia.org/wiki/Translation_lookaside_buffer))
+/// для заданной страницы `page`.
+</span><span class="kw">pub unsafe fn </span>flush(page: Page) {
     tlb::flush(page.address().into_usize());
 }
 </code></pre></div>

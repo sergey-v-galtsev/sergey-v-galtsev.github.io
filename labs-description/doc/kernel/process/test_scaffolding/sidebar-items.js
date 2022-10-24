@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":[["disable_interrupts",""],["map_log",""],["registers",""],["scheduler_enable",""]]};
+window.SIDEBAR_ITEMS = {"fn":[["disable_interrupts",""],["map_log",""],["registers",""],["scheduler_enable",""],["set_process",""]]};

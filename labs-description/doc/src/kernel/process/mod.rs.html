@@ -123,6 +123,25 @@
 <span id="123">123</span>
 <span id="124">124</span>
 <span id="125">125</span>
+<span id="126">126</span>
+<span id="127">127</span>
+<span id="128">128</span>
+<span id="129">129</span>
+<span id="130">130</span>
+<span id="131">131</span>
+<span id="132">132</span>
+<span id="133">133</span>
+<span id="134">134</span>
+<span id="135">135</span>
+<span id="136">136</span>
+<span id="137">137</span>
+<span id="138">138</span>
+<span id="139">139</span>
+<span id="140">140</span>
+<span id="141">141</span>
+<span id="142">142</span>
+<span id="143">143</span>
+<span id="144">144</span>
 </pre><pre class="rust"><code><span class="kw">mod </span>elf;
 <span class="attribute">#[allow(clippy::module_inception)]
 </span><span class="kw">mod </span>process;
@@ -153,6 +172,7 @@
         USER_READ,
         USER_RW,
     },
+    Subsystems,
     SYSTEM_INFO,
 };
 
@@ -167,17 +187,31 @@
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">use </span>registers::ModeContext;
 
 
-<span class="kw">pub fn </span>init() {
-    syscall::init();
+<span class="kw">pub fn </span>init(subsystems: Subsystems) {
+    <span class="kw">if </span>subsystems.contains(Subsystems::SYSCALL) {
+        syscall::init();
+    }
 
     <span class="kw">const </span>PROCESS_SLOT_COUNT: usize = <span class="number">1 </span>&lt;&lt; <span class="number">10</span>;
-    <span class="kw-2">*</span>TABLE.lock() = Table::new(PROCESS_SLOT_COUNT);
 
-    Scheduler::init(PROCESS_SLOT_COUNT);
+    <span class="kw">if </span>subsystems.contains(Subsystems::PROCESS_TABLE) {
+        <span class="kw-2">*</span>TABLE.lock() = Table::new(PROCESS_SLOT_COUNT);
+    } <span class="kw">else </span>{
+        table::test_scaffolding::init_dummy_table();
+    }
+
+    <span class="kw">if </span>subsystems.contains(Subsystems::SCHEDULER) {
+        Scheduler::init(PROCESS_SLOT_COUNT);
+    }
 }
 
 
 <span class="kw">pub fn </span>create(elf_file: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="prelude-ty">Result</span>&lt;Pid&gt; {
+    Table::allocate(create_process(elf_file)<span class="question-mark">?</span>)
+}
+
+
+<span class="kw">pub fn </span>create_process(elf_file: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="prelude-ty">Result</span>&lt;Process&gt; {
     <span class="kw">let </span><span class="kw-2">mut </span>address_space = BASE_ADDRESS_SPACE.lock().duplicate()<span class="question-mark">?</span>;
 
     address_space.switch_to();
@@ -195,7 +229,7 @@
 
     <span class="macro">info!</span>(%context, file_size = %Size::from_slice(elf_file), %process, <span class="string">&quot;loaded ELF file&quot;</span>);
 
-    Table::allocate(process)
+    <span class="prelude-val">Ok</span>(process)
 }
 
 
@@ -211,8 +245,8 @@
 
 <span class="kw">fn </span>map_log(address_space: <span class="kw-2">&amp;mut </span>AddressSpace) -&gt; <span class="prelude-ty">Result</span>&lt;RingBuffer&gt; {
     <span class="comment">// TODO: your code here.
-    </span><span class="macro">unimplemented!</span>();
-}
+    </span><span class="prelude-val">Ok</span>(RingBuffer::zero()) <span class="comment">// TODO: remove before flight.
+</span>}
 
 
 <span class="kw">fn </span>map_system_info(address_space: <span class="kw-2">&amp;mut </span>AddressSpace) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">*const </span>SystemInfo&gt; {
@@ -237,7 +271,11 @@
 
 
 <span class="kw">pub mod </span>test_scaffolding {
-    <span class="kw">pub use super</span>::{process::test_scaffolding::<span class="kw-2">*</span>, scheduler::test_scaffolding::<span class="kw-2">*</span>};
+    <span class="kw">pub use super</span>::{
+        process::test_scaffolding::<span class="kw-2">*</span>,
+        scheduler::test_scaffolding::<span class="kw-2">*</span>,
+        table::test_scaffolding::<span class="kw-2">*</span>,
+    };
 
     <span class="kw">use </span>ku::RingBuffer;
 
