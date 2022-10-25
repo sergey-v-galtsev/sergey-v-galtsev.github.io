@@ -73,7 +73,6 @@ fn MainFrameAllocator::init_frame_info(
 
 - [`ku::memory::frage::Frame::from_index()`](../../doc/ku/memory/frage/struct.Frage.html#method.from_index).
 - [`ku::memory::size::into_usize()`](../../doc/ku/memory/size/fn.into_usize.html).
-- [`core::cmp::min()`](https://doc.rust-lang.org/nightly/core/cmp/fn.min.html).
 - [`core::mem::replace()`](https://doc.rust-lang.org/nightly/core/mem/fn.replace.html).
 
 

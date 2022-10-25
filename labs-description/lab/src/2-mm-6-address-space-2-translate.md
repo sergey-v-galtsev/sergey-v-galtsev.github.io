@@ -134,6 +134,11 @@ unsafe fn Mapping::translate(
 Именно изменяемый `&mut FrameAllocator` нужен нам чтобы аллоцировать из него фреймы для промежуточных таблиц
 [`PageTable`](../../doc/ku/memory/mmu/type.PageTable.html),
 если это понадобится.
+Ещё один вариант --- использовать
+[`Option::as_deref_mut()`](https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.as_deref_mut)
+вместо
+[`Option::as_mut()`](https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.as_mut).
+
 Если во
 [`FrameAllocator`](../../doc/kernel/memory/enum.FrameAllocator.html)
 не окажется свободных фреймов, он вернёт ошибку

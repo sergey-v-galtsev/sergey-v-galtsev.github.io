@@ -179,21 +179,21 @@ pub(crate) struct ModeContext {
 <ul>
 <li>поле <a href="../../doc/kernel/process/registers/struct.ModeContext.html#structfield.rip"><code>ModeContext::rip</code></a> в регистр адреса команды <code>RIP</code>,</li>
 <li>поле <a href="../../doc/kernel/process/registers/struct.ModeContext.html#structfield.cs"><code>ModeContext::cs</code></a> в регистр сегмента кода <code>CS</code>,</li>
-<li>поле <a href="../../doc/kernel/process/registers/struct.ModeContext.html#structfield.cs"><code>ModeContext::rflags</code></a> в регистр флагов <code>RFLAGS</code>,</li>
-<li>поле <a href="../../doc/kernel/process/registers/struct.ModeContext.html#structfield.cs"><code>ModeContext::rsp</code></a> в регистр адреса стека <code>RSP</code>,</li>
-<li>поле <a href="../../doc/kernel/process/registers/struct.ModeContext.html#structfield.cs"><code>ModeContext::ss</code></a> в регистр сегмента стека <code>SS</code>.</li>
+<li>поле <a href="../../doc/kernel/process/registers/struct.ModeContext.html#structfield.rflags"><code>ModeContext::rflags</code></a> в регистр флагов <code>RFLAGS</code>,</li>
+<li>поле <a href="../../doc/kernel/process/registers/struct.ModeContext.html#structfield.rsp"><code>ModeContext::rsp</code></a> в регистр адреса стека <code>RSP</code>,</li>
+<li>поле <a href="../../doc/kernel/process/registers/struct.ModeContext.html#structfield.ss"><code>ModeContext::ss</code></a> в регистр сегмента стека <code>SS</code>.</li>
 </ul>
 <p>Слово mode в <a href="../../doc/kernel/process/registers/struct.ModeContext.html"><code>ModeContext</code></a>
 символизирует тот факт, что эта структура позволяет переключаться между режимами пользователя и ядра.</p>
 <p>С помощью метода
-<a href="../../doc/kernel/process/registers/struct.ModeContext.html#method.user_code"><code>ModeContext::user_context()</code></a>
+<a href="../../doc/kernel/process/registers/struct.ModeContext.html#method.user_context"><code>ModeContext::user_context()</code></a>
 заполним эти поля так:</p>
 <ul>
 <li>Поле <a href="../../doc/kernel/process/registers/struct.ModeContext.html#structfield.rip"><code>ModeContext::rip</code></a> будет содержать точку входа в программу пользователя, которую возвращает функция <a href="../../doc/kernel/process/elf/fn.load.html"><code>load()</code></a>.</li>
 <li>Поле <a href="../../doc/kernel/process/registers/struct.ModeContext.html#structfield.cs"><code>ModeContext::cs</code></a> — селектор кода пользователя, который возвращает метод <a href="../../doc/kernel/memory/gdt/struct.SmpGdt.html#method.user_code"><code>kernel::memory::gdt::Gdt::user_code()</code></a>.</li>
-<li>Поле <a href="../../doc/kernel/process/registers/struct.ModeContext.html#structfield.cs"><code>ModeContext::rflags</code></a> будет содержать единственный включённый флаг — <a href="../../doc/ku/process/registers/struct.RFlags.html#associatedconstant.INTERRUPT_FLAG"><code>RFlags::INTERRUPT_FLAG</code></a>. Это требуется чтобы по прерыванию, например, от таймера, процессор вернулся в ядро. И пользовательский код не смог его монополизировать.</li>
-<li>Поле <a href="../../doc/kernel/process/registers/struct.ModeContext.html#structfield.cs"><code>ModeContext::rsp</code></a> будет содержать адрес конца стека пользователя — в <a href="https://en.wikipedia.org/wiki/X86-64">x86-64</a> стек растёт от старших адресов к младшим. Стек для пользовательского процесса выделяет функция <a href="../../doc/kernel/process/fn.create.html"><code>kernel::process::create()</code></a> с помощью метода <a href="../../doc/kernel/memory/stack/struct.Stack.html#method.new"><code>kernel::memory::stack::Stack::new()</code></a>. Метод <a href="../../doc/kernel/memory/stack/struct.Stack.html#method.new"><code>Stack::new()</code></a> аллоцирует <a href="../../doc/kernel/memory/stack/constant.STACK_SIZE.html"><code>kernel::memory::stack::STACK_SIZE</code></a> байт памяти и запрещает доступ к младшим <a href="../../doc/kernel/memory/stack/constant.GUARD_ZONE_SIZE.html"><code>kernel::memory::stack::GUARD_ZONE_SIZE</code></a> байтам из них, чтобы отлавливать переполнение стека. Начальное значение указателя стека возвращает метод <a href="../../doc/kernel/memory/stack/struct.Stack.html#method.pointer"><code>Stack::pointer()</code></a>.</li>
-<li>Поле <a href="../../doc/kernel/process/registers/struct.ModeContext.html#structfield.cs"><code>ModeContext::ss</code></a> — селектор данных пользователя, который возвращает метод <a href="../../doc/kernel/memory/gdt/struct.SmpGdt.html#method.user_data"><code>kernel::memory::gdt::Gdt::user_data()</code></a>.</li>
+<li>Поле <a href="../../doc/kernel/process/registers/struct.ModeContext.html#structfield.rflags"><code>ModeContext::rflags</code></a> будет содержать единственный включённый флаг — <a href="../../doc/ku/process/registers/struct.RFlags.html#associatedconstant.INTERRUPT_FLAG"><code>RFlags::INTERRUPT_FLAG</code></a>. Это требуется чтобы по прерыванию, например, от таймера, процессор вернулся в ядро. И пользовательский код не смог его монополизировать.</li>
+<li>Поле <a href="../../doc/kernel/process/registers/struct.ModeContext.html#structfield.rsp"><code>ModeContext::rsp</code></a> будет содержать адрес конца стека пользователя — в <a href="https://en.wikipedia.org/wiki/X86-64">x86-64</a> стек растёт от старших адресов к младшим. Стек для пользовательского процесса выделяет функция <a href="../../doc/kernel/process/fn.create.html"><code>kernel::process::create()</code></a> с помощью метода <a href="../../doc/kernel/memory/stack/struct.Stack.html#method.new"><code>kernel::memory::stack::Stack::new()</code></a>. Метод <a href="../../doc/kernel/memory/stack/struct.Stack.html#method.new"><code>Stack::new()</code></a> аллоцирует <a href="../../doc/kernel/memory/stack/constant.STACK_SIZE.html"><code>kernel::memory::stack::STACK_SIZE</code></a> байт памяти и запрещает доступ к младшим <a href="../../doc/kernel/memory/stack/constant.GUARD_ZONE_SIZE.html"><code>kernel::memory::stack::GUARD_ZONE_SIZE</code></a> байтам из них, чтобы отлавливать переполнение стека. Начальное значение указателя стека возвращает метод <a href="../../doc/kernel/memory/stack/struct.Stack.html#method.pointer"><code>Stack::pointer()</code></a>.</li>
+<li>Поле <a href="../../doc/kernel/process/registers/struct.ModeContext.html#structfield.ss"><code>ModeContext::ss</code></a> — селектор данных пользователя, который возвращает метод <a href="../../doc/kernel/memory/gdt/struct.SmpGdt.html#method.user_data"><code>kernel::memory::gdt::Gdt::user_data()</code></a>.</li>
 </ul>
 <p>Конкретные значения остальных полей структуры
 <a href="../../doc/kernel/process/registers/struct.Registers.html"><code>Registers</code></a>,
@@ -225,7 +225,9 @@ pub(crate) struct ModeContext {
 );
 <span class="boring">}
 </span></code></pre></pre>
-<p>Есть надежда, что компилятор тогда не будет сохранять <a href="https://en.wikipedia.org/wiki/X86_calling_conventions#Callee-saved_%28non-volatile%29_registers">callee-saved</a> регистры нестандартизированного Rust ABI.
+<p>Есть надежда, что компилятор тогда не будет сохранять
+<a href="https://en.wikipedia.org/wiki/X86_calling_conventions#Callee-saved_%28non-volatile%29_registers">callee-saved</a>
+регистры.
 Единственное что, он не согласится на порчу регистров <code>RBX</code> и <code>RBP</code>.
 Эти регистры мы должны будем сохранить на стеке ядра и восстановить вручную.</p>
 <p>Таким образом для переключения в режим пользователя метод
@@ -235,7 +237,7 @@ pub(crate) struct ModeContext {
 <li>Сохранить регистры <code>RBX</code> и <code>RBP</code> в стеке ядра.</li>
 <li>Сохранить адрес <code>registers</code> в стеке.</li>
 <li>Записать текущее состояние стека ядра. В следующей лабораторке мы реализуем это более продвинутым способом. Пока же предлагается положить <code>RSP</code> на стек. После чего сохранить новый указатель на стек, который фактически будет указывать на это сохранённое значение <code>RSP</code>, в базу регистра <code>FS</code>. Это можно сделать с помощью инструкции <a href="https://www.felixcloutier.com/x86/wrmsr">wrmsr</a> процессора. Для неё нужно записать новое значение <code>RSP</code> в регистровую пару <code>EDX:EAX</code> — младшие 32 бита <code>RSP</code> в <code>EAX</code>, а старшие 32 бита <code>RSP</code> в <code>EDX</code>. А также нужно записать идентификатор базы <code>FS</code> как <a href="https://en.wikipedia.org/wiki/Model-specific_register">Model-specific register</a> — константу <a href="../../doc/x86/msr/constant.IA32_FS_BASE.html"><code>x86::msr::IA32_FS_BASE</code></a> — в регистр <code>ECX</code>. После чего вызвать <a href="https://www.felixcloutier.com/x86/wrmsr">wrmsr</a>. Теперь по логическому адресу <code>FS:0</code> будет доступно значение <code>RSP</code> ядра, сохранённое на его стеке.</li>
-<li>Запретить прерывания инструкцией <a href="https://www.felixcloutier.com/x86/cli">cli</a> процессора. Мы дальше будем переключать стек и не хотим чтобы прерывание записало адрес возврата непойми куда.</li>
+<li>Запретить прерывания инструкцией <a href="https://www.felixcloutier.com/x86/cli">cli</a> процессора. Мы дальше будем переключать стек и не хотим чтобы прерывание записало адрес возврата в неподходящее место.</li>
 <li>Переключить стек, то есть регистр <code>RSP</code>, на заданный ему на вход адрес <code>registers</code>.</li>
 <li>Восстановить из стека, то есть на самом деле из структуры <a href="../../doc/kernel/process/registers/struct.Registers.html"><code>Registers</code></a>, на которую он переключил свой стек, регистры общего назначения с <code>RAX</code> по <code>R15</code>.</li>
 <li>Выполнить инструкцию <code>iretq</code>, чтобы переключиться в процесс пользователя заданный полем <a href="../../doc/kernel/process/registers/struct.Registers.html#structfield.user_context"><code>Registers::user_context</code></a>.</li>
@@ -268,7 +270,7 @@ pub(crate) struct ModeContext {
 <a href="../../doc/kernel/process/registers/struct.Registers.html#method.switch_to"><code>Registers::switch_to()</code></a>
 должен:</p>
 <ul>
-<li>Вспомнить состояние стека ядра. Его можно прочитать по логическому адресу <code>FS:0</code>, так как мы ранее настроили базу <code>FS</code> на то место стека, куда сорхранили <code>RSP</code>.</li>
+<li>Вспомнить состояние стека ядра. Его можно прочитать по логическому адресу <code>FS:0</code>, так как мы ранее настроили базу <code>FS</code> на то место стека, куда сохранили <code>RSP</code>.</li>
 <li>Восстановить из стека ядра сохранённый адрес <code>registers</code>.</li>
 <li>Переключить стек на этот адрес плюс суммарный размер регистров общего назначения <code>user_registers_size = const mem::size_of::&lt;Registers&gt;() - mem::size_of::&lt;ModeContext&gt;()</code>.</li>
 <li>Записать в стек, то есть на самом деле в заданную на вход структуру <a href="../../doc/kernel/process/registers/struct.Registers.html"><code>Registers</code></a>, регистры общего назначения с <code>R15</code> по <code>RAX</code>. В обратном порядке, так как инструкции <code>push</code> и <code>pop</code> должны образовывать правильную скобочную последовательность с именами регистров в качестве типов скобок.</li>

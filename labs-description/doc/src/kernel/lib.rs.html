@@ -220,6 +220,8 @@
 <span id="220">220</span>
 <span id="221">221</span>
 <span id="222">222</span>
+<span id="223">223</span>
+<span id="224">224</span>
 </pre><pre class="rust"><code><span class="attribute">#![allow(dead_code)]
 #![allow(unused_imports)]
 #![allow(unused_variables)]
@@ -256,7 +258,9 @@
 <span class="doccomment">/// Здесь находится часть работы с памятью, которая происходит только в ядре.
 </span><span class="kw">pub mod </span>memory;
 
-<span class="kw">pub mod </span>process;
+<span class="doccomment">/// Здесь находится часть работы с процессами, которая происходит только в ядре.
+</span><span class="kw">pub mod </span>process;
+
 <span class="kw">pub mod </span>smp;
 
 <span class="doccomment">/// Здесь находится часть работы со временем, которая происходит только в ядре.

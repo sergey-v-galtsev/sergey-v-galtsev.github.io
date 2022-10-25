@@ -40,7 +40,7 @@ fn kernel::process::elf::load(
 является загружаемым ---
 [`Type::Load`](../../doc/xmas_elf/program/enum.Type.html#variant.Load).
 После загрузки она возвращает точку входа в загруженную программу
-[`HeaderPt2::entry_point()`](../../doc/xmas_elf/header/enum.HeaderPt2.html#method.entry_point).
+[`HeaderPt2::entry_point()`](../../doc/xmas_elf/header/enum.HeaderPt2.html#method.entry_point)
 в виде виртуального адреса
 [`Virt`](../../doc/ku/memory/addr/type.Virt.html).
 
@@ -143,7 +143,8 @@ fn kernel::process::elf::memory_block(
 
 ### Проверьте себя
 
-Запустите тест `3-process-1-elf` из файле [`kernel/src/tests/3-process-1-elf.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/tests/3-process-1-elf.rs):
+Запустите тест `3-process-1-elf` из файла
+[`kernel/src/tests/3-process-1-elf.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/tests/3-process-1-elf.rs):
 
 ```console
 $ (cd kernel; cargo test --test 3-process-1-elf)

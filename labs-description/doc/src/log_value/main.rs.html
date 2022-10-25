@@ -152,6 +152,7 @@
 <span id="152">152</span>
 <span id="153">153</span>
 <span id="154">154</span>
+<span id="155">155</span>
 </pre><pre class="rust"><code><span class="attribute">#![allow(dead_code)]
 #![allow(unused_imports)]
 #![allow(unused_variables)]
@@ -221,13 +222,13 @@
     <span class="kw">let </span>result = log_block(block.unwrap(), <span class="number">0</span>);
     <span class="kw">match </span>result {
         <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; {
-            syscall::log_value(<span class="string">&quot;expected Err(Null), got Ok&quot;</span>, <span class="number">0</span>).unwrap();
+            syscall::log_value(<span class="string">&quot;expected Err(InvalidArgument) or Err(Null), got Ok&quot;</span>, <span class="number">0</span>).unwrap();
             generate_page_fault();
         },
-        <span class="prelude-val">Err</span>(Null) =&gt; {},
+        <span class="prelude-val">Err</span>(InvalidArgument | Null) =&gt; {},
         <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; {
             syscall::log_value(
-                <span class="string">&quot;expected Err(Null), got another error&quot;</span>,
+                <span class="string">&quot;expected Err(InvalidArgument) or Err(Null), got another error&quot;</span>,
                 ResultCode::from(result).bits(),
             )
             .unwrap();
@@ -273,13 +274,14 @@
     <span class="kw">let </span>result = log_something(<span class="number">0xFFFF_FFFF_FFFF_0000</span>, <span class="number">0x10_0000</span>, <span class="number">0</span>);
     <span class="kw">match </span>result {
         <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; {
-            syscall::log_value(<span class="string">&quot;expected Err(Overflow), got Ok&quot;</span>, <span class="number">0</span>).unwrap();
+            syscall::log_value(<span class="string">&quot;expected Err(InvalidArgument) or Err(Overflow), got Ok&quot;</span>, <span class="number">0</span>)
+                .unwrap();
             generate_page_fault();
         },
-        <span class="prelude-val">Err</span>(Overflow) =&gt; {},
+        <span class="prelude-val">Err</span>(InvalidArgument | Overflow) =&gt; {},
         <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; {
             syscall::log_value(
-                <span class="string">&quot;expected Err(Overflow), got another error&quot;</span>,
+                <span class="string">&quot;expected Err(InvalidArgument) or Err(Overflow), got another error&quot;</span>,
                 ResultCode::from(result).bits(),
             )
             .unwrap();

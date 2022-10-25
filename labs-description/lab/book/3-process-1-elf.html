@@ -185,7 +185,7 @@ process::create(LOOP_ELF);
 является загружаемым —
 <a href="../../doc/xmas_elf/program/enum.Type.html#variant.Load"><code>Type::Load</code></a>.
 После загрузки она возвращает точку входа в загруженную программу
-<a href="../../doc/xmas_elf/header/enum.HeaderPt2.html#method.entry_point"><code>HeaderPt2::entry_point()</code></a>.
+<a href="../../doc/xmas_elf/header/enum.HeaderPt2.html#method.entry_point"><code>HeaderPt2::entry_point()</code></a>
 в виде виртуального адреса
 <a href="../../doc/ku/memory/addr/type.Virt.html"><code>Virt</code></a>.</p>
 <p>Для загрузки сегмента файла она пользуется вспомогательной <a href="../../doc/kernel/process/elf/fn.load_program_header.html">функцией</a></p>
@@ -278,7 +278,8 @@ process::create(LOOP_ELF);
 </ul>
 <p><img src="https://upload.wikimedia.org/wikipedia/commons/e/e4/ELF_Executable_and_Linkable_Format_diagram_by_Ange_Albertini.png" alt="" /></p>
 <h3 id="Проверьте-себя"><a class="header" href="#Проверьте-себя">Проверьте себя</a></h3>
-<p>Запустите тест <code>3-process-1-elf</code> из файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/tests/3-process-1-elf.rs"><code>kernel/src/tests/3-process-1-elf.rs</code></a>:</p>
+<p>Запустите тест <code>3-process-1-elf</code> из файла
+<a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/tests/3-process-1-elf.rs"><code>kernel/src/tests/3-process-1-elf.rs</code></a>:</p>
 <pre><code class="language-console">$ (cd kernel; cargo test --test 3-process-1-elf)
 ...
 3_process_1_elf::create_process--------------------------------

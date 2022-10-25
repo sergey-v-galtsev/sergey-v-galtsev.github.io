@@ -36,7 +36,7 @@ fn AddressSpace::check_permission_common(
 ) -> Result<()>
 ```
 
-Он должен пройтись по всем страницам заданного `block`, проверяя что они замаплены в адресное пространство `self`
+Он должен пройтись по всем страницам заданного `block`, проверяя что они отображены в адресное пространство `self`
 с флагами `PageTableFlags::PRESENT`, `PageTableFlags::USER_ACCESSIBLE` и заданными на вход `flags` одновременно.
 
 
@@ -53,25 +53,26 @@ fn AddressSpace::check_permission_common(
 
 ### Проверьте себя
 
-Запустите тест `3-process-2-check-permission` из файле [`kernel/src/tests/3-process-2-check-permission.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/tests/3-process-2-check-permission.rs):
+Запустите тест `3-process-2-permission-checks` из файлa
+[`kernel/src/tests/3-process-2-permission-checks.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/tests/3-process-2-permission-checks.rs):
 
 ```console
-$ (cd kernel; cargo test --test 3-process-2-check-permission)
+$ (cd kernel; cargo test --test 3-process-2-permission-checks)
 ...
-3_process_2_check_permission::user_rw--------------------------
+3_process_2_permission_checks::user_rw--------------------------
 19:41:36 0 D pages = [0v7FFFFFF3B000, 0v7FFFFFF3F000), size 16.000 KiB
-3_process_2_check_permission::user_rw----------------- [passed]
+3_process_2_permission_checks::user_rw----------------- [passed]
 
-3_process_2_check_permission::non_present----------------------
+3_process_2_permission_checks::non_present----------------------
 19:41:36 0 D pages = [0v7FFFFFF37000, 0v7FFFFFF3B000), size 16.000 KiB
-3_process_2_check_permission::non_present------------- [passed]
+3_process_2_permission_checks::non_present------------- [passed]
 
-3_process_2_check_permission::stress---------------------------
+3_process_2_permission_checks::stress---------------------------
 19:41:36 0 D pages = [0v7FFFFFF36000, 0v7FFFFFF37000), size 4.000 KiB
 19:41:37.093 0 D pages = [0v7FFFFFF34000, 0v7FFFFFF36000), size 8.000 KiB
 19:41:39.177 0 D pages = [0v7FFFFFF31000, 0v7FFFFFF34000), size 12.000 KiB
 19:41:48.835 0 D pages = [0v7FFFFFF2D000, 0v7FFFFFF31000), size 16.000 KiB
-3_process_2_check_permission::stress------------------ [passed]
+3_process_2_permission_checks::stress------------------ [passed]
 19:42:18.721 0 I exit qemu; exit_code = SUCCESS
 ```
 

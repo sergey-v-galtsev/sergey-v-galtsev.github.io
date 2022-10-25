@@ -272,7 +272,11 @@
 Именно изменяемый <code>&amp;mut FrameAllocator</code> нужен нам чтобы аллоцировать из него фреймы для промежуточных таблиц
 <a href="../../doc/ku/memory/mmu/type.PageTable.html"><code>PageTable</code></a>,
 если это понадобится.
-Если во
+Ещё один вариант — использовать
+<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.as_deref_mut"><code>Option::as_deref_mut()</code></a>
+вместо
+<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.as_mut"><code>Option::as_mut()</code></a>.</p>
+<p>Если во
 <a href="../../doc/kernel/memory/enum.FrameAllocator.html"><code>FrameAllocator</code></a>
 не окажется свободных фреймов, он вернёт ошибку
 <a href="../../doc/kernel/error/enum.Error.html#variant.NoFrame"><code>Error::NoFrame</code></a>,

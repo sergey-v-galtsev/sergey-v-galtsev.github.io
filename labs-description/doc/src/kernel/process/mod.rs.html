@@ -142,7 +142,38 @@
 <span id="142">142</span>
 <span id="143">143</span>
 <span id="144">144</span>
-</pre><pre class="rust"><code><span class="kw">mod </span>elf;
+<span id="145">145</span>
+<span id="146">146</span>
+<span id="147">147</span>
+<span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
+<span id="151">151</span>
+<span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
+<span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
+</pre><pre class="rust"><code><span class="doccomment">/// Загружает [ELF--файлы](https://en.wikipedia.org/wiki/Executable_and_Linkable_Format)
+/// пользовательских процессов и их адресные пространства.
+</span><span class="kw">mod </span>elf;
+
 <span class="attribute">#[allow(clippy::module_inception)]
 </span><span class="kw">mod </span>process;
 <span class="kw">mod </span>registers;
@@ -187,7 +218,8 @@
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">use </span>registers::ModeContext;
 
 
-<span class="kw">pub fn </span>init(subsystems: Subsystems) {
+<span class="doccomment">/// Инициализация подсистемы процессов.
+</span><span class="kw">pub fn </span>init(subsystems: Subsystems) {
     <span class="kw">if </span>subsystems.contains(Subsystems::SYSCALL) {
         syscall::init();
     }
@@ -206,12 +238,20 @@
 }
 
 
-<span class="kw">pub fn </span>create(elf_file: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="prelude-ty">Result</span>&lt;Pid&gt; {
+<span class="doccomment">/// Создаёт процесс для заданного
+/// [ELF--файла](https://en.wikipedia.org/wiki/Executable_and_Linkable_Format)
+/// `elf_file`,
+/// вставляет его в таблицу процессов и
+/// возвращает его идентификатор.
+</span><span class="kw">pub fn </span>create(elf_file: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="prelude-ty">Result</span>&lt;Pid&gt; {
     Table::allocate(create_process(elf_file)<span class="question-mark">?</span>)
 }
 
 
-<span class="kw">pub fn </span>create_process(elf_file: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="prelude-ty">Result</span>&lt;Process&gt; {
+<span class="doccomment">/// Создаёт процесс для заданного
+/// [ELF--файла](https://en.wikipedia.org/wiki/Executable_and_Linkable_Format)
+/// `elf_file` и возвращает его.
+</span><span class="kw">fn </span>create_process(elf_file: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="prelude-ty">Result</span>&lt;Process&gt; {
     <span class="kw">let </span><span class="kw-2">mut </span>address_space = BASE_ADDRESS_SPACE.lock().duplicate()<span class="question-mark">?</span>;
 
     address_space.switch_to();
@@ -233,7 +273,10 @@
 }
 
 
-<span class="kw">fn </span>map_process_info(address_space: <span class="kw-2">&amp;mut </span>AddressSpace) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span><span class="kw-2">mut </span>ProcessInfo&gt; {
+<span class="doccomment">/// Создаёт для процесса отображение в его адресное пространство `address_space`
+/// страниц с общей информацией о системе и с информацией о самом процессе.
+/// См. [`SystemInfo`] и [`ProcessInfo`].
+</span><span class="kw">fn </span>map_process_info(address_space: <span class="kw-2">&amp;mut </span>AddressSpace) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span><span class="kw-2">mut </span>ProcessInfo&gt; {
     <span class="kw">let </span>log = map_log(address_space)<span class="question-mark">?</span>;
     <span class="kw">let </span>recursive_mapping = address_space.mapping().make_recursive_mapping()<span class="question-mark">?</span>;
     <span class="kw">let </span>system_info = map_system_info(address_space)<span class="question-mark">?</span>;
@@ -243,17 +286,24 @@
 }
 
 
-<span class="kw">fn </span>map_log(address_space: <span class="kw-2">&amp;mut </span>AddressSpace) -&gt; <span class="prelude-ty">Result</span>&lt;RingBuffer&gt; {
+<span class="doccomment">/// Создаёт для процесса отображение в его адресное пространство `address_space`
+/// циклического буфера для логирования.
+/// См. [`RingBuffer`].
+</span><span class="kw">fn </span>map_log(address_space: <span class="kw-2">&amp;mut </span>AddressSpace) -&gt; <span class="prelude-ty">Result</span>&lt;RingBuffer&gt; {
     <span class="comment">// TODO: your code here.
     </span><span class="prelude-val">Ok</span>(RingBuffer::zero()) <span class="comment">// TODO: remove before flight.
 </span>}
 
 
-<span class="kw">fn </span>map_system_info(address_space: <span class="kw-2">&amp;mut </span>AddressSpace) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">*const </span>SystemInfo&gt; {
+<span class="doccomment">/// Создаёт для процесса отображение в его адресное пространство `address_space`
+/// страницы с общей информацией о системе.
+/// См. [`SystemInfo`].
+</span><span class="kw">fn </span>map_system_info(address_space: <span class="kw-2">&amp;mut </span>AddressSpace) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">*const </span>SystemInfo&gt; {
     <span class="kw">let </span>system_info_frame = address_space
         .mapping()
         .translate(Virt::from_ref(<span class="kw-2">&amp;</span>SYSTEM_INFO), <span class="prelude-val">None</span>, PageTableFlags::empty())<span class="question-mark">?
         </span>.frame()<span class="question-mark">?</span>;
+
     <span class="kw">let </span>system_info_page = address_space
         .allocate(mem::size_of_val(<span class="kw-2">&amp;</span>SYSTEM_INFO))<span class="question-mark">?
         </span>.into_iter()
@@ -270,7 +320,8 @@
 }
 
 
-<span class="kw">pub mod </span>test_scaffolding {
+<span class="attribute">#[doc(hidden)]
+</span><span class="kw">pub mod </span>test_scaffolding {
     <span class="kw">pub use super</span>::{
         process::test_scaffolding::<span class="kw-2">*</span>,
         scheduler::test_scaffolding::<span class="kw-2">*</span>,
@@ -279,7 +330,12 @@
 
     <span class="kw">use </span>ku::RingBuffer;
 
-    <span class="kw">use crate</span>::{error::Result, memory::AddressSpace};
+    <span class="kw">use crate</span>::{error::Result, memory::AddressSpace, process::Process};
+
+
+    <span class="kw">pub fn </span>create_process(elf_file: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="prelude-ty">Result</span>&lt;Process&gt; {
+        <span class="kw">super</span>::create_process(elf_file)
+    }
 
 
     <span class="kw">pub fn </span>map_log(address_space: <span class="kw-2">&amp;mut </span>AddressSpace) -&gt; <span class="prelude-ty">Result</span>&lt;RingBuffer&gt; {

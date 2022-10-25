@@ -31,10 +31,10 @@ fn kernel::process::syscall::init()
 Она подготавливает процессор к выполнению инструкций
 [`syscall` и `sysret`](https://wiki.osdev.org/SYSENTER#AMD:_SYSCALL.2FSYSRET):
 
-- Включает бит [`x86_64::registers::model_specific::EferFlags::SYSTEM_CALL_EXTENSIONS`](../../doc/x86_64/registers/model_specific/struct.EferFlags.html#associatedconstant.SYSTEM_CALL_EXTENSIONS) в регистре [`x86_64::registers::model_specific::Efer`](../../doc/x86_64/registers/model_specific/struct.Efer.html), оставляя остальные биты в исходном состоянии.
-- Записывает в регистр [`x86_64::registers::model_specific::Star`](../../doc/x86_64/registers/model_specific/struct.Star.html) методом [`Star::write()`](../../doc/x86_64/registers/model_specific/struct.Star.html#method.write) селекторы кода и данных для режимов пользователя и ядра --- `Gdt::user_code()`, `Gdt::user_data()`, `Gdt::kernel_code()`, `Gdt::kernel_data()`.
+- Включает бит [`x86_64::registers::model_specific::EferFlags::SYSTEM_CALL_EXTENSIONS`](../../doc/x86_64/registers/model_specific/struct.EferFlags.html#associatedconstant.SYSTEM_CALL_EXTENSIONS) в регистре [`x86_64::registers::model_specific::Efer`](../../doc/x86_64/registers/model_specific/struct.Efer.html). А остальные биты оставляет в исходном состоянии.
+- Записывает в регистр [`x86_64::registers::model_specific::Star`](../../doc/x86_64/registers/model_specific/struct.Star.html) методом [`Star::write()`](../../doc/x86_64/registers/model_specific/struct.Star.html#method.write) селекторы кода и данных для режимов пользователя и ядра --- [`kernel::memory::gdt::Gdt::user_code()`](../../doc/kernel/memory/gdt/struct.SmpGdt.html#method.user_code), [`kernel::memory::gdt::Gdt::user_data()`](../../doc/kernel/memory/gdt/struct.SmpGdt.html#method.user_data), [`kernel::memory::gdt::Gdt::kernel_code()`](../../doc/kernel/memory/gdt/struct.SmpGdt.html#method.kernel_code), [`kernel::memory::gdt::Gdt::kernel_data()`](../../doc/kernel/memory/gdt/struct.SmpGdt.html#method.kernel_data).
 - Записывает в регистр [`x86_64::registers::model_specific::LStar`](../../doc/x86_64/registers/model_specific/struct.LStar.html) виртуальный адрес функции [`kernel::process::syscall::syscall_trampoline()`](../../doc/kernel/process/syscall/fn.syscall_trampoline.html).
-- Записывает в регистр [`x86_64::registers::model_specific::SFMask`](../../doc/x86_64/registers/model_specific/struct.SFMask.html) маску для регистра флагов `RFLAGS`, которая определяет какие флаги в `RFLAGS` будут сброшены при входе в системный вызов. Нужно сбросить флаг прерываний. Так как если прерывание возникнет сразу после переключения в ядро и до того как ядро переключится в собственный стек, процессор сохранит контекст прерывания на пользовательский стек. А ему как мы помним доверять нельзя. Также предлагается сбросить все остальные флаги, просто для определённости состояния `RFLAGS` в момент системного вызова.
+- Записывает в регистр [`x86_64::registers::model_specific::SFMask`](../../doc/x86_64/registers/model_specific/struct.SFMask.html) маску для регистра флагов `RFLAGS`, которая определяет какие флаги в `RFLAGS` будут сброшены при входе в системный вызов. Нужно сбросить флаг прерываний. Так как если прерывание возникнет сразу после переключения в ядро и до того как ядро переключится в собственный стек, процессор сохранит контекст прерывания на пользовательский стек. А ему, как мы помним, доверять нельзя. Также предлагается сбросить все остальные флаги, просто для определённости состояния `RFLAGS` в момент системного вызова.
 
 
 #### Диспетчеризация системных вызовов
@@ -79,7 +79,7 @@ extern "C" fn kernel::process::syscall::syscall(
 означает, что имя функции, доступное в ассемблере будет как написано в коде --- `syscall`.
 Иначе оно будет искажено для уникализации, --- чтобы не совпадать с таким же именем в другом модуле.
 (В C++ искажение имени учитывает ещё и типы аргументов для реализации перегрузки функций.)
-Например, имя функции `syscall_trampoline()`, у которой такой аннотации нет, в ассемблере будет
+Если бы такой аннотации у `syscall()` в ассемблере имя было бы похоже на
 `_ZN6kernel7process7syscall7syscall17hc1ae395af68eb49cE`.
 Программа `rustfilt` позволяет восстановить искажённое имя:
 ```console
@@ -111,7 +111,7 @@ Nikka сама по себе не сломается от получения п�
 [`STI`](https://www.felixcloutier.com/x86/sti).
 Если же не включить прерывания, можно например пропустить очередной тик RTC, пока будет выполняться системный вызов.
 И тогда в логе может быть неверное время.
-Например тут последовательные строки логирования выглядят как будто между ними прошло 15-16 секунд:
+Например, тут последовательные строки логирования выглядят как будто между ними прошло 15-16 секунд:
 
 ```console
 10:48:24 0 D entering the user mode; pid = 0:4; registers = { rax: 0x0, rdi: 0x7F7FFFFAD000, rsi: 0x0, { mode: user, cs:rip: 0x0023:0v10007550, ss:rsp: 0x001B:0v7F7FFFFFF000, rflags: IF } }
@@ -126,8 +126,8 @@ Nikka сама по себе не сломается от получения п�
 И только в 10:48:40 было получено второе прерывание.
 А все промежуточные пропали из-за того, что во время исполнения системных вызовов прерывания были отключены.
 
-Запрещённость прерываний до переключения стека проверяется в тесте `3-process-4-syscalls` из файла
-[`kernel/src/tests/3-process-4-syscalls.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/tests/3-process-4-syscalls.rs)
+То что прерывания запрещены до переключения стека, проверяется в тесте `3-process-4-syscall` из файла
+[`kernel/src/tests/3-process-4-syscall.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/tests/3-process-4-syscall.rs)
 следующим образом.
 Код пользователя из файла
 [`user/exit/src/main.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/user/exit/src/main.rs)
@@ -142,16 +142,16 @@ time::delay(Duration::milliseconds(100));
 ```
 А значит, появился сигнал о прерывании.
 После этого код пользователя записывает `0` в `RSP` и делает системный вызов.
-Начинает исполнятся код ядра.
+Начинает исполняться код ядра.
 И как только он разрешит прерывания, то сразу же получит прерывание от
 [PIT](https://en.wikipedia.org/wiki/Programmable_interval_timer).
 
 Если стек ещё не был переключён, это приведёт к Page Fault из-за того что код пользователя испортил `RSP`:
 
 ```console
-$ (cd kernel; cargo test --test 3-process-4-syscalls)
+$ (cd kernel; cargo test --test 3-process-4-syscall)
 ...
-3_process_4_syscalls::syscall_exit-----------------------------
+3_process_4_syscall::syscall_exit-----------------------------
 ...
 19:32:14 0 D entering the user mode; pid = 0:0; registers = { rax: 0x0, rdi: 0x7F7FFFFEB000, rsi: 0x0, { mode: user, cs:rip: 0x0023:0v10007BA0, ss:rsp: 0x001B:0v7F7FFFFFF000, rflags:  } }
 19:32:14 0 D trap = "Page Fault"; context = { mode: kernel, cs:rip: 0x0008:0v8648E4, ss:rsp: 0x0010:0v0, rflags: IF }; info = { code: 0b11 = protection violation | write | kernel, address: 0vFFFFFFFFFFFFFFF8 }
@@ -159,6 +159,33 @@ $ (cd kernel; cargo test --test 3-process-4-syscalls)
 panicked at 'kernel mode trap #14 - Page Fault, context: { mode: kernel, cs:rip: 0x0008:0v8648E4, ss:rsp: 0x0010:0v0, rflags: IF }', kernel/src/interrupts.rs:411:13
 --------------------------------------------------- [failed]
 ```
+
+Также учтите, что если вы сохранили `RSP` ядра и настроили базу сегментного регистра `FS` на него,
+как предлагалось в
+[предыдущей задаче](../../lab/book/3-process-3-user-mode.html#%D0%97%D0%B0%D0%B4%D0%B0%D1%87%D0%B0-3--%D0%BF%D0%B5%D1%80%D0%B5%D0%BA%D0%BB%D1%8E%D1%87%D0%B5%D0%BD%D0%B8%D0%B5-%D0%BF%D1%80%D0%BE%D1%86%D0%B5%D1%81%D1%81%D0%BE%D1%80%D0%B0-%D0%B2-%D1%80%D0%B5%D0%B6%D0%B8%D0%BC-%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D1%8F-%D0%B8-%D0%B2%D0%BE%D0%B7%D0%B2%D1%80%D0%B0%D1%82-%D0%B8%D0%B7-%D0%BD%D0%B5%D0%B3%D0%BE),
+то восстановление `RSP` из `FS:0` приведёт к записи в `RSP` состояния до сохранения значения `RSP` на стеке.
+То есть, фактически вытолкнет `RSP` со стека.
+Но он нам ещё понадобится.
+Поэтому после этого действия нужно либо записать `RSP` на стек ещё раз,
+либо просто отступить в стеке на соответствующее количество байт.
+И только после этого уже можно писать в стек часть аргументов функции
+[`syscall()`](../../doc/kernel/process/syscall/fn.syscall.html).
+Если же вы этого не сделаете, то тест `3-process-4-syscall` упадёт сразу же после выполнения
+системного вызова, когда
+[`Registers::switch_to()`](../../doc/kernel/process/registers/struct.Registers.html#method.switch_to)
+тоже захочет взять из `FS:0` сохранённый им указатель на стек ядра:
+```console
+$ (cd kernel; cargo test --test 3-process-4-syscall)
+...
+3_process_4_syscall::syscall_exit-----------------------------
+...
+20:46:18 0 I syscall = "exit"; pid = 0:0; code = 3141592653589793238; reason = None
+20:46:18 0 D trap = "Page Fault"; context = { mode: kernel, cs:rip: 0x0008:0vCE36E6, ss:rsp: 0x0010:0v0, rflags: IF ZF PF }; info = { code: 0b0 = non-present page | read | kernel, address: 0v0 }
+20:46:18 0 E kernel mode trap; trap = "Page Fault"; number = 14; info = { code: 0b0 = non-present page | read | kernel, address: 0v0 }; context = { mode: kernel, cs:rip: 0x0008:0vCE36E6, ss:rsp: 0x0010:0v0, rflags: IF ZF PF }
+panicked at 'kernel mode trap #14 - Page Fault, context: { mode: kernel, cs:rip: 0x0008:0vCE36E6, ss:rsp: 0x0010:0v0, rflags: IF ZF PF }', kernel/src/interrupts.rs:411:13
+--------------------------------------------------- [failed]
+```
+Это артефакт временного решения, который мы исправим в следующей лабораторке.
 
 После переключения стека, аргументы функции
 [`syscall()`](../../doc/kernel/process/syscall/fn.syscall.html),
@@ -180,7 +207,7 @@ panicked at 'kernel mode trap #14 - Page Fault, context: { mode: kernel, cs:rip:
 Пока что нам хватит системных вызовов
 
 - [`kernel::process::syscall::exit()`](../../doc/kernel/process/syscall/fn.exit.html) с номером [`ku::process::syscall::Syscall::EXIT`](../../doc/ku/process/syscall/struct.Syscall.html#associatedconstant.EXIT) и
-- [`kernel::process::syscall::log_value()`](../../doc/kernel/process/syscall/fn.log_value.html) с номером [`ku::process::syscall::Syscall::TRAINING_WHEELS`](../../doc/ku/process/syscall/struct.Syscall.html#associatedconstant.TRAINING_WHEELS).
+- [`kernel::process::syscall::log_value()`](../../doc/kernel/process/syscall/fn.log_value.html) с номером [`ku::process::syscall::Syscall::LOG_VALUE`](../../doc/ku/process/syscall/struct.Syscall.html#associatedconstant.LOG_VALUE).
 
 После выполнения функции, реализующей нужный системный вызов,
 [`syscall()`](../../doc/kernel/process/syscall/fn.syscall.html)
@@ -204,7 +231,7 @@ fn kernel::process::syscall::sysret(
 Она
 
 - Записывает результат системного вызова `result` в регистры общего назначения, например в `RAX`, `RDI`, `RSI`, и т.д. Обратите внимание, что признак и код ошибки, если `result` содержит ошибку, нужно записать в один из регистров --- пользовательскому процессу он тоже важен.
-- Записывает в регистр `R11` состояние регистра флагов, которое должно быть в пространстве пользователя. Как минимум должен быть установлен [`RFlags::INTERRUPT_FLAG`](../../doc/ku/process/registers/struct.RFlags.html#associatedconstant.INTERRUPT_FLAG), чтобы процесс не мог монополизировать процессор. Но пока что включение прерываний приведёт к нестабильности теста `3_process_4_syscalls::syscall_log_value`. Поэтому предлагается отложить включение [`RFlags::INTERRUPT_FLAG`](../../doc/ku/process/registers/struct.RFlags.html#associatedconstant.INTERRUPT_FLAG) до следующей лабораторки, а пока выключить все флаги при возврате в режим пользователя --- [`RFlags::default()`](../../doc/ku/process/registers/struct.RFlags.html#method.default).
+- Записывает в регистр `R11` состояние регистра флагов, которое должно быть в пространстве пользователя. Как минимум должен быть установлен [`RFlags::INTERRUPT_FLAG`](../../doc/ku/process/registers/struct.RFlags.html#associatedconstant.INTERRUPT_FLAG), чтобы процесс не мог монополизировать процессор. Но пока что включение прерываний приведёт к нестабильности теста `3_process_4_syscall::syscall_log_value`. Поэтому предлагается отложить включение [`RFlags::INTERRUPT_FLAG`](../../doc/ku/process/registers/struct.RFlags.html#associatedconstant.INTERRUPT_FLAG) до следующей лабораторки, а пока выключить все флаги при возврате в режим пользователя --- [`RFlags::default()`](../../doc/ku/process/registers/struct.RFlags.html#method.default).
 - Записывает адрес возврата в код пользователя в регистр `RCX`. Функции [`syscall_trampoline()`](../../doc/kernel/process/syscall/fn.syscall_trampoline.html)/[`syscall()`](../../doc/kernel/process/syscall/fn.syscall.html) получили этот адрес в этом же регистре. И должны были его передать вместе с адресом стека пользователя в аргументе `context`.
 - Переключает регистр `RSP` на стек пользователя.
 - Зануляет все неиспользованные выше регистры общего назначения, чтобы предотвратить утечку информации из режима ядра в режим пользователя.
@@ -265,15 +292,18 @@ fn kernel::process::syscall::log_value(
 вернула эту ошибку в код пользователя.
 Ошибку [`core::str::Utf8Error`](https://doc.rust-lang.org/nightly/core/str/struct.Utf8Error.html)
 можно преобразовать, например, в
-[`ku::error::Error::InvalidArgument`](../../doc/ku/error/enum.Error.html#variant.InvalidArgument)
+[`ku::error::Error::InvalidArgument`](../../doc/ku/error/enum.Error.html#variant.InvalidArgument).
 
 Далее системный вызов
 [`log_value()`](../../doc/kernel/process/syscall/fn.log_value.html)
 делает свою основную работу --- логирует получившуюся строку и `value`.
-После чего возвращает управление.
+Вам будет удобнее пользоваться
+[`log_value()`](../../doc/kernel/process/syscall/fn.log_value.html)
+, если вы залогируете `value` и в десятичном, и в шестнадцатеричном виде.
+После этого системный вызов возвращает управление.
 
-С помощью этого системного вызова тест `3-process-4-syscalls` из файла
-[`kernel/src/tests/3-process-4-syscalls.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/tests/3-process-4-syscalls.rs)
+С помощью этого системного вызова тест `3-process-4-syscall` из файла
+[`kernel/src/tests/3-process-4-syscall.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/tests/3-process-4-syscall.rs)
 проверяет возможность чтения системного времени из непривилегированного режима пользователя.
 Код в файле
 [`user/log_value/src/main.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/user/log_value/src/main.rs)
@@ -291,9 +321,9 @@ if syscall::log_value("user space can read the system time", timestamp).is_err()
 Должно залогироваться что-то подобное:
 
 ```console
-$ (cd kernel; cargo test --test 3-process-4-syscalls)
+$ (cd kernel; cargo test --test 3-process-4-syscall)
 ...
-3_process_4_syscalls::syscall_log_value------------------------
+3_process_4_syscall::syscall_log_value------------------------
 ...
 04:30:41 0 D entering the user mode; pid = 0:0; registers = { rax: 0x0, rdi: 0x7F7FFFFEB000, rsi: 0x0, { mode: user, cs:rip: 0x0023:0v10008BD0, ss:rsp: 0x001B:0v7F7FFFFFF000, rflags:  } }
 04:30:41 0 I user space can read the system time; value = 1666585841; hex_value = 0x635614F1; pid = 0:0
@@ -309,14 +339,14 @@ $ (cd kernel; cargo test --test 3-process-4-syscalls)
 получат Page Fault:
 
 ```console
-$ (cd kernel; cargo test --test 3-process-4-syscalls)
+$ (cd kernel; cargo test --test 3-process-4-syscall)
 ...
-3_process_4_syscalls::syscall_exit-----------------------------
+3_process_4_syscall::syscall_exit-----------------------------
 ...
 04:55:08 0 D entering the user mode; pid = 0:0; registers = { rax: 0x0, rdi: 0x7F7FFFFEB000, rsi: 0x0, { mode: user, cs:rip: 0x0023:0v10007BB0, ss:rsp: 0x001B:0v7F7FFFFFF000, rflags:  } }
 04:55:08 0 D trap = "Page Fault"; context = { mode: user, cs:rip: 0x0023:0v1000E09C, ss:rsp: 0x001B:0v7F7FFFFFEA78, rflags: PF }; info = { code: 0b111 = protection violation | write | user, address: 0v7F7FFFFEC038 }
 04:55:08 0 D leaving the user mode; pid = 0:0
-panicked at 'if the Page Fault was in the kernel mode, probably the `syscall` instruction is not initialized or the kernel has not switched to its own stack; if it was in the user mode, maybe the time functions from the first lab use `read-dont-modify-write` construction', kernel/tests/3-process-4-syscalls.rs:71:5
+panicked at 'if the Page Fault was in the kernel mode, probably the `syscall` instruction is not initialized or the kernel has not switched to its own stack; if it was in the user mode, maybe the time functions from the first lab use `read-dont-modify-write` construction', kernel/tests/3-process-4-syscall.rs:71:5
 --------------------------------------------------- [failed]
 ```
 
@@ -353,13 +383,13 @@ fn lib::syscall::syscall(
 
 ### Проверьте себя
 
-Запустите тест `3-process-4-syscalls` из файла
-[`kernel/src/tests/3-process-4-syscalls.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/tests/3-process-4-syscalls.rs):
+Запустите тест `3-process-4-syscall` из файла
+[`kernel/src/tests/3-process-4-syscall.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/tests/3-process-4-syscall.rs):
 
 ```console
-$ (cd kernel; cargo test --test 3-process-4-syscalls)
+$ (cd kernel; cargo test --test 3-process-4-syscall)
 ...
-3_process_4_syscalls::syscall_exit-----------------------------
+3_process_4_syscall::syscall_exit-----------------------------
 05:13:26 0 I page allocator init; free_page_count = 33822867456; block = [0v18000000000, 0v7F8000000000), size 126.000 TiB
 05:13:26 0 I duplicate; address_space = "process" @ 0p7F1B000
 05:13:26 0 I switch to; address_space = "process" @ 0p7F1B000
@@ -377,9 +407,9 @@ $ (cd kernel; cargo test --test 3-process-4-syscalls)
 05:13:26 0 D entering the user mode; pid = 0:0; registers = { rax: 0x0, rdi: 0x7F7FFFFEB000, rsi: 0x0, { mode: user, cs:rip: 0x0023:0v10007BA0, ss:rsp: 0x001B:0v7F7FFFFFF000, rflags:  } }
 05:13:26 0 I syscall = "exit"; pid = 0:0; code = 3141592653589793238; reason = None
 05:13:26 0 D leaving the user mode; pid = 0:0
-3_process_4_syscalls::syscall_exit-------------------- [passed]
+3_process_4_syscall::syscall_exit-------------------- [passed]
 
-3_process_4_syscalls::syscall_log_value------------------------
+3_process_4_syscall::syscall_log_value------------------------
 05:13:27 0 I page allocator init; free_page_count = 33822867456; block = [0v18000000000, 0v7F8000000000), size 126.000 TiB
 05:13:27 0 I duplicate; address_space = "process" @ 0p7E93000
 05:13:27 0 I switch to; address_space = "process" @ 0p7E93000
@@ -405,7 +435,7 @@ $ (cd kernel; cargo test --test 3-process-4-syscalls)
 05:13:27 0 W syscall failed; syscall = Some(LOG_VALUE); number = 1; arg0 = 18446744073709486080; arg1 = 1048576; arg2 = 0; arg3 = 0; arg4 = 1099513729752; error = Overflow
 05:13:27 0 I syscall = "exit"; pid = 0:0; code = 0; reason = Some(OK)
 05:13:27 0 D leaving the user mode; pid = 0:0
-3_process_4_syscalls::syscall_log_value--------------- [passed]
+3_process_4_syscall::syscall_log_value--------------- [passed]
 05:13:27 0 I exit qemu; exit_code = SUCCESS
 ```
 
