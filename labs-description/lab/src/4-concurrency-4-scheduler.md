@@ -6,7 +6,7 @@
 И, так же как и таблица процессов, является [синглтоном](https://en.wikipedia.org/wiki/Singleton_pattern)
 `static ref SCHEDULER: Mutex<Scheduler>`.
 
-### Задача 8 --- реализуйте методы планировщика
+### Задача 7 --- реализуйте методы планировщика
 
 - `fn Scheduler::enqueue(pid: Pid)` ставит процесс, заданный идентификатором `pid` в очередь исполнения.
 - `fn Scheduler::dequeue() -> Option<Pid>` достаёт из очереди первый процесс.

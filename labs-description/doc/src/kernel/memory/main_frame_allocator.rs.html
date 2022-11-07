@@ -226,6 +226,19 @@
 <span id="226">226</span>
 <span id="227">227</span>
 <span id="228">228</span>
+<span id="229">229</span>
+<span id="230">230</span>
+<span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
+<span id="237">237</span>
+<span id="238">238</span>
+<span id="239">239</span>
+<span id="240">240</span>
+<span id="241">241</span>
 </pre><pre class="rust"><code><span class="attribute">#![forbid(unsafe_code)]
 
 
@@ -373,6 +386,19 @@
     </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>reference(<span class="kw-2">&amp;mut </span><span class="self">self</span>, frame: Frame) {
         <span class="comment">// TODO: your code here.
         </span><span class="macro">unimplemented!</span>();
+    }
+
+
+    <span class="doccomment">/// Возвращает количество ссылок на `frame`.
+    ///
+    /// - Если `frame` свободен, возвращается `0`.
+    /// - Если он отсутствует или зарезервирован --- [`Error::NoFrame`].
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>reference_count(<span class="kw-2">&amp;</span><span class="self">self</span>, frame: Frame) -&gt; <span class="prelude-ty">Result</span>&lt;usize&gt; {
+        <span class="kw">match </span><span class="self">self</span>.frame_info[frame.index()] {
+            FrameInfo::Absent =&gt; <span class="prelude-val">Err</span>(NoFrame),
+            FrameInfo::Free { .. } =&gt; <span class="prelude-val">Ok</span>(<span class="number">0</span>),
+            FrameInfo::Used { reference_count } =&gt; <span class="prelude-val">Ok</span>(reference_count),
+        }
     }
 
 

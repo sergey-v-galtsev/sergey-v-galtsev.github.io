@@ -223,6 +223,77 @@
 <span id="223">223</span>
 <span id="224">224</span>
 <span id="225">225</span>
+<span id="226">226</span>
+<span id="227">227</span>
+<span id="228">228</span>
+<span id="229">229</span>
+<span id="230">230</span>
+<span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
+<span id="237">237</span>
+<span id="238">238</span>
+<span id="239">239</span>
+<span id="240">240</span>
+<span id="241">241</span>
+<span id="242">242</span>
+<span id="243">243</span>
+<span id="244">244</span>
+<span id="245">245</span>
+<span id="246">246</span>
+<span id="247">247</span>
+<span id="248">248</span>
+<span id="249">249</span>
+<span id="250">250</span>
+<span id="251">251</span>
+<span id="252">252</span>
+<span id="253">253</span>
+<span id="254">254</span>
+<span id="255">255</span>
+<span id="256">256</span>
+<span id="257">257</span>
+<span id="258">258</span>
+<span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
+<span id="262">262</span>
+<span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
 </pre><pre class="rust"><code><span class="kw">use </span>core::{arch::asm, fmt, mem};
 
 <span class="kw">use </span>x86::msr::IA32_FS_BASE;
@@ -237,26 +308,31 @@
 };
 
 
-<span class="attribute">#[derive(Clone, Copy, Debug)]
+<span class="doccomment">/// Состояние регистров пользовательского процесса.
+</span><span class="attribute">#[derive(Clone, Copy, Debug)]
 #[repr(C)]
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>Registers {
-    <span class="kw">pub</span>(<span class="kw">super</span>) rax: usize,
+    rax: usize,
     gpr1: [usize; <span class="number">3</span>],
-    <span class="kw">pub</span>(<span class="kw">super</span>) rdi: usize,
-    <span class="kw">pub</span>(<span class="kw">super</span>) rsi: usize,
+    rdi: usize,
+    rsi: usize,
     gpr2: [usize; <span class="number">9</span>],
     user_context: ModeContext,
 }
 
 
 <span class="kw">impl </span>Registers {
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>new(context: MiniContext, arg0: usize) -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Создаёт регистры процесса с заданным начальным минимальным `context` и передаёт ему `arg0`
+    /// как регистре, отведённом под первый аргумент функции в
+    /// [System V ABI](https://wiki.osdev.org/System_V_ABI#x86-64).
+    /// Остальные регистры заполнет нулями.
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>new(context: MiniContext, rdi: usize) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             <span class="comment">// https://wiki.osdev.org/System_V_ABI#x86-64:
             // Parameters to functions are passed in the registers rdi, rsi, rdx, rcx, r8, r9, and further values are passed on the stack in reverse order.
             </span>rax: <span class="number">0</span>,
             gpr1: [<span class="number">0</span>; <span class="number">3</span>],
-            rdi: arg0,
+            rdi,
             rsi: <span class="number">0</span>,
             gpr2: [<span class="number">0</span>; <span class="number">9</span>],
             user_context: ModeContext::user_context(context),
@@ -264,22 +340,44 @@
     }
 
 
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>mini_context(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; MiniContext {
+    <span class="doccomment">/// Дублирует регистры, заменяя в копии значения `rax`, `rdi` и `rsi`.
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>duplicate(<span class="kw-2">&amp;</span><span class="self">self</span>, rax: usize, rdi: usize, rsi: usize) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            rax,
+            gpr1: <span class="self">self</span>.gpr1,
+            rdi,
+            rsi,
+            gpr2: <span class="self">self</span>.gpr2,
+            user_context: <span class="self">self</span>.user_context,
+        }
+    }
+
+
+    <span class="doccomment">/// Возвращает минимальный контекст процесса.
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>mini_context(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; MiniContext {
         <span class="self">self</span>.user_context.mini_context()
     }
 
 
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>set_mini_context(<span class="kw-2">&amp;mut </span><span class="self">self</span>, context: MiniContext) {
+    <span class="doccomment">/// Устанавливает минимальный контекст процесса.
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>set_mini_context(<span class="kw-2">&amp;mut </span><span class="self">self</span>, context: MiniContext) {
         <span class="self">self</span>.user_context.set_mini_context(context);
     }
 
 
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>set_mode_context(<span class="kw-2">&amp;mut </span><span class="self">self</span>, context: ModeContext) {
+    <span class="doccomment">/// Устанавливает расширенный контекст процесса с уровнем привилегий и регистром флагов.
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>set_mode_context(<span class="kw-2">&amp;mut </span><span class="self">self</span>, context: ModeContext) {
         <span class="self">self</span>.user_context = context;
     }
 
 
-    <span class="attribute">#[allow(named_asm_labels)]
+    <span class="doccomment">/// Переключается в процесс, заданный регистрами `Registers`.
+    ///
+    /// Сохраняет контекст ядра и переключается в контекст пользователя.
+    /// При этом текущий уровень привилегий меняется с уровня ядра на уровень пользователя.
+    /// После возвращения из режима пользователя сохраняет контекст пользователя и
+    /// восстанавливает ранее сохранённый контекст ядра.
+    </span><span class="attribute">#[allow(named_asm_labels)]
     #[inline(never)] </span><span class="comment">// For the named label to be a unique link symbol.
     </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">unsafe fn </span>switch_to(registers: <span class="kw-2">*const </span>Registers) {
         <span class="comment">// TODO: your code here.
@@ -302,13 +400,29 @@
     }
 
 
-    <span class="attribute">#[naked]
+    <span class="doccomment">/// Вытесняет текущий исполняющийся процесс с процессора по его собственному запросу.
+    ///
+    /// Не сохраняет контекст процесса пользователя,
+    /// он должен сохранить его сам в процедуре системного вызова `syscall::sched_yield()`.
+    /// Возвращается в контекст ядра, из которого этот процесс был запущен.
+    /// Текущий контекст ядра уничтожается.
+    </span><span class="attribute">#[naked]
     </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">unsafe extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>sched_yield() -&gt; ! {
         <span class="macro">asm!</span>(<span class="string">&quot;jmp switch_to_kernel_mode&quot;</span>, options(noreturn));
     }
 
 
-    <span class="attribute">#[naked]
+    <span class="doccomment">/// Вытесняет текущий исполняющийся процесс с процессора принудительно.
+    ///
+    /// Сохраняет контекст процесса пользователя,
+    /// так как он не готов к вытеснению и порче регистров.
+    /// Возвращается в контекст ядра, из которого этот процесс был запущен.
+    /// Текущий контекст ядра уничтожается.
+    ///
+    /// Реализация прыгает внутрь метода [`Registers::switch_to()`] на метку,
+    /// с которой начинается сохранение контекста пользователя и
+    /// восстановление контекста ядра.
+    </span><span class="attribute">#[naked]
     </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">unsafe extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>switch_from() -&gt; ! {
         <span class="macro">asm!</span>(<span class="string">&quot;jmp store_user_mode_context&quot;</span>, options(noreturn));
     }
@@ -326,21 +440,33 @@
 }
 
 
-<span class="doccomment">/// `iret` instruction layout.
-/// It is the minimal register context that is necessary for switching between the kernel mode and the user mode.
+<span class="doccomment">/// Контекст исполнения, позволяющий задать уровень привилегий --- ядра или пользователя.
+///
+/// Имеет в памяти ровно такое представление, какого требует инструкция
+/// [iret](https://www.felixcloutier.com/x86/iret:iretd:iretq).
 </span><span class="attribute">#[derive(Clone, Copy, Debug)]
 #[repr(C)]
 </span><span class="kw">pub struct </span>ModeContext {
-    rip: Virt,
-    cs: usize,
-    rflags: RFlags,
-    rsp: Virt,
-    ss: usize,
+    <span class="doccomment">/// [Instruction Pointer](https://wiki.osdev.org/CPU_Registers_x86-64#Pointer_Registers)
+    </span>rip: Virt,
+
+    <span class="doccomment">/// [Code Segment](https://wiki.osdev.org/CPU_Registers_x86-64#Segment_Registers)
+    </span>cs: usize,
+
+    <span class="doccomment">/// [RFLAGS Register](https://wiki.osdev.org/CPU_Registers_x86-64#RFLAGS_Register)
+    </span>rflags: RFlags,
+
+    <span class="doccomment">/// [Stack Pointer](https://wiki.osdev.org/CPU_Registers_x86-64#General_Purpose_Registers)
+    </span>rsp: Virt,
+
+    <span class="doccomment">/// [Stack Segment](https://wiki.osdev.org/CPU_Registers_x86-64#Segment_Registers)
+    </span>ss: usize,
 }
 
 
 <span class="kw">impl </span>ModeContext {
-    <span class="kw">fn </span>new(
+    <span class="doccomment">/// Собирает [`ModeContext`] из его частей.
+    </span><span class="kw">fn </span>new(
         code: SegmentSelector,
         data: SegmentSelector,
         context: MiniContext,
@@ -356,7 +482,8 @@
     }
 
 
-    <span class="kw">fn </span>user_context(context: MiniContext) -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Возвращает [`ModeContext`] для заданного `context` с привилегиями пользователя.
+    </span><span class="kw">fn </span>user_context(context: MiniContext) -&gt; <span class="self">Self </span>{
         <span class="self">Self</span>::new(
             Gdt::user_code(),
             Gdt::user_data(),
@@ -366,7 +493,10 @@
     }
 
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>kernel_context(rsp: Virt) -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Возвращает [`ModeContext`] для заданного `rsp` с привилегиями пользователя.
+    /// В качестве `rip` использует функцию [`Registers::switch_from()`],
+    /// то есть при переходе в этот контекст будет запущена именно она.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>kernel_context(rsp: Virt) -&gt; <span class="self">Self </span>{
         <span class="self">Self</span>::new(
             Gdt::kernel_code(),
             Gdt::kernel_data(),
@@ -376,30 +506,35 @@
     }
 
 
-    <span class="kw">pub fn </span>mini_context(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; MiniContext {
+    <span class="doccomment">/// Возвращает [`MiniContext`].
+    </span><span class="kw">pub fn </span>mini_context(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; MiniContext {
         MiniContext::new(<span class="self">self</span>.rip, <span class="self">self</span>.rsp)
     }
 
 
-    <span class="kw">pub fn </span>set_mini_context(<span class="kw-2">&amp;mut </span><span class="self">self</span>, context: MiniContext) {
+    <span class="doccomment">/// Устанавливает [`MiniContext`].
+    </span><span class="kw">pub fn </span>set_mini_context(<span class="kw-2">&amp;mut </span><span class="self">self</span>, context: MiniContext) {
         <span class="self">self</span>.rip = context.rip();
         <span class="self">self</span>.rsp = context.rsp();
     }
 
 
-    <span class="kw">pub fn </span>is_user_mode(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+    <span class="doccomment">/// Возвращает `true`, если контекст имеет привилегии пользователя.
+    </span><span class="kw">pub fn </span>is_user_mode(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
         <span class="macro">assert!</span>(<span class="self">Self</span>::is_user_mode_segment(<span class="self">self</span>.cs) == <span class="self">Self</span>::is_user_mode_segment(<span class="self">self</span>.ss));
 
         <span class="self">Self</span>::is_user_mode_segment(<span class="self">self</span>.cs)
     }
 
 
-    <span class="kw">fn </span>is_user_mode_segment(segment_register: usize) -&gt; bool {
-        segment_register &amp; <span class="self">Self</span>::CPL_MASK != <span class="self">Self</span>::RING_0
+    <span class="doccomment">/// Возвращает `true`, если селектор сегмента `segment_selector` имеет привилегии пользователя.
+    </span><span class="kw">fn </span>is_user_mode_segment(segment_selector: usize) -&gt; bool {
+        segment_selector &amp; <span class="self">Self</span>::CPL_MASK != <span class="self">Self</span>::RING_0
     }
 
 
-    <span class="kw">fn </span>mode(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str {
+    <span class="doccomment">/// Возвращает текстовое имя режима контекста --- `&quot;kernel&quot;` или `&quot;user&quot;`.
+    </span><span class="kw">fn </span>mode(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str {
         <span class="kw">if </span><span class="self">self</span>.is_user_mode() {
             <span class="string">&quot;user&quot;
         </span>} <span class="kw">else </span>{
@@ -408,8 +543,14 @@
     }
 
 
-    <span class="kw">const </span>CPL_MASK: usize = <span class="number">0x3</span>;
-    <span class="kw">const </span>RING_0: usize = <span class="number">0x0</span>;
+    <span class="doccomment">/// Маска уровня привилегий ([кольца защиты](https://en.wikipedia.org/wiki/Protection_ring))
+    /// записанного в селекторе сегмента.
+    ///
+    /// (Current Priviledge Level, если селектор записан в регистр сегмента кода CS.)
+    </span><span class="kw">const </span>CPL_MASK: usize = <span class="number">0x3</span>;
+
+    <span class="doccomment">/// Уровень привилегий ([кольцо защиты](https://en.wikipedia.org/wiki/Protection_ring)) ядра.
+    </span><span class="kw">const </span>RING_0: usize = <span class="number">0x0</span>;
 }
 
 
@@ -429,7 +570,8 @@
 }
 
 
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">mod </span>test_scaffolding {
+<span class="attribute">#[doc(hidden)]
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">mod </span>test_scaffolding {
     <span class="kw">use super</span>::{RFlags, Registers};
 
 

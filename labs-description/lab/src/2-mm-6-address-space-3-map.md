@@ -47,12 +47,16 @@ unsafe fn AddressSpace::map_page_to_frame(
 методом ввода--вывода через память
 ([Memory-mapped I/O](https://en.wikipedia.org/wiki/Memory-mapped_I/O)).
 
-Если страница `page` уже замаплена, то проверьте что у неё есть флаг `PageTableFlags::USER_ACCESSIBLE`.
-Если флаг есть, то есть видимо пользовательский процесс хочет изменить маппинг доступной ему страницы,
-удалите старый маппинг с помощью метода
-[`AddressSpace::unmap_pte()`](../../doc/kernel/memory/address_space/struct.AddressSpace.html#method.unmap_pte).
-Если флага нет, `map_page_to_frame()` должен вернуть ошибку
+Если `page` уже была отображена, то старое отображение удаляется,
+если только при этом не произойдёт замена прав доступа к странице с
+"только для ядра" на "доступно в пользовательском пространстве" ---
+[`PageTableFlags::USER_ACCESSIBLE`](../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.USER_ACCESSIBLE).
+В случае попытки такой замены отображение не меняется, а возвращается ошибка
 [`Error::PermissionDenied`](../../doc/kernel/error/enum.Error.html#variant.PermissionDenied).
+Если же отображение `page` поменялось, старый физический фрейм освобождается,
+если на него не осталось других ссылок.
+Удалить старый маппинг можно с помощью метода
+[`AddressSpace::unmap_pte()`](../../doc/kernel/memory/address_space/struct.AddressSpace.html#method.unmap_pte).
 
 Используя
 [`FrameAllocator::allocate()`](../../doc/kernel/memory/enum.FrameAllocator.html#method.allocate)

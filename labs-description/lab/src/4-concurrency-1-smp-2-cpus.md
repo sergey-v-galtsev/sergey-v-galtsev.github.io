@@ -25,7 +25,10 @@
   - [`FS`](https://wiki.osdev.org/CPU_Registers_x86-64#FS.base.2C_GS.base) --- доступен для программных нужд.
 
 
-### Задача 2 --- инициализация TSS и регистра `TR`
+### Задача 3 --- вектор структур [`kernel::smp::cpu::Cpu`](../../doc/kernel/smp/cpu/struct.Cpu.html)
+
+
+#### Инициализация TSS и регистра `TR`
 
 Реализуйте [метод](../../doc/kernel/smp/cpu/struct.Cpu.html#method.set_tss)
 
@@ -53,7 +56,7 @@ fn Cpu::set_tss()
 - [`x86_64::instructions::tables::load_tss`](../../doc/x86_64/instructions/tables/fn.load_tss.html).
 
 
-### Задача 3 --- инициализация регистра `FS`
+#### Инициализация регистра `FS`
 
 Регистр `FS` будем использовать для аналога
 [thread--local storage](https://en.wikipedia.org/wiki/Thread-local_storage), ---
@@ -105,7 +108,7 @@ fn Cpu::set_fs()
 [`Virt::from_ref()`](../../doc/kernel/memory/addr/struct.Addr.html#method.from_ref).
 
 
-### Задача 4 --- использование регистра `FS` для получения текущего [`kernel::smp::cpu::Cpu`](../../doc/kernel/smp/cpu/struct.Cpu.html)
+#### Использование регистра `FS` для получения текущего [`kernel::smp::cpu::Cpu`](../../doc/kernel/smp/cpu/struct.Cpu.html)
 
 Реализуйте [метод](../../doc/kernel/smp/cpu/struct.Cpu.html#method.get)
 
@@ -149,8 +152,23 @@ unsafe fn Cpu::get() -> &'static mut Cpu
 Он выполнит необходимые проверки на валидность этого адреса.
 В случае, если проверки не пройдут и вернётся ошибка, можно паниковать.
 
+Так как поменялось назначение сегментного регистра `FS`,
+поправьте код метода
+[`Registers::switch_to()`](../../doc/kernel/process/registers/struct.Registers.html#method.switch_to)
+который вы реализовали в
+[задаче про переключение процессора в режим пользователя](../../lab/book/3-process-3-user-mode.html#%D0%97%D0%B0%D0%B4%D0%B0%D1%87%D0%B0-3--%D0%BF%D0%B5%D1%80%D0%B5%D0%BA%D0%BB%D1%8E%D1%87%D0%B5%D0%BD%D0%B8%D0%B5-%D0%BF%D1%80%D0%BE%D1%86%D0%B5%D1%81%D1%81%D0%BE%D1%80%D0%B0-%D0%B2-%D1%80%D0%B5%D0%B6%D0%B8%D0%BC-%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D1%8F-%D0%B8-%D0%B2%D0%BE%D0%B7%D0%B2%D1%80%D0%B0%D1%82-%D0%B8%D0%B7-%D0%BD%D0%B5%D0%B3%D0%BE).
+А также код метода
+[`kernel::process::syscall::syscall_trampoline()`](../../doc/kernel/process/syscall/fn.syscall_trampoline.html),
+который участвует в
+[диспетчеризации системных вызовов](../../lab/book/3-process-4-syscall.html#%D0%94%D0%B8%D1%81%D0%BF%D0%B5%D1%82%D1%87%D0%B5%D1%80%D0%B8%D0%B7%D0%B0%D1%86%D0%B8%D1%8F-%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D0%BD%D1%8B%D1%85-%D0%B2%D1%8B%D0%B7%D0%BE%D0%B2%D0%BE%D0%B2)
+и был добавлен в соответствующей
+[задаче](../../lab/book/3-process-4-syscall.html#%D0%97%D0%B0%D0%B4%D0%B0%D1%87%D0%B0-4--%D0%BF%D0%BE%D0%B4%D0%B4%D0%B5%D1%80%D0%B6%D0%BA%D0%B0-%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D0%BD%D1%8B%D1%85-%D0%B2%D1%8B%D0%B7%D0%BE%D0%B2%D0%BE%D0%B2).
+А запись `RSP` в стек и его сохранение в
+[`syscall_trampoline()`](../../doc/kernel/process/syscall/fn.syscall_trampoline.html)
+нужно будет удалить.
 
-### Задача 5 --- Инициализация вектора структур [`kernel::smp::cpu::Cpu`](../../doc/kernel/smp/cpu/struct.Cpu.html)
+
+#### Инициализация вектора структур [`kernel::smp::cpu::Cpu`](../../doc/kernel/smp/cpu/struct.Cpu.html)
 
 Чтобы пользоваться структурами
 [`Cpu`](../../doc/kernel/smp/cpu/struct.Cpu.html)
@@ -178,6 +196,22 @@ fn init_cpu_vec(cpu_count: usize) -> Result<Vec<Cpu>>
 и срез из части ранее выделенных стеков в количестве
 [`Cpu::STACKS_PER_CPU`](../../doc/kernel/smp/cpu/struct.Cpu.html#associatedconstant.STACKS_PER_CPU)
 штук.
+
+
+### Проверьте себя
+
+Запустите тест `4-concurrency-3-cpus` из файла
+[`kernel/src/tests/4-concurrency-3-cpus.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/tests/4-concurrency-3-cpus.rs):
+
+```console
+$ (cd kernel; cargo test --test 4-concurrency-3-cpus)
+...
+4_concurrency_3_cpus::initialized---------------------------
+19:57:54 0 I cpu = 0; local_apic_id = 0
+19:57:54 0 I cpu = 0; kernel_stack = 0v7FFFFFEB8000; frame = Frame(32427 @ 0p7EAB000); flags = PRESENT | WRITABLE | ACCESSED | DIRTY | NO_EXECUTE
+4_concurrency_3_cpus::initialized------------------ [passed]
+19:57:54 0 I exit qemu; exit_code = SUCCESS
+```
 
 
 ### Ориентировочный объём работ этой части лабораторки

@@ -410,8 +410,8 @@
     /// возвращает ошибку [`Error::NoPage`].
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>make_recursive_mapping(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;usize&gt; {
         <span class="comment">// TODO: your code here.
-        </span><span class="macro">unimplemented!</span>();
-    }
+        </span><span class="prelude-val">Ok</span>(<span class="self">self</span>.recursive_mapping) <span class="comment">// TODO: remove before flight.
+    </span>}
 
 
     <span class="doccomment">/// Возвращает физический фрейм корневого узла текущего отображения

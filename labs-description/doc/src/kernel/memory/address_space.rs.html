@@ -541,14 +541,94 @@
 <span id="541">541</span>
 <span id="542">542</span>
 <span id="543">543</span>
-</pre><pre class="rust"><code><span class="kw">use </span>core::{any, fmt, mem, mem::MaybeUninit, ptr};
+<span id="544">544</span>
+<span id="545">545</span>
+<span id="546">546</span>
+<span id="547">547</span>
+<span id="548">548</span>
+<span id="549">549</span>
+<span id="550">550</span>
+<span id="551">551</span>
+<span id="552">552</span>
+<span id="553">553</span>
+<span id="554">554</span>
+<span id="555">555</span>
+<span id="556">556</span>
+<span id="557">557</span>
+<span id="558">558</span>
+<span id="559">559</span>
+<span id="560">560</span>
+<span id="561">561</span>
+<span id="562">562</span>
+<span id="563">563</span>
+<span id="564">564</span>
+<span id="565">565</span>
+<span id="566">566</span>
+<span id="567">567</span>
+<span id="568">568</span>
+<span id="569">569</span>
+<span id="570">570</span>
+<span id="571">571</span>
+<span id="572">572</span>
+<span id="573">573</span>
+<span id="574">574</span>
+<span id="575">575</span>
+<span id="576">576</span>
+<span id="577">577</span>
+<span id="578">578</span>
+<span id="579">579</span>
+<span id="580">580</span>
+<span id="581">581</span>
+<span id="582">582</span>
+<span id="583">583</span>
+<span id="584">584</span>
+<span id="585">585</span>
+<span id="586">586</span>
+<span id="587">587</span>
+<span id="588">588</span>
+<span id="589">589</span>
+<span id="590">590</span>
+<span id="591">591</span>
+<span id="592">592</span>
+<span id="593">593</span>
+<span id="594">594</span>
+<span id="595">595</span>
+<span id="596">596</span>
+<span id="597">597</span>
+<span id="598">598</span>
+<span id="599">599</span>
+<span id="600">600</span>
+<span id="601">601</span>
+<span id="602">602</span>
+<span id="603">603</span>
+<span id="604">604</span>
+<span id="605">605</span>
+<span id="606">606</span>
+<span id="607">607</span>
+<span id="608">608</span>
+<span id="609">609</span>
+<span id="610">610</span>
+<span id="611">611</span>
+<span id="612">612</span>
+<span id="613">613</span>
+<span id="614">614</span>
+<span id="615">615</span>
+<span id="616">616</span>
+<span id="617">617</span>
+<span id="618">618</span>
+<span id="619">619</span>
+<span id="620">620</span>
+<span id="621">621</span>
+</pre><pre class="rust"><code><span class="kw">use </span>core::{alloc::Layout, any, fmt, mem, mem::MaybeUninit, ptr};
 
 <span class="kw">use </span>lazy_static::lazy_static;
 <span class="kw">use </span>spin::Mutex;
 
+<span class="kw">use </span>ku::allocator::{AtomicInfo, BigAllocator, Info};
+
 <span class="kw">use crate</span>::{
     error::{
-        Error::{PermissionDenied, WrongAlignment},
+        Error::{InvalidArgument, PermissionDenied, WrongAlignment},
         <span class="prelude-ty">Result</span>,
     },
     log::{info, trace, warn},
@@ -564,6 +644,7 @@
     page_allocator::PageAllocator,
     Virt,
     FRAME_ALLOCATOR,
+    KERNEL_RW,
 };
 
 <span class="comment">// Used in docs.
@@ -574,6 +655,9 @@
 <span class="doccomment">/// Структура для работы с виртуальным адресным пространством.
 </span><span class="attribute">#[derive(Debug, Default)]
 </span><span class="kw">pub struct </span>AddressSpace {
+    <span class="doccomment">/// Статистика аллокатора общего назначения.
+    </span>info: AtomicInfo,
+
     <span class="doccomment">/// Тип виртуального адресного пространства для логирования:
     /// - [`Kind::Invalid`] --- некорректное;
     /// - [`Kind::Base`] --- базовое;
@@ -602,6 +686,7 @@
             PageAllocator::new(<span class="kw">unsafe </span>{ mapping.page_table_ref(mapping.page_directory()) });
 
         <span class="kw">let </span>address_space = <span class="self">Self </span>{
+            info: AtomicInfo::new(),
             kind: Kind::Base,
             mapping,
             page_allocator,
@@ -623,6 +708,7 @@
             PageAllocator::new(<span class="kw">unsafe </span>{ mapping.page_table_ref(mapping.page_directory()) });
 
         <span class="kw">let </span>address_space = <span class="self">Self </span>{
+            info: AtomicInfo::new(),
             kind: Kind::Process,
             mapping,
             page_allocator,
@@ -632,6 +718,12 @@
         <span class="macro">info!</span>(%address_space, <span class="string">&quot;duplicate&quot;</span>);
 
         <span class="prelude-val">Ok</span>(address_space)
+    }
+
+
+    <span class="doccomment">/// Статистика аллокатора общего назначения.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>info(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Info {
+        <span class="self">self</span>.info.load()
     }
 
 
@@ -1009,6 +1101,44 @@
 }
 
 
+<span class="kw">unsafe impl </span>BigAllocator <span class="kw">for </span>AddressSpace {
+    <span class="kw">fn </span>reserve(<span class="kw-2">&amp;mut </span><span class="self">self</span>, layout: Layout) -&gt; <span class="prelude-ty">Result</span>&lt;Block&lt;Page&gt;&gt; {
+        <span class="kw">if </span>layout.align() &gt; Page::SIZE {
+            <span class="macro">warn!</span>(<span class="question-mark">?</span>layout, page_size = %Page::SIZE, <span class="string">&quot;can not handle alignments greater than the page size&quot;</span>);
+            <span class="kw">return </span><span class="prelude-val">Err</span>(WrongAlignment);
+        }
+
+        <span class="kw">let </span>block = <span class="self">self</span>.page_allocator.allocate(layout.size())<span class="question-mark">?</span>;
+        <span class="self">self</span>.info.allocation(block.size(), block.size(), block.count());
+
+        <span class="prelude-val">Ok</span>(block)
+    }
+
+
+    <span class="kw">unsafe fn </span>unreserve(<span class="kw-2">&amp;mut </span><span class="self">self</span>, block: Block&lt;Page&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+        <span class="self">self</span>.info.deallocation(block.size(), block.size(), block.count());
+
+        <span class="prelude-val">Ok</span>(())
+    }
+
+
+    <span class="kw">unsafe fn </span>map(<span class="kw-2">&amp;mut </span><span class="self">self</span>, block: Block&lt;Page&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+        <span class="self">self</span>.map_block(block, KERNEL_RW)
+    }
+
+
+    <span class="kw">unsafe fn </span>unmap(<span class="kw-2">&amp;mut </span><span class="self">self</span>, block: Block&lt;Page&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+        <span class="self">self</span>.unmap_block(block)
+    }
+
+
+    <span class="kw">unsafe fn </span>remap(<span class="kw-2">&amp;mut </span><span class="self">self</span>, old_block: Block&lt;Page&gt;, new_block: Block&lt;Page&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+        <span class="comment">// TODO: your code here.
+        </span><span class="macro">unimplemented!</span>();
+    }
+}
+
+
 <span class="doccomment">/// Тип виртуального адресного пространства для логирования.
 </span><span class="attribute">#[derive(Debug, Default)]
 </span><span class="kw">enum </span>Kind {
@@ -1038,10 +1168,31 @@
     <span class="kw">use </span><span class="kw">crate</span>::error::Result;
 
     <span class="kw">use super</span>::{
-        <span class="kw">super</span>::{mmu::PageTableFlags, page_allocator::test_scaffolding::block, Block, Page, Virt},
+        <span class="kw">super</span>::{
+            mmu::PageTableFlags,
+            page_allocator::test_scaffolding::block,
+            Block,
+            Frame,
+            Page,
+            Virt,
+        },
         AddressSpace,
         Mapping,
     };
+
+
+    <span class="kw">pub unsafe fn </span>map_page(
+        address_space: <span class="kw-2">&amp;mut </span>AddressSpace,
+        page: Page,
+        flags: PageTableFlags,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;Frame&gt; {
+        address_space.map_page(page, flags)
+    }
+
+
+    <span class="kw">pub unsafe fn </span>unmap_page(address_space: <span class="kw-2">&amp;mut </span>AddressSpace, page: Page) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+        address_space.unmap_page(page)
+    }
 
 
     <span class="kw">pub fn </span>check_permission&lt;T&gt;(
@@ -1082,6 +1233,11 @@
 
     <span class="kw">pub fn </span>page_allocator_block(address_space: <span class="kw-2">&amp;</span>AddressSpace) -&gt; Block&lt;Page&gt; {
         block(<span class="kw-2">&amp;</span>address_space.page_allocator)
+    }
+
+
+    <span class="kw">pub fn </span>switch_to(address_space: <span class="kw-2">&amp;</span>AddressSpace) {
+        address_space.switch_to();
     }
 }
 </code></pre></div>

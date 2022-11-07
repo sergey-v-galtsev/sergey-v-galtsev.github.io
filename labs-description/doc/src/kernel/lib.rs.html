@@ -222,6 +222,14 @@
 <span id="222">222</span>
 <span id="223">223</span>
 <span id="224">224</span>
+<span id="225">225</span>
+<span id="226">226</span>
+<span id="227">227</span>
+<span id="228">228</span>
+<span id="229">229</span>
+<span id="230">230</span>
+<span id="231">231</span>
+<span id="232">232</span>
 </pre><pre class="rust"><code><span class="attribute">#![allow(dead_code)]
 #![allow(unused_imports)]
 #![allow(unused_variables)]
@@ -234,12 +242,14 @@
 #![cfg_attr(feature = <span class="string">&quot;deny-warnings&quot;</span>, deny(warnings))]
 #![feature(abi_x86_interrupt)]
 #![feature(alloc_error_handler)]
+#![feature(allocator_api)]
 #![feature(asm_const)]
 #![feature(const_refs_to_cell)]
 #![feature(custom_test_frameworks)]
 #![feature(maybe_uninit_slice)]
 #![feature(naked_functions)]
 #![feature(panic_info_message)]
+#![feature(slice_ptr_get)]
 #![no_std]
 #![reexport_test_harness_main = <span class="string">&quot;test_main&quot;</span>]
 #![test_runner(<span class="kw">crate</span>::test_runner)]
@@ -250,7 +260,9 @@
 </span><span class="kw">extern crate </span>alloc;
 
 
-<span class="kw">pub mod </span>allocator;
+<span class="doccomment">/// Аллокаторы памяти общего назначения.
+</span><span class="kw">pub mod </span>allocator;
+
 <span class="kw">pub mod </span>error;
 <span class="kw">pub mod </span>interrupts;
 <span class="kw">pub mod </span>log;
@@ -296,7 +308,7 @@
 
 
 <span class="macro">bitflags! </span>{
-    <span class="kw">pub struct </span>Subsystems: u8 {
+    <span class="kw">pub struct </span>Subsystems: usize {
         <span class="kw">const </span>PHYS_MEMORY = <span class="number">1 </span>&lt;&lt; <span class="number">0</span>;
         <span class="kw">const </span>VIRT_MEMORY = <span class="number">1 </span>&lt;&lt; <span class="number">1</span>;
         <span class="kw">const </span>MAIN_FRAME_ALLOCATOR = <span class="number">1 </span>&lt;&lt; <span class="number">2</span>;
@@ -309,7 +321,11 @@
 
         <span class="kw">const </span>PROCESS = <span class="self">Self</span>::SYSCALL.bits | <span class="self">Self</span>::PROCESS_TABLE.bits | <span class="self">Self</span>::SCHEDULER.bits;
 
-        <span class="kw">const </span>SMP = <span class="number">1 </span>&lt;&lt; <span class="number">7</span>;
+        <span class="kw">const </span>LOCAL_APIC = <span class="number">1 </span>&lt;&lt; <span class="number">7</span>;
+        <span class="kw">const </span>CPUS = <span class="number">1 </span>&lt;&lt; <span class="number">8</span>;
+        <span class="kw">const </span>BOOT_APS = <span class="number">1 </span>&lt;&lt; <span class="number">9</span>;
+
+        <span class="kw">const </span>SMP = <span class="self">Self</span>::LOCAL_APIC.bits | <span class="self">Self</span>::CPUS.bits | <span class="self">Self</span>::BOOT_APS.bits;
     }
 }
 
@@ -338,8 +354,8 @@
         }
     }
 
-    <span class="kw">if </span>subsystems.contains(Subsystems::SMP) {
-        smp::init(boot_info);
+    <span class="kw">if </span>subsystems &amp; Subsystems::SMP != Subsystems::empty() {
+        smp::init(boot_info, subsystems);
     }
 
     <span class="kw">if </span>subsystems &amp; Subsystems::PROCESS != Subsystems::empty() {

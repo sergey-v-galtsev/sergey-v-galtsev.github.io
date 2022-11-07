@@ -11,7 +11,7 @@
 - [`LocalApic::get()`](../../doc/kernel/smp/local_apic/struct.LocalApic.html#method.get) возвращает структуру [`LocalApic`](../../doc/kernel/smp/local_apic/struct.LocalApic.html) данного CPU.
 
 
-### Задача 1 --- инициализация работы с `LocalApic`
+### Задача 2 --- инициализация работы с `LocalApic`
 
 Интерфейс для работы с local APIC в [x86-64](https://en.wikipedia.org/wiki/X86-64) представляет собой выровненную область размером 4 килобайта в физической памяти --- один физический фрейм.
 Такой тип интерфейса называется
@@ -66,6 +66,21 @@ fn LocalApic::map(address: Phys) -> Result<()>
 - [`kernel::memory::Frame`](../../doc/kernel/memory/type.Frame.html),
 - [`kernel::memory::Page`](../../doc/kernel/memory/type.Page.html),
 - [`kernel::memory::Virt`](../../doc/kernel/memory/type.Virt.html).
+
+
+### Проверьте себя
+
+Запустите тест `4-concurrency-2-local-apic` из файла
+[`kernel/src/tests/4-concurrency-2-local-apic.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/tests/4-concurrency-2-local-apic.rs):
+
+```console
+$ (cd kernel; cargo test --test 4-concurrency-2-local-apic)
+...
+4_concurrency_2_local_apic::mapped_properly-----------------
+19:45:48 0 I Local APIC; local_apic = 0v322000; frame = Frame(1043968 @ 0pFEE00000); flags = PRESENT | WRITABLE | WRITE_THROUGH | NO_CACHE | ACCESSED | DIRTY | NO_EXECUTE
+19:45:48 0 I cpu = 0
+4_concurrency_2_local_apic::mapped_properly-------- [passed]
+```
 
 
 ### Ориентировочный объём работ этой части лабораторки

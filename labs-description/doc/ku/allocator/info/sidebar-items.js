@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":[["AtomicCounter",""],["AtomicInfo","Предназначена для конкурентного доступа к статистике аллокатора."],["Counter",""],["Info","Статистика аллокатора общего назначения."],["SizeCounter",""]]};

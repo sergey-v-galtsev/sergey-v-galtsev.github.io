@@ -92,6 +92,24 @@
 <span id="92">92</span>
 <span id="93">93</span>
 <span id="94">94</span>
+<span id="95">95</span>
+<span id="96">96</span>
+<span id="97">97</span>
+<span id="98">98</span>
+<span id="99">99</span>
+<span id="100">100</span>
+<span id="101">101</span>
+<span id="102">102</span>
+<span id="103">103</span>
+<span id="104">104</span>
+<span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
+<span id="112">112</span>
 </pre><pre class="rust"><code><span class="kw">mod </span>acpi_info;
 <span class="kw">mod </span>ap_init;
 <span class="kw">mod </span>cpu;
@@ -108,6 +126,7 @@
     memory,
     memory::Page,
     time,
+    Subsystems,
 };
 
 <span class="kw">use </span>acpi_info::AcpiInfo;
@@ -116,11 +135,11 @@
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">use </span>local_apic::{CpuId, LocalApic};
 
 
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>init(boot_info: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>BootInfo) {
+<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>init(boot_info: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>BootInfo, subsystems: Subsystems) {
     <span class="kw">let </span>timer = time::timer();
     <span class="kw">let </span>phys2virt = memory::phys2virt(boot_info);
 
-    <span class="kw">if let </span><span class="prelude-val">Err</span>(error) = init_smp(phys2virt) {
+    <span class="kw">if let </span><span class="prelude-val">Err</span>(error) = init_smp(phys2virt, subsystems) {
         <span class="macro">warn!</span>(<span class="question-mark">?</span>error, duration = %timer.elapsed(), <span class="string">&quot;SMP init&quot;</span>);
     } <span class="kw">else </span>{
         <span class="macro">info!</span>(duration = %timer.elapsed(), <span class="string">&quot;SMP init&quot;</span>);
@@ -128,7 +147,11 @@
 }
 
 
-<span class="kw">fn </span>init_smp(phys2virt: Page) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+<span class="kw">fn </span>init_smp(phys2virt: Page, subsystems: Subsystems) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="kw">if </span>!subsystems.contains(Subsystems::LOCAL_APIC) {
+        <span class="kw">return </span><span class="prelude-val">Err</span>(Unimplemented);
+    }
+
     <span class="kw">let </span>acpi_info = AcpiInfo::new(phys2virt)<span class="question-mark">?</span>;
     <span class="kw">let </span>local_apic_address = acpi_info.local_apic_address();
 
@@ -152,12 +175,20 @@
     <span class="kw">let </span>cpu_count = usize::from(max_cpu_id) + <span class="number">1</span>;
     <span class="macro">info!</span>(cpu = current_cpu, cpu_count, %local_apic_address, <span class="string">&quot;Local APIC init&quot;</span>);
 
+    <span class="kw">if </span>!subsystems.contains(Subsystems::CPUS) {
+        <span class="kw">return </span><span class="prelude-val">Err</span>(Unimplemented);
+    }
+
     <span class="kw">let </span><span class="kw-2">mut </span>cpus = cpu::init(cpu_count, current_cpu)<span class="question-mark">?</span>;
+
+    <span class="macro">assert_eq!</span>(cpus.len(), cpu_count);
 
     <span class="macro">info!</span>(cpu = current_cpu, <span class="string">&quot;Bootstrap Processor&quot;</span>);
 
-    <span class="kw">for </span>id <span class="kw">in </span>acpi_info.ap_ids() {
-        ap_init::boot_ap(phys2virt, <span class="kw-2">&amp;mut </span>cpus[usize::from(<span class="kw-2">*</span>id)])<span class="question-mark">?</span>;
+    <span class="kw">if </span>subsystems.contains(Subsystems::BOOT_APS) {
+        <span class="kw">for </span>id <span class="kw">in </span>acpi_info.ap_ids() {
+            ap_init::boot_ap(phys2virt, <span class="kw-2">&amp;mut </span>cpus[usize::from(<span class="kw-2">*</span>id)])<span class="question-mark">?</span>;
+        }
     }
 
     <span class="comment">// Intentionally leak Cpu stuctures as they should be &#39;static.
@@ -172,6 +203,11 @@
 <span class="attribute">#[doc(hidden)]
 </span><span class="kw">pub mod </span>test_scaffolding {
     <span class="kw">use </span>core::sync::atomic::{AtomicBool, Ordering};
+
+    <span class="kw">pub use super</span>::{
+        cpu::test_scaffolding::<span class="kw-2">*</span>,
+        local_apic::test_scaffolding::<span class="kw-2">*</span>,
+    };
 
 
     <span class="kw">pub fn </span>is_initialized() -&gt; bool {

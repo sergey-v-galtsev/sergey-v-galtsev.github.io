@@ -607,11 +607,45 @@
 <span id="607">607</span>
 <span id="608">608</span>
 <span id="609">609</span>
+<span id="610">610</span>
+<span id="611">611</span>
+<span id="612">612</span>
+<span id="613">613</span>
+<span id="614">614</span>
+<span id="615">615</span>
+<span id="616">616</span>
+<span id="617">617</span>
+<span id="618">618</span>
+<span id="619">619</span>
+<span id="620">620</span>
+<span id="621">621</span>
+<span id="622">622</span>
+<span id="623">623</span>
+<span id="624">624</span>
+<span id="625">625</span>
+<span id="626">626</span>
+<span id="627">627</span>
+<span id="628">628</span>
+<span id="629">629</span>
+<span id="630">630</span>
+<span id="631">631</span>
+<span id="632">632</span>
+<span id="633">633</span>
+<span id="634">634</span>
+<span id="635">635</span>
 </pre><pre class="rust"><code><span class="attribute">#![warn(missing_docs)]
 #![warn(clippy::missing_docs_in_private_items)]
 
 
-</span><span class="kw">use </span>core::{fmt, iter::IntoIterator, marker::PhantomData, mem, ops::Range, option::Option};
+</span><span class="kw">use </span>core::{
+    fmt,
+    iter::IntoIterator,
+    marker::PhantomData,
+    mem,
+    ops::Range,
+    option::Option,
+    ptr::NonNull,
+};
 
 <span class="kw">use </span><span class="kw">crate</span>::error::{Error::InvalidArgument, <span class="prelude-ty">Result</span>};
 
@@ -873,6 +907,24 @@
         } <span class="kw">else </span>{
             <span class="prelude-val">Err</span>(InvalidArgument)
         }
+    }
+
+
+    <span class="doccomment">/// Преобразует [`Block&lt;Virt&gt;`] или [`Block&lt;Page&gt;`] в [`NonNull&lt;[Q]&gt;`].
+    /// Размер среза вычисляется из размера блока и размера типа `Q`.
+    ///
+    /// Возвращает ошибки:
+    /// - [`Error::InvalidArgument`] если блок не соответствует типу `Q` по размеру.
+    /// - [`Error::WrongAlignment`] если блок не соответствует типу `Q` по выравниванию.
+    /// - [`Error::Null`] если адрес блока нулевой.
+    ///
+    /// # Safety
+    ///
+    /// Вызывающая сторона должна гарантировать,
+    /// что не будут нарушены инварианты управления памятью в Rust,
+    /// которые не относятся к возвращаемым ошибкам.
+    </span><span class="kw">pub unsafe fn </span>try_into_non_null_slice&lt;Q&gt;(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;NonNull&lt;[Q]&gt;&gt; {
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>.try_into_mut_slice()<span class="question-mark">?</span>.into())
     }
 }
 

@@ -112,8 +112,7 @@ unsafe fn Mapping::translate(
 не отображена на физическую память, то есть два варианта:
 
 - Входной `frame_allocator` равен [`None`](https://doc.rust-lang.org/nightly/core/option/enum.Option.html#variant.None), тогда [`Mapping::translate()`](../../doc/kernel/memory/mapping/struct.Mapping.html#method.translate) сразу выходит, возвращая ошибку [`Error::NoPage`](../../doc/kernel/error/enum.Error.html#variant.NoPage).
-- Входной `frame_allocator` равен [`Some`](https://doc.rust-lang.org/nightly/core/option/enum.Option.html#variant.Some)
-, тогда [`Mapping::translate()`](../../doc/kernel/memory/mapping/struct.Mapping.html#method.translate) аллоцирует с его помощью фрейм для недостающей промежуточной [`PageTable`](../../doc/ku/memory/mmu/type.PageTable.html). И очищает её --- все записи в ней должны быть равны значению, которое возвращает метод [`PageTableEntry::default()`](../../doc/ku/memory/mmu/struct.PageTableEntry.html#method.default).
+- Входной `frame_allocator` равен [`Some`](https://doc.rust-lang.org/nightly/core/option/enum.Option.html#variant.Some), тогда [`Mapping::translate()`](../../doc/kernel/memory/mapping/struct.Mapping.html#method.translate) аллоцирует с его помощью фрейм для недостающей промежуточной [`PageTable`](../../doc/ku/memory/mmu/type.PageTable.html). И очищает её --- все записи в ней должны быть равны значению, которое возвращает метод [`PageTableEntry::default()`](../../doc/ku/memory/mmu/struct.PageTableEntry.html#method.default).
 
 Вам может пригодиться конструкция `frame_allocator.as_mut().ok_or(NoPage)?`. В ней
 [`Option::as_mut()`](https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.as_mut)
@@ -334,13 +333,13 @@ fn Mapping::duplicate_page_table(
 - `PageTable` уровней L3--L1 включительно нужно пересоздать, заполняя их `PageTableEntry` результатами рекурсивных вызовов `Mapping::duplicate_page_table()`.
 - А вот `PageTable` уровня L0 нужно просто скопировать как есть, их записи `PageTableEntry` должны вести в те же физические фреймы, что и в исходном отображении `self`. Но только если соответствующая запись ведёт на страницу, принадлежащую ядру. Ссылки уровня L0 на страницы, принадлежащие пользователю --- `PageTableFlags::USER_ACCESSIBLE`, --- копировать не нужно.
 - На этот раз `PageTableFlags::HUGE_PAGE` нужно корректно обработать. Это означает, что рекурсивно спускаться в записи `PageTableEntry` для которых этот флаг включён не нужно. С этими записями нужно поступить как с записями на уровне L0, --- скопировать в точности из `self`.
+- Не используемые записи в новых [`PageTable`](../../doc/ku/memory/mmu/type.PageTable.html) нужно почистить, как и в [`Mapping::map_intermediate()`](../../doc/kernel/memory/mapping/struct.Mapping.html#method.map_intermediate).
 
 Для физических фреймов, на которые указывают скопированные записи листьевого уровня L0, нужно вызвать
 [`FrameAllocator::reference()`](../../doc/kernel/memory/enum.FrameAllocator.html#method.reference).
 Этот метод увеличивает число ссылок на физический фрейм.
 И позволяет понять, что физический фрейм нельзя считать свободным пока оба отображения `self` и `dst` существуют.
 А ведь именно указанные фреймы мы разделяем, используя сразу в обоих отображениях.
-
 Для выделения новых физических фреймов используйте
 [`FrameAllocator::allocate()`](../../doc/kernel/memory/enum.FrameAllocator.html#method.allocate).
 В обоих случаях обращайтесь к глобальному

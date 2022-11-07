@@ -170,15 +170,33 @@
 <span id="170">170</span>
 <span id="171">171</span>
 <span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
+<span id="177">177</span>
+<span id="178">178</span>
+<span id="179">179</span>
+<span id="180">180</span>
+<span id="181">181</span>
+<span id="182">182</span>
 </pre><pre class="rust"><code><span class="doccomment">/// Загружает [ELF--файлы](https://en.wikipedia.org/wiki/Executable_and_Linkable_Format)
 /// пользовательских процессов и их адресные пространства.
 </span><span class="kw">mod </span>elf;
 
-<span class="attribute">#[allow(clippy::module_inception)]
+<span class="doccomment">/// Содержит структуру пользовательского процесса [`Process`].
+</span><span class="attribute">#[allow(clippy::module_inception)]
 </span><span class="kw">mod </span>process;
-<span class="kw">mod </span>registers;
+
+<span class="doccomment">/// Описывает состояние регистров процесса [`Registers`] и
+/// контекст исполнения содержажий уровень привилегий [`ModeContext`].
+</span><span class="kw">mod </span>registers;
+
 <span class="kw">mod </span>scheduler;
-<span class="kw">mod </span>syscall;
+
+<span class="doccomment">/// Реализует системные вызовы.
+</span><span class="kw">mod </span>syscall;
+
 <span class="kw">mod </span>table;
 
 
@@ -217,6 +235,10 @@
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">use </span>registers::ModeContext;
 
+<span class="comment">// Used in docs.
+</span><span class="attribute">#[allow(unused)]
+</span><span class="kw">use </span>registers::Registers;
+
 
 <span class="doccomment">/// Инициализация подсистемы процессов.
 </span><span class="kw">pub fn </span>init(subsystems: Subsystems) {
@@ -228,8 +250,6 @@
 
     <span class="kw">if </span>subsystems.contains(Subsystems::PROCESS_TABLE) {
         <span class="kw-2">*</span>TABLE.lock() = Table::new(PROCESS_SLOT_COUNT);
-    } <span class="kw">else </span>{
-        table::test_scaffolding::init_dummy_table();
     }
 
     <span class="kw">if </span>subsystems.contains(Subsystems::SCHEDULER) {

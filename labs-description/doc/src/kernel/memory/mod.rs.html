@@ -281,6 +281,21 @@
 <span id="281">281</span>
 <span id="282">282</span>
 <span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
 </pre><pre class="rust"><code><span class="attribute">#![warn(missing_docs)]
 #![warn(clippy::missing_docs_in_private_items)]
 
@@ -410,7 +425,8 @@
 }
 
 
-<span class="kw">impl </span>FrameAllocator {
+<span class="attribute">#[allow(rustdoc::private_intra_doc_links)]
+</span><span class="kw">impl </span>FrameAllocator {
     <span class="doccomment">/// Возвращает количество свободных физических фреймов у аллокатора [`FrameAllocator`].
     </span><span class="kw">pub fn </span>count(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="kw">match </span><span class="self">self </span>{
@@ -434,8 +450,7 @@
     }
 
 
-    <span class="attribute">#[allow(rustdoc::private_intra_doc_links)]
-    </span><span class="doccomment">/// Уменьшает на единицу счётчик использований заданного физического фрейма `frame`.
+    <span class="doccomment">/// Уменьшает на единицу счётчик использований заданного физического фрейма `frame`.
     /// Физический фрейм освобождается, если на него не осталось других ссылок.
     ///
     /// # Panics
@@ -450,8 +465,7 @@
     }
 
 
-    <span class="attribute">#[allow(rustdoc::private_intra_doc_links)]
-    </span><span class="doccomment">/// Увеличивает на единицу счётчик использований заданного физического фрейма `frame`.
+    <span class="doccomment">/// Увеличивает на единицу счётчик использований заданного физического фрейма `frame`.
     ///
     /// # Panics
     ///
@@ -461,6 +475,22 @@
         <span class="kw">match </span><span class="self">self </span>{
             FrameAllocator::Main(main_allocator) =&gt; main_allocator.reference(frame),
             <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">&quot;can not reference a frame without the main frame allocator&quot;</span>),
+        }
+    }
+
+
+    <span class="doccomment">/// Возвращает количество ссылок на `frame`.
+    ///
+    /// - Если `frame` свободен, возвращается `0`.
+    /// - Если он отсутствует или зарезервирован --- [`Error::NoFrame`].
+    ///
+    /// # Panics
+    ///
+    /// Паникует, если в данный момент за аллокацию отвечает не [`MainFrameAllocator`].
+    </span><span class="kw">pub fn </span>reference_count(<span class="kw-2">&amp;</span><span class="self">self</span>, frame: Frame) -&gt; <span class="prelude-ty">Result</span>&lt;usize&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            FrameAllocator::Main(main_allocator) =&gt; main_allocator.reference_count(frame),
+            <span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">&quot;can not get the reference count without the main frame allocator&quot;</span>),
         }
     }
 

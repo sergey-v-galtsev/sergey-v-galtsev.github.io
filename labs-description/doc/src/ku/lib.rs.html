@@ -49,6 +49,9 @@
 <span id="49">49</span>
 <span id="50">50</span>
 <span id="51">51</span>
+<span id="52">52</span>
+<span id="53">53</span>
+<span id="54">54</span>
 </pre><pre class="rust"><code><span class="attribute">#![allow(dead_code)]
 #![allow(unused_imports)]
 #![allow(unused_variables)]
@@ -58,6 +61,7 @@
 #![allow(unused_variables)]
 
 #![deny(warnings)]
+#![feature(allocator_api)]
 #![feature(cell_update)]
 #![feature(step_trait)]
 #![no_std]
@@ -66,6 +70,8 @@
 
 </span><span class="kw">extern crate </span>rlibc;
 
+<span class="doccomment">/// Аллокаторы памяти общего назначения.
+</span><span class="kw">pub mod </span>allocator;
 
 <span class="kw">pub mod </span>error;
 

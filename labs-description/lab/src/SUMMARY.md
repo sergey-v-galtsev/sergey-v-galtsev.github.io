@@ -45,6 +45,7 @@
 # Лабораторная работа №4
 
 - [Конкурентное выполнение задач](4-concurrency-0-intro.md)
+  - [Аллокатор памяти общего назначения](4-concurrency-1-memory-allocator.md)
   - [Поддержка нескольких процессоров (SMP)](4-concurrency-1-smp-0-intro.md)
     - [Работа с local APIC](4-concurrency-1-smp-1-local-apic.md)
     - [Состояние каждого процессора](4-concurrency-1-smp-2-cpus.md)

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":[["MemoryAllocator","Аллокатор памяти общего назначения внутри [`AddressSpace`]."]]};

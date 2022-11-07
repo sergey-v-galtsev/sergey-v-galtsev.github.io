@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":[["disable_interrupts",""],["registers",""]]};

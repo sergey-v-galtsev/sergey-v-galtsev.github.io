@@ -41,7 +41,7 @@ fn kernel_main(boot_info: &'static BootInfo) -> ! {
 А затем мы в цикле выводим в лог статистику счётчиков прерываний и
 вычисленную с помощью RTC и PIT частоту процессора.
 Инструкция
-[`HLT`](https://www.felixcloutier.com/x86/htl),
+[`HLT`](https://www.felixcloutier.com/x86/hlt),
 которую мы используем через функцию
 [`x86_64::instructions::hlt()`](../../doc/x86_64/instructions/fn.hlt.html),
 выключает процессор до прихода следующего прерывания.

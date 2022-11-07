@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":[["info",""]],"mod":[["info",""],["paged",""]],"static":[["ALLOCATOR",""]],"struct":[["Info",""]]};
+window.SIDEBAR_ITEMS = {"mod":[["memory_allocator","Аллокатор памяти общего назначения внутри [`AddressSpace`]."]],"static":[["GLOBAL_ALLOCATOR","Глобальный аллокатор памяти общего назначения для ядра. Выделяет память и отображает её внутри [`struct@BASE_ADDRESS_SPACE`]."]],"struct":[["GlobalAllocator","Глобальный аллокатор памяти общего назначения для ядра. Выделяет память и отображает её внутри [`struct@BASE_ADDRESS_SPACE`]."]]};

@@ -282,13 +282,92 @@
 <span id="282">282</span>
 <span id="283">283</span>
 <span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
+<span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
+<span id="334">334</span>
+<span id="335">335</span>
+<span id="336">336</span>
+<span id="337">337</span>
+<span id="338">338</span>
+<span id="339">339</span>
+<span id="340">340</span>
+<span id="341">341</span>
+<span id="342">342</span>
+<span id="343">343</span>
+<span id="344">344</span>
+<span id="345">345</span>
+<span id="346">346</span>
+<span id="347">347</span>
+<span id="348">348</span>
+<span id="349">349</span>
+<span id="350">350</span>
+<span id="351">351</span>
+<span id="352">352</span>
+<span id="353">353</span>
+<span id="354">354</span>
+<span id="355">355</span>
+<span id="356">356</span>
+<span id="357">357</span>
+<span id="358">358</span>
+<span id="359">359</span>
+<span id="360">360</span>
+<span id="361">361</span>
+<span id="362">362</span>
 </pre><pre class="rust"><code><span class="kw">use </span>core::fmt;
 
-<span class="kw">use </span>spin::MutexGuard;
+<span class="kw">use </span>spin::{Mutex, MutexGuard};
 
 <span class="kw">use </span>ku::{process::MiniContext, ProcessInfo, RingBuffer};
 
 <span class="kw">use crate</span>::{
+    allocator::MemoryAllocator,
     error::{Error::InvalidArgument, <span class="prelude-ty">Result</span>},
     log::{debug, info},
     memory::{AddressSpace, Block, Virt, USER_RW},
@@ -298,28 +377,53 @@
 <span class="kw">use super</span>::{registers::Registers, Pid, Table};
 
 
-<span class="attribute">#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+<span class="doccomment">/// Состояние пользовательского процесса.
+</span><span class="attribute">#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">enum </span>State {
-    Exofork,
-    Runnable,
-    Running,
+    <span class="doccomment">/// Процесс только что создан и не готов к запуску.
+    </span>Exofork,
+
+    <span class="doccomment">/// Процесс готов к вытеснению, но не выполняется в данный момент.
+    </span>Runnable,
+
+    <span class="doccomment">/// Процесс выполняется в данный момент.
+    </span>Running,
 }
 
 
-<span class="attribute">#[derive(Debug)]
+
+<span class="doccomment">/// Описывает пользовательский процесс.
+</span><span class="attribute">#[derive(Debug)]
 </span><span class="kw">pub struct </span>Process {
-    address_space: AddressSpace,
-    info: Block&lt;Virt&gt;,
-    parent: <span class="prelude-ty">Option</span>&lt;Pid&gt;,
-    pid: Pid,
-    registers: Registers,
-    state: State,
-    trap_context: TrapContext,
+    <span class="doccomment">/// Виртуальное адресное пространство процесса.
+    </span>address_space: Mutex&lt;AddressSpace&gt;,
+
+    <span class="doccomment">/// Блок памяти, через который ядро предоставляет процессу информацию о нём.
+    /// В этом блоке находится структура типа [`ProcessInfo`].
+    </span>info: Block&lt;Virt&gt;,
+
+    <span class="doccomment">/// Идентификатор процесса--родителя, который создал данный процесс.
+    </span>parent: <span class="prelude-ty">Option</span>&lt;Pid&gt;,
+
+    <span class="doccomment">/// Идентификатор процесса.
+    </span>pid: Pid,
+
+    <span class="doccomment">/// Состояние регистров процесса.
+    </span>registers: Registers,
+
+    <span class="doccomment">/// Состояние процесса.
+    </span>state: State,
+
+    <span class="doccomment">/// Контекст пользователя, в который передаются исключения и прерывания,
+    /// относящиеся к данному процессу.
+    /// Например, Page Fault при некорректном доступе к памяти в коде пользователя.
+    </span>trap_context: TrapContext,
 }
 
 
 <span class="kw">impl </span>Process {
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>new(
+    <span class="doccomment">/// Создаёт новый процесс.
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>new(
         address_space: AddressSpace,
         context: MiniContext,
         info: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span><span class="kw-2">mut </span>ProcessInfo,
@@ -327,7 +431,7 @@
         <span class="kw">let </span>info = Block::from_ref(info);
 
         <span class="self">Self </span>{
-            address_space,
+            address_space: Mutex::new(address_space),
             info,
             parent: <span class="prelude-val">None</span>,
             pid: Pid::Current,
@@ -338,48 +442,63 @@
     }
 
 
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>duplicate(<span class="kw-2">&amp;</span><span class="self">self</span>, result: usize, arg0: usize) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
-        <span class="kw">let </span><span class="kw-2">mut </span>address_space = <span class="self">self</span>.address_space.duplicate()<span class="question-mark">?</span>;
+    <span class="doccomment">/// Дублирует существующий процесс.
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>duplicate(<span class="kw-2">&amp;</span><span class="self">self</span>, rax: usize, rdi: usize) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>address_space = <span class="self">self</span>.address_space.lock().duplicate()<span class="question-mark">?</span>;
 
         address_space.switch_to();
         <span class="kw">let </span>info = Block::from_ref(<span class="kw">super</span>::map_process_info(<span class="kw-2">&amp;mut </span>address_space)<span class="question-mark">?</span>);
-        <span class="self">self</span>.address_space.switch_to();
-
-        <span class="kw">let </span><span class="kw-2">mut </span>registers = <span class="self">self</span>.registers;
-        registers.rax = result;
-        registers.rdi = arg0;
-        registers.rsi = info.start_address().into_usize();
+        <span class="self">self</span>.address_space.lock().switch_to();
 
         <span class="prelude-val">Ok</span>(<span class="self">Self </span>{
-            address_space,
+            address_space: Mutex::new(address_space),
             info,
             parent: <span class="prelude-val">Some</span>(<span class="self">self</span>.pid),
             pid: Pid::Current,
-            registers,
+            registers: <span class="self">self</span>.registers.duplicate(rax, rdi, info.start_address().into_usize()),
             state: State::Exofork,
             trap_context: TrapContext::default(),
         })
     }
 
 
-    <span class="kw">pub fn </span>address_space(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>AddressSpace {
-        <span class="kw-2">&amp;mut </span><span class="self">self</span>.address_space
+    <span class="doccomment">/// Возвращает виртуальное адресное пространство процесса.
+    </span><span class="kw">pub fn </span>address_space(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>AddressSpace {
+        <span class="self">self</span>.address_space.get_mut()
     }
 
 
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>set_context(<span class="kw-2">&amp;mut </span><span class="self">self</span>, context: MiniContext) {
+    <span class="doccomment">/// Захватывает и возвращает блокировку на виртуальное адресное пространство процесса.
+    /// В отличие от [`Process::address_space()`] не требует эксклюзивную ссылку на [`Process`].
+    /// Это позволяет одновременно держать ссылки и на адресное пространство процесса и
+    /// на его аллокатор памяти [`MemoryAllocator`].
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>lock_address_space(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; MutexGuard&lt;<span class="lifetime">&#39;_</span>, AddressSpace&gt; {
+        <span class="self">self</span>.address_space.lock()
+    }
+
+
+    <span class="doccomment">/// Возвращает аллокатор памяти общего назначения внутри адресного пространства процесса.
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>allocator(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; MemoryAllocator {
+        MemoryAllocator::new(<span class="kw-2">&amp;</span><span class="self">self</span>.address_space)
+    }
+
+
+    <span class="doccomment">/// Устанавливает минимальный контекст процесса.
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>set_context(<span class="kw-2">&amp;mut </span><span class="self">self</span>, context: MiniContext) {
         <span class="self">self</span>.registers.set_mini_context(context);
     }
 
 
-    <span class="kw">pub fn </span>log(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;mut </span>RingBuffer&gt; {
+    <span class="doccomment">/// Возвращает [`RingBuffer`] в который код пользователя записывает свои логи.
+    </span><span class="kw">pub fn </span>log(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;mut </span>RingBuffer&gt; {
         <span class="kw">let </span>info = <span class="kw">unsafe </span>{ <span class="self">self</span>.info()<span class="question-mark">? </span>};
         <span class="kw">let </span>log = Block::from_ref(info.log());
+        <span class="kw">let </span>address_space = <span class="self">self</span>.address_space.get_mut();
 
-        <span class="kw">let </span>log = <span class="self">self</span>.address_space.check_permission_mut::&lt;RingBuffer&gt;(log, USER_RW)<span class="question-mark">?</span>;
+        <span class="kw">let </span>log = address_space.check_permission_mut::&lt;RingBuffer&gt;(log, USER_RW)<span class="question-mark">?</span>;
 
         <span class="kw">if </span>log.len() == <span class="number">1 </span>{
-            <span class="self">self</span>.address_space.check_permission_mut::&lt;u8&gt;(log[<span class="number">0</span>].block(), USER_RW)<span class="question-mark">?</span>;
+            address_space.check_permission_mut::&lt;u8&gt;(log[<span class="number">0</span>].block(), USER_RW)<span class="question-mark">?</span>;
             <span class="prelude-val">Ok</span>(<span class="kw-2">&amp;mut </span>log[<span class="number">0</span>])
         } <span class="kw">else </span>{
             <span class="prelude-val">Err</span>(InvalidArgument)
@@ -387,12 +506,14 @@
     }
 
 
-    <span class="kw">pub fn </span>parent(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Pid&gt; {
+    <span class="doccomment">/// Возвращает идентификатор процесса--родителя, который создал данный процесс.
+    </span><span class="kw">pub fn </span>parent(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Pid&gt; {
         <span class="self">self</span>.parent
     }
 
 
-    <span class="kw">pub fn </span>pid(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Pid {
+    <span class="doccomment">/// Возвращает идентификатор процесса.
+    </span><span class="kw">pub fn </span>pid(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Pid {
         <span class="macro">assert!</span>(
             <span class="self">self</span>.pid != Pid::Current,
             <span class="string">&quot;the process has not been assigned a pid yet&quot;
@@ -401,40 +522,52 @@
     }
 
 
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>set_pid(<span class="kw-2">&amp;mut </span><span class="self">self</span>, pid: Pid) {
+    <span class="doccomment">/// Устанавливает идентификатор процесса.
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>set_pid(<span class="kw-2">&amp;mut </span><span class="self">self</span>, pid: Pid) {
         <span class="kw">if let </span>Pid::Id { .. } = pid {
             <span class="self">self</span>.pid = pid;
-            <span class="self">self</span>.address_space.set_pid(pid);
+            <span class="self">self</span>.address_space.get_mut().set_pid(pid);
         } <span class="kw">else </span>{
             <span class="macro">panic!</span>(<span class="string">&quot;assignment of a wrong pid to a process&quot;</span>);
         }
     }
 
 
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>state(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; State {
+    <span class="doccomment">/// Возвращает состояние процесса.
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>state(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; State {
         <span class="self">self</span>.state
     }
 
 
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>set_state(<span class="kw-2">&amp;mut </span><span class="self">self</span>, state: State) {
+    <span class="doccomment">/// Устанавливает состояние процесса.
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>set_state(<span class="kw-2">&amp;mut </span><span class="self">self</span>, state: State) {
         <span class="self">self</span>.state = state
     }
 
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>trap_context(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TrapContext {
+    <span class="doccomment">/// Возвращает контекст пользователя, в который передаются исключения и прерывания,
+    /// относящиеся к данному процессу.
+    /// Например, Page Fault при некорректном доступе к памяти в коде пользователя.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>trap_context(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TrapContext {
         <span class="self">self</span>.trap_context
     }
 
 
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>set_trap_context(<span class="kw-2">&amp;mut </span><span class="self">self</span>, trap_context: TrapContext) {
+    <span class="doccomment">/// Устанавливает контекст пользователя, в который передаются исключения и прерывания,
+    /// относящиеся к данному процессу.
+    /// Например, Page Fault при некорректном доступе к памяти в коде пользователя.
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>set_trap_context(<span class="kw-2">&amp;mut </span><span class="self">self</span>, trap_context: TrapContext) {
         <span class="self">self</span>.trap_context = trap_context;
     }
 
 
-    <span class="kw">pub fn </span>enter_user_mode(<span class="kw-2">mut </span>process: MutexGuard&lt;Process&gt;) -&gt; bool {
+    <span class="doccomment">/// Переходит в режим пользователя.
+    /// Возвращает `true` если возврат из режима пользователя
+    /// был совершён принудительно (по прерыванию таймера `interrupts::apic_timer()`).
+    </span><span class="kw">pub fn </span>enter_user_mode(<span class="kw-2">mut </span>process: MutexGuard&lt;Process&gt;) -&gt; bool {
         <span class="kw">let </span>pid = process.pid;
 
-        process.address_space.switch_to();
+        process.address_space.get_mut().switch_to();
 
         <span class="kw">if let </span><span class="prelude-val">Ok</span>(info) = <span class="kw">unsafe </span>{ process.info() } {
             info.set_pid(pid);
@@ -464,8 +597,12 @@
     </span>}
 
 
-    <span class="doccomment">/// Switches into the kernel context in which `enter_user_mode()` was called.
-    /// The current kernel context is destroyed.
+    <span class="doccomment">/// Вытесняет текущий исполняющийся процесс с процессора принудительно.
+    ///
+    /// Сохраняет контекст процесса пользователя,
+    /// так как он не готов к вытеснению и порче регистров.
+    /// Возвращается в контекст ядра, из которого этот процесс был запущен.
+    /// Текущий контекст ядра уничтожается.
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>leave_user_mode() -&gt; ! {
         <span class="kw">unsafe </span>{
             <span class="macro">assert!</span>(Cpu::current_process().is_ok());
@@ -475,7 +612,13 @@
     }
 
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>sched_yield() -&gt; ! {
+    <span class="doccomment">/// Вытесняет текущий исполняющийся процесс с процессора по его собственному запросу.
+    ///
+    /// Не сохраняет контекст процесса пользователя,
+    /// он должен сохранить его сам в процедуре системного вызова `syscall::sched_yield()`.
+    /// Возвращается в контекст ядра, из которого этот процесс был запущен.
+    /// Текущий контекст ядра уничтожается.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>sched_yield() -&gt; ! {
         <span class="kw">unsafe </span>{
             <span class="macro">assert!</span>(Cpu::current_process().is_ok());
 
@@ -484,8 +627,13 @@
     }
 
 
-    <span class="kw">unsafe fn </span>info(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;mut </span>ProcessInfo&gt; {
-        <span class="kw">let </span>info = <span class="self">self</span>.address_space.check_permission_mut::&lt;ProcessInfo&gt;(<span class="self">self</span>.info, USER_RW)<span class="question-mark">?</span>;
+    <span class="doccomment">/// Возвращает ссылку на структуру [`ProcessInfo`],
+    /// через которую ядро предоставляет процессу информацию о нём.
+    </span><span class="kw">unsafe fn </span>info(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;mut </span>ProcessInfo&gt; {
+        <span class="kw">let </span>info = <span class="self">self
+            </span>.address_space
+            .get_mut()
+            .check_permission_mut::&lt;ProcessInfo&gt;(<span class="self">self</span>.info, USER_RW)<span class="question-mark">?</span>;
 
         <span class="kw">if </span>info.len() == <span class="number">1 </span>{
             <span class="prelude-val">Ok</span>(<span class="kw-2">&amp;mut </span>info[<span class="number">0</span>])
@@ -502,58 +650,66 @@
             formatter,
             <span class="string">&quot;{{ pid: {}, address_space: {}, {} }}&quot;</span>,
             <span class="self">self</span>.pid,
-            <span class="self">self</span>.address_space,
+            <span class="self">self</span>.address_space.lock(),
             <span class="self">self</span>.registers.mini_context(),
         )
     }
 }
 
 
-<span class="attribute">#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+<span class="doccomment">/// Контекст пользователя, в который передаются исключения и прерывания,
+/// относящиеся к данному процессу.
+/// Например, Page Fault при некорректном доступе к памяти в коде пользователя.
+</span><span class="attribute">#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>TrapContext {
-    context: MiniContext,
-    stack: Block&lt;Virt&gt;,
+    <span class="doccomment">/// Контекст пользовательского обработчика исключений и прерываний.
+    </span>mini_context: MiniContext,
+
+    <span class="doccomment">/// Блок памяти, отведённый под стек для
+    /// пользовательского обработчика исключений и прерываний.
+    </span>stack: Block&lt;Virt&gt;,
 }
 
 
 <span class="kw">impl </span>TrapContext {
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>new(rip: Virt, stack: Block&lt;Virt&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;TrapContext&gt; {
+    <span class="doccomment">/// Создаёт контекст пользовательского обработчика исключений и прерываний.
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>new(rip: Virt, stack: Block&lt;Virt&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;TrapContext&gt; {
         <span class="prelude-val">Ok</span>(<span class="self">Self </span>{
-            context: MiniContext::new(rip, stack.end_address()<span class="question-mark">?</span>),
+            mini_context: MiniContext::new(rip, stack.end_address()<span class="question-mark">?</span>),
             stack,
         })
     }
 
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>contains(<span class="kw-2">&amp;</span><span class="self">self</span>, rsp: Virt) -&gt; bool {
+    <span class="doccomment">/// Возвращает `true` если указатель стека `rsp` указывает в стек
+    /// пользовательского обработчика исключений и прерываний.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>contains(<span class="kw-2">&amp;</span><span class="self">self</span>, rsp: Virt) -&gt; bool {
         <span class="self">self</span>.stack.contains_address(rsp)
     }
 
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>is_valid(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+    <span class="doccomment">/// Возвращает `true` если пользователь установил свой обработчик исключений.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>is_valid(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
         <span class="self">self</span>.stack != Block::default()
     }
 
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>rip(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Virt {
-        <span class="self">self</span>.context.rip()
-    }
-
-
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>rsp(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Virt {
-        <span class="self">self</span>.context.rsp()
+    <span class="doccomment">/// Возвращает контекст пользовательского обработчика исключений и прерываний.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>mini_context(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; MiniContext {
+        <span class="self">self</span>.mini_context
     }
 }
 
 
 <span class="kw">impl </span>fmt::Display <span class="kw">for </span>TrapContext {
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, formatter: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
-        <span class="macro">write!</span>(formatter, <span class="string">&quot;{{ {}, stack: {} }}&quot;</span>, <span class="self">self</span>.context, <span class="self">self</span>.stack)
+        <span class="macro">write!</span>(formatter, <span class="string">&quot;{{ {}, stack: {} }}&quot;</span>, <span class="self">self</span>.mini_context, <span class="self">self</span>.stack)
     }
 }
 
 
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">mod </span>test_scaffolding {
+<span class="attribute">#[doc(hidden)]
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">mod </span>test_scaffolding {
     <span class="kw">use super</span>::{<span class="kw">super</span>::registers::test_scaffolding, Process};
 
 

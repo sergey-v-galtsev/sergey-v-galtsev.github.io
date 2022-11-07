@@ -1,0 +1,362 @@
+<!DOCTYPE HTML>
+<html lang="ru" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Аллокатор памяти общего назначения - Лабораторные работы</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="0-intro-1-nikka.html">Введение в лабораторные работы</a></li><li class="chapter-item expanded affix "><a href="0-intro-2-rust.html">Почему Rust</a></li><li class="chapter-item expanded affix "><a href="0-intro-3-dirs.html">Структура кода</a></li><li class="chapter-item expanded affix "><a href="0-intro-4-install.html">Компиляция и запуск тестов</a></li><li class="chapter-item expanded affix "><a href="0-intro-5-gdb.html">Запуск с отладчиком gdb</a></li><li class="chapter-item expanded affix "><a href="0-intro-6-log.html">Логирование и логи</a></li><li class="chapter-item expanded affix "><a href="0-intro-7-vscode.html">Настройка VSCode</a></li><li class="chapter-item expanded affix "><li class="part-title">Лабораторная работа №1</li><li class="chapter-item expanded "><a href="1-time-0-intro.html"><strong aria-hidden="true">1.</strong> Время</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="1-time-1-rtc.html"><strong aria-hidden="true">1.1.</strong> Часы реального времени</a></li><li class="chapter-item expanded "><a href="1-time-2-tsc.html"><strong aria-hidden="true">1.2.</strong> Счётчик тактов процессора</a></li><li class="chapter-item expanded "><a href="1-time-3-correlation-point.html"><strong aria-hidden="true">1.3.</strong> Счётчики тиков</a></li><li class="chapter-item expanded "><a href="1-time-4-correlation-interval.html"><strong aria-hidden="true">1.4.</strong> Измерение частоты процессора и повышение разрешения часов</a></li><li class="chapter-item expanded "><a href="1-time-5-interrupts.html"><strong aria-hidden="true">1.5.</strong> Обработка прерываний RTC</a></li><li class="chapter-item expanded "><a href="1-time-6-info.html"><strong aria-hidden="true">1.6.</strong> Информация о системе</a></li><li class="chapter-item expanded "><a href="1-time-7-summary.html"><strong aria-hidden="true">1.7.</strong> Собираем всё вместе</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №2</li><li class="chapter-item expanded "><a href="2-mm-0-intro.html"><strong aria-hidden="true">2.</strong> Память</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="2-mm-1-types.html"><strong aria-hidden="true">2.1.</strong> Типы</a></li><li class="chapter-item expanded "><a href="2-mm-2-mapping.html"><strong aria-hidden="true">2.2.</strong> Страничные отображения</a></li><li class="chapter-item expanded "><a href="2-mm-3-diagrams.html"><strong aria-hidden="true">2.3.</strong> Диаграммы преобразований</a></li><li class="chapter-item expanded "><a href="2-mm-4-plan.html"><strong aria-hidden="true">2.4.</strong> План</a></li><li class="chapter-item expanded "><a href="2-mm-5-boot-frame-allocator.html"><strong aria-hidden="true">2.5.</strong> Временный аллокатор фреймов</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space.html"><strong aria-hidden="true">2.6.</strong> Виртуальное адресное пространство</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="2-mm-6-address-space-1-allocation.html"><strong aria-hidden="true">2.6.1.</strong> Аллокатор виртуальных страниц адресного пространства</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space-2-translate.html"><strong aria-hidden="true">2.6.2.</strong> Отображение виртуальных страниц в физические фреймы</a></li><li class="chapter-item expanded "><a href="2-mm-6-address-space-3-map.html"><strong aria-hidden="true">2.6.3.</strong> Высокоуровневый интерфейс управления адресным пространством</a></li></ol></li><li class="chapter-item expanded "><a href="2-mm-7-main-frame-allocator.html"><strong aria-hidden="true">2.7.</strong> Основной аллокатор фреймов</a></li><li class="chapter-item expanded "><a href="2-mm-8-tests.html"><strong aria-hidden="true">2.8.</strong> Проверьте себя</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №3</li><li class="chapter-item expanded "><a href="3-process-0-intro.html"><strong aria-hidden="true">3.</strong> Процессы</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="3-process-1-elf.html"><strong aria-hidden="true">3.1.</strong> Загрузка процесса в память</a></li><li class="chapter-item expanded "><a href="3-process-2-permission-checks.html"><strong aria-hidden="true">3.2.</strong> Проверки доступа процесса к памяти</a></li><li class="chapter-item expanded "><a href="3-process-3-user-mode.html"><strong aria-hidden="true">3.3.</strong> Переход в режим пользователя</a></li><li class="chapter-item expanded "><a href="3-process-4-syscall.html"><strong aria-hidden="true">3.4.</strong> Поддержка системных вызовов</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №4</li><li class="chapter-item expanded "><a href="4-concurrency-0-intro.html"><strong aria-hidden="true">4.</strong> Конкурентное выполнение задач</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="4-concurrency-1-memory-allocator.html" class="active"><strong aria-hidden="true">4.1.</strong> Аллокатор памяти общего назначения</a></li><li class="chapter-item expanded "><a href="4-concurrency-1-smp-0-intro.html"><strong aria-hidden="true">4.2.</strong> Поддержка нескольких процессоров (SMP)</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="4-concurrency-1-smp-1-local-apic.html"><strong aria-hidden="true">4.2.1.</strong> Работа с local APIC</a></li><li class="chapter-item expanded "><a href="4-concurrency-1-smp-2-cpus.html"><strong aria-hidden="true">4.2.2.</strong> Состояние каждого процессора</a></li><li class="chapter-item expanded "><a href="4-concurrency-1-smp-3-ap-init.html"><strong aria-hidden="true">4.2.3.</strong> Загрузка Application Processor</a></li></ol></li><li class="chapter-item expanded "><a href="4-concurrency-2-table.html"><strong aria-hidden="true">4.3.</strong> Таблица процессов</a></li><li class="chapter-item expanded "><a href="4-concurrency-3-preemption.html"><strong aria-hidden="true">4.4.</strong> Вытесняющая многозадачность</a></li><li class="chapter-item expanded "><a href="4-concurrency-4-scheduler.html"><strong aria-hidden="true">4.5.</strong> Планировщик</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">Лабораторная работа №5</li><li class="chapter-item expanded "><a href="5-um-0-intro.html"><strong aria-hidden="true">5.</strong> Продвинутая работа с памятью в пространстве пользователя</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="5-um-1-ring-buffer.html"><strong aria-hidden="true">5.1.</strong> Разделяемая память</a></li><li class="chapter-item expanded "><a href="5-um-2-memory.html"><strong aria-hidden="true">5.2.</strong> Системные вызовы для работы с виртуальной памятью</a></li><li class="chapter-item expanded "><a href="5-um-3-eager-fork.html"><strong aria-hidden="true">5.3.</strong> Eager fork</a></li><li class="chapter-item expanded "><a href="5-um-4-traps.html"><strong aria-hidden="true">5.4.</strong> Обработка исключений в режиме пользователя</a></li><li class="chapter-item expanded "><a href="5-um-5-cow-fork.html"><strong aria-hidden="true">5.5.</strong> Copy-on-write fork</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Лабораторные работы</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="Аллокатор-памяти-общего-назначения"><a class="header" href="#Аллокатор-памяти-общего-назначения">Аллокатор памяти общего назначения</a></h2>
+<p>В этой части лабораторной работы вам нужно будет провязать
+Rust’овский интерфейс аллокатора памяти общего назначения с реализованными во
+<a href="../../lab/book/2-mm-0-intro.html">второй лабораторной работе</a>
+методами адресного пространства
+<a href="../../doc/kernel/memory/address_space/struct.AddressSpace.html"><code>kernel::memory::address_space::AddressSpace</code></a>.</p>
+<p>После этого станет доступна
+<a href="https://doc.rust-lang.org/nightly/alloc/index.html"><code>alloc</code></a>
+часть стандартной библиотеки.
+И в последующих задачах лабораторки мы сможем использовать
+<a href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html"><code>alloc::vec::Vec</code></a>
+<a href="https://doc.rust-lang.org/nightly/alloc/collections/vec_deque/struct.VecDeque.html"><code>alloc::collections::vec_deque::VecDeque</code></a>.
+Что гораздо удобнее, чем методы семейства
+<a href="../../doc/kernel/memory/address_space/struct.AddressSpace.html#method.map_slice"><code>AddressSpace::map_slice()</code></a>.</p>
+<h3 id="Типажи-coreallocallocator-и-kuallocatordrydryallocator"><a class="header" href="#Типажи-coreallocallocator-и-kuallocatordrydryallocator">Типажи <a href="https://doc.rust-lang.org/nightly/core/alloc/trait.Allocator.html"><code>core::alloc::Allocator</code></a> и <a href="../../doc/ku/allocator/dry/trait.DryAllocator.html"><code>ku::allocator::dry::DryAllocator</code></a></a></h3>
+<p>Прежде всего изучите Rust’овский интерфейс аллокатора памяти общего назначения — типаж
+<a href="https://doc.rust-lang.org/nightly/core/alloc/trait.Allocator.html"><code>core::alloc::Allocator</code></a>.
+Убедитесь, что вы понимаете:</p>
+<ul>
+<li>что такое <a href="https://doc.rust-lang.org/nightly/core/alloc/struct.Layout.html"><code>core::alloc::Layout</code></a>;</li>
+<li>что такое <a href="https://doc.rust-lang.org/nightly/core/ptr/struct.NonNull.html"><code>core::ptr::NonNull</code></a>;</li>
+<li>чем отличаются <code>NonNull&lt;u8&gt;</code> и <code>NonNull&lt;[u8]&gt;</code>.</li>
+</ul>
+<p>Также изучите типаж
+<a href="../../doc/ku/allocator/dry/trait.DryAllocator.html"><code>ku::allocator::dry::DryAllocator</code></a>.
+Он очень похож на
+<a href="https://doc.rust-lang.org/nightly/core/alloc/trait.Allocator.html"><code>core::alloc::Allocator</code></a>,
+и отличается только тем, что:</p>
+<ul>
+<li>Вместо двух методов <a href="https://doc.rust-lang.org/nightly/core/alloc/trait.Allocator.html#tymethod.allocate"><code>core::alloc::Allocator::allocate()</code></a> и <a href="https://doc.rust-lang.org/nightly/core/alloc/trait.Allocator.html#method.allocate_zeroed"><code>core::alloc::Allocator::allocate_zeroed()</code></a> имеет только один метод <a href="../../doc/ku/allocator/dry/trait.DryAllocator.html#tymethod.dry_allocate"><code>ku::allocator::dry::DryAllocator::dry_allocate()</code></a>, принимающий признак необходимости занулить память <a href="../../doc/ku/allocator/dry/enum.Initialize.html"><code>ku::allocator::dry::Initialize</code></a>. Это сделано, чтобы не дублировать код.</li>
+<li>Аналогично вместо двух методов <a href="https://doc.rust-lang.org/nightly/core/alloc/trait.Allocator.html#method.grow"><code>core::alloc::Allocator::grow()</code></a> и <a href="https://doc.rust-lang.org/nightly/core/alloc/trait.Allocator.html#method.grow_zeroed"><code>core::alloc::Allocator::grow_zeroed()</code></a> имеет только один метод <a href="../../doc/ku/allocator/dry/trait.DryAllocator.html#tymethod.dry_grow"><code>ku::allocator::dry::DryAllocator::dry_grow()</code></a>.</li>
+</ul>
+<h3 id="Типаж-kuallocatorbigbigallocator"><a class="header" href="#Типаж-kuallocatorbigbigallocator">Типаж <a href="../../doc/ku/allocator/big/trait.BigAllocator.html"><code>ku::allocator::big::BigAllocator</code></a></a></h3>
+<p>Мы не можем воспользоваться реализацией по умолчанию для методов
+<a href="https://doc.rust-lang.org/nightly/core/alloc/trait.Allocator.html#method.grow"><code>Allocator::grow()</code></a>,
+<a href="https://doc.rust-lang.org/nightly/core/alloc/trait.Allocator.html#method.grow_zeroed"><code>Allocator::grow_zeroed()</code></a> и
+<a href="https://doc.rust-lang.org/nightly/core/alloc/trait.Allocator.html#method.shrink"><code>Allocator::shrink()</code></a>.
+Нам придётся переопределять их поведение, потому что мы хотим сделать следующий трюк.
+При переаллокации мы не будем копировать содержимое памяти.
+А вместо этого поменяем отображение физических фреймов старого блока памяти, на место нового блока памяти.</p>
+<p>Естественно, это пройдёт только для блоков памяти, которые выровнены на границы страниц.
+Интерфейс аллокации таких блоков памяти задаётся типажом
+<a href="../../doc/ku/allocator/big/trait.BigAllocator.html"><code>ku::allocator::big::BigAllocator</code></a>.</p>
+<p>План состоит в том, чтобы</p>
+<ul>
+<li>Для <a href="../../doc/kernel/memory/address_space/struct.AddressSpace.html"><code>kernel::memory::address_space::AddressSpace</code></a> реализовать типаж <a href="../../doc/ku/allocator/big/trait.BigAllocator.html"><code>ku::allocator::big::BigAllocator</code></a>. Этот пункт уже частично сделан, остался один метод — <a href="../../doc/ku/allocator/big/trait.BigAllocator.html#tymethod.remap"><code>BigAllocator::remap()</code></a></li>
+<li>Для типажа <a href="../../doc/ku/allocator/big/trait.BigAllocator.html"><code>ku::allocator::big::BigAllocator</code></a> реализовать типаж <a href="../../doc/ku/allocator/dry/trait.DryAllocator.html"><code>ku::allocator::dry::DryAllocator</code></a>.</li>
+<li>Определить тип <a href="../../doc/kernel/allocator/memory_allocator/struct.MemoryAllocator.html"><code>kernel::allocator::memory_allocator::MemoryAllocator</code></a> и реализовать для него типаж <a href="https://doc.rust-lang.org/nightly/core/alloc/trait.Allocator.html"><code>core::alloc::Allocator</code></a> через реализованный ранее <a href="../../doc/ku/allocator/dry/trait.DryAllocator.html"><code>ku::allocator::dry::DryAllocator</code></a>. Этот пункт уже сделан в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/allocator/memory_allocator.rs"><code>kernel/src/allocator/memory_allocator.rs</code></a>.</li>
+</ul>
+<p>После этого станет доступен глобальный аллокатор памяти общего назначения
+<a href="../../doc/kernel/allocator/struct.GlobalAllocator.html"><code>kernel::allocator::GlobalAllocator</code></a>.
+Он является
+<a href="../../doc/kernel/allocator/memory_allocator/struct.MemoryAllocator.html"><code>kernel::allocator::memory_allocator::MemoryAllocator</code></a>
+поверх базового адресного пространства
+<a href="../../doc/kernel/memory/struct.BASE_ADDRESS_SPACE.html"><code>kernel::memory::BASE_ADDRESS_SPACE</code></a>
+и определён в файле
+<a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/allocator/mod.rs"><code>kernel/src/allocator/mod.rs</code></a>.</p>
+<h3 id="Задача-1--аллокатор-памяти-общего-назначения"><a class="header" href="#Задача-1--аллокатор-памяти-общего-назначения">Задача 1 — аллокатор памяти общего назначения</a></h3>
+<p>Реализуйте метод
+<a href="../../doc/kernel/memory/address_space/struct.AddressSpace.html#method.remap"><code>remap()</code></a>
+типажа
+<a href="../../doc/ku/allocator/big/trait.BigAllocator.html"><code>ku::allocator::big::BigAllocator</code></a>
+для
+<a href="../../doc/kernel/memory/address_space/struct.AddressSpace.html"><code>kernel::memory::address_space::AddressSpace</code></a>
+в файле
+<a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/memory/address_space.rs"><code>kernel/src/memory/address_space.rs</code></a>:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>unsafe fn remap(&amp;mut self, old_block: Block&lt;Page&gt;, new_block: Block&lt;Page&gt;) -&gt; Result&lt;()&gt;;
+<span class="boring">}
+</span></code></pre></pre>
+<p>Он перемещает отображение физических фреймов из <code>old_block</code> в <code>new_block</code>.
+Если изначально <code>new_block</code> содержал отображённые страницы,
+их отображение удаляется.
+Физические фреймы, на которые не осталось других ссылок, освобождаются.
+После работы <code>remap()</code> виртуальные адреса <code>old_block</code>
+становятся недоступны.
+А содержимое памяти, которое ранее было доступно через <code>old_block</code>,
+становится доступным через <code>new_block</code>.
+Флаги доступа при этом не меняются.</p>
+<p>Если <code>old_block</code> и <code>new_block</code> имеют разный размер или пересекаются, метод <code>remap()</code>
+возвращает ошибку
+<a href="../../doc/ku/error/enum.Error.html#variant.InvalidArgument"><code>Error::InvalidArgument</code></a>.</p>
+<p>Реализуйте методы типажа
+<a href="../../doc/ku/allocator/dry/trait.DryAllocator.html"><code>ku::allocator::dry::DryAllocator</code></a>
+для типа, который уже реализует типаж
+<a href="../../doc/ku/allocator/big/trait.BigAllocator.html"><code>ku::allocator::big::BigAllocator</code></a>
+в файле
+<a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/ku/src/allocator/big.rs"><code>ku/src/allocator/big.rs</code></a>.
+При этом с виртуальным адресным пространством работайте через
+<a href="../../doc/ku/allocator/big/trait.BigAllocator.html#tymethod.reserve"><code>ku::allocator::big::BigAllocator::reserve()</code></a>
+и
+<a href="../../doc/ku/allocator/big/trait.BigAllocator.html#tymethod.unreserve"><code>ku::allocator::big::BigAllocator::unreserve()</code></a>.
+А чтобы метять его отображение на физическую память, используете
+<a href="../../doc/ku/allocator/big/trait.BigAllocator.html#tymethod.map"><code>ku::allocator::big::BigAllocator::map()</code></a>,
+<a href="../../doc/ku/allocator/big/trait.BigAllocator.html#tymethod.unmap"><code>ku::allocator::big::BigAllocator::unmap()</code></a>
+и
+<a href="../../doc/ku/allocator/big/trait.BigAllocator.html#tymethod.remap"><code>ku::allocator::big::BigAllocator::remap()</code></a>.
+Естественно, все выдаваемые блоки памяти будут выровнены на границы страниц и по своему адресу и по размеру.</p>
+<p>Вам могут пригодиться методы <a href="../../doc/ku/memory/block/struct.Block.html"><code>ku::memory::block::Block</code></a>, например:</p>
+<ul>
+<li><a href="../../doc/ku/memory/block/struct.Block.html#method.count"><code>Block::count()</code></a>,</li>
+<li><a href="../../doc/ku/memory/block/struct.Block.html#method.from_index"><code>Block::from_index()</code></a>,</li>
+<li><a href="../../doc/ku/memory/block/struct.Block.html#method.tail"><code>Block::tail()</code></a>,</li>
+<li><a href="../../doc/ku/memory/block/struct.Block.html#method.try_into_non_null_slice"><code>Block::try_into_non_null_slice()</code></a>.</li>
+</ul>
+<p>А также вспомогательные функции, определённые в том же файле
+<a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/ku/src/allocator/big.rs"><code>ku/src/allocator/big.rs</code></a>:</p>
+<ul>
+<li><a href="../../doc/ku/allocator/big/fn.try_into_block.html"><code>ku::allocator::big::try_into_block()</code></a></li>
+<li><a href="../../doc/ku/allocator/big/fn.initialize_block.html"><code>ku::allocator::big::initialize_block()</code></a>.</li>
+</ul>
+<p>При реализации учтите, что даже если <code>old_layout</code> и <code>new_layout</code> в <code>dry_grow()</code> и <code>dry_shrink()</code> отличаются,
+но при этом не отличаются соответствующие им блоки страниц <code>Block&lt;Page&gt;</code>,
+то ничего делать не нужно.
+Можно вернуть на выход срез со старым адрес, приведённый к новому размеру.</p>
+<h3 id="Проверьте-себя"><a class="header" href="#Проверьте-себя">Проверьте себя</a></h3>
+<p>Запустите тест <code>4-concurrency-1-memory-allocator</code> из файла
+<a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/tests/4-concurrency-1-memory-allocator.rs"><code>kernel/src/tests/4-concurrency-1-memory-allocator.rs</code></a>:</p>
+<pre><code class="language-console">$ (cd kernel; cargo test --test 4-concurrency-1-memory-allocator)
+...
+4_concurrency_1_memory_allocator::basic---------------------
+17:07:11 0 D start_info = { allocations: 0 - 0 = 0, requested: 0 B - 0 B = 0 B, allocated: 0 B - 0 B = 0 B, pages: 0 - 0 = 0, loss: 0 B = 0.000% }
+17:07:11 0 D info = { allocations: 1 - 0 = 1, requested: 4.000 KiB - 0 B = 4.000 KiB, allocated: 4.000 KiB - 0 B = 4.000 KiB, pages: 1 - 0 = 1, loss: 0 B = 0.000% }
+17:07:11 0 D info_diff = { allocations: 1 - 0 = 1, requested: 4.000 KiB - 0 B = 4.000 KiB, allocated: 4.000 KiB - 0 B = 4.000 KiB, pages: 1 - 0 = 1, loss: 0 B = 0.000% }
+17:07:11 0 D end_info = { allocations: 1 - 1 = 0, requested: 4.000 KiB - 4.000 KiB = 0 B, allocated: 4.000 KiB - 4.000 KiB = 0 B, pages: 1 - 1 = 0, loss: 0 B = 0.000% }
+17:07:12 0 D end_info_diff = { allocations: 1 - 1 = 0, requested: 4.000 KiB - 4.000 KiB = 0 B, allocated: 4.000 KiB - 4.000 KiB = 0 B, pages: 1 - 1 = 0, loss: 0 B = 0.000% }
+4_concurrency_1_memory_allocator::basic------------ [passed]
+
+4_concurrency_1_memory_allocator::grow_and_shrink-----------
+17:07:12 0 D start_info = { allocations: 1 - 1 = 0, requested: 4.000 KiB - 4.000 KiB = 0 B, allocated: 4.000 KiB - 4.000 KiB = 0 B, pages: 1 - 1 = 0, loss: 0 B = 0.000% }
+17:07:12 0 D info = { allocations: 7 - 6 = 1, requested: 256.000 KiB - 128.000 KiB = 128.000 KiB, allocated: 256.000 KiB - 128.000 KiB = 128.000 KiB, pages: 64 - 32 = 32, loss: 0 B = 0.000% }
+17:07:12 0 D info_diff = { allocations: 6 - 5 = 1, requested: 252.000 KiB - 124.000 KiB = 128.000 KiB, allocated: 252.000 KiB - 124.000 KiB = 128.000 KiB, pages: 63 - 31 = 32, loss: 0 B = 0.000% }
+17:07:12 0 D end_info = { allocations: 12 - 12 = 0, requested: 380.000 KiB - 380.000 KiB = 0 B, allocated: 380.000 KiB - 380.000 KiB = 0 B, pages: 95 - 95 = 0, loss: 0 B = 0.000% }
+4_concurrency_1_memory_allocator::grow_and_shrink-- [passed]
+
+4_concurrency_1_memory_allocator::paged_realloc_is_cheap----
+17:07:12 0 D block = [0v7FFFFFEDF000, 0v7FFFFFEE0000), size 4.000 KiB; frames = [32540 @ 0p7F1C000 -WP]
+17:07:12 0 D block = [0v7FFFFFEDC000, 0v7FFFFFEDE000), size 8.000 KiB; frames = [32540 @ 0p7F1C000 -WP, 32537 @ 0p7F19000 -WP]
+17:07:12 0 D block = [0v7FFFFFED7000, 0v7FFFFFEDB000), size 16.000 KiB; frames = [32540 @ 0p7F1C000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP, 32533 @ 0p7F15000 -WP]
+17:07:12 0 D block = [0v7FFFFFECE000, 0v7FFFFFED6000), size 32.000 KiB; frames = [32540 @ 0p7F1C000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP, 32533 @ 0p7F15000 -WP, 32538 @ 0p7F1A000 -WP, 32535 @ 0p7F17000 -WP, 32536 @ 0p7F18000 -WP, 32525 @ 0p7F0D000 -WP]
+17:07:12 0 D block = [0v7FFFFFEBD000, 0v7FFFFFECD000), size 64.000 KiB; frames = [32540 @ 0p7F1C000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP, 32533 @ 0p7F15000 -WP, 32538 @ 0p7F1A000 -WP, 32535 @ 0p7F17000 -WP, 32536 @ 0p7F18000 -WP, 32525 @ 0p7F0D000 -WP, 32534 @ 0p7F16000 -WP, 32527 @ 0p7F0F000 -WP, 32528 @ 0p7F10000 -WP, 32529 @ 0p7F11000 -WP, 32530 @ 0p7F12000 -WP, 32531 @ 0p7F13000 -WP, 32532 @ 0p7F14000 -WP, 32509 @ 0p7EFD000 -WP]
+17:07:12 0 D block = [0v7FFFFFEAD000, 0v7FFFFFEBC000), size 60.000 KiB; frames = [32540 @ 0p7F1C000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP, 32533 @ 0p7F15000 -WP, 32538 @ 0p7F1A000 -WP, 32535 @ 0p7F17000 -WP, 32536 @ 0p7F18000 -WP, 32525 @ 0p7F0D000 -WP, 32534 @ 0p7F16000 -WP, 32527 @ 0p7F0F000 -WP, 32528 @ 0p7F10000 -WP, 32529 @ 0p7F11000 -WP, 32530 @ 0p7F12000 -WP, 32531 @ 0p7F13000 -WP, 32532 @ 0p7F14000 -WP]
+17:07:12 0 D block = [0v7FFFFFE9E000, 0v7FFFFFEAC000), size 56.000 KiB; frames = [32540 @ 0p7F1C000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP, 32533 @ 0p7F15000 -WP, 32538 @ 0p7F1A000 -WP, 32535 @ 0p7F17000 -WP, 32536 @ 0p7F18000 -WP, 32525 @ 0p7F0D000 -WP, 32534 @ 0p7F16000 -WP, 32527 @ 0p7F0F000 -WP, 32528 @ 0p7F10000 -WP, 32529 @ 0p7F11000 -WP, 32530 @ 0p7F12000 -WP, 32531 @ 0p7F13000 -WP]
+17:07:12 0 D block = [0v7FFFFFE90000, 0v7FFFFFE9D000), size 52.000 KiB; frames = [32540 @ 0p7F1C000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP, 32533 @ 0p7F15000 -WP, 32538 @ 0p7F1A000 -WP, 32535 @ 0p7F17000 -WP, 32536 @ 0p7F18000 -WP, 32525 @ 0p7F0D000 -WP, 32534 @ 0p7F16000 -WP, 32527 @ 0p7F0F000 -WP, 32528 @ 0p7F10000 -WP, 32529 @ 0p7F11000 -WP, 32530 @ 0p7F12000 -WP]
+17:07:12 0 D block = [0v7FFFFFE83000, 0v7FFFFFE8F000), size 48.000 KiB; frames = [32540 @ 0p7F1C000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP, 32533 @ 0p7F15000 -WP, 32538 @ 0p7F1A000 -WP, 32535 @ 0p7F17000 -WP, 32536 @ 0p7F18000 -WP, 32525 @ 0p7F0D000 -WP, 32534 @ 0p7F16000 -WP, 32527 @ 0p7F0F000 -WP, 32528 @ 0p7F10000 -WP, 32529 @ 0p7F11000 -WP]
+17:07:12 0 D block = [0v7FFFFFE77000, 0v7FFFFFE82000), size 44.000 KiB; frames = [32540 @ 0p7F1C000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP, 32533 @ 0p7F15000 -WP, 32538 @ 0p7F1A000 -WP, 32535 @ 0p7F17000 -WP, 32536 @ 0p7F18000 -WP, 32525 @ 0p7F0D000 -WP, 32534 @ 0p7F16000 -WP, 32527 @ 0p7F0F000 -WP, 32528 @ 0p7F10000 -WP]
+17:07:12 0 D block = [0v7FFFFFE6C000, 0v7FFFFFE76000), size 40.000 KiB; frames = [32540 @ 0p7F1C000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP, 32533 @ 0p7F15000 -WP, 32538 @ 0p7F1A000 -WP, 32535 @ 0p7F17000 -WP, 32536 @ 0p7F18000 -WP, 32525 @ 0p7F0D000 -WP, 32534 @ 0p7F16000 -WP, 32527 @ 0p7F0F000 -WP]
+17:07:12 0 D block = [0v7FFFFFE62000, 0v7FFFFFE6B000), size 36.000 KiB; frames = [32540 @ 0p7F1C000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP, 32533 @ 0p7F15000 -WP, 32538 @ 0p7F1A000 -WP, 32535 @ 0p7F17000 -WP, 32536 @ 0p7F18000 -WP, 32525 @ 0p7F0D000 -WP, 32534 @ 0p7F16000 -WP]
+17:07:12 0 D block = [0v7FFFFFE59000, 0v7FFFFFE61000), size 32.000 KiB; frames = [32540 @ 0p7F1C000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP, 32533 @ 0p7F15000 -WP, 32538 @ 0p7F1A000 -WP, 32535 @ 0p7F17000 -WP, 32536 @ 0p7F18000 -WP, 32525 @ 0p7F0D000 -WP]
+17:07:12 0 D block = [0v7FFFFFE51000, 0v7FFFFFE58000), size 28.000 KiB; frames = [32540 @ 0p7F1C000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP, 32533 @ 0p7F15000 -WP, 32538 @ 0p7F1A000 -WP, 32535 @ 0p7F17000 -WP, 32536 @ 0p7F18000 -WP]
+17:07:12 0 D block = [0v7FFFFFE4A000, 0v7FFFFFE50000), size 24.000 KiB; frames = [32540 @ 0p7F1C000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP, 32533 @ 0p7F15000 -WP, 32538 @ 0p7F1A000 -WP, 32535 @ 0p7F17000 -WP]
+17:07:12 0 D block = [0v7FFFFFE44000, 0v7FFFFFE49000), size 20.000 KiB; frames = [32540 @ 0p7F1C000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP, 32533 @ 0p7F15000 -WP, 32538 @ 0p7F1A000 -WP]
+17:07:12 0 D block = [0v7FFFFFE3F000, 0v7FFFFFE43000), size 16.000 KiB; frames = [32540 @ 0p7F1C000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP, 32533 @ 0p7F15000 -WP]
+17:07:12 0 D block = [0v7FFFFFE3B000, 0v7FFFFFE3E000), size 12.000 KiB; frames = [32540 @ 0p7F1C000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP]
+17:07:12 0 D block = [0v7FFFFFE38000, 0v7FFFFFE3A000), size 8.000 KiB; frames = [32540 @ 0p7F1C000 -WP, 32537 @ 0p7F19000 -WP]
+17:07:12 0 D block = [0v7FFFFFE36000, 0v7FFFFFE37000), size 4.000 KiB; frames = [32540 @ 0p7F1C000 -WP]
+17:07:12 0 D block = [0v1000, 0v1000), size 0 B; frames = []
+4_concurrency_1_memory_allocator::paged_realloc_is_cheap [passed]
+</code></pre>
+<h3 id="Ориентировочный-объём-работ-этой-части-лабораторки"><a class="header" href="#Ориентировочный-объём-работ-этой-части-лабораторки">Ориентировочный объём работ этой части лабораторки</a></h3>
+<pre><code class="language-console"> kernel/src/memory/address_space.rs |   22 ++++++++-
+ ku/src/allocator/big.rs            |   89 +++++++++++++++++++++++++++++++------
+ 2 files changed, 95 insertions(+), 16 deletions(-)
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="4-concurrency-0-intro.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next" href="4-concurrency-1-smp-0-intro.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="4-concurrency-0-intro.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" href="4-concurrency-1-smp-0-intro.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </body>
+</html>
