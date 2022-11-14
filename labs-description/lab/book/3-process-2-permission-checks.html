@@ -145,8 +145,7 @@
                 <div id="content" class="content">
                     <main>
                         <h2 id="Проверки-доступа-процесса-к-памяти"><a class="header" href="#Проверки-доступа-процесса-к-памяти">Проверки доступа процесса к памяти</a></h2>
-<p>В системных вызовах код пользователя будет передавать области памяти, описываемые <code>Block&lt;Virt&gt;</code>,
-в ядро.
+<p>В системных вызовах код пользователя будет передавать в ядро области памяти, описываемые <code>Block&lt;Virt&gt;</code>.
 И код ядра должен будет что-то сделать с указанной памятью,
 иногда читая или записывая в неё.</p>
 <p>Ядро не может доверять коду пользователя, поэтому перед чтением или записью в такие области памяти,
@@ -187,6 +186,7 @@
 <li>Метод <a href="../../doc/ku/memory/block/struct.Block.html#method.enclosing"><code>fn Block::&lt;Virt&gt;::enclosing() -&gt; Block&lt;Page&gt;</code></a>, который для заданного блока виртуальных адресов возвращает минимальный содержащий его блок страниц виртуальной памяти.</li>
 <li>Метод <a href="../../doc/kernel/memory/mapping/struct.Mapping.html#method.translate"><code>Mapping::translate()</code></a>.</li>
 <li>Метод <a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#method.contains"><code>PageTableFlags::contains()</code></a>.</li>
+<li><a href="../../doc/ku/memory/block/struct.Block.html#impl-IntoIterator-for-Block%3CT%3E">Итерирование</a> по страницам блока с помощью вызова <a href="../../doc/ku/memory/block/struct.Block.html#method.into_iter"><code>Block::&lt;Page&gt;::into_iter()</code></a>.</li>
 </ul>
 <h3 id="Проверьте-себя"><a class="header" href="#Проверьте-себя">Проверьте себя</a></h3>
 <p>Запустите тест <code>3-process-2-permission-checks</code> из файлa

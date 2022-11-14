@@ -230,6 +230,9 @@
 <span id="230">230</span>
 <span id="231">231</span>
 <span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
 </pre><pre class="rust"><code><span class="attribute">#![allow(dead_code)]
 #![allow(unused_imports)]
 #![allow(unused_variables)]
@@ -238,8 +241,10 @@
 #![allow(unused_imports)]
 #![allow(unused_variables)]
 
-#![cfg_attr(test, no_main)]
+#![allow(clippy::missing_safety_doc)]
+#![allow(clippy::unusual_byte_groupings)]
 #![cfg_attr(feature = <span class="string">&quot;deny-warnings&quot;</span>, deny(warnings))]
+#![cfg_attr(test, no_main)]
 #![feature(abi_x86_interrupt)]
 #![feature(alloc_error_handler)]
 #![feature(allocator_api)]
@@ -250,11 +255,10 @@
 #![feature(naked_functions)]
 #![feature(panic_info_message)]
 #![feature(slice_ptr_get)]
+#![feature(strict_provenance)]
 #![no_std]
 #![reexport_test_harness_main = <span class="string">&quot;test_main&quot;</span>]
 #![test_runner(<span class="kw">crate</span>::test_runner)]
-#![allow(clippy::unusual_byte_groupings)]
-#![allow(clippy::missing_safety_doc)]
 
 
 </span><span class="kw">extern crate </span>alloc;
@@ -273,7 +277,9 @@
 <span class="doccomment">/// Здесь находится часть работы с процессами, которая происходит только в ядре.
 </span><span class="kw">pub mod </span>process;
 
-<span class="kw">pub mod </span>smp;
+<span class="doccomment">/// Поддержка симметричной многопроцессорности
+/// ([Symmetric multiprocessing](https://en.wikipedia.org/wiki/Symmetric_multiprocessing), SMP).
+</span><span class="kw">pub mod </span>smp;
 
 <span class="doccomment">/// Здесь находится часть работы со временем, которая происходит только в ядре.
 </span><span class="kw">pub mod </span>time;

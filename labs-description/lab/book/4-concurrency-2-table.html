@@ -146,7 +146,7 @@
                     <main>
                         <h2 id="Таблица-процессов"><a class="header" href="#Таблица-процессов">Таблица процессов</a></h2>
 <p>Код таблицы процессов находится в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/process/table.rs"><code>kernel/src/process/table.rs</code></a>.</p>
-<h3 id="Идентификаторы-процессов-pid"><a class="header" href="#Идентификаторы-процессов-pid">Идентификаторы процессов <code>Pid</code></a></h3>
+<h3 id="Идентификаторы-процессов-kuprocesspidpid"><a class="header" href="#Идентификаторы-процессов-kuprocesspidpid">Идентификаторы процессов <a href="../../doc/ku/process/pid/enum.Pid.html"><code>ku::process::pid::Pid</code></a></a></h3>
 <p>В файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/ku/src/process/pid.rs"><code>ku/src/process/pid.rs</code></a> описана структура</p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -160,26 +160,37 @@ pub enum Pid {
 }
 <span class="boring">}
 </span></code></pre></pre>
-<p>Она позволяет отдельно указывать <code>Pid::Current</code> — текущий процесс,
-это удобно для использования тех системных вызовов, что принимают на вход <code>Pid</code>.
-Либо конкретный процесс <code>Pid::Id</code>, идентификатор которого состоит из номера слота в таблице процессов <code>slot</code>
-и эпохи этого слота <code>epoch</code>.
-<code>slot</code> позволяет быстро находить процесс по его идентификатору в таблице процессов, —
+<p>Она позволяет отдельно указывать либо
+<a href="../../doc/ku/process/pid/enum.Pid.html#variant.Current"><code>Pid::Current</code></a> —
+текущий процесс, это удобно для использования тех системных вызовов, что принимают на вход
+<a href="../../doc/ku/process/pid/enum.Pid.html"><code>Pid</code></a>.
+Либо конкретный процесс
+<a href="../../doc/ku/process/pid/enum.Pid.html#variant.Id"><code>Pid::Id</code></a>,
+идентификатор которого состоит из номера слота в таблице процессов
+<a href="../../doc/ku/process/pid/enum.Pid.html#variant.Id.field.slot"><code>slot</code></a>
+и эпохи этого слота
+<a href="../../doc/ku/process/pid/enum.Pid.html#variant.Id.field.epoch"><code>epoch</code></a>.
+Поле <a href="../../doc/ku/process/pid/enum.Pid.html#variant.Id.field.slot"><code>slot</code></a> позволяет быстро находить процесс по его идентификатору в таблице процессов, —
 она может быть устроена как вектор, а не как хеш-таблица.
-А <code>epoch</code> позволяет сделать идентификаторы процессов уникальными на протяжении всего времени работы системы.
-Например, в Unix есть гонка, из-за того что одно и то же значение <code>pid_t</code> может в разное время ссылаться на разные процессы.
+А <a href="../../doc/ku/process/pid/enum.Pid.html#variant.Id.field.epoch"><code>epoch</code></a> позволяет сделать идентификаторы процессов уникальными на протяжении всего времени работы системы.</p>
+<p>Например, в Unix есть гонка, из-за того что одно и то же значение <code>pid_t</code> может в разное время ссылаться на разные процессы.
 Если вы хотите что-то сделать с определённым процессом, и записали его <code>pid_t</code> себе,
 то конкурентно он может прекратить своё исполнение, а ядро выдаст то же самое значение <code>pid_t</code> новому процессу.
 Теперь вы что-то делаете с процессом по сохранённому у себя <code>pid_t</code>, например, посылаете ему сигнал <code>SIGKILL</code>, но это уже другой процесс.
 Реализации пытаются уменьшить вероятность таких гонок за счёт выдачи <code>pid_t</code> по кругу.
-В Nikka для избежания гонки, каждый раз, когда новый процесс получает тот же <code>slot</code>, он получает на 1 большее значение <code>epoch</code>, за это отвечает метод <code>Pid::next_epoch()</code>.</p>
-<p>Другие методы <code>Pid</code>:</p>
+В Nikka для избежания гонки, каждый раз, когда новый процесс получает тот же
+<a href="../../doc/ku/process/pid/enum.Pid.html#variant.Id.field.slot"><code>slot</code></a>,
+он получает на единицу большее значение
+<a href="../../doc/ku/process/pid/enum.Pid.html#variant.Id.field.epoch"><code>epoch</code></a>.
+За это отвечает метод
+<a href="../../doc/ku/process/pid/enum.Pid.html#method.next_epoch"><code>Pid::next_epoch()</code></a>.</p>
+<p>Другие методы <a href="../../doc/ku/process/pid/enum.Pid.html"><code>Pid</code></a>:</p>
 <ul>
-<li><code>Pid::new(slot)</code> создаёт <code>pid</code> с начальным значением <code>epoch</code> для заданного <code>slot</code>.</li>
-<li><code>Pid::slot()</code> возвращает значение <code>slot</code>.</li>
-<li><code>Pid::into_usize()</code> и <code>Pid::from_usize()</code> позволяют сериализовать <code>Pid</code> в регистр для передачи в системные вызовы.</li>
+<li><a href="../../doc/ku/process/pid/enum.Pid.html#method.new"><code>Pid::new(slot)</code></a> создаёт <a href="../../doc/ku/process/pid/enum.Pid.html"><code>Pid</code></a> с начальным значением <a href="../../doc/ku/process/pid/enum.Pid.html#variant.Id.field.epoch"><code>epoch</code></a> для заданного <code>slot</code>.</li>
+<li><a href="../../doc/ku/process/pid/enum.Pid.html#method.slot"><code>Pid::slot()</code></a> возвращает значение <a href="../../doc/ku/process/pid/enum.Pid.html#variant.Id.field.slot"><code>slot</code></a>.</li>
+<li><a href="../../doc/ku/process/pid/enum.Pid.html#method.into_usize"><code>Pid::into_usize()</code></a> и <a href="../../doc/ku/process/pid/enum.Pid.html#method.from_usize"><code>Pid::from_usize()</code></a> позволяют сериализовать <a href="../../doc/ku/process/pid/enum.Pid.html"><code>Pid</code></a> в регистр для передачи в системные вызовы.</li>
 </ul>
-<h3 id="Слоты-таблицы-процессов"><a class="header" href="#Слоты-таблицы-процессов">Слоты таблицы процессов</a></h3>
+<h3 id="Слот-таблицы-процессов-kernelprocesstableslot"><a class="header" href="#Слот-таблицы-процессов-kernelprocesstableslot">Слот таблицы процессов <a href="../../doc/kernel/process/table/enum.Slot.html"><code>kernel::process::table::Slot</code></a></a></h3>
 <p>Таблица процессов состоит из фиксированного количества слотов</p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -194,43 +205,70 @@ pub enum Pid {
 }
 <span class="boring">}
 </span></code></pre></pre>
-<p>Каждый из которых либо свободен — <code>Slot::Free</code>, либо занят — <code>Slot::Occupied</code>.</p>
-<p>Свободные слоты содержат <code>pid</code> для того, что помнить эпоху последнего процесса, занимавшего этот слот.
-И выдать следующему процессу, который попадёт в тот же слот, номер эпохи на 1 больше.
-Также свободные слоты провязаны в список, чтобы удобнее было за O(1) находить какой-нибудь свободный слот под новый процесс.</p>
-<p>Занятые слоты содержат мьютекс <code>process</code>.
-Когда нам понадобится обратиться к процессу, нужно будет захватить его мьютекс, чтобы избежать неконсистентного конкурентного изменения структуры <code>Process</code>.
+<p>Каждый из которых либо свободен —
+<a href="../../doc/kernel/process/table/enum.Slot.html#variant.Free"><code>Slot::Free</code></a>,
+либо занят —
+<a href="../../doc/kernel/process/table/enum.Slot.html#variant.Occupied"><code>Slot::Occupied</code></a>.</p>
+<p>Свободные слоты содержат поле
+<a href="../../doc/kernel/process/table/enum.Slot.html#variant.Free.field.pid"><code>pid</code></a>
+для того, что помнить эпоху последнего процесса, занимавшего этот слот.
+И выдать следующему процессу, который попадёт в тот же слот, номер эпохи на единицу больше.
+Также свободные слоты провязаны в список, чтобы удобнее было за \(O(1)\)
+находить какой-нибудь свободный слот под новый процесс.</p>
+<p>Занятые слоты содержат спинлок
+<a href="../../doc/kernel/process/table/enum.Slot.html#variant.Occupied.field.process"><code>process</code></a>.
+Когда нам понадобится обратиться к процессу, нужно будет захватить его спинлок,
+чтобы избежать неконсистентного конкурентного изменения структуры
+<a href="../../doc/kernel/process/process/struct.Process.html"><code>kernel::process::process::Process</code></a>.
 Чтобы обратиться с самой таблице процессов
 <a href="../../doc/kernel/process/table/struct.TABLE.html"><code>static ref kernel::process::table::TABLE: Mutex&lt;Table&gt;</code></a>,
-конечно тоже нужно захватить её общий мьютекс.
-Но не хочется держать заблокированным мьютекс всей таблицы, пока мы работаем со структурой <code>Process</code> одного её процесса.
-Поэтому, таблица будет по идентификатору процесса <code>Pid</code> фактически обменивать заблокированный мьютекс <code>Mutex&lt;Table&gt;</code> на заблокированный мьютекс процесса <code>Mutex&lt;Process&gt;</code>.
-После чего вызывающий код сможет работать с процессом конкурентно другому коду, который сможет захватить уже освободившийся <code>Mutex&lt;Table&gt;</code>.</p>
+конечно тоже нужно захватить её общий спинлок.
+Но не хочется держать заблокированным спинлок всей таблицы, пока мы работаем со структурой
+<a href="../../doc/kernel/process/process/struct.Process.html"><code>kernel::process::process::Process</code></a>
+одного её процесса.
+Поэтому, таблица будет по идентификатору процесса
+<a href="../../doc/ku/process/pid/enum.Pid.html"><code>Pid</code></a>
+фактически обменивать заблокированный спинлок <code>Mutex&lt;Table&gt;</code> на заблокированный спинлок процесса <code>Mutex&lt;Process&gt;</code>.
+После чего вызывающий код сможет работать с процессом конкурентно другому коду,
+который сможет захватить уже освободившийся <code>Mutex&lt;Table&gt;</code>.</p>
 <h3 id="Задача-5--таблица-процессов"><a class="header" href="#Задача-5--таблица-процессов">Задача 5 — таблица процессов</a></h3>
 <h4 id="Инициализация-таблицы"><a class="header" href="#Инициализация-таблицы">Инициализация таблицы</a></h4>
-<p>Реализуйте метод</p>
+<p>Реализуйте <a href="../../doc/kernel/process/struct.Table.html#method.new">метод</a></p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>fn Table::new(len: usize) -&gt; Self
 <span class="boring">}
 </span></code></pre></pre>
-<p>Он создаёт таблицу процессов <code>Table::table</code> размера <code>len</code> элементов, заполняя её пустыми слотами <code>Slot::Free</code> с соответствующими индексам слотов полями <code>Pid::slot</code>.
-Эти пустые слоты он провязывает в односвязный список с головой в поле <code>Table::free</code>.
+<p>Он создаёт таблицу процессов
+<a href="../../doc/kernel/process/struct.Table.html#structfield.table"><code>Table::table</code></a>
+размера <code>len</code> элементов, заполняя её пустыми слотами
+<a href="../../doc/kernel/process/table/enum.Slot.html#variant.Free"><code>Slot::Free</code></a>
+с соответствующими индексам слотов полями
+<a href="../../doc/ku/process/pid/enum.Pid.html#variant.Id.field.slot"><code>Pid::Id::slot</code></a>.
+Эти пустые слоты он провязывает в односвязный список с головой в поле
+<a href="../../doc/kernel/process/struct.Table.html#structfield.free"><code>Table::free</code></a>.
 Чтобы избежать переаллокаций рекомендуется использовать метод
 <a href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html#method.with_capacity"><code>alloc::vec::Vec::with_capacity()</code></a>.</p>
 <h4 id="Аллокация-слота-под-процесс"><a class="header" href="#Аллокация-слота-под-процесс">Аллокация слота под процесс</a></h4>
-<p>Реализуйте метод</p>
+<p>Реализуйте <a href="../../doc/kernel/process/struct.Table.html#method.allocate">метод</a></p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>fn Table::allocate(mut process: Process) -&gt; Result&lt;Pid&gt;
 <span class="boring">}
 </span></code></pre></pre>
 <p>Он должен выделить новому процессу <code>process</code> свободный слот таблицы.
-Слот возьмите из головы списка свободных <code>Table::free</code>.
-Запишите в него <code>process</code>, а <code>Pid</code> слота запишите в структуру процесса <code>process</code> методом <code>Process::set_pid()</code>.
-Если же свободного слота нет, верните ошибку <code>Error::NoProcessSlot</code>.
+Слот возьмите из головы списка свободных
+<a href="../../doc/kernel/process/struct.Table.html#structfield.free"><code>Table::free</code></a>.
+Запишите в него <code>process</code>, а
+<a href="../../doc/kernel/process/table/enum.Slot.html#variant.Free.field.pid"><code>pid</code></a>
+слота запишите в структуру процесса <code>process</code> методом
+<a href="../../doc/kernel/process/process/struct.Process.html#method.set_pid"><code>Process::set_pid()</code></a>.
+Если же свободного слота нет, верните ошибку
+<a href="../../doc/kernel/error/enum.Error.html#variant.NoProcessSlot"><code>Error::NoProcessSlot</code></a>.
 В этом случае при выходе из метода, <code>process</code> будет автоматически уничтожен, а все его ресурсы освобождены.
-Так как по сигнатуре <code>Table::allocate(process: Process)</code> поглощает свой аргумент.
+Так как по сигнатуре
+<a href="../../doc/kernel/process/struct.Table.html#method.allocate"><code>Table::allocate(process: Process)</code></a>
+поглощает свой аргумент.
 Этот и все последующие методы — статические, они оперируют с глобальным
 <a href="https://en.wikipedia.org/wiki/Singleton_pattern">синглтоном</a>
 <a href="../../doc/kernel/process/table/struct.TABLE.html"><code>static ref TABLE: Mutex&lt;Table&gt;</code></a>,
@@ -238,34 +276,59 @@ pub enum Pid {
 При реализации вам может пригодиться метод
 <a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.take"><code>Option::take()</code></a>.</p>
 <h4 id="Получение-процесса-по-его-идентификатору"><a class="header" href="#Получение-процесса-по-его-идентификатору">Получение процесса по его идентификатору</a></h4>
-<p>Реализуйте метод</p>
+<p>Реализуйте <a href="../../doc/kernel/process/struct.Table.html#method.get">метод</a></p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>fn Table::get(pid: Pid) -&gt; Result&lt;MutexGuard&lt;'static, Process&gt;&gt;
 <span class="boring">}
 </span></code></pre></pre>
-<p>Он возвращает заблокированный мьютекс <code>MutexGuard</code> со структурой <code>Process</code>, соответствующей идентификатору <code>pid</code>.
-Верните ошибку <code>Error::NoProcess</code>, если процесса по указанному <code>pid</code> нет.
-То есть, если либо не занят <code>pid.slot()</code>, либо в этом слоте другое значение поля <code>Slot::pid</code> (значит у него другая эпоха <code>Pid::epoch</code>, так как слот <code>Pid::slot</code> должен совпадать).
-Вытащить значение <code>epoch</code> тип <code>Pid</code> не позволяет, но зато он позволяет сравнивать два своих значения на равенство за счёт реализации <code>#[derive(..., Eq, PartialEq)]</code>.</p>
+<p>Он возвращает заблокированный спинлок
+<a href="../../doc/spin/mutex/struct.MutexGuard.html"><code>spin::mutex::MutexGuard</code></a>
+со структурой
+<a href="../../doc/kernel/process/process/struct.Process.html"><code>kernel::process::process::Process</code></a>,
+соответствующей идентификатору <code>pid</code>.
+Верните ошибку
+<a href="../../doc/kernel/error/enum.Error.html#variant.NoProcess"><code>Error::NoProcess</code></a>,
+если процесса по указанному <code>pid</code> нет.
+То есть, если либо не занят <code>pid.slot()</code>, либо в этом слоте у процесса другое значение
+<a href="../../doc/kernel/process/process/struct.Process.html#method.pid"><code>kernel::process::process::Process::pid()</code></a>
+(значит у него другая эпоха
+<a href="../../doc/ku/process/pid/enum.Pid.html#variant.Id.field.epoch"><code>Pid::epoch</code></a>,
+так как слот
+<a href="../../doc/ku/process/pid/enum.Pid.html#variant.Id.field.slot"><code>Pid::slot</code></a>
+должен совпадать).
+Вытащить значение
+<a href="../../doc/ku/process/pid/enum.Pid.html#variant.Id.field.epoch"><code>epoch</code></a> тип
+<a href="../../doc/ku/process/pid/enum.Pid.html"><code>Pid</code></a>
+не позволяет, но зато он позволяет сравнивать два своих значения на равенство за счёт реализации
+<code>#[derive(..., Eq, PartialEq)]</code>.</p>
 <p>Так как размер таблицы процессов
 <a href="../../doc/kernel/process/table/struct.TABLE.html"><code>static ref TABLE: Mutex&lt;Table&gt;</code></a>
-после инициализации мы никода не меняем, и в частности не уменьшаем, время жизни каждого её слота — практически <code>'static</code>.
-Который и указан в результирующем типе метода <code>Table::get()</code>.
+после инициализации мы никода не меняем, и в частности не уменьшаем,
+время жизни каждого её слота — практически <code>'static</code>.
+Который и указан в результирующем типе метода
+<a href="../../doc/kernel/process/struct.Table.html#method.get"><code>Table::get()</code></a>.
 Но Rust не может проверить это самостоятельно.
-Нам придётся пообещать ему это с помощью unsafe–функции</p>
+Нам придётся пообещать ему это с помощью
+<a href="../../doc/kernel/process/table/fn.forge_static_lifetime.html">unsafe–функции</a></p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>unsafe fn forge_static_lifetime&lt;T&gt;(x: &amp;T) -&gt; &amp;'static T
 <span class="boring">}
 </span></code></pre></pre>
-<p>Естественно, чтобы вернуть <code>MutexGuard</code> нужно заблокировать процесс в слоте методом <code>Mutex::lock()</code>.
-Мьютекс же самой <code>TABLE</code> будет автоматически разблокирован аналогичным гардом при выходе из функции.
-Получается, что она в начале захватывает низкогранулярную блокировку на всю таблицу <code>TABLE</code>,
+<p>Естественно, чтобы вернуть
+<a href="../../doc/spin/mutex/struct.MutexGuard.html"><code>MutexGuard</code></a>
+нужно заблокировать процесс в слоте методом
+<a href="../../doc/spin/mutex/struct.Mutex.html#method.lock"><code>Mutex::lock()</code></a>.
+Спинлок же самой
+<a href="../../doc/kernel/process/table/struct.TABLE.html"><code>TABLE</code></a>
+будет автоматически разблокирован аналогичным гардом при выходе из функции.
+Получается, что она в начале захватывает низкогранулярную блокировку на всю таблицу
+<a href="../../doc/kernel/process/table/struct.TABLE.html"><code>TABLE</code></a>,
 а потом повышает гранулярность этой блокировки до блокировки одного слота таблицы.
 И вызывающая функции в дальнейшем работает уже с высокогранулярной блокировкой.</p>
 <h4 id="Освобождение-слота-с-уничтожением-процесса"><a class="header" href="#Освобождение-слота-с-уничтожением-процесса">Освобождение слота с уничтожением процесса</a></h4>
-<p>Реализуйте метод</p>
+<p>Реализуйте <a href="../../doc/kernel/process/struct.Table.html#method.free">метод</a></p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>fn Table::free(process: MutexGuard&lt;Process&gt;)
@@ -275,13 +338,195 @@ pub enum Pid {
 <ul>
 <li>Удаляет процесс <code>process</code>.</li>
 <li>Инкрементирует эпоху в освободившемся слоте.</li>
-<li>Вставляет слот в голову списка свободных слотов <code>Table::free</code>.</li>
+<li>Вставляет слот в голову списка свободных слотов <a href="../../doc/kernel/process/struct.Table.html#structfield.free"><code>Table::free</code></a>.</li>
 </ul>
-<p>Вам могут пригодиться функции <code>drop()</code> и
+<p>Вам могут пригодиться функции
+<a href="https://doc.rust-lang.org/nightly/core/mem/fn.drop.html"><code>drop()</code></a> и
 <a href="https://doc.rust-lang.org/nightly/core/mem/fn.replace.html"><code>core::mem::replace()</code></a>.</p>
+<h3 id="Проверьте-себя"><a class="header" href="#Проверьте-себя">Проверьте себя</a></h3>
+<p>Теперь должны заработать тесты <code>basic()</code> и <code>full_capacity()</code> в файле
+<a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/tests/4-concurrency-5-table.rs"><code>kernel/src/tests/4-concurrency-5-table.rs</code></a>:</p>
+<pre><code class="language-console">$ (cd kernel; cargo test --test 4-concurrency-5-table)
+...
+4_concurrency_5_table::basic--------------------------------
+20:26:51 0 I page allocator init; free_page_count = 33822867456; block = [0v18000000000, 0v7F8000000000), size 126.000 TiB
+20:26:51 0 I duplicate; address_space = &quot;process&quot; @ 0p7E8A000
+20:26:51 0 I switch to; address_space = &quot;process&quot; @ 0p7E8A000
+20:26:51 0 I switch to; address_space = &quot;base&quot; @ 0p1000
+20:26:51 0 I allocate; slot = Process { pid: 0:0, address_space: &quot;0:0&quot; @ 0p7E8A000, { rip: 0v0, rsp: 0v0 } }; process_count = 1
+20:26:51 0 I page allocator init; free_page_count = 33822867456; block = [0v18000000000, 0v7F8000000000), size 126.000 TiB
+20:26:51 0 I duplicate; address_space = &quot;process&quot; @ 0p7E74000
+20:26:51 0 I switch to; address_space = &quot;process&quot; @ 0p7E74000
+20:26:51 0 I switch to; address_space = &quot;base&quot; @ 0p1000
+20:26:51 0 I allocate; slot = Process { pid: 1:0, address_space: &quot;1:0&quot; @ 0p7E74000, { rip: 0v0, rsp: 0v0 } }; process_count = 2
+20:26:51 0 D pid_1 = 0:0; pid_2 = 1:0
+20:26:51 0 I free; slot = Process { pid: 0:0, address_space: &quot;0:0&quot; @ 0p7E8A000, { rip: 0v0, rsp: 0v0 } }; process_count = 1
+20:26:51 0 I drop; address_space = &quot;0:0&quot; @ 0p7E8A000
+20:26:51 0 I free; slot = Process { pid: 1:0, address_space: &quot;1:0&quot; @ 0p7E74000, { rip: 0v0, rsp: 0v0 } }; process_count = 0
+20:26:51 0 I drop; address_space = &quot;1:0&quot; @ 0p7E74000
+4_concurrency_5_table::basic----------------------- [passed]
+
+4_concurrency_5_table::full_capacity------------------------
+20:26:51 0 I page allocator init; free_page_count = 33822867456; block = [0v18000000000, 0v7F8000000000), size 126.000 TiB
+20:26:51 0 I duplicate; address_space = &quot;process&quot; @ 0p7E74000
+20:26:51 0 I switch to; address_space = &quot;process&quot; @ 0p7E74000
+20:26:51 0 I switch to; address_space = &quot;base&quot; @ 0p1000
+20:26:51 0 I allocate; slot = Process { pid: 1:1, address_space: &quot;1:1&quot; @ 0p7E74000, { rip: 0v0, rsp: 0v0 } }; process_count = 1
+20:26:51 0 I page allocator init; free_page_count = 33822867456; block = [0v18000000000, 0v7F8000000000), size 126.000 TiB
+20:26:51 0 I duplicate; address_space = &quot;process&quot; @ 0p7E79000
+20:26:51 0 I switch to; address_space = &quot;process&quot; @ 0p7E79000
+20:26:51 0 I switch to; address_space = &quot;base&quot; @ 0p1000
+20:26:51 0 I allocate; slot = Process { pid: 0:1, address_space: &quot;0:1&quot; @ 0p7E79000, { rip: 0v0, rsp: 0v0 } }; process_count = 2
+20:26:51 0 I page allocator init; free_page_count = 33822867456; block = [0v18000000000, 0v7F8000000000), size 126.000 TiB
+20:26:51 0 I duplicate; address_space = &quot;process&quot; @ 0p7E5C000
+20:26:51 0 I switch to; address_space = &quot;process&quot; @ 0p7E5C000
+20:26:51 0 I switch to; address_space = &quot;base&quot; @ 0p1000
+20:26:51 0 I allocate; slot = Process { pid: 2:0, address_space: &quot;2:0&quot; @ 0p7E5C000, { rip: 0v0, rsp: 0v0 } }; process_count = 3
+...
+20:27:10.241 0 I drop; address_space = &quot;process&quot; @ 0p6888000
+20:27:10.289 0 I free; slot = Process { pid: 1:1, address_space: &quot;1:1&quot; @ 0p7E74000, { rip: 0v0, rsp: 0v0 } }; process_count = 255
+20:27:10.295 0 I drop; address_space = &quot;1:1&quot; @ 0p7E74000
+20:27:10.375 0 I page allocator init; free_page_count = 33822867456; block = [0v18000000000, 0v7F8000000000), size 126.000 TiB
+20:27:10.381 0 I duplicate; address_space = &quot;process&quot; @ 0p7E74000
+20:27:10.385 0 I switch to; address_space = &quot;process&quot; @ 0p7E74000
+20:27:10.391 0 I switch to; address_space = &quot;base&quot; @ 0p1000
+20:27:10.395 0 I allocate; slot = Process { pid: 1:2, address_space: &quot;1:2&quot; @ 0p7E74000, { rip: 0v0, rsp: 0v0 } }; process_count = 256
+20:27:10.447 0 I page allocator init; free_page_count = 33822867456; block = [0v18000000000, 0v7F8000000000), size 126.000 TiB
+20:27:10.455 0 I duplicate; address_space = &quot;process&quot; @ 0p6888000
+20:27:10.459 0 I switch to; address_space = &quot;process&quot; @ 0p6888000
+20:27:10.463 0 I switch to; address_space = &quot;base&quot; @ 0p1000
+20:27:10.467 0 I drop; address_space = &quot;process&quot; @ 0p6888000
+20:27:10.503 0 D prev_pid = 1:1; pid = 1:2
+20:27:10.505 0 I free; slot = Process { pid: 1:2, address_space: &quot;1:2&quot; @ 0p7E74000, { rip: 0v0, rsp: 0v0 } }; process_count = 255
+20:27:10.513 0 I drop; address_space = &quot;1:2&quot; @ 0p7E74000
+20:27:10.593 0 I page allocator init; free_page_count = 33822867456; block = [0v18000000000, 0v7F8000000000), size 126.000 TiB
+20:27:10.599 0 I duplicate; address_space = &quot;process&quot; @ 0p7E74000
+20:27:10.603 0 I switch to; address_space = &quot;process&quot; @ 0p7E74000
+20:27:10.609 0 I switch to; address_space = &quot;base&quot; @ 0p1000
+20:27:10.613 0 I allocate; slot = Process { pid: 1:3, address_space: &quot;1:3&quot; @ 0p7E74000, { rip: 0v0, rsp: 0v0 } }; process_count = 256
+20:27:10.665 0 I page allocator init; free_page_count = 33822867456; block = [0v18000000000, 0v7F8000000000), size 126.000 TiB
+20:27:10.673 0 I duplicate; address_space = &quot;process&quot; @ 0p6888000
+20:27:10.677 0 I switch to; address_space = &quot;process&quot; @ 0p6888000
+20:27:10.681 0 I switch to; address_space = &quot;base&quot; @ 0p1000
+20:27:10.685 0 I drop; address_space = &quot;process&quot; @ 0p6888000
+20:27:10.719 0 D prev_pid = 1:2; pid = 1:3
+20:27:10.723 0 I free; slot = Process { pid: 1:3, address_space: &quot;1:3&quot; @ 0p7E74000, { rip: 0v0, rsp: 0v0 } }; process_count = 255
+20:27:10.731 0 I drop; address_space = &quot;1:3&quot; @ 0p7E74000
+20:27:10.809 0 I page allocator init; free_page_count = 33822867456; block = [0v18000000000, 0v7F8000000000), size 126.000 TiB
+20:27:10.817 0 I duplicate; address_space = &quot;process&quot; @ 0p7E74000
+20:27:10.821 0 I switch to; address_space = &quot;process&quot; @ 0p7E74000
+20:27:10.827 0 I switch to; address_space = &quot;base&quot; @ 0p1000
+20:27:10.831 0 I allocate; slot = Process { pid: 1:4, address_space: &quot;1:4&quot; @ 0p7E74000, { rip: 0v0, rsp: 0v0 } }; process_count = 256
+20:27:10.883 0 I page allocator init; free_page_count = 33822867456; block = [0v18000000000, 0v7F8000000000), size 126.000 TiB
+20:27:10.889 0 I duplicate; address_space = &quot;process&quot; @ 0p6888000
+20:27:10.893 0 I switch to; address_space = &quot;process&quot; @ 0p6888000
+20:27:10.899 0 I switch to; address_space = &quot;base&quot; @ 0p1000
+20:27:10.903 0 I drop; address_space = &quot;process&quot; @ 0p6888000
+20:27:10.937 0 D prev_pid = 1:3; pid = 1:4
+20:27:10.941 0 I free; slot = Process { pid: 1:4, address_space: &quot;1:4&quot; @ 0p7E74000, { rip: 0v0, rsp: 0v0 } }; process_count = 255
+20:27:10.949 0 I drop; address_space = &quot;1:4&quot; @ 0p7E74000
+20:27:11.027 0 I page allocator init; free_page_count = 33822867456; block = [0v18000000000, 0v7F8000000000), size 126.000 TiB
+20:27:11.035 0 I duplicate; address_space = &quot;process&quot; @ 0p7E74000
+20:27:11.039 0 I switch to; address_space = &quot;process&quot; @ 0p7E74000
+20:27:11.043 0 I switch to; address_space = &quot;base&quot; @ 0p1000
+20:27:11.047 0 I allocate; slot = Process { pid: 1:5, address_space: &quot;1:5&quot; @ 0p7E74000, { rip: 0v0, rsp: 0v0 } }; process_count = 256
+20:27:11.101 0 I page allocator init; free_page_count = 33822867456; block = [0v18000000000, 0v7F8000000000), size 126.000 TiB
+20:27:11.107 0 I duplicate; address_space = &quot;process&quot; @ 0p6888000
+20:27:11.111 0 I switch to; address_space = &quot;process&quot; @ 0p6888000
+20:27:11.117 0 I switch to; address_space = &quot;base&quot; @ 0p1000
+20:27:11.121 0 I drop; address_space = &quot;process&quot; @ 0p6888000
+20:27:11.155 0 D prev_pid = 1:4; pid = 1:5
+20:27:11.159 0 I free; slot = Process { pid: 1:5, address_space: &quot;1:5&quot; @ 0p7E74000, { rip: 0v0, rsp: 0v0 } }; process_count = 255
+20:27:11.165 0 I drop; address_space = &quot;1:5&quot; @ 0p7E74000
+20:27:11.245 0 I page allocator init; free_page_count = 33822867456; block = [0v18000000000, 0v7F8000000000), size 126.000 TiB
+20:27:11.253 0 I duplicate; address_space = &quot;process&quot; @ 0p7E74000
+20:27:11.257 0 I switch to; address_space = &quot;process&quot; @ 0p7E74000
+20:27:11.261 0 I switch to; address_space = &quot;base&quot; @ 0p1000
+20:27:11.265 0 I allocate; slot = Process { pid: 1:6, address_space: &quot;1:6&quot; @ 0p7E74000, { rip: 0v0, rsp: 0v0 } }; process_count = 256
+20:27:11.319 0 I page allocator init; free_page_count = 33822867456; block = [0v18000000000, 0v7F8000000000), size 126.000 TiB
+20:27:11.325 0 I duplicate; address_space = &quot;process&quot; @ 0p6888000
+20:27:11.329 0 I switch to; address_space = &quot;process&quot; @ 0p6888000
+20:27:11.335 0 I switch to; address_space = &quot;base&quot; @ 0p1000
+20:27:11.339 0 I drop; address_space = &quot;process&quot; @ 0p6888000
+20:27:11.373 0 D prev_pid = 1:5; pid = 1:6
+20:27:11.377 0 I free; slot = Process { pid: 1:6, address_space: &quot;1:6&quot; @ 0p7E74000, { rip: 0v0, rsp: 0v0 } }; process_count = 255
+20:27:11.385 0 I drop; address_space = &quot;1:6&quot; @ 0p7E74000
+20:27:11.463 0 I page allocator init; free_page_count = 33822867456; block = [0v18000000000, 0v7F8000000000), size 126.000 TiB
+20:27:11.471 0 I duplicate; address_space = &quot;process&quot; @ 0p7E74000
+20:27:11.475 0 I switch to; address_space = &quot;process&quot; @ 0p7E74000
+20:27:11.479 0 I switch to; address_space = &quot;base&quot; @ 0p1000
+20:27:11.483 0 I allocate; slot = Process { pid: 1:7, address_space: &quot;1:7&quot; @ 0p7E74000, { rip: 0v0, rsp: 0v0 } }; process_count = 256
+20:27:11.535 0 I page allocator init; free_page_count = 33822867456; block = [0v18000000000, 0v7F8000000000), size 126.000 TiB
+20:27:11.543 0 I duplicate; address_space = &quot;process&quot; @ 0p6888000
+20:27:11.547 0 I switch to; address_space = &quot;process&quot; @ 0p6888000
+20:27:11.553 0 I switch to; address_space = &quot;base&quot; @ 0p1000
+20:27:11.557 0 I drop; address_space = &quot;process&quot; @ 0p6888000
+20:27:11.591 0 D prev_pid = 1:6; pid = 1:7
+20:27:11.595 0 I free; slot = Process { pid: 1:7, address_space: &quot;1:7&quot; @ 0p7E74000, { rip: 0v0, rsp: 0v0 } }; process_count = 255
+20:27:11.601 0 I drop; address_space = &quot;1:7&quot; @ 0p7E74000
+20:27:11.681 0 I page allocator init; free_page_count = 33822867456; block = [0v18000000000, 0v7F8000000000), size 126.000 TiB
+20:27:11.689 0 I duplicate; address_space = &quot;process&quot; @ 0p7E74000
+20:27:11.691 0 I switch to; address_space = &quot;process&quot; @ 0p7E74000
+20:27:11.697 0 I switch to; address_space = &quot;base&quot; @ 0p1000
+20:27:11.701 0 I allocate; slot = Process { pid: 1:8, address_space: &quot;1:8&quot; @ 0p7E74000, { rip: 0v0, rsp: 0v0 } }; process_count = 256
+20:27:11.753 0 I page allocator init; free_page_count = 33822867456; block = [0v18000000000, 0v7F8000000000), size 126.000 TiB
+20:27:11.761 0 I duplicate; address_space = &quot;process&quot; @ 0p6888000
+20:27:11.765 0 I switch to; address_space = &quot;process&quot; @ 0p6888000
+20:27:11.769 0 I switch to; address_space = &quot;base&quot; @ 0p1000
+20:27:11.773 0 I drop; address_space = &quot;process&quot; @ 0p6888000
+20:27:11.809 0 D prev_pid = 1:7; pid = 1:8
+20:27:11.811 0 I free; slot = Process { pid: 1:8, address_space: &quot;1:8&quot; @ 0p7E74000, { rip: 0v0, rsp: 0v0 } }; process_count = 255
+20:27:11.819 0 I drop; address_space = &quot;1:8&quot; @ 0p7E74000
+20:27:11.899 0 I page allocator init; free_page_count = 33822867456; block = [0v18000000000, 0v7F8000000000), size 126.000 TiB
+20:27:11.905 0 I duplicate; address_space = &quot;process&quot; @ 0p7E74000
+20:27:11.909 0 I switch to; address_space = &quot;process&quot; @ 0p7E74000
+20:27:11.915 0 I switch to; address_space = &quot;base&quot; @ 0p1000
+20:27:11.919 0 I allocate; slot = Process { pid: 1:9, address_space: &quot;1:9&quot; @ 0p7E74000, { rip: 0v0, rsp: 0v0 } }; process_count = 256
+20:27:11.971 0 I page allocator init; free_page_count = 33822867456; block = [0v18000000000, 0v7F8000000000), size 126.000 TiB
+20:27:11.979 0 I duplicate; address_space = &quot;process&quot; @ 0p6888000
+20:27:11.983 0 I switch to; address_space = &quot;process&quot; @ 0p6888000
+20:27:11.987 0 I switch to; address_space = &quot;base&quot; @ 0p1000
+20:27:11.991 0 I drop; address_space = &quot;process&quot; @ 0p6888000
+20:27:12.025 0 D prev_pid = 1:8; pid = 1:9
+20:27:12.029 0 I free; slot = Process { pid: 1:9, address_space: &quot;1:9&quot; @ 0p7E74000, { rip: 0v0, rsp: 0v0 } }; process_count = 255
+20:27:12.037 0 I drop; address_space = &quot;1:9&quot; @ 0p7E74000
+20:27:12.117 0 I page allocator init; free_page_count = 33822867456; block = [0v18000000000, 0v7F8000000000), size 126.000 TiB
+20:27:12.125 0 I duplicate; address_space = &quot;process&quot; @ 0p7E74000
+20:27:12.127 0 I switch to; address_space = &quot;process&quot; @ 0p7E74000
+20:27:12.133 0 I switch to; address_space = &quot;base&quot; @ 0p1000
+20:27:12.137 0 I allocate; slot = Process { pid: 1:10, address_space: &quot;1:10&quot; @ 0p7E74000, { rip: 0v0, rsp: 0v0 } }; process_count = 256
+20:27:12.189 0 I page allocator init; free_page_count = 33822867456; block = [0v18000000000, 0v7F8000000000), size 126.000 TiB
+20:27:12.197 0 I duplicate; address_space = &quot;process&quot; @ 0p6888000
+20:27:12.201 0 I switch to; address_space = &quot;process&quot; @ 0p6888000
+20:27:12.207 0 I switch to; address_space = &quot;base&quot; @ 0p1000
+20:27:12.211 0 I drop; address_space = &quot;process&quot; @ 0p6888000
+20:27:12.245 0 D prev_pid = 1:9; pid = 1:10
+20:27:12.249 0 I free; slot = Process { pid: 1:10, address_space: &quot;1:10&quot; @ 0p7E74000, { rip: 0v0, rsp: 0v0 } }; process_count = 255
+20:27:12.255 0 I drop; address_space = &quot;1:10&quot; @ 0p7E74000
+20:27:12.335 0 I page allocator init; free_page_count = 33822867456; block = [0v18000000000, 0v7F8000000000), size 126.000 TiB
+20:27:12.343 0 I duplicate; address_space = &quot;process&quot; @ 0p7E74000
+20:27:12.345 0 I switch to; address_space = &quot;process&quot; @ 0p7E74000
+20:27:12.351 0 I switch to; address_space = &quot;base&quot; @ 0p1000
+20:27:12.355 0 I allocate; slot = Process { pid: 1:11, address_space: &quot;1:11&quot; @ 0p7E74000, { rip: 0v0, rsp: 0v0 } }; process_count = 256
+20:27:12.407 0 I page allocator init; free_page_count = 33822867456; block = [0v18000000000, 0v7F8000000000), size 126.000 TiB
+20:27:12.415 0 I duplicate; address_space = &quot;process&quot; @ 0p6888000
+20:27:12.419 0 I switch to; address_space = &quot;process&quot; @ 0p6888000
+20:27:12.423 0 I switch to; address_space = &quot;base&quot; @ 0p1000
+20:27:12.427 0 I drop; address_space = &quot;process&quot; @ 0p6888000
+20:27:12.463 0 D prev_pid = 1:10; pid = 1:11
+...
+20:27:22.979 0 I free; slot = Process { pid: 2:0, address_space: &quot;2:0&quot; @ 0p7E5C000, { rip: 0v0, rsp: 0v0 } }; process_count = 2
+20:27:22.987 0 I drop; address_space = &quot;2:0&quot; @ 0p7E5C000
+20:27:23.021 0 I free; slot = Process { pid: 0:1, address_space: &quot;0:1&quot; @ 0p7E79000, { rip: 0v0, rsp: 0v0 } }; process_count = 1
+20:27:23.029 0 I drop; address_space = &quot;0:1&quot; @ 0p7E79000
+20:27:23.063 0 I free; slot = Process { pid: 1:11, address_space: &quot;1:11&quot; @ 0p7E74000, { rip: 0v0, rsp: 0v0 } }; process_count = 0
+20:27:23.069 0 I drop; address_space = &quot;1:11&quot; @ 0p7E74000
+4_concurrency_5_table::full_capacity--------------- [passed]
+20:27:23.107 0 I exit qemu; exit_code = SUCCESS
+</code></pre>
 <h3 id="Ориентировочный-объём-работ-этой-части-лабораторки"><a class="header" href="#Ориентировочный-объём-работ-этой-части-лабораторки">Ориентировочный объём работ этой части лабораторки</a></h3>
-<pre><code class="language-console"> table.rs |  100 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 96 insertions(+), 4 deletions(-)
+<pre><code class="language-console"> kernel/src/process/table.rs |  119 +++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 111 insertions(+), 8 deletions(-)
 </code></pre>
 
                     </main>

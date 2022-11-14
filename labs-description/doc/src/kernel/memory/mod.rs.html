@@ -296,8 +296,8 @@
 <span id="296">296</span>
 <span id="297">297</span>
 <span id="298">298</span>
-</pre><pre class="rust"><code><span class="attribute">#![warn(missing_docs)]
-#![warn(clippy::missing_docs_in_private_items)]
+</pre><pre class="rust"><code><span class="attribute">#![warn(clippy::missing_docs_in_private_items)]
+#![warn(missing_docs)]
 
 
 </span><span class="doccomment">/// Дополнительные функции для работы с [Memory Management Unit](https://en.wikipedia.org/wiki/Memory_management_unit), доступные только ядру.
@@ -397,7 +397,7 @@
 }
 
 
-<span class="doccomment">/// Возвращает страницу `phys2virt`, с которой начинается линейное отображение
+<span class="doccomment">/// Возвращает виртуальную страницу `phys2virt`, с которой начинается линейное отображение
 /// всей физической памяти в виртуальную.
 </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>phys2virt(boot_info: <span class="kw-2">&amp;</span>BootInfo) -&gt; Page {
     Virt::new_u64(boot_info.physical_memory_offset)

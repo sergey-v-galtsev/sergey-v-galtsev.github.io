@@ -32,9 +32,10 @@ LAPIC находится на том же кристалле, что и проц
 Наоборот, совпадение физических адресов всех LAPIC удобно для программиста.
 Например, если программе нужно понять, на каком именно CPU она сейчас запущена ---
 достаточно прочитать идентификатор LAPIC и CPU по определённому физическому адресу области MMIO LAPIC.
-Это и делает метод [`LocalApic::id()`](../../doc/kernel/smp/local_apic/struct.LocalApic.html#method.id).
+Это и делает метод
+[`LocalApic::id()`](../../doc/kernel/smp/local_apic/struct.LocalApic.html#method.id).
 
-Физический адрес MMIO для local APIC предоставляет метод
+Физический адрес MMIO для local APIC можно узнать вызвав метод
 [`kernel::smp::acpi_info::AcpiInfo::local_apic_address()`](../../doc/kernel/smp/acpi_info/struct.AcpiInfo.html#method.local_apic_address).
 А виртуальный адрес можно было бы выбрать произвольно.
 Но ядро должно этот адрес где-то запомнить, чтобы использовать для обращений в дальнейшем.
@@ -46,7 +47,7 @@ LAPIC находится на том же кристалле, что и проц
 А мы при инициализации MMIO для local APIC удалим маппинг для этой виртуальной страницы и вместо ненужных нам нулей замапим на её виртуальный адрес физический фрейм local APIC.
 Побочным результатом такого подхода будет то, что до того как мы инициализируем MMIO, метод
 [`LocalApic::id()`](../../doc/kernel/smp/local_apic/struct.LocalApic.html#method.id)
-будет выдавать 0, а не ошибку.
+будет выдавать `0`, а не ошибку.
 И функции, которые им пользуются, могут обойтись без обработки ошибки в этом случае.
 
 Реализуйте [метод](../../doc/kernel/smp/local_apic/struct.LocalApic.html#method.map)
@@ -77,8 +78,8 @@ fn LocalApic::map(address: Phys) -> Result<()>
 $ (cd kernel; cargo test --test 4-concurrency-2-local-apic)
 ...
 4_concurrency_2_local_apic::mapped_properly-----------------
-19:45:48 0 I Local APIC; local_apic = 0v322000; frame = Frame(1043968 @ 0pFEE00000); flags = PRESENT | WRITABLE | WRITE_THROUGH | NO_CACHE | ACCESSED | DIRTY | NO_EXECUTE
-19:45:48 0 I cpu = 0
+20:26:39 0 I Local APIC; local_apic = 0v334000; frame = Frame(1043968 @ 0pFEE00000); flags = PRESENT | WRITABLE | WRITE_THROUGH | NO_CACHE | ACCESSED | DIRTY | NO_EXECUTE
+20:26:39 0 I cpu = 0
 4_concurrency_2_local_apic::mapped_properly-------- [passed]
 ```
 
@@ -86,6 +87,6 @@ $ (cd kernel; cargo test --test 4-concurrency-2-local-apic)
 ### Ориентировочный объём работ этой части лабораторки
 
 ```console
- kernel/src/smp/local_apic.rs |   17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+ kernel/src/smp/local_apic.rs |   19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
 ```

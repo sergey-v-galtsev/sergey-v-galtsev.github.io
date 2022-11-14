@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":[["Slot",""]],"fn":[["forge_static_lifetime",""]],"struct":[["TABLE",""],["Table",""]]};
+window.SIDEBAR_ITEMS = {"enum":[["Slot","Слот таблицы процессов."]],"fn":[["forge_static_lifetime","Обещает Rust, что слоты таблицы процессов [`Table`] имеют время жизни `'static`, так как Rust не может проверить это самостоятельно."]],"struct":[["TABLE","Таблица процессов."],["Table","Таблица процессов."]]};

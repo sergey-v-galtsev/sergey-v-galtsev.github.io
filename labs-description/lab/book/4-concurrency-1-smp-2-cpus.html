@@ -145,8 +145,7 @@
                 <div id="content" class="content">
                     <main>
                         <h2 id="Состояние-каждого-процессора"><a class="header" href="#Состояние-каждого-процессора">Состояние каждого процессора</a></h2>
-<p>В мультипроцессорной системе нужно различать состояние системы в целом и состояние каждого отдельного процессора.
-В Nikka состояние отдельного процессора описано в
+<p>В Nikka состояние отдельного процессора описано в структуре
 <a href="../../doc/kernel/smp/cpu/struct.Cpu.html"><code>kernel::smp::cpu::Cpu</code></a>,
 определённой в <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/smp/cpu.rs"><code>kernel/src/smp/cpu.rs</code></a>.
 Номер процессора, на котором сейчас происходит выполнение кода, продублирован в этой структуре и его можно узнать с помощью метода
@@ -155,11 +154,11 @@
 <a href="../../doc/kernel/smp/cpu/struct.Cpu.html"><code>Cpu</code></a>
 текущего процессора можно получить из статического метода
 <a href="../../doc/kernel/smp/cpu/struct.Cpu.html#method.get"><code>Cpu::get()</code></a>.</p>
-<p>Состояние отдельного процессора, которое стоит учитывать:</p>
+<p>Состояние каждого процессора включает:</p>
 <ul>
 <li>Стек ядра <a href="../../doc/kernel/smp/cpu/struct.Cpu.html#structfield.kernel_stack"><code>Cpu::kernel_stack</code></a>. Процессоры обрабатывают системные вызовы и прерывания независимо, так что у каждого должен быть свой стек для этого.</li>
 <li>Также полезен дополнительный стек <a href="../../doc/kernel/smp/cpu/struct.Cpu.html#structfield.page_fault_stack"><code>Cpu::page_fault_stack</code></a>, который используется во время обработки Page Fault. Он позволяет напечатать диагностику возникшего исключения даже в случае, когда оно вызвано исчерпанием основного стека ядра.</li>
-<li>Task State Segment <a href="../../doc/kernel/smp/cpu/struct.Cpu.html#structfield.tss"><code>Cpu::tss</code></a>. В TSS описано, где находится стек ядра для текущего процессора. Разумеется, раз стеки разные, то и TSS тоже должны быть разные.</li>
+<li><a href="https://en.wikipedia.org/wiki/Task_state_segment">Task State Segment</a> <a href="../../doc/kernel/smp/cpu/struct.Cpu.html#structfield.tss"><code>Cpu::tss</code></a>. В TSS хранится <code>RSP</code> ядра для текущего процессора. Разумеется, раз стеки разные, то и TSS тоже должны быть разные.</li>
 <li>Исполняющийся на данном CPU в текущий момент пользовательский процесс <a href="../../doc/kernel/smp/cpu/struct.Cpu.html#structfield.current_process"><code>Cpu::current_process</code></a>. Пользовательские процессы выполняются независимо на разных ядрах. Следовательно, у каждого ядра текущий процесс должен быть своим.</li>
 <li>Системные регистры. У каждого процессора свои системные регистры. Так что функции их инициализации должны быть вызваны для каждого CPU. Явно в структуре <a href="../../doc/kernel/smp/cpu/struct.Cpu.html"><code>Cpu</code></a> регистры не хранятся.
 <ul>
@@ -216,18 +215,30 @@ CPU–local storage.
 для текущего CPU в его собственном регистре <code>FS</code>.
 Этот же адрес нужно будет записать в поле
 <a href="../../doc/kernel/smp/cpu/struct.Cpu.html#structfield.this"><code>Cpu::this</code></a>.
-Дело в том, что адресовать память относительно регистра <code>FS</code> можно, но узнать его абсолютный адрес можно только прочитав его напрямую.
-Получить абсолютный адрес через инструкцию <code>lea</code> не получится.
+Дело в том, что адресовать память относительно регистра <code>FS</code> можно,
+но узнать его линейный адрес можно только прочитав его напрямую
+инструкцией <a href="https://www.felixcloutier.com/x86/rdmsr">rdmsr</a>.
+Получить линейный адрес через инструкцию
+<a href="https://www.felixcloutier.com/x86/lea"><code>lea</code></a>
+не получится.
 А адресовать что-либо через <code>FS</code> неудобно — это можно сделать только в ассемблере.
-Самым удобным представляется такой вариант: прочитать адрес структуры
+Самым удобным представляется такой вариант.
+Прочитать адрес структуры
 <a href="../../doc/kernel/smp/cpu/struct.Cpu.html"><code>Cpu</code></a>
 из поля
 <a href="../../doc/kernel/smp/cpu/struct.Cpu.html#structfield.this"><code>Cpu::this</code></a>,
-обращаясь к самому этому полю относительно регистра <code>FS</code>.
-А дальше, имея абсолютный адрес структуры
+обращаясь к самому этому полю относительно регистра <code>FS</code>,
+то есть используя логический адрес <code>&lt;сегментный_регистр&gt;:&lt;смещение&gt;</code>.
+А дальше, имея линейный адрес структуры
 <a href="../../doc/kernel/smp/cpu/struct.Cpu.html"><code>Cpu</code></a>
 получить её саму и дальше обращаться к её полям и методам без использования <code>FS</code>.
 Что уже можно делать в Rust безо всякого ассемблера.</p>
+<p>По умолчанию код пользователя не может менять регистры <code>FS</code> и <code>GS</code>, так это и оставим.
+Если бы мы разрешили ему их менять, например для реализации
+<a href="https://en.wikipedia.org/wiki/Thread-local_storage">thread-local storage</a> (TLS),
+нам также понадобилась бы инструкция
+<a href="https://www.felixcloutier.com/x86/swapgs">swapgs</a>
+при переключении между режимами ядра и пользователя.</p>
 <p>Для сохранения значения в регистр <code>FS</code> вам пригодится метод
 <a href="../../doc/x86_64/registers/model_specific/struct.FsBase.html#method.write"><code>x86_64::registers::model_specific::FsBase::write()</code></a>.
 Он принимает
@@ -254,7 +265,7 @@ CPU–local storage.
 только после инициализации <code>FS</code> методом
 <a href="../../doc/kernel/smp/cpu/struct.Cpu.html#method.set_fs"><code>Cpu::set_fs()</code></a>.
 Иначе в лучшем случае будет паника, а в худшем — обращение к невалидной или занятой другими данными памяти.</p>
-<p>Загрузите из инициализированного в предыдущей задаче
+<p>Загрузите из инициализированного в предыдущей задаче поля
 <a href="../../doc/kernel/smp/cpu/struct.Cpu.html#structfield.this"><code>Cpu::this</code></a>
 адрес структуры
 <a href="../../doc/kernel/smp/cpu/struct.Cpu.html"><code>Cpu</code></a>.
@@ -273,12 +284,13 @@ CPU–local storage.
 <a href="../../doc/kernel/smp/cpu/struct.Cpu.html"><code>Cpu</code></a>.
 Для этого пригодится макрос
 <a href="../../doc/memoffset/macro.offset_of.html"><code>memoffset::offset_of!()</code></a>.</p>
-<p>Полученный адрес нужно будет сохранить в переменной подходящего типа, поддерживаемом макросом <code>asm!()</code>, например <code>usize</code>.
+<p>Полученный адрес нужно будет сохранить в переменной подходящего типа,
+поддерживаемого макросом <code>asm!()</code>, например <code>usize</code>.
 Преобразовать его в ссылку на структуру
 <a href="../../doc/kernel/smp/cpu/struct.Cpu.html"><code>Cpu</code></a>
 можно с помощью
 <a href="../../doc/kernel/memory/type.Virt.html"><code>Virt</code></a>.
-Он выполнит необходимые проверки на валидность этого адреса.
+Который выполнит необходимые проверки на валидность этого адреса.
 В случае, если проверки не пройдут и вернётся ошибка, можно паниковать.</p>
 <p>Так как поменялось назначение сегментного регистра <code>FS</code>,
 поправьте код метода
@@ -291,12 +303,20 @@ CPU–local storage.
 <a href="../../lab/book/3-process-4-syscall.html#%D0%94%D0%B8%D1%81%D0%BF%D0%B5%D1%82%D1%87%D0%B5%D1%80%D0%B8%D0%B7%D0%B0%D1%86%D0%B8%D1%8F-%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D0%BD%D1%8B%D1%85-%D0%B2%D1%8B%D0%B7%D0%BE%D0%B2%D0%BE%D0%B2">диспетчеризации системных вызовов</a>
 и был добавлен в соответствующей
 <a href="../../lab/book/3-process-4-syscall.html#%D0%97%D0%B0%D0%B4%D0%B0%D1%87%D0%B0-4--%D0%BF%D0%BE%D0%B4%D0%B4%D0%B5%D1%80%D0%B6%D0%BA%D0%B0-%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D0%BD%D1%8B%D1%85-%D0%B2%D1%8B%D0%B7%D0%BE%D0%B2%D0%BE%D0%B2">задаче</a>.
+Теперь <code>RSP</code> нужно писать не в стек, а по адресу <code>FS:offset</code>, где <code>offset</code> — смещение <code>RSP</code> ядра в структуре
+<a href="../../doc/kernel/smp/cpu/struct.Cpu.html"><code>Cpu</code></a>.
+Для этого смещения есть константа
+<a href="../../doc/kernel/smp/cpu/constant.KERNEL_RSP_OFFSET_IN_CPU.html"><code>kernel::smp::cpu::KERNEL_RSP_OFFSET_IN_CPU</code></a>.
 А запись <code>RSP</code> в стек и его сохранение в
 <a href="../../doc/kernel/process/syscall/fn.syscall_trampoline.html"><code>syscall_trampoline()</code></a>
-нужно будет удалить.</p>
+нужно будет удалить.
+Обратите внимание, что в ассемблере всё также нужно использовать запись <code>FS:offset</code>.
+Высокоуровневые методы вроде
+<a href="../../doc/kernel/smp/cpu/struct.Cpu.html#method.get"><code>Cpu::get()</code></a>
+доступны только для Rust–кода — до переключения стека невозможно корректно позвать Rust–функцию.</p>
 <h4 id="Инициализация-вектора-структур-kernelsmpcpucpu"><a class="header" href="#Инициализация-вектора-структур-kernelsmpcpucpu">Инициализация вектора структур <a href="../../doc/kernel/smp/cpu/struct.Cpu.html"><code>kernel::smp::cpu::Cpu</code></a></a></h4>
 <p>Чтобы пользоваться структурами
-<a href="../../doc/kernel/smp/cpu/struct.Cpu.html"><code>Cpu</code></a>
+<a href="../../doc/kernel/smp/cpu/struct.Cpu.html"><code>Cpu</code></a>,
 для них и для содержащихся в них стеках нужно выделить память.</p>
 <p>Реализуйте <a href="../../doc/kernel/smp/cpu/fn.init_cpu_vec.html">функцию</a></p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
@@ -325,14 +345,14 @@ CPU–local storage.
 <pre><code class="language-console">$ (cd kernel; cargo test --test 4-concurrency-3-cpus)
 ...
 4_concurrency_3_cpus::initialized---------------------------
-19:57:54 0 I cpu = 0; local_apic_id = 0
-19:57:54 0 I cpu = 0; kernel_stack = 0v7FFFFFEB8000; frame = Frame(32427 @ 0p7EAB000); flags = PRESENT | WRITABLE | ACCESSED | DIRTY | NO_EXECUTE
+20:26:42 0 I cpu = 0; local_apic_id = 0
+20:26:42 0 I cpu = 0; kernel_stack = 0v7FFFFFEB8000; frame = Frame(32427 @ 0p7EAB000); flags = PRESENT | WRITABLE | ACCESSED | DIRTY | NO_EXECUTE
 4_concurrency_3_cpus::initialized------------------ [passed]
-19:57:54 0 I exit qemu; exit_code = SUCCESS
+20:26:43 0 I exit qemu; exit_code = SUCCESS
 </code></pre>
 <h3 id="Ориентировочный-объём-работ-этой-части-лабораторки"><a class="header" href="#Ориентировочный-объём-работ-этой-части-лабораторки">Ориентировочный объём работ этой части лабораторки</a></h3>
-<pre><code class="language-console"> kernel/src/smp/cpu.rs |   32 ++++++++++++++++++++++++++++----
- 1 file changed, 28 insertions(+), 4 deletions(-)
+<pre><code class="language-console"> kernel/src/smp/cpu.rs |   54 ++++++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 46 insertions(+), 8 deletions(-)
 </code></pre>
 
                     </main>

@@ -1,7 +1,6 @@
 ## Проверки доступа процесса к памяти
 
-В системных вызовах код пользователя будет передавать области памяти, описываемые `Block<Virt>`,
-в ядро.
+В системных вызовах код пользователя будет передавать в ядро области памяти, описываемые `Block<Virt>`.
 И код ядра должен будет что-то сделать с указанной памятью,
 иногда читая или записывая в неё.
 
@@ -49,6 +48,7 @@ fn AddressSpace::check_permission_common(
 - Метод [`fn Block::<Virt>::enclosing() -> Block<Page>`](../../doc/ku/memory/block/struct.Block.html#method.enclosing), который для заданного блока виртуальных адресов возвращает минимальный содержащий его блок страниц виртуальной памяти.
 - Метод [`Mapping::translate()`](../../doc/kernel/memory/mapping/struct.Mapping.html#method.translate).
 - Метод [`PageTableFlags::contains()`](../../doc/ku/memory/mmu/struct.PageTableFlags.html#method.contains).
+- [Итерирование](../../doc/ku/memory/block/struct.Block.html#impl-IntoIterator-for-Block%3CT%3E) по страницам блока с помощью вызова [`Block::<Page>::into_iter()`](../../doc/ku/memory/block/struct.Block.html#method.into_iter).
 
 
 ### Проверьте себя

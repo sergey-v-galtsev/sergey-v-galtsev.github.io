@@ -308,6 +308,88 @@
 <span id="308">308</span>
 <span id="309">309</span>
 <span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
+<span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
+<span id="334">334</span>
+<span id="335">335</span>
+<span id="336">336</span>
+<span id="337">337</span>
+<span id="338">338</span>
+<span id="339">339</span>
+<span id="340">340</span>
+<span id="341">341</span>
+<span id="342">342</span>
+<span id="343">343</span>
+<span id="344">344</span>
+<span id="345">345</span>
+<span id="346">346</span>
+<span id="347">347</span>
+<span id="348">348</span>
+<span id="349">349</span>
+<span id="350">350</span>
+<span id="351">351</span>
+<span id="352">352</span>
+<span id="353">353</span>
+<span id="354">354</span>
+<span id="355">355</span>
+<span id="356">356</span>
+<span id="357">357</span>
+<span id="358">358</span>
+<span id="359">359</span>
+<span id="360">360</span>
+<span id="361">361</span>
+<span id="362">362</span>
+<span id="363">363</span>
+<span id="364">364</span>
+<span id="365">365</span>
+<span id="366">366</span>
+<span id="367">367</span>
+<span id="368">368</span>
+<span id="369">369</span>
+<span id="370">370</span>
+<span id="371">371</span>
+<span id="372">372</span>
+<span id="373">373</span>
+<span id="374">374</span>
+<span id="375">375</span>
+<span id="376">376</span>
+<span id="377">377</span>
+<span id="378">378</span>
+<span id="379">379</span>
+<span id="380">380</span>
+<span id="381">381</span>
+<span id="382">382</span>
+<span id="383">383</span>
+<span id="384">384</span>
+<span id="385">385</span>
+<span id="386">386</span>
+<span id="387">387</span>
+<span id="388">388</span>
+<span id="389">389</span>
+<span id="390">390</span>
+<span id="391">391</span>
+<span id="392">392</span>
 </pre><pre class="rust"><code><span class="kw">use </span>core::{
     cmp,
     fmt,
@@ -326,45 +408,64 @@
 <span class="doccomment">/// Статистика аллокатора общего назначения.
 </span><span class="attribute">#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 </span><span class="kw">pub struct </span>Info {
-    allocated: Counter,
-    allocations: Counter,
-    pages: Counter,
-    requested: Counter,
+    <span class="doccomment">/// Сколько памяти в байтах было выделено аллокатором.
+    </span>allocated: Counter,
+
+    <span class="doccomment">/// Количество запросов к аллокатору.
+    </span>allocations: Counter,
+
+    <span class="doccomment">/// Количество виртуальных страниц, которые аллокатор выделил для удовлетворения запросов.
+    </span>pages: Counter,
+
+    <span class="doccomment">/// Сколько памяти в байтах было запрошено у аллокатора.
+    </span>requested: Counter,
 }
 
 
 <span class="kw">impl </span>Info {
-    <span class="kw">pub fn </span>allocated(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Counter {
+    <span class="doccomment">/// Сколько памяти в байтах было выделено аллокатором.
+    </span><span class="kw">pub fn </span>allocated(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Counter {
         <span class="self">self</span>.allocated
     }
 
 
-    <span class="kw">pub fn </span>allocations(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Counter {
+    <span class="doccomment">/// Количество запросов к аллокатору.
+    </span><span class="kw">pub fn </span>allocations(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Counter {
         <span class="self">self</span>.allocations
     }
 
 
-    <span class="kw">pub fn </span>pages(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Counter {
+    <span class="doccomment">/// Количество виртуальных страниц, которые аллокатор выделил для удовлетворения запросов.
+    </span><span class="kw">pub fn </span>pages(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Counter {
         <span class="self">self</span>.pages
     }
 
 
-    <span class="kw">pub fn </span>requested(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Counter {
+    <span class="doccomment">/// Сколько памяти в байтах было запрошено у аллокатора.
+    </span><span class="kw">pub fn </span>requested(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Counter {
         <span class="self">self</span>.requested
     }
 
 
-    <span class="kw">pub fn </span>fragmentation_loss(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+    <span class="doccomment">/// Сколько памяти в байтах потеряно на фрагментацию в текущий момент времени.
+    /// Равно `allocated().balance() - requested().balance()`.
+    </span><span class="kw">pub fn </span>fragmentation_loss(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="self">self</span>.allocated.balance() - <span class="self">self</span>.requested.balance()
     }
 
 
-    <span class="kw">pub fn </span>fragmentation_loss_percentage(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; f64 {
+    <span class="doccomment">/// Сколько памяти в процентах потеряно на фрагментацию в текущий момент времени.
+    /// Равно `100.0 * fragmentation_loss() / allocated().balance()`.
+    </span><span class="kw">pub fn </span>fragmentation_loss_percentage(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; f64 {
         <span class="self">self</span>.fragmentation_loss() <span class="kw">as </span>f64 / cmp::max(<span class="self">self</span>.allocated.balance(), <span class="number">1</span>) <span class="kw">as </span>f64 * <span class="number">100.0
     </span>}
 
 
-    <span class="kw">fn </span>is_valid(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+    <span class="doccomment">/// Проверка, соблюдены ли ожидаемые инварианты:
+    /// - Количество и объёмы деаллокаций не должны превосходить
+    /// соответсвующие величины для аллокаций.
+    /// - Реально выделенный объём памяти не может быть меньше запрошенного.
+    </span><span class="kw">fn </span>is_valid(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
         <span class="self">self</span>.allocated.is_valid() &amp;&amp;
             <span class="self">self</span>.allocations.is_valid() &amp;&amp;
             <span class="self">self</span>.pages.is_valid() &amp;&amp;
@@ -401,16 +502,35 @@
 /// - [Crate seqlock.](https://docs.rs/seqlock/0.1.2/seqlock/)
 </span><span class="attribute">#[derive(Debug, Default)]
 </span><span class="kw">pub struct </span>AtomicInfo {
-    allocated: AtomicCounter,
-    allocations: AtomicCounter,
-    pages: AtomicCounter,
-    requested: AtomicCounter,
-    sequence: AtomicUsize,
+    <span class="doccomment">/// Сколько памяти в байтах было выделено аллокатором.
+    </span>allocated: AtomicCounter,
+
+    <span class="doccomment">/// Количество запросов к аллокатору.
+    </span>allocations: AtomicCounter,
+
+    <span class="doccomment">/// Количество виртуальных страниц, которые аллокатор выделил для удовлетворения запросов.
+    </span>pages: AtomicCounter,
+
+    <span class="doccomment">/// Сколько памяти в байтах было запрошено у аллокатора.
+    </span>requested: AtomicCounter,
+
+    <span class="doccomment">/// - Нечётное значение в [`AtomicInfo::sequence`] означает,
+    /// что писатель начал обновлять структуру [`AtomicInfo`], но ещё не закончил.
+    /// Если читатель обнаруживает структуру в таком состоянии,
+    /// он должен подождать пока писатель закончит обновление.
+    /// - Чётное значение в [`AtomicInfo::sequence`] означает,
+    /// что значение структуры [`AtomicInfo`] консистентно.
+    /// И читатель может его использовать при дополнительном условии,
+    /// что чтение [`AtomicInfo::sequence`] вернуло один и тот же результат
+    /// до чтения и после чтения остальных полей.
+    </span>sequence: AtomicUsize,
 }
 
 
 <span class="kw">impl </span>AtomicInfo {
-    <span class="kw">pub const fn </span>new() -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Возвращает [`AtomicInfo`], заполненную нулями.
+    /// Аналогична [`AtomicInfo::default()`], но доступна в константном контексте.
+    </span><span class="kw">pub const fn </span>new() -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             allocated: AtomicCounter::new(),
             allocations: AtomicCounter::new(),
@@ -421,7 +541,11 @@
     }
 
 
-    <span class="kw">pub fn </span>allocation(<span class="kw-2">&amp;</span><span class="self">self</span>, requested: usize, allocated: usize, allocated_pages: usize) {
+    <span class="doccomment">/// Добавляет в счётчики одну аллокацию:
+    /// - Запрошено `requested` байт.
+    /// - Реально выделено `allocated` байт.
+    /// - Для аллокации дополнительно пришлось выделить `allocated_pages` виртуальных страниц.
+    </span><span class="kw">pub fn </span>allocation(<span class="kw-2">&amp;</span><span class="self">self</span>, requested: usize, allocated: usize, allocated_pages: usize) {
         <span class="self">self</span>.sequence.fetch_add(<span class="number">1</span>, Ordering::Acquire);
         <span class="self">self</span>.allocated.add(allocated);
         <span class="self">self</span>.allocations.add(<span class="number">1</span>);
@@ -433,11 +557,15 @@
     }
 
 
-    <span class="kw">pub fn </span>deallocation(<span class="kw-2">&amp;</span><span class="self">self</span>, requested: usize, allocated: usize, deallocated_pages: usize) {
+    <span class="doccomment">/// Добавляет в счётчики одну деаллокацию:
+    /// - Запрошено освобождение `requested` байт.
+    /// - Реально освобождено `deallocated` байт.
+    /// - При этом освободились `deallocated_pages` виртуальных страниц.
+    </span><span class="kw">pub fn </span>deallocation(<span class="kw-2">&amp;</span><span class="self">self</span>, requested: usize, deallocated: usize, deallocated_pages: usize) {
         <span class="self">self</span>.sequence.fetch_add(<span class="number">1</span>, Ordering::Acquire);
         <span class="self">self</span>.allocations.sub(<span class="number">1</span>);
         <span class="self">self</span>.requested.sub(requested);
-        <span class="self">self</span>.allocated.sub(allocated);
+        <span class="self">self</span>.allocated.sub(deallocated);
         <span class="kw">if </span>deallocated_pages &gt; <span class="number">0 </span>{
             <span class="self">self</span>.pages.sub(deallocated_pages);
         }
@@ -445,7 +573,8 @@
     }
 
 
-    <span class="kw">pub fn </span>load(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Info {
+    <span class="doccomment">/// Загрузить структуру [`Info`] из атомарного хранилища [`AtomicInfo`].
+    </span><span class="kw">pub fn </span>load(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Info {
         <span class="kw">let </span><span class="kw-2">mut </span>allocated;
         <span class="kw">let </span><span class="kw-2">mut </span>allocations;
         <span class="kw">let </span><span class="kw-2">mut </span>pages;
@@ -459,10 +588,12 @@
                 sequence = <span class="self">self</span>.sequence.load(Ordering::Acquire);
             }
 
-            allocated = <span class="self">self</span>.allocated.load();
-            allocations = <span class="self">self</span>.allocations.load();
-            pages = <span class="self">self</span>.pages.load();
-            requested = <span class="self">self</span>.requested.load();
+            <span class="kw">unsafe </span>{
+                allocated = <span class="self">self</span>.allocated.load();
+                allocations = <span class="self">self</span>.allocations.load();
+                pages = <span class="self">self</span>.pages.load();
+                requested = <span class="self">self</span>.requested.load();
+            }
 
             <span class="comment">// Use the &#39;read-dont-modify-write&#39; trick to be able to `Release`
             // the read section of the sequence lock.
@@ -504,30 +635,43 @@
 }
 
 
-<span class="attribute">#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+<span class="doccomment">/// Счётчик для каждой из отслеживаемых величин,
+/// разбитый на положительную часть для аллокаций и
+/// отрицательную часть для деаллокаций.
+</span><span class="attribute">#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 </span><span class="kw">pub struct </span>Counter {
-    negative: usize,
-    positive: usize,
+    <span class="doccomment">/// Суммарный размер соответствующего параметра для деаллокаций.
+    </span>negative: usize,
+
+    <span class="doccomment">/// Суммарный размер соответствующего параметра для аллокаций.
+    </span>positive: usize,
 }
 
 
 <span class="kw">impl </span>Counter {
-    <span class="kw">pub fn </span>negative(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+    <span class="doccomment">/// Суммарный размер соответствующего параметра для деаллокаций.
+    </span><span class="kw">pub fn </span>negative(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="self">self</span>.negative
     }
 
 
-    <span class="kw">pub fn </span>positive(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+    <span class="doccomment">/// Суммарный размер соответствующего параметра для аллокаций.
+    </span><span class="kw">pub fn </span>positive(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="self">self</span>.positive
     }
 
 
-    <span class="kw">pub fn </span>balance(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+    <span class="doccomment">/// Баланс счётчика --- значение отслеживаемой величины в текущий момент.
+    /// Равен разнице между положительной и отрицательной частью счётчика.
+    </span><span class="kw">pub fn </span>balance(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="self">self</span>.positive.checked_sub(<span class="self">self</span>.negative).expect(<span class="string">&quot;negative balance detected&quot;</span>)
     }
 
 
-    <span class="kw">fn </span>is_valid(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+    <span class="doccomment">/// Проверка, соблюдены ли ожидаемые инварианты.
+    /// А именно, количество и объёмы деаллокаций не должны превосходить
+    /// соответсвующие величины для аллокаций.
+    </span><span class="kw">fn </span>is_valid(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
         <span class="self">self</span>.negative &lt;= <span class="self">self</span>.positive
     }
 }
@@ -559,15 +703,24 @@
 }
 
 
-<span class="attribute">#[derive(Debug, Default)]
+<span class="doccomment">/// Атомарный счётчик для каждой из отслеживаемых величин,
+/// разбитый на положительную часть для аллокаций и
+/// отрицательную часть для деаллокаций.
+</span><span class="attribute">#[derive(Debug, Default)]
 </span><span class="kw">struct </span>AtomicCounter {
-    negative: AtomicUsize,
-    positive: AtomicUsize,
+    <span class="doccomment">/// Суммарный размер соответствующего параметра для деаллокаций.
+    </span>negative: AtomicUsize,
+
+    <span class="doccomment">/// Суммарный размер соответствующего параметра для аллокаций.
+    </span>positive: AtomicUsize,
 }
 
 
 <span class="kw">impl </span>AtomicCounter {
-    <span class="kw">const fn </span>new() -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Создаёт атомарный счётчик для каждой из отслеживаемых величин,
+    /// имеющий нулевые положительную и отрицательную компоненты.
+    /// Аналогична [`AtomicCounter::default()`], но доступна в константном контексте.
+    </span><span class="kw">const fn </span>new() -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             positive: AtomicUsize::new(<span class="number">0</span>),
             negative: AtomicUsize::new(<span class="number">0</span>),
@@ -575,7 +728,13 @@
     }
 
 
-    <span class="kw">fn </span>load(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Counter {
+    <span class="doccomment">/// Загрузить значение из счётчика.
+    ///
+    /// # Safety
+    ///
+    /// Не гарантирует атомарность между положительной и отрицательной частами счётчика.
+    /// Об этом должен позаботиться вызывающий код.
+    </span><span class="kw">unsafe fn </span>load(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Counter {
         Counter {
             positive: <span class="self">self</span>.positive(),
             negative: <span class="self">self</span>.negative(),
@@ -583,28 +742,33 @@
     }
 
 
-    <span class="kw">fn </span>negative(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+    <span class="doccomment">/// Суммарный размер соответствующего параметра для деаллокаций.
+    </span><span class="kw">fn </span>negative(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="self">self</span>.negative.load(Ordering::Relaxed)
     }
 
 
-    <span class="kw">fn </span>positive(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+    <span class="doccomment">/// Суммарный размер соответствующего параметра для аллокаций.
+    </span><span class="kw">fn </span>positive(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="self">self</span>.positive.load(Ordering::Relaxed)
     }
 
 
-    <span class="kw">fn </span>add(<span class="kw-2">&amp;</span><span class="self">self</span>, value: usize) {
+    <span class="doccomment">/// Добавить к счётчику величину `value`.
+    </span><span class="kw">fn </span>add(<span class="kw-2">&amp;</span><span class="self">self</span>, value: usize) {
         <span class="self">self</span>.positive.fetch_add(value, Ordering::Relaxed);
     }
 
 
-    <span class="kw">fn </span>sub(<span class="kw-2">&amp;</span><span class="self">self</span>, value: usize) {
+    <span class="doccomment">/// Вычесть из счётчика величину `value`.
+    </span><span class="kw">fn </span>sub(<span class="kw-2">&amp;</span><span class="self">self</span>, value: usize) {
         <span class="self">self</span>.negative.fetch_add(value, Ordering::Relaxed);
     }
 }
 
 
-<span class="kw">struct </span>SizeCounter(Counter);
+<span class="doccomment">/// Вспомогательная структура для удобного форматирования счётчиков, отслеживающих байты.
+</span><span class="kw">struct </span>SizeCounter(Counter);
 
 
 <span class="kw">impl </span>fmt::Display <span class="kw">for </span>SizeCounter {

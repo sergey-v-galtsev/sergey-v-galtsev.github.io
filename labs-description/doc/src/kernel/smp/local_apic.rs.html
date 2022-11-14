@@ -276,6 +276,129 @@
 <span id="276">276</span>
 <span id="277">277</span>
 <span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
+<span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
+<span id="334">334</span>
+<span id="335">335</span>
+<span id="336">336</span>
+<span id="337">337</span>
+<span id="338">338</span>
+<span id="339">339</span>
+<span id="340">340</span>
+<span id="341">341</span>
+<span id="342">342</span>
+<span id="343">343</span>
+<span id="344">344</span>
+<span id="345">345</span>
+<span id="346">346</span>
+<span id="347">347</span>
+<span id="348">348</span>
+<span id="349">349</span>
+<span id="350">350</span>
+<span id="351">351</span>
+<span id="352">352</span>
+<span id="353">353</span>
+<span id="354">354</span>
+<span id="355">355</span>
+<span id="356">356</span>
+<span id="357">357</span>
+<span id="358">358</span>
+<span id="359">359</span>
+<span id="360">360</span>
+<span id="361">361</span>
+<span id="362">362</span>
+<span id="363">363</span>
+<span id="364">364</span>
+<span id="365">365</span>
+<span id="366">366</span>
+<span id="367">367</span>
+<span id="368">368</span>
+<span id="369">369</span>
+<span id="370">370</span>
+<span id="371">371</span>
+<span id="372">372</span>
+<span id="373">373</span>
+<span id="374">374</span>
+<span id="375">375</span>
+<span id="376">376</span>
+<span id="377">377</span>
+<span id="378">378</span>
+<span id="379">379</span>
+<span id="380">380</span>
+<span id="381">381</span>
+<span id="382">382</span>
+<span id="383">383</span>
+<span id="384">384</span>
+<span id="385">385</span>
+<span id="386">386</span>
+<span id="387">387</span>
+<span id="388">388</span>
+<span id="389">389</span>
+<span id="390">390</span>
+<span id="391">391</span>
+<span id="392">392</span>
+<span id="393">393</span>
+<span id="394">394</span>
+<span id="395">395</span>
+<span id="396">396</span>
+<span id="397">397</span>
+<span id="398">398</span>
+<span id="399">399</span>
+<span id="400">400</span>
+<span id="401">401</span>
 </pre><pre class="rust"><code><span class="kw">use </span>core::{convert::TryInto, hint, mem};
 
 <span class="kw">use </span>bitflags::bitflags;
@@ -302,36 +425,94 @@
 <span class="kw">use </span>register::Register;
 
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type </span>CpuId = u8;
+<span class="doccomment">/// Идентификатор local APIC и текущего CPU.
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type </span>CpuId = u8;
 
 
-<span class="doccomment">/// &lt;https://www.intel.com/content/dam/www/public/us/en/documents/manuals/64-ia-32-architectures-software-developer-vol-3a-part-1-manual.pdf&gt;, Chapter 10.
+<span class="doccomment">/// [Memory--mapped I/O](https://en.wikipedia.org/wiki/Memory-mapped_I/O) (MMIO)
+/// для работы с local APIC.
+///
+/// &lt;https://www.intel.com/content/dam/www/public/us/en/documents/manuals/64-ia-32-architectures-software-developer-vol-3a-part-1-manual.pdf&gt;, Chapter 10.
 /// &lt;https://wiki.osdev.org/APIC#Local_APIC_registers&gt;
 </span><span class="attribute">#[derive(Clone)]
 #[repr(C, align(<span class="number">4096</span>))]
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>LocalApic {
-    _0: [Register; <span class="number">2</span>],
-    id: Register,
-    _1: [Register; <span class="number">8</span>],
-    eoi: Register,
-    _2: [Register; <span class="number">3</span>],
-    spurious: Register,
-    _3: [Register; <span class="number">23</span>],
-    error_status_register: Register,
-    _4: [Register; <span class="number">8</span>],
-    interrupt_command_lo: Register,
-    interrupt_command_hi: Register,
-    lvt_timer: Register,
-    lvt_termal_sensor: Register,
-    lvt_performance_counter_overflow: Register,
-    lvt_lint0: Register,
-    lvt_lint1: Register,
-    lvt_error: Register,
-    timer_initial_count: Register,
-    timer_current_count: Register,
-    _5: [Register; <span class="number">4</span>],
-    timer_divide_configuration: Register,
-    _6: [Register; <span class="number">1</span>],
+    <span class="attribute">#[doc(hidden)]
+    </span>_0: [Register; <span class="number">2</span>],
+
+    <span class="doccomment">/// Позволяет узнать идентификатор local APIC и текущего CPU.
+    </span>id: Register,
+
+    <span class="attribute">#[doc(hidden)]
+    </span>_1: [Register; <span class="number">8</span>],
+
+    <span class="doccomment">/// Посылает local APIC сигнал о завершении работы обработчика прерывания ---
+    /// [end of interrupt (EOI)](https://en.wikipedia.org/wiki/End_of_interrupt).
+    </span>eoi: Register,
+
+    <span class="attribute">#[doc(hidden)]
+    </span>_2: [Register; <span class="number">3</span>],
+
+    <span class="doccomment">/// Обработчик &quot;фантомных прерываний&quot;
+    /// ([Spurious interrupts](https://en.wikipedia.org/wiki/Interrupt#Spurious_interrupts)).
+    ///
+    /// &lt;https://wiki.osdev.org/APIC#Spurious_Interrupt_Vector_Register&gt;
+    </span>spurious: Register,
+
+    <span class="attribute">#[doc(hidden)]
+    </span>_3: [Register; <span class="number">23</span>],
+
+    <span class="doccomment">/// Регистр ошибок.
+    </span>error_status_register: Register,
+
+    <span class="attribute">#[doc(hidden)]
+    </span>_4: [Register; <span class="number">8</span>],
+
+    <span class="doccomment">/// Позволяет посылать другим процессорам прерывание ---
+    /// [inter-processor interrupt](https://en.wikipedia.org/wiki/Inter-processor_interrupt) (IPI).
+    /// Эта (нижняя) часть двойного регистра задаёт флаги и дополнительные данные для IPI,
+    /// см. [`InterruptCommand`].
+    </span>interrupt_command_lo: Register,
+
+    <span class="doccomment">/// Позволяет посылать другим процессорам прерывание ---
+    /// [inter-processor interrupt](https://en.wikipedia.org/wiki/Inter-processor_interrupt) (IPI).
+    /// Эта (верхняя) часть двойного регистра задаёт целевой процессор для IPI.
+    </span>interrupt_command_hi: Register,
+
+    <span class="doccomment">/// Регистр таймера.
+    </span>lvt_timer: Register,
+
+    <span class="doccomment">/// Регистр сенсора температуры.
+    </span>lvt_termal_sensor: Register,
+
+    <span class="doccomment">/// Регистр переполнения
+    /// [hardware performance counter](https://en.wikipedia.org/wiki/Hardware_performance_counter)
+    /// (HPC).
+    </span>lvt_performance_counter_overflow: Register,
+
+    <span class="attribute">#[doc(hidden)]
+    </span>lvt_lint0: Register,
+
+    <span class="attribute">#[doc(hidden)]
+    </span>lvt_lint1: Register,
+
+    <span class="attribute">#[doc(hidden)]
+    </span>lvt_error: Register,
+
+    <span class="doccomment">/// Начальное значение счётчика таймера.
+    </span>timer_initial_count: Register,
+
+    <span class="doccomment">/// Текущее значение счётчика таймера.
+    </span>timer_current_count: Register,
+
+    <span class="attribute">#[doc(hidden)]
+    </span>_5: [Register; <span class="number">4</span>],
+
+    <span class="doccomment">/// Делитель счётчика таймера.
+    </span>timer_divide_configuration: Register,
+
+    <span class="attribute">#[doc(hidden)]
+    </span>_6: [Register; <span class="number">1</span>],
 }
 
 
@@ -339,7 +520,12 @@
 
 
 <span class="kw">impl </span>LocalApic {
-    <span class="kw">const fn </span>zero() -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Инициализирует виртуальную страницу для [`LocalApic`] нулями.
+    /// Доступна в константном контексте, чтобы можно было инициализировать
+    /// с её помощью статическую переменную [`LOCAL_APIC`].
+    /// Позже эта страница будет заменена на страницу для доступа к local APIC через интерфейс
+    /// [Memory--mapped I/O](https://en.wikipedia.org/wiki/Memory-mapped_I/O) (MMIO).
+    </span><span class="kw">const fn </span>zero() -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             _0: [Register::zero(); <span class="number">2</span>],
             id: Register::zero(),
@@ -367,9 +553,10 @@
     }
 
 
-    <span class="doccomment">/// Инициализирует local APIC, например включает прерывание таймера.
+    <span class="doccomment">/// Инициализирует local APIC, в том числе включает прерывание таймера.
     </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>init() {
-        <span class="kw">const </span>TSCS_PER_INTERRUPT: u32 = <span class="number">100_000_000</span>;
+        <span class="doccomment">/// Количество тиков процессора между прерываниями от APIC таймера.
+        </span><span class="kw">const </span>TSCS_PER_INTERRUPT: u32 = <span class="number">100_000_000</span>;
 
         <span class="kw">let </span>local_apic = <span class="self">Self</span>::get();
 
@@ -380,14 +567,20 @@
     }
 
 
-    <span class="doccomment">/// Инициализирует [Memory--mapped I/O](https://en.wikipedia.org/wiki/Memory-mapped_I/O) (MMIO) для работы с local APIC.
+    <span class="doccomment">/// Инициализирует [Memory--mapped I/O](https://en.wikipedia.org/wiki/Memory-mapped_I/O) (MMIO)
+    /// для работы с local APIC по физическому адресу `address`.
     </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>map(address: Phys) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="comment">// TODO: your code here.
         </span><span class="macro">unimplemented!</span>();
     }
 
 
-    <span class="doccomment">/// &lt;https://www.intel.com/content/dam/www/public/us/en/documents/manuals/64-ia-32-architectures-software-developer-vol-3a-part-1-manual.pdf&gt;, Chapter 10.8.5 &quot;Signaling Interrupt Servicing Completion&quot;
+    <span class="doccomment">/// Посылает local APIC сигнал о завершении работы обработчика прерывания ---
+    /// [end of interrupt (EOI)](https://en.wikipedia.org/wiki/End_of_interrupt).
+    ///
+    /// &lt;https://www.intel.com/content/dam/www/public/us/en/documents/manuals/64-ia-32-architectures-software-developer-vol-3a-part-1-manual.pdf&gt;,
+    /// Chapter 10.8.5 &quot;Signaling Interrupt Servicing Completion&quot;
+    ///
     /// &lt;https://wiki.osdev.org/APIC#EOI_Register&gt;
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>end_of_interrupt() {
         <span class="self">Self</span>::get().eoi.set(<span class="number">0</span>);
@@ -396,19 +589,25 @@
 
     <span class="doccomment">/// Позволяет узнать идентификатор local APIC и текущего CPU.
     ///
-    /// &lt;https://www.intel.com/content/dam/www/public/us/en/documents/manuals/64-ia-32-architectures-software-developer-vol-3a-part-1-manual.pdf&gt;, Chapter 10.4.6 &quot;Local APIC ID&quot;
+    /// &lt;https://www.intel.com/content/dam/www/public/us/en/documents/manuals/64-ia-32-architectures-software-developer-vol-3a-part-1-manual.pdf&gt;,
+    /// Chapter 10.4.6 &quot;Local APIC ID&quot;
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>id() -&gt; CpuId {
         (<span class="self">Self</span>::get().id.get() &gt;&gt; <span class="self">Self</span>::ID_SHIFT).try_into().unwrap()
     }
 
 
-    <span class="doccomment">/// Посылает прерывание на Application Processor, предназначенное для его инициализации.
+    <span class="doccomment">/// Посылает прерывание на Application Processor с идентификатором `id`,
+    /// предназначенное для его инициализации.
+    /// Физический адрес процедуры инициализации задаёт `boot_address`.
     ///
     /// MultiProcessor Specification 4.1 part B.4 &quot;Application Processor Startup&quot;
     </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>send_init(id: CpuId, boot_address: Phys) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
-        <span class="kw">const </span>MAX_BOOT_PAGE: u32 = <span class="number">0xFF</span>;
+        <span class="doccomment">/// Максимальный номер физического фрейма, который может задавать адрес
+        /// кода загрузки процессора.
+        </span><span class="kw">const </span>MAX_BOOT_FRAME: u32 = <span class="number">0xFF</span>;
+
         <span class="kw">let </span>boot_page = size::try_into_u32(Frame::new(boot_address)<span class="question-mark">?</span>.index())<span class="question-mark">?</span>;
-        <span class="kw">if </span>boot_page &gt; MAX_BOOT_PAGE {
+        <span class="kw">if </span>boot_page &gt; MAX_BOOT_FRAME {
             <span class="kw">return </span><span class="prelude-val">Err</span>(InvalidArgument);
         }
 
@@ -431,7 +630,12 @@
     }
 
 
-    <span class="doccomment">/// 10.6 &quot;ISSUING INTERPROCESSOR INTERRUPTS&quot;
+    <span class="doccomment">/// Посылает процессору `id` прерывание
+    /// ([inter-processor interrupt](https://en.wikipedia.org/wiki/Inter-processor_interrupt), IPI)
+    /// с дополнительными данными `data`.
+    ///
+    /// &lt;https://www.intel.com/content/dam/www/public/us/en/documents/manuals/64-ia-32-architectures-software-developer-vol-3a-part-1-manual.pdf&gt;,
+    /// 10.6 &quot;Issuing Interprocessor Interrupts&quot;
     </span><span class="kw">fn </span>send_ipi(<span class="kw-2">&amp;mut </span><span class="self">self</span>, id: CpuId, data: u32) {
         <span class="self">self</span>.interrupt_command_hi.set(u32::from(id) &lt;&lt; <span class="self">Self</span>::ID_SHIFT);
         <span class="self">self</span>.interrupt_command_lo.set(data);
@@ -453,17 +657,24 @@
     }
 
 
-    <span class="doccomment">/// &lt;https://wiki.osdev.org/APIC#Spurious_Interrupt_Vector_Register&gt;
+    <span class="doccomment">/// Разрешает использование local APIC.
+    ///
+    /// &lt;https://wiki.osdev.org/APIC#Spurious_Interrupt_Vector_Register&gt;
     </span><span class="kw">fn </span>enable(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
-        <span class="kw">const </span>ENABLE_LOCAL_APIC: u32 = <span class="number">1 </span>&lt;&lt; <span class="number">8</span>;
+        <span class="doccomment">/// Включает использование local APIC.
+        </span><span class="kw">const </span>ENABLE_LOCAL_APIC: u32 = <span class="number">1 </span>&lt;&lt; <span class="number">8</span>;
         <span class="self">self</span>.spurious
             .set(ENABLE_LOCAL_APIC | size::try_into_u32(APIC_SPURIOUS).unwrap());
     }
 
 
-    <span class="doccomment">/// &lt;https://wiki.osdev.org/APIC#Local_Vector_Table_Registers&gt;
+    <span class="doccomment">/// Запрещает ненужные нам локальные прерывания.
+    ///
+    /// &lt;https://wiki.osdev.org/APIC#Local_Vector_Table_Registers&gt;
     </span><span class="kw">fn </span>disable_lvts(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
-        <span class="kw">const </span>MASK_INTERRUPT: u32 = <span class="number">1 </span>&lt;&lt; <span class="number">16</span>;
+        <span class="doccomment">/// Отключает получение прерывания.
+        </span><span class="kw">const </span>MASK_INTERRUPT: u32 = <span class="number">1 </span>&lt;&lt; <span class="number">16</span>;
+
         <span class="kw">for </span>interrupt <span class="kw">in </span>[
             <span class="kw-2">&amp;mut </span><span class="self">self</span>.lvt_termal_sensor,
             <span class="kw-2">&amp;mut </span><span class="self">self</span>.lvt_performance_counter_overflow,
@@ -475,47 +686,63 @@
     }
 
 
-    <span class="doccomment">/// &lt;https://www.intel.com/content/dam/www/public/us/en/documents/manuals/64-ia-32-architectures-software-developer-vol-3a-part-1-manual.pdf&gt;, Chapter 10.5.4
+    <span class="doccomment">/// Инициализирует таймер local APIC в периодическом режиме с делителем 1
+    /// и прерыванием номер [`APIC_TIMER`].
+    ///
+    /// &lt;https://www.intel.com/content/dam/www/public/us/en/documents/manuals/64-ia-32-architectures-software-developer-vol-3a-part-1-manual.pdf&gt;,
+    /// Chapter 10.5.4
     </span><span class="kw">fn </span>init_timer(<span class="kw-2">&amp;mut </span><span class="self">self</span>, tscs_per_interrupt: u32) {
-        <span class="kw">const </span>DIVIDE_BY_1: u32 = <span class="number">0b1011</span>;
+        <span class="doccomment">/// Задаёт делитель таймера равный 1.
+        </span><span class="kw">const </span>DIVIDE_BY_1: u32 = <span class="number">0b1011</span>;
+
         <span class="self">self</span>.timer_divide_configuration.set(DIVIDE_BY_1);
         <span class="self">self</span>.timer_initial_count.set(tscs_per_interrupt);
 
-        <span class="kw">const </span>PERIODIC_MODE: u32 = <span class="number">0b01 </span>&lt;&lt; <span class="number">17</span>;
+        <span class="doccomment">/// Задаёт периодический режим таймера.
+        </span><span class="kw">const </span>PERIODIC_MODE: u32 = <span class="number">0b01 </span>&lt;&lt; <span class="number">17</span>;
+
         <span class="self">self</span>.lvt_timer.set(PERIODIC_MODE | size::try_into_u32(APIC_TIMER).unwrap());
     }
 
 
-    <span class="kw">const </span>ID_SHIFT: usize = <span class="number">24</span>;
+    <span class="doccomment">/// Сдвиг для [`CpuId`] внутри [`LocalApic::id`].
+    </span><span class="kw">const </span>ID_SHIFT: usize = <span class="number">24</span>;
 }
 
 
-<span class="kw">mod </span>register {
+<span class="doccomment">/// Задаёт формат одного регистра local APIC.
+</span><span class="kw">mod </span>register {
     <span class="kw">use </span>volatile::Volatile;
 
 
-    <span class="attribute">#[derive(Clone, Copy)]
+    <span class="doccomment">/// Задаёт формат одного регистра local APIC.
+    </span><span class="attribute">#[derive(Clone, Copy)]
     #[repr(C)]
-    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct </span>Register(u32, [u32; <span class="number">3</span>]);
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct </span>Register(u32, <span class="attribute">#[doc(hidden)] </span>[u32; <span class="number">3</span>]);
 
 
     <span class="kw">impl </span>Register {
-        <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">const fn </span>zero() -&gt; <span class="self">Self </span>{
+        <span class="doccomment">/// Возвращает регистр, инициализированный нулём.
+        /// Доступна в константном контексте.
+        </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">const fn </span>zero() -&gt; <span class="self">Self </span>{
             <span class="self">Self</span>(<span class="number">0</span>, [<span class="number">0</span>; <span class="number">3</span>])
         }
 
 
-        <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u32 {
+        <span class="doccomment">/// Читает значение из регистра.
+        </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u32 {
             Volatile::new(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>).read()
         }
 
 
-        <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>set(<span class="kw-2">&amp;mut </span><span class="self">self</span>, value: u32) {
+        <span class="doccomment">/// Записывает значение в регистр.
+        </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>set(<span class="kw-2">&amp;mut </span><span class="self">self</span>, value: u32) {
             Volatile::new(<span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0</span>).write(value);
         }
 
 
-        <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>update&lt;F: FnOnce(<span class="kw-2">&amp;mut </span>u32)&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, f: F) {
+        <span class="doccomment">/// Обновляет значение в регистре с помощью заданной `f`.
+        </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>update&lt;F: FnOnce(<span class="kw-2">&amp;mut </span>u32)&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, f: F) {
             Volatile::new(<span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0</span>).update(f);
         }
     }
@@ -523,19 +750,38 @@
 
 
 <span class="macro">bitflags! </span>{
-    <span class="doccomment">/// 10.6.1 Interrupt Command Register (ICR)
+    <span class="doccomment">/// Поля регистра данных [`LocalApic::interrupt_command_lo`] для
+    /// [inter-processor interrupt](https://en.wikipedia.org/wiki/Inter-processor_interrupt) (IPI).
+    ///
+    /// &lt;https://www.intel.com/content/dam/www/public/us/en/documents/manuals/64-ia-32-architectures-software-developer-vol-3a-part-1-manual.pdf&gt;,
+    /// 10.6.1 Interrupt Command Register (ICR)
     </span><span class="kw">struct </span>InterruptCommand: u32 {
-        <span class="kw">const </span>INIT = <span class="number">0b101 </span>&lt;&lt; <span class="number">8</span>;
-        <span class="kw">const </span>START_UP = <span class="number">0b110 </span>&lt;&lt; <span class="number">8</span>;
-        <span class="kw">const </span>SEND_PENDING = <span class="number">1 </span>&lt;&lt; <span class="number">12</span>;
-        <span class="kw">const </span>LEVEL_ASSERT = <span class="number">1 </span>&lt;&lt; <span class="number">14</span>;
-        <span class="kw">const </span>LEVEL_DEASSERT = <span class="number">0 </span>&lt;&lt; <span class="number">14</span>;
-        <span class="kw">const </span>TRIGGER_MODE_LEVEL = <span class="number">1 </span>&lt;&lt; <span class="number">15</span>;
+        <span class="doccomment">/// Выполнить инициализацию процессора.
+        </span><span class="kw">const </span>INIT = <span class="number">0b101 </span>&lt;&lt; <span class="number">8</span>;
+
+        <span class="doccomment">/// Выполнить код загрузки по заданному адресу.
+        </span><span class="kw">const </span>START_UP = <span class="number">0b110 </span>&lt;&lt; <span class="number">8</span>;
+
+        <span class="doccomment">/// Признак того, что последнее
+        /// [IPI](https://en.wikipedia.org/wiki/Inter-processor_interrupt)
+        /// пока не доставлено целевому процессору.
+        </span><span class="kw">const </span>SEND_PENDING = <span class="number">1 </span>&lt;&lt; <span class="number">12</span>;
+
+        <span class="doccomment">/// Высокий уровень сигнала для прерывания [`InterruptCommand::INIT`].
+        </span><span class="kw">const </span>LEVEL_ASSERT = <span class="number">1 </span>&lt;&lt; <span class="number">14</span>;
+
+        <span class="doccomment">/// Низкий уровень сигнала для прерывания [`InterruptCommand::INIT`].
+        </span><span class="kw">const </span>LEVEL_DEASSERT = <span class="number">0 </span>&lt;&lt; <span class="number">14</span>;
+
+        <span class="doccomment">/// Выбрать режим &quot;уровень&quot; для прерывания [`InterruptCommand::INIT`].
+        </span><span class="kw">const </span>TRIGGER_MODE_LEVEL = <span class="number">1 </span>&lt;&lt; <span class="number">15</span>;
     }
 }
 
 
-<span class="kw">static </span><span class="kw-2">mut </span>LOCAL_APIC: LocalApic = LocalApic::zero();
+<span class="doccomment">/// [Memory--mapped I/O](https://en.wikipedia.org/wiki/Memory-mapped_I/O) (MMIO)
+/// для работы с local APIC.
+</span><span class="kw">static </span><span class="kw-2">mut </span>LOCAL_APIC: LocalApic = LocalApic::zero();
 
 
 <span class="attribute">#[doc(hidden)]
@@ -551,7 +797,7 @@
 
 
     <span class="kw">pub fn </span>id() -&gt; u8 {
-        LocalApic::id().into()
+        LocalApic::id()
     }
 }
 </code></pre></div>

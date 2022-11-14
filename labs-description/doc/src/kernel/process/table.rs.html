@@ -129,6 +129,43 @@
 <span id="129">129</span>
 <span id="130">130</span>
 <span id="131">131</span>
+<span id="132">132</span>
+<span id="133">133</span>
+<span id="134">134</span>
+<span id="135">135</span>
+<span id="136">136</span>
+<span id="137">137</span>
+<span id="138">138</span>
+<span id="139">139</span>
+<span id="140">140</span>
+<span id="141">141</span>
+<span id="142">142</span>
+<span id="143">143</span>
+<span id="144">144</span>
+<span id="145">145</span>
+<span id="146">146</span>
+<span id="147">147</span>
+<span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
+<span id="151">151</span>
+<span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
 </pre><pre class="rust"><code><span class="kw">use </span>alloc::vec::Vec;
 <span class="kw">use </span>core::{fmt, mem};
 
@@ -146,15 +183,27 @@
 
 <span class="kw">use super</span>::{Pid, Process};
 
+<span class="comment">// Used in docs.
+</span><span class="attribute">#[allow(unused)]
+</span><span class="kw">use </span><span class="kw">crate</span>::error::Error;
 
-<span class="attribute">#[allow(clippy::large_enum_variant)]
+
+<span class="doccomment">/// Слот таблицы процессов.
+</span><span class="attribute">#[allow(clippy::large_enum_variant)]
 </span><span class="kw">enum </span>Slot {
-    Free {
-        pid: Pid,
-        next: <span class="prelude-ty">Option</span>&lt;Pid&gt;,
+    <span class="doccomment">/// Слот свободен.
+    </span>Free {
+        <span class="doccomment">/// Хранит эпоху последнего процесса, занимавшего этот слот.
+        </span>pid: Pid,
+
+        <span class="doccomment">/// Провязывает свободные слоты в интрузивный список.
+        </span>next: <span class="prelude-ty">Option</span>&lt;Pid&gt;,
     },
-    Occupied {
-        process: Mutex&lt;Process&gt;,
+
+    <span class="doccomment">/// Слот занят.
+    </span>Occupied {
+        <span class="doccomment">/// Процесс, находящийся в этом слоте таблицы процессов.
+        </span>process: Mutex&lt;Process&gt;,
     },
 }
 
@@ -171,34 +220,53 @@
 }
 
 
-<span class="attribute">#[derive(Default)]
+<span class="doccomment">/// Таблица процессов.
+</span><span class="attribute">#[derive(Default)]
 </span><span class="kw">pub struct </span>Table {
-    free: <span class="prelude-ty">Option</span>&lt;Pid&gt;,
-    process_count: usize,
-    table: Vec&lt;Slot&gt;,
+    <span class="doccomment">/// Голова списка свободных слотов таблицы.
+    </span>free: <span class="prelude-ty">Option</span>&lt;Pid&gt;,
+
+    <span class="doccomment">/// Количество процессов в таблице.
+    </span>process_count: usize,
+
+    <span class="doccomment">/// Слоты таблицы процессов.
+    </span>table: Vec&lt;Slot&gt;,
 }
 
 
 <span class="kw">impl </span>Table {
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>new(len: usize) -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Он создаёт таблицу процессов [`Table`] размера `len` элементов, заполняя её
+    /// пустыми слотами [`Slot::Free`] с соответствующими индексам слотов полями [`Pid::Id::slot`].
+    /// Эти пустые слоты провязывает в односвязный список с головой в поле [`Table::free`].
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>new(len: usize) -&gt; <span class="self">Self </span>{
         <span class="comment">// TODO: your code here.
         </span><span class="macro">unimplemented!</span>();
     }
 
 
-    <span class="attribute">#[allow(unused_mut)] </span><span class="comment">// TODO: remove before flight.
+    <span class="doccomment">/// Выделяет процессу `process` свободный слот таблицы и возвращает соответствующий [`Pid`].
+    /// Если свободного слота нет, возвращает ошибку [`Error::NoProcessSlot`].
+    </span><span class="attribute">#[allow(unused_mut)] </span><span class="comment">// TODO: remove before flight.
     </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>allocate(<span class="kw-2">mut </span>process: Process) -&gt; <span class="prelude-ty">Result</span>&lt;Pid&gt; {
         <span class="comment">// TODO: your code here.
         </span><span class="macro">unimplemented!</span>();
     }
 
 
-    <span class="kw">pub fn </span>free(process: MutexGuard&lt;Process&gt;) {
+    <span class="doccomment">/// Удаляет процесс `process`.
+    /// При этом:
+    /// - Инкрементирует эпоху в освободившемся слоте.
+    /// - Вставляет слот в голову списка свободных слотов [`Table::free`].
+    </span><span class="kw">pub fn </span>free(process: MutexGuard&lt;Process&gt;) {
         <span class="comment">// TODO: your code here.
     </span>}
 
 
-    <span class="kw">pub fn </span>get(pid: Pid) -&gt; <span class="prelude-ty">Result</span>&lt;MutexGuard&lt;<span class="lifetime">&#39;static</span>, Process&gt;&gt; {
+    <span class="doccomment">/// Возвращает заблокированный спинлок [`MutexGuard`] со структурой [`Process`]
+    /// соответствующей идентификатору `pid`.
+    /// Если процесса по указанному `pid` нет или тот же слот занят уже другим процессом,
+    /// возвращает ошибку [`Error::NoProcess`].
+    </span><span class="kw">pub fn </span>get(pid: Pid) -&gt; <span class="prelude-ty">Result</span>&lt;MutexGuard&lt;<span class="lifetime">&#39;static</span>, Process&gt;&gt; {
         <span class="comment">// TODO: your code here.
         </span>test_scaffolding::process() <span class="comment">// TODO: remove before flight.
     </span>}
@@ -215,13 +283,19 @@
 }
 
 
-<span class="kw">unsafe fn </span>forge_static_lifetime&lt;T&gt;(x: <span class="kw-2">&amp;</span>T) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>T {
+<span class="doccomment">/// Обещает Rust, что слоты таблицы процессов [`Table`] имеют время жизни `&#39;static`,
+/// так как Rust не может проверить это самостоятельно.
+///
+/// Так как размер таблицы процессов [`Table`] после инициализации мы никода не меняем,
+/// и в частности не уменьшаем, время жизни каждого её слота --- практически `&#39;static`.
+</span><span class="kw">unsafe fn </span>forge_static_lifetime&lt;T&gt;(x: <span class="kw-2">&amp;</span>T) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>T {
     <span class="kw-2">&amp;*</span>(x <span class="kw">as </span><span class="kw-2">*const </span>T) <span class="kw">as </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>T
 }
 
 
 <span class="macro">lazy_static! </span>{
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">static </span><span class="kw-2">ref </span>TABLE: Mutex&lt;Table&gt; = Mutex::new(Table::default());
+    <span class="doccomment">/// Таблица процессов.
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">static </span><span class="kw-2">ref </span>TABLE: Mutex&lt;Table&gt; = Mutex::new(Table::default());
 }
 
 

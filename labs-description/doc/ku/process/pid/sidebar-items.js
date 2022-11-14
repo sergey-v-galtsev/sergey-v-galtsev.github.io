@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":[["Pid",""]]};
+window.SIDEBAR_ITEMS = {"enum":[["Pid","Идентификатор процесса."]]};

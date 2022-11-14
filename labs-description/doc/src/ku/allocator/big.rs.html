@@ -150,6 +150,22 @@
 <span id="150">150</span>
 <span id="151">151</span>
 <span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
 </pre><pre class="rust"><code><span class="kw">use </span>core::{alloc::Layout, cmp, ptr::NonNull};
 
 <span class="kw">use crate</span>::{
@@ -195,6 +211,22 @@
     /// не будут нарушены.
     /// В частности, не осталось ссылок, которые ведут в `block`.
     </span><span class="kw">unsafe fn </span>unreserve(<span class="kw-2">&amp;mut </span><span class="self">self</span>, block: Block&lt;Page&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt;;
+
+
+    <span class="doccomment">/// Уменьшает ранее зарезервированный блок виртуальных страниц `old_block`
+    /// до его подблока `sub_block`.
+    /// Возвращает ошибку [`Error::InvalidArgument`], если `sub_block`
+    /// не содержится в `old_block` целиком.
+    ///
+    /// # Safety
+    ///
+    /// - `old_block` должен был быть ранее выделен с помощью [`BigAllocator::reserve()`].
+    /// - Для станиц `old_block`, не попадающих в `sub_block`,
+    /// отображения в физическую память уже не дожно быть.
+    /// - Вызывающий код должен гарантировать, что инварианты управления памятью в Rust&#39;е
+    /// не будут нарушены.
+    /// В частности, не осталось ссылок, которые ведут в освобождаемые страницы.
+    </span><span class="kw">unsafe fn </span>rereserve(<span class="kw-2">&amp;mut </span><span class="self">self</span>, old_block: Block&lt;Page&gt;, sub_block: Block&lt;Page&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt;;
 
 
     <span class="doccomment">/// Аллоцирует нужное количество физических фреймов

@@ -133,6 +133,43 @@
 <span id="133">133</span>
 <span id="134">134</span>
 <span id="135">135</span>
+<span id="136">136</span>
+<span id="137">137</span>
+<span id="138">138</span>
+<span id="139">139</span>
+<span id="140">140</span>
+<span id="141">141</span>
+<span id="142">142</span>
+<span id="143">143</span>
+<span id="144">144</span>
+<span id="145">145</span>
+<span id="146">146</span>
+<span id="147">147</span>
+<span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
+<span id="151">151</span>
+<span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
+<span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
 </pre><pre class="rust"><code><span class="kw">use </span>alloc::vec::Vec;
 <span class="kw">use </span>core::{convert::TryInto, ptr::NonNull, result};
 
@@ -158,17 +195,37 @@
 
 <span class="kw">use </span><span class="kw">super</span>::CpuId;
 
+<span class="comment">// Used in docs.
+</span><span class="attribute">#[allow(unused)]
+</span><span class="kw">use </span><span class="kw">crate</span>::error::Error;
 
-<span class="attribute">#[derive(Debug)]
+
+<span class="doccomment">/// Данные из таблиц
+/// [Advanced Configuration and Power Interface](https://en.wikipedia.org/wiki/ACPI) (ACPI)
+/// которые используются при инициализации симметричной многопроцессорности
+/// ([Symmetric multiprocessing](https://en.wikipedia.org/wiki/Symmetric_multiprocessing), SMP).
+///
+/// [Спецификация ACPI](https://uefi.org/sites/default/files/resources/ACPI_Spec_6_5_Aug29.pdf).
+</span><span class="attribute">#[derive(Debug)]
 </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct </span>AcpiInfo {
-    local_apic_address: Phys,
-    bsp_id: CpuId,
-    ap_ids: Vec&lt;CpuId&gt;,
+    <span class="doccomment">/// Физический адрес
+    /// [Memory--mapped I/O](https://en.wikipedia.org/wiki/Memory-mapped_I/O) (MMIO)
+    /// local [APIC](https://en.wikipedia.org/wiki/Advanced_Programmable_Interrupt_Controller).
+    </span>local_apic_address: Phys,
+
+    <span class="doccomment">/// Идентификатор Bootstrap Processor.
+    </span>bsp_id: CpuId,
+
+    <span class="doccomment">/// Идентификаторы доступных Application Processor.
+    </span>ap_ids: Vec&lt;CpuId&gt;,
 }
 
 
 <span class="kw">impl </span>AcpiInfo {
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>new(phys2virt: Page) -&gt; <span class="prelude-ty">Result</span>&lt;AcpiInfo&gt; {
+    <span class="doccomment">/// Заполняет структуру [`AcpiInfo`] по таблицам ACPI, которые BIOS сохранил в памяти.
+    /// Аргумент `phys2virt` --- виртуальная страница, с которой начинается линейное отображение
+    /// всей физической памяти в виртуальную, см. [`memory::phys2virt_map()`].
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>new(phys2virt: Page) -&gt; <span class="prelude-ty">Result</span>&lt;AcpiInfo&gt; {
         <span class="kw">let </span>platform_info = <span class="kw">match </span>platform_info(phys2virt) {
             <span class="prelude-val">Ok</span>(platform_info) =&gt; platform_info,
             <span class="prelude-val">Err</span>(acpi_error) =&gt; {
@@ -200,23 +257,31 @@
     }
 
 
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>local_apic_address(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Phys {
+    <span class="doccomment">/// Физический адрес
+    /// [Memory--mapped I/O](https://en.wikipedia.org/wiki/Memory-mapped_I/O) (MMIO)
+    /// local [APIC](https://en.wikipedia.org/wiki/Advanced_Programmable_Interrupt_Controller).
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>local_apic_address(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Phys {
         <span class="self">self</span>.local_apic_address
     }
 
 
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>bsp_id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; CpuId {
+    <span class="doccomment">/// Идентификатор Bootstrap Processor.
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>bsp_id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; CpuId {
         <span class="self">self</span>.bsp_id
     }
 
 
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>ap_ids(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[CpuId] {
+    <span class="doccomment">/// Идентификаторы доступных Application Processor.
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>ap_ids(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[CpuId] {
         <span class="kw-2">&amp;</span><span class="self">self</span>.ap_ids
     }
 }
 
 
-<span class="kw">fn </span>apic(interrupt_model: InterruptModel) -&gt; <span class="prelude-ty">Result</span>&lt;Apic&gt; {
+<span class="doccomment">/// Возвращает [`Apic`] если в `interrupt_model` из таблиц ACPI указан соответствующий
+/// контроллер прерываний.
+/// Иначе возвращает ошибку [`Error::Unimplemented`].
+</span><span class="kw">fn </span>apic(interrupt_model: InterruptModel) -&gt; <span class="prelude-ty">Result</span>&lt;Apic&gt; {
     <span class="kw">if let </span>InterruptModel::Apic(apic) = interrupt_model {
         <span class="prelude-val">Ok</span>(apic)
     } <span class="kw">else </span>{
@@ -225,14 +290,19 @@
 }
 
 
-<span class="kw">fn </span>platform_info(phys2virt: Page) -&gt; result::Result&lt;PlatformInfo, AcpiError&gt; {
+<span class="doccomment">/// Выполняет поиск в памяти таблиц ACPI с помощью библиотеки [`acpi`].
+/// И возвращает найденную информацию.
+/// Аргумент `phys2virt` --- виртуальная страница, с которой начинается линейное отображение
+/// всей физической памяти в виртуальную, см. [`memory::phys2virt_map()`].
+</span><span class="kw">fn </span>platform_info(phys2virt: Page) -&gt; result::Result&lt;PlatformInfo, AcpiError&gt; {
     <span class="kw">let </span>acpi_mapper = AcpiMapper { phys2virt };
     <span class="kw">let </span>acpi_tables = <span class="kw">unsafe </span>{ AcpiTables::search_for_rsdp_bios(acpi_mapper)<span class="question-mark">? </span>};
     acpi_tables.platform_info()
 }
 
 
-<span class="kw">fn </span>usable_aps(cpus: <span class="kw-2">&amp;</span>ProcessorInfo) -&gt; Vec&lt;CpuId&gt; {
+<span class="doccomment">/// Возвращает идентификаторы доступных Application Processor по входной структуре `cpus`.
+</span><span class="kw">fn </span>usable_aps(cpus: <span class="kw-2">&amp;</span>ProcessorInfo) -&gt; Vec&lt;CpuId&gt; {
     cpus.application_processors
         .iter()
         .filter(|cpu| cpu.state == ProcessorState::WaitingForSipi)
@@ -242,9 +312,12 @@
 }
 
 
-<span class="attribute">#[derive(Clone, Copy)]
+<span class="doccomment">/// Маппер физической памяти в виртуальную, который нужен библиотеке [`acpi`].
+</span><span class="attribute">#[derive(Clone, Copy)]
 </span><span class="kw">struct </span>AcpiMapper {
-    phys2virt: Page,
+    <span class="doccomment">/// Виртуальная страница, с которой начинается линейное отображение
+    /// всей физической памяти в виртуальную, см. [`memory::phys2virt_map()`].
+    </span>phys2virt: Page,
 }
 
 
@@ -264,6 +337,7 @@
 
         PhysicalMapping::new(physical_address, pointer, size, size, <span class="kw-2">*</span><span class="self">self</span>)
     }
+
 
     <span class="kw">fn </span>unmap_physical_region&lt;T&gt;(<span class="kw">_</span>: <span class="kw-2">&amp;</span>PhysicalMapping&lt;<span class="self">Self</span>, T&gt;) {
     }

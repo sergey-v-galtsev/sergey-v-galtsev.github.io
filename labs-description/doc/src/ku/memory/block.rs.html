@@ -633,8 +633,14 @@
 <span id="633">633</span>
 <span id="634">634</span>
 <span id="635">635</span>
-</pre><pre class="rust"><code><span class="attribute">#![warn(missing_docs)]
-#![warn(clippy::missing_docs_in_private_items)]
+<span id="636">636</span>
+<span id="637">637</span>
+<span id="638">638</span>
+<span id="639">639</span>
+<span id="640">640</span>
+<span id="641">641</span>
+</pre><pre class="rust"><code><span class="attribute">#![warn(clippy::missing_docs_in_private_items)]
+#![warn(missing_docs)]
 
 
 </span><span class="kw">use </span>core::{
@@ -762,6 +768,12 @@
         } <span class="kw">else </span>{
             <span class="bool-val">true
         </span>}
+    }
+
+
+    <span class="doccomment">/// Проверяет, что заданный `block` целиком содержится внутри текущего или совпадает с ним.
+    </span><span class="kw">pub fn </span>contains_block(<span class="kw-2">&amp;</span><span class="self">self</span>, block: Block&lt;T&gt;) -&gt; bool {
+        <span class="self">self</span>.start &lt;= block.start &amp;&amp; block.end &lt;= <span class="self">self</span>.end
     }
 
 

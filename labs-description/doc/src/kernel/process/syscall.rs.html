@@ -238,6 +238,75 @@
 <span id="238">238</span>
 <span id="239">239</span>
 <span id="240">240</span>
+<span id="241">241</span>
+<span id="242">242</span>
+<span id="243">243</span>
+<span id="244">244</span>
+<span id="245">245</span>
+<span id="246">246</span>
+<span id="247">247</span>
+<span id="248">248</span>
+<span id="249">249</span>
+<span id="250">250</span>
+<span id="251">251</span>
+<span id="252">252</span>
+<span id="253">253</span>
+<span id="254">254</span>
+<span id="255">255</span>
+<span id="256">256</span>
+<span id="257">257</span>
+<span id="258">258</span>
+<span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
+<span id="262">262</span>
+<span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
 </pre><pre class="rust"><code><span class="kw">use </span>alloc::vec::Vec;
 <span class="kw">use </span>core::{arch::asm, str};
 
@@ -281,6 +350,7 @@
 
 <span class="doccomment">/// Получает управление при выполнении инструкции
 /// [syscall](https://www.felixcloutier.com/x86/syscall).
+///
 /// Переключает стек на стек ядра, разрешает прерывания и
 /// передаёт управление в функцию [`syscall()`].
 </span><span class="attribute">#[naked]
@@ -299,8 +369,9 @@
 
 
 <span class="doccomment">/// Выполняет диспетчеризацию системных вызовов по аргументу `number` --- номеру системного вызова.
+///
 /// Передаёт в функции, реализующие конкретные системные вызовы,
-/// нужную часть аргументов `arg0`–`arg4`.
+/// нужную часть аргументов `arg0`--`arg4`.
 /// После выполнения функции конкретного системного вызова,
 /// с помощью функции [`sysret()`] возвращает управление в контекст пользователя,
 /// задаваемый `rip` и `rsp`.
@@ -330,6 +401,7 @@
 
 <span class="doccomment">/// С помощью инструкции [sysret](https://www.felixcloutier.com/x86/sysret)
 /// возвращает управление в контекст пользователя `context`.
+///
 /// Передаёт пользователю результат системного вызова в виде кода успеха или ошибки `result` и
 /// полезной нагрузки `res`.
 </span><span class="kw">fn </span>sysret(context: MiniContext, result: ResultCode, res: SyscallResult) -&gt; ! {
@@ -352,6 +424,7 @@
 
 
 <span class="doccomment">/// Выполняет системный вызов `syscall::exit(code)`.
+///
 /// Освобождает слот таблицы процессов и возвращается в контекст ядра,
 /// из которого пользовательский процесс был запущен.
 </span><span class="kw">fn </span>exit(process: MutexGuard&lt;Process&gt;, code: usize) -&gt; ! {
@@ -361,7 +434,9 @@
 
 
 <span class="doccomment">/// Выполняет системный вызов `syscall::log_value(string, value)`.
-/// Логирует строку типа `&amp;str`, заданную началом `start` и длиной `len` и число `value`.
+///
+/// Логирует строку `string` типа `&amp;str`, заданную началом `start` и длиной `len`,
+/// а также число `value`.
 </span><span class="attribute">#[allow(unused_mut)] </span><span class="comment">// TODO: remove before flight.
 </span><span class="kw">fn </span>log_value(
     <span class="kw-2">mut </span>process: MutexGuard&lt;Process&gt;,
@@ -374,19 +449,35 @@
 }
 
 
-<span class="kw">fn </span>sched_yield(process: MutexGuard&lt;Process&gt;) -&gt; ! {
+<span class="doccomment">/// Выполняет системный вызов `syscall::sched_yield()`.
+///
+/// Перепланирует процесс в конец очереди готовых к исполнению процессов и
+/// забирает у него CPU, вернувшись в цикл планировщика [`Scheduler`].
+</span><span class="kw">fn </span>sched_yield(process: MutexGuard&lt;Process&gt;) -&gt; ! {
     <span class="comment">// TODO: your code here.
     </span><span class="macro">unimplemented!</span>();
 }
 
 
-<span class="kw">fn </span>exofork(process: MutexGuard&lt;Process&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;SyscallResult&gt; {
+<span class="doccomment">/// Выполняет системный вызов `syscall::exofork()`.
+///
+/// Создаёт копию вызывающего процесса `process` и возвращает исходному процессу [`Pid`] копии.
+/// Внутри копии возвращает [`Pid::Current`].
+/// При этом новый процесс создаётся практически без адресного пространства и не готовый к работе.
+/// Поэтому он, в частности, не ставится в очередь планировщика.
+</span><span class="kw">fn </span>exofork(process: MutexGuard&lt;Process&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;SyscallResult&gt; {
     <span class="comment">// TODO: your code here.
     </span><span class="macro">unimplemented!</span>();
 }
 
 
-<span class="kw">fn </span>map(
+<span class="doccomment">/// Выполняет системный вызов `syscall::map(dst_pid, dst_block, flags)`.
+///
+/// Отображает в памяти процесса, заданного `dst_pid`, блок страниц размера `dst_size` байт
+/// начиная с виртуального адреса `dst_address` с флагами доступа `flags`.
+/// Если `dst_address` равен нулю,
+/// сам выбирает свободный участок адресного пространства размера `dst_size`.
+</span><span class="kw">fn </span>map(
     process: MutexGuard&lt;Process&gt;,
     dst_pid: usize,
     dst_address: usize,
@@ -398,7 +489,11 @@
 }
 
 
-<span class="kw">fn </span>unmap(
+<span class="doccomment">/// Выполняет системный вызов `syscall::unmap(dst_pid, dst_block)`.
+///
+/// Удаляет из виртуальной памяти целевого процесса `dst_pid` блок страниц
+/// размера `dst_size` байт начиная с виртуального адреса `dst_address`.
+</span><span class="kw">fn </span>unmap(
     process: MutexGuard&lt;Process&gt;,
     dst_pid: usize,
     dst_address: usize,
@@ -409,7 +504,18 @@
 }
 
 
-<span class="kw">fn </span>copy_mapping(
+<span class="doccomment">/// Выполняет системный вызов `syscall::copy_mapping(dst_pid, src_block, dst_block, flags)`.
+///
+/// Создаёт копию отображения виртуальной памяти из вызывающего процесса `process`
+/// в процесс, заданный `dst_pid`.
+/// Исходный диапазон начинается с виртуального адреса `src_address`,
+/// целевой --- с виртуального адреса `dst_address`.
+/// Размер диапазона --- `dst_size` байт.
+/// В целевом процессе диапазон должен быть отображён с флагами `flags`.
+/// Не допускает целевое отображение с более широким набором флагов, чем исходное.
+/// После выполнения у процессов появляется область
+/// [разделяемой памяти](https://en.wikipedia.org/wiki/Shared_memory).
+</span><span class="kw">fn </span>copy_mapping(
     process: MutexGuard&lt;Process&gt;,
     dst_pid: usize,
     src_address: usize,
@@ -422,7 +528,9 @@
 }
 
 
-<span class="attribute">#[allow(unused_mut)] </span><span class="comment">// TODO: remove before flight.
+<span class="doccomment">/// Выполняет копирование отображения `src_block` в `dst_block` с флагами `flags`
+/// из адресного пространства процесса `src` в адресное пространство `dst_address_space`.
+</span><span class="attribute">#[allow(unused_mut)] </span><span class="comment">// TODO: remove before flight.
 </span><span class="kw">fn </span>do_copy_mapping(
     src: <span class="kw-2">&amp;</span>MutexGuard&lt;Process&gt;,
     <span class="kw-2">mut </span>dst_address_space: MutexGuard&lt;AddressSpace&gt;,
@@ -435,13 +543,23 @@
 }
 
 
-<span class="kw">fn </span>set_state(process: MutexGuard&lt;Process&gt;, dst_pid: usize, state: usize) -&gt; <span class="prelude-ty">Result</span>&lt;SyscallResult&gt; {
+<span class="doccomment">/// Выполняет системный вызов `syscall::set_state(dst_pid, state)`.
+///
+/// Переводит целевой процесс, заданный идентификатором `dst_pid`, в заданное состояние `state`.
+/// Ставит его в очередь планировщика в случае [`State::Runnable`].
+</span><span class="kw">fn </span>set_state(process: MutexGuard&lt;Process&gt;, dst_pid: usize, state: usize) -&gt; <span class="prelude-ty">Result</span>&lt;SyscallResult&gt; {
     <span class="comment">// TODO: your code here.
     </span><span class="macro">unimplemented!</span>();
 }
 
 
-<span class="kw">fn </span>set_trap_handler(
+<span class="doccomment">/// Выполняет системный вызов `syscall::set_trap_handler(dst_pid, trap_handler, trap_stack)`.
+///
+/// Устанавливает для целевого процесса, заданного идентификатором `dst_pid`,
+/// пользовательский обработчик прерывания с виртуальным адресом `rip` и стеком,
+/// который задаётся блоком виртуальных адресов начиная с `stack_address` и размера `stack_size`.
+/// Стек может быть не выровнен по границе страниц.
+</span><span class="kw">fn </span>set_trap_handler(
     process: MutexGuard&lt;Process&gt;,
     dst_pid: usize,
     rip: usize,
@@ -453,25 +571,45 @@
 }
 
 
-<span class="kw">fn </span>check_block(address: usize, size: usize) -&gt; <span class="prelude-ty">Result</span>&lt;Block&lt;Page&gt;&gt; {
+<span class="doccomment">/// Проверяет, что `address` и `size` задают корректно выровненный диапазон страниц,
+/// целиком лежащий внутри одной из
+/// [двух непрерывных половин](https://en.wikipedia.org/wiki/X86-64#Virtual_address_space_details)
+/// адресного пространства.
+/// Возвращает блок соответствующих виртуальных страниц.
+</span><span class="kw">fn </span>check_block(address: usize, size: usize) -&gt; <span class="prelude-ty">Result</span>&lt;Block&lt;Page&gt;&gt; {
     <span class="comment">// TODO: your code here.
     </span><span class="macro">unimplemented!</span>();
 }
 
 
-<span class="kw">fn </span>check_frame(process: <span class="kw-2">&amp;</span>MutexGuard&lt;Process&gt;, page: Page, flags: PageTableFlags) -&gt; <span class="prelude-ty">Result</span>&lt;Frame&gt; {
+<span class="doccomment">/// Проверяет, что заданная виртуальная страница `page` отображена в
+/// адресное пространство процесса `process` с корректно заданными флагами `flags`.
+/// Возвращает физический фрейм, в который она отображена.
+</span><span class="kw">fn </span>check_frame(process: <span class="kw-2">&amp;</span>MutexGuard&lt;Process&gt;, page: Page, flags: PageTableFlags) -&gt; <span class="prelude-ty">Result</span>&lt;Frame&gt; {
     <span class="comment">// TODO: your code here.
     </span><span class="macro">unimplemented!</span>();
 }
 
 
-<span class="kw">fn </span>check_page_flags(flags: usize) -&gt; <span class="prelude-ty">Result</span>&lt;PageTableFlags&gt; {
+<span class="doccomment">/// Проверяет, что `flags` задаёт валидный набор флагов отображения страниц,
+/// в котором обязательно должны быть включены флаги присутствия страницы в памяти и
+/// разрешения доступа со стороны кода пользователя.
+/// Возвращает входные `flags` в виде [`PageTableFlags`].
+</span><span class="kw">fn </span>check_page_flags(flags: usize) -&gt; <span class="prelude-ty">Result</span>&lt;PageTableFlags&gt; {
     <span class="comment">// TODO: your code here.
     </span><span class="macro">unimplemented!</span>();
 }
 
 
-<span class="kw">fn </span>check_process_permissions(
+<span class="doccomment">/// Проверяет, что процесс `process` имеет право модифицировать целевой процесс,
+/// заданный своим идентификатором `dst_pid`.
+/// Поглощает блокировку `process`, выдавая взамен блокировку на целевой процесс.
+/// Целевой процесс может совпадать с `process`.
+///
+/// Модифицировать можно:
+/// - Либо самого себя, задавая [`Pid::Current`] или явно собственный идентификатор [`Pid::Id`].
+/// - Либо свой непосредственно дочерний процесс, задавая его идентификатор.
+</span><span class="kw">fn </span>check_process_permissions(
     process: MutexGuard&lt;Process&gt;,
     dst_pid: usize,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;MutexGuard&lt;Process&gt;&gt; {

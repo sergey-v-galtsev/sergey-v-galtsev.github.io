@@ -218,6 +218,52 @@
 <span id="218">218</span>
 <span id="219">219</span>
 <span id="220">220</span>
+<span id="221">221</span>
+<span id="222">222</span>
+<span id="223">223</span>
+<span id="224">224</span>
+<span id="225">225</span>
+<span id="226">226</span>
+<span id="227">227</span>
+<span id="228">228</span>
+<span id="229">229</span>
+<span id="230">230</span>
+<span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
+<span id="237">237</span>
+<span id="238">238</span>
+<span id="239">239</span>
+<span id="240">240</span>
+<span id="241">241</span>
+<span id="242">242</span>
+<span id="243">243</span>
+<span id="244">244</span>
+<span id="245">245</span>
+<span id="246">246</span>
+<span id="247">247</span>
+<span id="248">248</span>
+<span id="249">249</span>
+<span id="250">250</span>
+<span id="251">251</span>
+<span id="252">252</span>
+<span id="253">253</span>
+<span id="254">254</span>
+<span id="255">255</span>
+<span id="256">256</span>
+<span id="257">257</span>
+<span id="258">258</span>
+<span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
+<span id="262">262</span>
+<span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
 </pre><pre class="rust"><code><span class="kw">use </span>alloc::vec::Vec;
 <span class="kw">use </span>core::{arch::asm, convert::TryInto, mem};
 
@@ -249,8 +295,16 @@
 
 <span class="kw">use super</span>::{CpuId, LocalApic};
 
+<span class="comment">// Used in docs.
+</span><span class="attribute">#[allow(unused)]
+</span><span class="kw">use </span><span class="kw">crate</span>::process::Registers;
 
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>init(cpu_count: usize, current_cpu: CpuId) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;Cpu&gt;&gt; {
+
+<span class="doccomment">/// Инициализирует вектор структур [`Cpu`] размера `cpu_count` и
+/// регистры [`FS`](https://wiki.osdev.org/CPU_Registers_x86-64#FS.base.2C_GS.base) и
+/// [`TR`](https://wiki.osdev.org/CPU_Registers_x86-64#TR)
+/// для `current_cpu` (Bootstrap Processor).
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>init(cpu_count: usize, current_cpu: CpuId) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;Cpu&gt;&gt; {
     <span class="kw">let </span><span class="kw-2">mut </span>cpus = init_cpu_vec(cpu_count)<span class="question-mark">?</span>;
 
     <span class="kw">let </span>cpu = <span class="kw-2">&amp;mut </span>cpus[usize::from(current_cpu)];
@@ -268,38 +322,48 @@
 }
 
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span>KERNEL_RSP_OFFSET_IN_CPU: usize = <span class="macro">offset_of!</span>(Cpu, tss) +
+<span class="doccomment">/// Смещение внутри [`Cpu`], по которому нужно сохранять `rsp` ядра,
+/// чтобы процессор переключал стек на него при возникновении прерываний в ненулевом
+/// кольце защиты.
+/// Ядро сохраняет там свой `rsp`, когда переключается в режим пользователя
+/// и восстанавливает свой `rsp` оттуда, когда возвращается из режима пользователя
+/// или получает он него системный вызов.
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span>KERNEL_RSP_OFFSET_IN_CPU: usize = <span class="macro">offset_of!</span>(Cpu, tss) +
     <span class="macro">offset_of!</span>(TaskStateSegment, privilege_stack_table) +
     PrivilegeLevel::Ring0 <span class="kw">as </span>usize * mem::size_of::&lt;VirtAddr&gt;();
 
 
-<span class="doccomment">/// CPU-local storage.
+<span class="doccomment">/// CPU--local storage.
 /// Aligned on the cache line size to avoid false sharing.
 /// [Why align on 128 bytes instead of 64?](https://docs.rs/crossbeam/latest/crossbeam/utils/struct.CachePadded.html#size-and-alignment)
 </span><span class="attribute">#[repr(align(<span class="number">128</span>))]
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>Cpu {
     <span class="doccomment">/// Исполняющийся на данном CPU в текущий момент пользовательский процесс.
     ///
-    /// Пользовательские процессы выполняются независимо на разных ядрах, следовательно у каждого ядра текущий процесс должен быть своим.
+    /// Пользовательские процессы выполняются независимо на разных ядрах,
+    /// следовательно у каждого ядра текущий процесс должен быть своим.
     </span>current_process: <span class="prelude-ty">Option</span>&lt;Pid&gt;,
 
-    <span class="doccomment">/// Идентификатор данного CPU, содержит копию идентификатора его Local APIC --- [`LocalApic::id()`].
+    <span class="doccomment">/// Идентификатор данного CPU, копия идентификатора его Local APIC --- [`LocalApic::id()`].
     </span>id: CpuId,
 
     <span class="doccomment">/// Стек ядра данного CPU.
     ///
-    /// Процессоры обрабатывают системные вызовы и прерывания независимо, так что у каждого должен быть свой стек для этого.
+    /// Процессоры обрабатывают системные вызовы и прерывания независимо,
+    /// так что у каждого должен быть свой стек для этого.
     </span>kernel_stack: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>Stack,
 
-    <span class="doccomment">/// Дополнительный стек, который используется во время обработки Page Fault.
+    <span class="doccomment">/// Дополнительный стек, который используется во время обработки
+    /// [Page Fault](https://en.wikipedia.org/wiki/Page_fault).
     ///
-    /// Он позволяет напечатать диагностику возникшего исключения даже в случае, когда оно вызвано исчерпанием основного стека ядра.
+    /// Он позволяет напечатать диагностику возникшего исключения даже в случае,
+    /// когда оно вызвано исчерпанием основного стека ядра.
     </span>page_fault_stack: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>Stack,
 
     <span class="doccomment">/// Адрес структуры [`Cpu`] для данного CPU.
     </span>this: Virt,
 
-    <span class="doccomment">/// Task State Segment (TSS) для данного CPU.
+    <span class="doccomment">/// [Task State Segment](https://en.wikipedia.org/wiki/Task_state_segment) (TSS) данного CPU.
     ///
     /// В TSS описано где находится стек ядра для текущего процессора.
     /// Стеки у разных CPU разные, поэтому и TSS тоже должны быть разные.
@@ -311,7 +375,10 @@
 
 
 <span class="kw">impl </span>Cpu {
-    <span class="kw">pub fn </span>new(id: CpuId, stacks: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>[Stack]) -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Заполняет структуру [`Cpu`] для процессора номер `id` с двумя заданными
+    /// стеками `stacks` для обычного кода ядра и для обработчика
+    /// [Page Fault](https://en.wikipedia.org/wiki/Page_fault).
+    </span><span class="kw">pub fn </span>new(id: CpuId, stacks: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>[Stack]) -&gt; <span class="self">Self </span>{
         <span class="macro">assert!</span>(stacks.len() == <span class="self">Self</span>::STACKS_PER_CPU);
 
         <span class="kw">let </span><span class="kw-2">mut </span>result = <span class="self">Self </span>{
@@ -336,7 +403,11 @@
     }
 
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>current_process() -&gt; <span class="prelude-ty">Result</span>&lt;Pid&gt; {
+    <span class="doccomment">/// Возвращает исполняющийся на данном CPU в текущий момент пользовательский процесс.
+    ///
+    /// Пользовательские процессы выполняются независимо на разных ядрах,
+    /// следовательно у каждого ядра текущий процесс должен быть своим.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>current_process() -&gt; <span class="prelude-ty">Result</span>&lt;Pid&gt; {
         <span class="kw">if </span><span class="kw">super</span>::test_scaffolding::is_initialized() {
             <span class="kw">let </span>cpu = <span class="kw">unsafe </span>{ <span class="self">Self</span>::get() };
             cpu.current_process.ok_or(NoProcess)
@@ -346,7 +417,11 @@
     }
 
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>set_current_process(process: <span class="prelude-ty">Option</span>&lt;Pid&gt;) {
+    <span class="doccomment">/// Устанавливает исполняющийся на данном CPU в текущий момент пользовательский процесс.
+    ///
+    /// Пользовательские процессы выполняются независимо на разных ядрах,
+    /// следовательно у каждого ядра текущий процесс должен быть своим.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>set_current_process(process: <span class="prelude-ty">Option</span>&lt;Pid&gt;) {
         <span class="kw">if </span><span class="kw">super</span>::test_scaffolding::is_initialized() {
             <span class="kw">let </span>cpu = <span class="kw">unsafe </span>{ <span class="self">Self</span>::get() };
             cpu.current_process = process;
@@ -354,7 +429,10 @@
     }
 
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>kernel_context() -&gt; ModeContext {
+    <span class="doccomment">/// Возвращает контекст ядра для данного [`Cpu`], то есть с его стеком.
+    /// В качестве `rip` использует функцию [`Registers::switch_from()`],
+    /// то есть при переходе в этот контекст будет запущена именно она.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>kernel_context() -&gt; ModeContext {
         <span class="kw">let </span>cpu = <span class="kw">unsafe </span>{ <span class="self">Self</span>::get() };
         ModeContext::kernel_context(
             cpu.tss.privilege_stack_table[PrivilegeLevel::Ring0 <span class="kw">as </span>usize].into(),
@@ -362,13 +440,16 @@
     }
 
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>set_user_context(user_context: ModeContext) {
+    <span class="doccomment">/// Записывает в [`Cpu`] контекст принудительно вытесненного с этого CPU процесса.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>set_user_context(user_context: ModeContext) {
         <span class="kw">let </span>cpu = <span class="kw">unsafe </span>{ <span class="self">Self</span>::get() };
         cpu.user_context = <span class="prelude-val">Some</span>(user_context);
     }
 
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>take_user_context() -&gt; <span class="prelude-ty">Option</span>&lt;ModeContext&gt; {
+    <span class="doccomment">/// Вытаскивает из [`Cpu`] контекст принудительно вытесненного с этого CPU процесса.
+    /// После выполнения этой функции в соответствующем поле [`Cpu`] будет храниться [`None`].
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>take_user_context() -&gt; <span class="prelude-ty">Option</span>&lt;ModeContext&gt; {
         <span class="kw">if </span><span class="kw">super</span>::test_scaffolding::is_initialized() {
             <span class="kw">let </span>cpu = <span class="kw">unsafe </span>{ <span class="self">Self</span>::get() };
             cpu.user_context.take()
@@ -378,24 +459,32 @@
     }
 
 
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; CpuId {
+    <span class="doccomment">/// Идентификатор данного CPU, копия идентификатора его Local APIC --- [`LocalApic::id()`].
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; CpuId {
         <span class="self">self</span>.id
     }
 
 
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>kernel_stack(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>Stack {
+    <span class="doccomment">/// Стек ядра данного CPU.
+    ///
+    /// Процессоры обрабатывают системные вызовы и прерывания независимо,
+    /// так что у каждого должен быть свой стек для этого.
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>kernel_stack(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>Stack {
         <span class="self">self</span>.kernel_stack
     }
 
 
-    <span class="doccomment">/// Инициализация регистра `FS` текущего CPU.
+    <span class="doccomment">/// Инициализация регистра
+    /// [`FS`](https://wiki.osdev.org/CPU_Registers_x86-64#FS.base.2C_GS.base)
+    /// текущего CPU.
     </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>set_fs(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
         <span class="comment">// TODO: your code here.
         </span><span class="macro">unimplemented!</span>();
     }
 
 
-    <span class="doccomment">/// Инициализация TSS и регистра TR текущего CPU.
+    <span class="doccomment">/// Инициализация [Task State Segment](https://en.wikipedia.org/wiki/Task_state_segment)
+    /// и регистра [`TR`](https://wiki.osdev.org/CPU_Registers_x86-64#TR) текущего CPU.
     </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>set_tss(<span class="kw-2">&amp;</span><span class="self">self</span>) {
         <span class="comment">// TODO: your code here.
         </span><span class="macro">unimplemented!</span>();
@@ -409,7 +498,10 @@
     }
 
 
-    <span class="kw">const </span>STACKS_PER_CPU: usize = <span class="number">2</span>;
+    <span class="doccomment">/// Каждому CPU нужно два стека:
+    /// - для обычного кода ядра и
+    /// - для обработчика [Page Fault](https://en.wikipedia.org/wiki/Page_fault).
+    </span><span class="kw">const </span>STACKS_PER_CPU: usize = <span class="number">2</span>;
 }
 
 
@@ -429,7 +521,7 @@
 
     <span class="kw">pub fn </span>cpu_id() -&gt; u8 {
         <span class="kw">let </span>cpu = <span class="kw">unsafe </span>{ Cpu::get() };
-        cpu.id().into()
+        cpu.id()
     }
 
 

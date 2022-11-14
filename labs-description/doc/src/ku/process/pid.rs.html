@@ -110,6 +110,25 @@
 <span id="110">110</span>
 <span id="111">111</span>
 <span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
+<span id="116">116</span>
+<span id="117">117</span>
+<span id="118">118</span>
+<span id="119">119</span>
+<span id="120">120</span>
+<span id="121">121</span>
+<span id="122">122</span>
+<span id="123">123</span>
+<span id="124">124</span>
+<span id="125">125</span>
+<span id="126">126</span>
+<span id="127">127</span>
+<span id="128">128</span>
+<span id="129">129</span>
+<span id="130">130</span>
+<span id="131">131</span>
 </pre><pre class="rust"><code><span class="kw">use </span>core::{convert::TryInto, fmt, mem};
 
 <span class="kw">use </span>static_assertions::const_assert;
@@ -117,24 +136,38 @@
 <span class="kw">use </span><span class="kw">crate</span>::error::{Error::InvalidArgument, <span class="prelude-ty">Result</span>};
 
 
-<span class="attribute">#[derive(Clone, Copy, Eq, PartialEq)]
+<span class="doccomment">/// Идентификатор процесса.
+</span><span class="attribute">#[derive(Clone, Copy, Eq, PartialEq)]
 </span><span class="kw">pub enum </span>Pid {
-    Current,
-    Id {
-        slot: u16,
-        epoch: u32,
+    <span class="doccomment">/// Текущий процесс, это удобно для использования тех системных вызовов,
+    /// что принимают на вход [`Pid`].
+    </span>Current,
+
+    <span class="doccomment">/// Конкретный процесс, идентификатор которого состоит из
+    /// номера слота в таблице процессов и эпохи этого слота.
+    </span>Id {
+        <span class="doccomment">/// Номер слота в таблице процессов.
+        /// Позволяет быстро находить процесс по его идентификатору в таблице процессов.
+        </span>slot: u16,
+
+        <span class="doccomment">/// Эпоха слота в таблице процессов.
+        /// Позволяет сделать идентификаторы процессов уникальными
+        /// на протяжении всего времени работы системы.
+        </span>epoch: u32,
     },
 }
 
 
 <span class="kw">impl </span>Pid {
-    <span class="kw">pub const </span>MAX_COUNT: usize = (<span class="number">1 </span>&lt;&lt; <span class="self">Self</span>::EPOCH_SHIFT);
+    <span class="doccomment">/// Максимальное поддерживаемое [`Pid`] количество одновременно работающих процессов.
+    </span><span class="kw">pub const </span>MAX_COUNT: usize = (<span class="number">1 </span>&lt;&lt; <span class="self">Self</span>::EPOCH_SHIFT);
 
     <span class="kw">const </span>EPOCH_SHIFT: u32 = u16::BITS;
     <span class="kw">const </span>INDEX_MASK: usize = <span class="self">Self</span>::MAX_COUNT - <span class="number">1</span>;
 
 
-    <span class="kw">pub fn </span>new(slot: usize) -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Создаёт [`Pid`] с начальным значением [`Pid::Id::epoch`] для заданного `slot`.
+    </span><span class="kw">pub fn </span>new(slot: usize) -&gt; <span class="self">Self </span>{
         <span class="self">Self</span>::Id {
             slot: slot.try_into().unwrap(),
             epoch: <span class="number">0</span>,
@@ -142,7 +175,8 @@
     }
 
 
-    <span class="kw">pub fn </span>from_usize(pid: usize) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
+    <span class="doccomment">/// Позволяет десериализовать [`Pid`] из регистра при передаче в системные вызовы.
+    </span><span class="kw">pub fn </span>from_usize(pid: usize) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         <span class="kw">if </span>pid == usize::MAX - <span class="number">1 </span>{
             <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Current)
         } <span class="kw">else </span>{
@@ -160,7 +194,8 @@
     }
 
 
-    <span class="kw">pub fn </span>into_usize(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+    <span class="doccomment">/// Позволяет сериализовать [`Pid`] в регистр при передаче в системные вызовы.
+    </span><span class="kw">pub fn </span>into_usize(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="macro">const_assert!</span>(mem::size_of::&lt;Pid&gt;() &lt;= mem::size_of::&lt;usize&gt;());
         <span class="macro">const_assert!</span>(mem::size_of::&lt;<span class="prelude-ty">Option</span>&lt;Pid&gt;&gt;() &lt;= mem::size_of::&lt;usize&gt;());
 
@@ -171,7 +206,9 @@
     }
 
 
-    <span class="kw">pub fn </span>slot(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+    <span class="doccomment">/// Номер слота в таблице процессов.
+    /// Позволяет быстро находить процесс по его идентификатору в таблице процессов.
+    </span><span class="kw">pub fn </span>slot(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="kw">let </span>pid = <span class="kw">match </span><span class="self">self </span>{
             <span class="self">Self</span>::Current =&gt; {
                 <span class="macro">unimplemented!</span>();
@@ -190,7 +227,8 @@
     }
 
 
-    <span class="kw">pub fn </span>next_epoch(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+    <span class="doccomment">/// Инкрементирует номер эпохи [`Pid::Id::epoch`] слота в таблице процессов.
+    </span><span class="kw">pub fn </span>next_epoch(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
         <span class="kw">if let </span><span class="self">Self</span>::Id { slot: <span class="kw">_</span>, epoch } = <span class="self">self </span>{
             <span class="kw-2">*</span>epoch = epoch.checked_add(<span class="number">1</span>).expect(<span class="string">&quot;epoch overflow&quot;</span>);
         } <span class="kw">else </span>{

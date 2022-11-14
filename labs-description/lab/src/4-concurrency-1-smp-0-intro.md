@@ -32,10 +32,14 @@ local [Advanced Programmable Interrupt Controller](https://en.wikipedia.org/wiki
 ### Ориентировочный объём работ этой части лабораторки
 
 ```console
- kernel/src/smp/ap_init.rs    |   42 ++++++++++++++++++++++++++++++++++++++++--
- kernel/src/smp/cpu.rs        |   32 ++++++++++++++++++++++++++++----
- kernel/src/smp/local_apic.rs |   17 ++++++++++++++++-
- 3 files changed, 84 insertions(+), 7 deletions(-)
+ kernel/src/smp/ap_init.rs    |   55 ++++++++++++++++++++++++++++++++++++++++---
+ kernel/src/smp/cpu.rs        |   54 +++++++++++++++++++++++++++++++++++-------
+ kernel/src/smp/local_apic.rs |   19 +++++++++++++-
+ 3 files changed, 115 insertions(+), 13 deletions(-)
 ```
 
-Однако, будьте готовы к тому что на написание и отладку [задачи 6](../../lab/book/4-concurrency-1-smp-3-ap-init.html#%D0%97%D0%B0%D0%B4%D0%B0%D1%87%D0%B0-6--%D0%BF%D0%B5%D1%80%D0%B5%D0%BA%D0%BB%D1%8E%D1%87%D0%B5%D0%BD%D0%B8%D0%B5-ap-%D0%B2-64-%D0%B1%D0%B8%D1%82%D0%BD%D1%8B%D0%B9-%D1%80%D0%B5%D0%B6%D0%B8%D0%BC) может потребоваться много времени. Также может потребоваться изучить ассемблер различных режимов работы процессора архитектуры [x86-64](https://en.wikipedia.org/wiki/X86-64).
+Однако, будьте готовы к тому что на написание и отладку
+[задачи 4](../../lab/book/4-concurrency-1-smp-3-ap-init.html#%D0%97%D0%B0%D0%B4%D0%B0%D1%87%D0%B0-4--%D0%BF%D0%B5%D1%80%D0%B5%D0%BA%D0%BB%D1%8E%D1%87%D0%B5%D0%BD%D0%B8%D0%B5-ap-%D0%B2-64-%D0%B1%D0%B8%D1%82%D0%BD%D1%8B%D0%B9-%D1%80%D0%B5%D0%B6%D0%B8%D0%BC)
+может потребоваться много времени.
+Также может потребоваться изучить ассемблер различных режимов работы процессора архитектуры
+[x86-64](https://en.wikipedia.org/wiki/X86-64).

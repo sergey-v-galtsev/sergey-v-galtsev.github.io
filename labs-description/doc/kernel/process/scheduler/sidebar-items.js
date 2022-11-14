@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":[["test_scaffolding",""]],"struct":[["SCHEDULER",""],["Scheduler",""]]};
+window.SIDEBAR_ITEMS = {"struct":[["SCHEDULER","Планировщик процессов. Реализует простейшее циклическое исполнение процессов."],["Scheduler","Планировщик процессов. Реализует простейшее циклическое исполнение процессов."]]};

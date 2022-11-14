@@ -171,12 +171,16 @@ local <a href="https://en.wikipedia.org/wiki/Advanced_Programmable_Interrupt_Con
 <li><a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/smp/local_apic.rs"><code>kernel/src/smp/local_apic.rs</code></a> — код работы с local APIC.</li>
 </ul>
 <h3 id="Ориентировочный-объём-работ-этой-части-лабораторки"><a class="header" href="#Ориентировочный-объём-работ-этой-части-лабораторки">Ориентировочный объём работ этой части лабораторки</a></h3>
-<pre><code class="language-console"> kernel/src/smp/ap_init.rs    |   42 ++++++++++++++++++++++++++++++++++++++++--
- kernel/src/smp/cpu.rs        |   32 ++++++++++++++++++++++++++++----
- kernel/src/smp/local_apic.rs |   17 ++++++++++++++++-
- 3 files changed, 84 insertions(+), 7 deletions(-)
+<pre><code class="language-console"> kernel/src/smp/ap_init.rs    |   55 ++++++++++++++++++++++++++++++++++++++++---
+ kernel/src/smp/cpu.rs        |   54 +++++++++++++++++++++++++++++++++++-------
+ kernel/src/smp/local_apic.rs |   19 +++++++++++++-
+ 3 files changed, 115 insertions(+), 13 deletions(-)
 </code></pre>
-<p>Однако, будьте готовы к тому что на написание и отладку <a href="../../lab/book/4-concurrency-1-smp-3-ap-init.html#%D0%97%D0%B0%D0%B4%D0%B0%D1%87%D0%B0-6--%D0%BF%D0%B5%D1%80%D0%B5%D0%BA%D0%BB%D1%8E%D1%87%D0%B5%D0%BD%D0%B8%D0%B5-ap-%D0%B2-64-%D0%B1%D0%B8%D1%82%D0%BD%D1%8B%D0%B9-%D1%80%D0%B5%D0%B6%D0%B8%D0%BC">задачи 6</a> может потребоваться много времени. Также может потребоваться изучить ассемблер различных режимов работы процессора архитектуры <a href="https://en.wikipedia.org/wiki/X86-64">x86-64</a>.</p>
+<p>Однако, будьте готовы к тому что на написание и отладку
+<a href="../../lab/book/4-concurrency-1-smp-3-ap-init.html#%D0%97%D0%B0%D0%B4%D0%B0%D1%87%D0%B0-4--%D0%BF%D0%B5%D1%80%D0%B5%D0%BA%D0%BB%D1%8E%D1%87%D0%B5%D0%BD%D0%B8%D0%B5-ap-%D0%B2-64-%D0%B1%D0%B8%D1%82%D0%BD%D1%8B%D0%B9-%D1%80%D0%B5%D0%B6%D0%B8%D0%BC">задачи 4</a>
+может потребоваться много времени.
+Также может потребоваться изучить ассемблер различных режимов работы процессора архитектуры
+<a href="https://en.wikipedia.org/wiki/X86-64">x86-64</a>.</p>
 
                     </main>
 

@@ -360,6 +360,18 @@
 <span id="360">360</span>
 <span id="361">361</span>
 <span id="362">362</span>
+<span id="363">363</span>
+<span id="364">364</span>
+<span id="365">365</span>
+<span id="366">366</span>
+<span id="367">367</span>
+<span id="368">368</span>
+<span id="369">369</span>
+<span id="370">370</span>
+<span id="371">371</span>
+<span id="372">372</span>
+<span id="373">373</span>
+<span id="374">374</span>
 </pre><pre class="rust"><code><span class="kw">use </span>core::fmt;
 
 <span class="kw">use </span>spin::{Mutex, MutexGuard};
@@ -369,6 +381,7 @@
 <span class="kw">use crate</span>::{
     allocator::MemoryAllocator,
     error::{Error::InvalidArgument, <span class="prelude-ty">Result</span>},
+    interrupts::InterruptContext,
     log::{debug, info},
     memory::{AddressSpace, Block, Virt, USER_RW},
     smp::Cpu,
@@ -389,7 +402,6 @@
     <span class="doccomment">/// Процесс выполняется в данный момент.
     </span>Running,
 }
-
 
 
 <span class="doccomment">/// Описывает пользовательский процесс.
@@ -594,6 +606,18 @@
         <span class="comment">// TODO: your code here.
 
         </span><span class="bool-val">false
+    </span>}
+
+
+    <span class="doccomment">/// Выполняет переключение текущего контекста исполнения `context`
+    /// на контекст ядра в случае, если текущий контекст исполняется в режиме пользователя.
+    /// Текущий контекст пользователя сохраняет в структуре `Cpu` текущего процессора.
+    ///
+    /// Этот метод вызывается из функции обработки прерывания от таймера `interrupts::apic_timer()`.
+    </span><span class="attribute">#[allow(unused_mut)] </span><span class="comment">// TODO: remove before flight.
+    </span><span class="attribute">#[inline(always)]
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>preempt(context: <span class="kw-2">&amp;mut </span>InterruptContext) {
+        <span class="comment">// TODO: your code here.
     </span>}
 
 

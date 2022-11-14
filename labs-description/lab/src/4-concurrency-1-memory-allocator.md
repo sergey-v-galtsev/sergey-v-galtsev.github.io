@@ -66,6 +66,63 @@ Rust'овский интерфейс аллокатора памяти обще�
 [`kernel/src/allocator/mod.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/allocator/mod.rs).
 
 
+### Статистика аллокатора [`ku::allocator::info::Info`](../../doc/ku/allocator/info/struct.Info.html)
+
+Для отладки аллокации памяти в коде присутствует сбор статистики про выполняемые аллокатором операции.
+Эта статистика доступна в виде структуры [`ku::allocator::info::Info`](../../doc/ku/allocator/info/struct.Info.html).
+Её поля означают следующее:
+- [`Info::requested`](../../doc/ku/allocator/info/struct.Info.html#structfield.requested) --- сколько памяти в байтах было запрошено у аллокатора.
+- [`Info::allocated`](../../doc/ku/allocator/info/struct.Info.html#structfield.allocated) --- сколько памяти в байтах было выделено аллокатором.
+- [`Info::allocations`](../../doc/ku/allocator/info/struct.Info.html#structfield.allocations) --- количество запросов к аллокатору.
+- [`Info::pages`](../../doc/ku/allocator/info/struct.Info.html#structfield.pages) --- количество виртуальных страниц, которые аллокатор выделил для удовлетворения запросов.
+
+Каждый такой счётчик является структурой
+[`ku::allocator::info::Counter`](../../doc/ku/allocator/info/struct.Counter.html),
+содержащей положительную и отрицательную компоненту:
+
+- [`Counter::positive`](../../doc/ku/allocator/info/struct.Counter.html#structfield.positive) --- суммарный размер соответствующего параметра для аллокаций.
+- [`Counter::negative`](../../doc/ku/allocator/info/struct.Counter.html#structfield.negative) --- суммарный размер соответствующего параметра для деаллокаций.
+
+То есть, например `info.allocated.positive()` выдаёт количество реально выделенных байт, `info.pages.negative()` выдаёт количество освобождённых при деаллокациях страниц, а `info.requested.balance()` выдаёт количество байт, которые были запрошена у аллокатора, но ещё не освобождены.
+
+От этих чисел хочется интерпретируемости и соответствия естественным инвариантам.
+Если количество аллокаций больше чем деаллокаций, то естественно ожидать, что какая-то память ещё занята.
+А в ситуации, когда ещё и на входе и выходе балансы должны быть нулевые, это означает утечку.
+Если же деаллокаций больше чем аллокаций в ситуации когда и на входе и выходе балансы должны быть нулевые,
+это наталкивает на мысли о наличии какой-то серьёзной ошибки.
+В частности, реаллокация учитываются как одна деаллокация полного старого блока плюс одна аллокация полного
+нового блока.
+Не создавайте несколько деаллокаций по кусочку старого блока при вызовах `dry_shrink()` или
+фиктивных аллокаций нулевого размера.
+Это сломает естественные инварианты и интерпретируемость значений
+[`ku::allocator::info::Info`](../../doc/ku/allocator/info/struct.Info.html),
+а также не пройдёт тесты.
+
+Поэтому обратите внимание, как в
+[`ku::allocator::info::Info`](../../doc/ku/allocator/info/struct.Info.html)
+отслеживаются аллокации и деаллокации, которые выполняет ваш код.
+Реализации методов
+- [`ku::allocator::big::BigAllocator::reserve()`](../../doc/ku/allocator/big/trait.BigAllocator.html#tymethod.reserve),
+- [`ku::allocator::big::BigAllocator::unreserve()`](../../doc/ku/allocator/big/trait.BigAllocator.html#tymethod.unreserve) и
+- [`ku::allocator::big::BigAllocator::rereserve()`](../../doc/ku/allocator/big/trait.BigAllocator.html#tymethod.unreserve)
+для
+[`kernel::memory::address_space::AddressSpace`](../../doc/kernel/memory/address_space/struct.AddressSpace.html)
+сами обновляют эту статистику.
+Вам остаётся только корректно позвать эти методы.
+
+В логах эти счётчики будут печататься так:
+
+```console
+20:26:37 0 D info = { allocations: 9 - 8 = 1, requested: 284.000 KiB - 156.000 KiB = 128.000 KiB, allocated: 284.000 KiB - 156.000 KiB = 128.000 KiB, pages: 71 - 39 = 32, loss: 0 B = 0.000% }
+```
+
+Это означает, что всего было выполнено `9` аллокаций и `8` деаллокаций.
+В аллокациях было суммарно запрошено `284.000 KiB`, а в деаллокациях суммарно было освобождено `156.000 KiB`,
+что даёт текущее запрошенное потребление `128.000 KiB` в одной оставшейся на данный момент аллокации.
+Так как аллокатор постраничный, эти величины совпадают с количеством реально выделенной памяти,
+а потери на фрагментацию нулевые.
+
+
 ### Задача 1 --- аллокатор памяти общего назначения
 
 Реализуйте метод
@@ -102,10 +159,10 @@ unsafe fn remap(&mut self, old_block: Block<Page>, new_block: Block<Page>) -> Re
 в файле
 [`ku/src/allocator/big.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/ku/src/allocator/big.rs).
 При этом с виртуальным адресным пространством работайте через
-[`ku::allocator::big::BigAllocator::reserve()`](../../doc/ku/allocator/big/trait.BigAllocator.html#tymethod.reserve)
-и
-[`ku::allocator::big::BigAllocator::unreserve()`](../../doc/ku/allocator/big/trait.BigAllocator.html#tymethod.unreserve).
-А чтобы метять его отображение на физическую память, используете
+[`ku::allocator::big::BigAllocator::reserve()`](../../doc/ku/allocator/big/trait.BigAllocator.html#tymethod.reserve),
+[`ku::allocator::big::BigAllocator::unreserve()`](../../doc/ku/allocator/big/trait.BigAllocator.html#tymethod.unreserve) и
+[`ku::allocator::big::BigAllocator::rereserve()`](../../doc/ku/allocator/big/trait.BigAllocator.html#tymethod.unreserve).
+А чтобы менять его отображение на физическую память, используете
 [`ku::allocator::big::BigAllocator::map()`](../../doc/ku/allocator/big/trait.BigAllocator.html#tymethod.map),
 [`ku::allocator::big::BigAllocator::unmap()`](../../doc/ku/allocator/big/trait.BigAllocator.html#tymethod.unmap)
 и
@@ -125,10 +182,14 @@ unsafe fn remap(&mut self, old_block: Block<Page>, new_block: Block<Page>) -> Re
 - [`ku::allocator::big::try_into_block()`](../../doc/ku/allocator/big/fn.try_into_block.html)
 - [`ku::allocator::big::initialize_block()`](../../doc/ku/allocator/big/fn.initialize_block.html).
 
+В зависимости от вашей реализации `dry_shrink()`, вам может пригодиться или не пригодиться метод
+[`BigAllocator::rereserve()`](../../doc/ku/allocator/big/trait.BigAllocator.html#tymethod.unreserve).
+
 При реализации учтите, что даже если `old_layout` и `new_layout` в `dry_grow()` и `dry_shrink()` отличаются,
 но при этом не отличаются соответствующие им блоки страниц `Block<Page>`,
 то ничего делать не нужно.
-Можно вернуть на выход срез со старым адрес, приведённый к новому размеру.
+Можно вернуть на выход срез со старым адресом, приведённый к новому размеру.
+Аналогично, из `dry_shrink()` вы можете всегда возвращать срез со старым адресом и новым размером.
 
 
 ### Проверьте себя
@@ -140,43 +201,48 @@ unsafe fn remap(&mut self, old_block: Block<Page>, new_block: Block<Page>) -> Re
 $ (cd kernel; cargo test --test 4-concurrency-1-memory-allocator)
 ...
 4_concurrency_1_memory_allocator::basic---------------------
-17:07:11 0 D start_info = { allocations: 0 - 0 = 0, requested: 0 B - 0 B = 0 B, allocated: 0 B - 0 B = 0 B, pages: 0 - 0 = 0, loss: 0 B = 0.000% }
-17:07:11 0 D info = { allocations: 1 - 0 = 1, requested: 4.000 KiB - 0 B = 4.000 KiB, allocated: 4.000 KiB - 0 B = 4.000 KiB, pages: 1 - 0 = 1, loss: 0 B = 0.000% }
-17:07:11 0 D info_diff = { allocations: 1 - 0 = 1, requested: 4.000 KiB - 0 B = 4.000 KiB, allocated: 4.000 KiB - 0 B = 4.000 KiB, pages: 1 - 0 = 1, loss: 0 B = 0.000% }
-17:07:11 0 D end_info = { allocations: 1 - 1 = 0, requested: 4.000 KiB - 4.000 KiB = 0 B, allocated: 4.000 KiB - 4.000 KiB = 0 B, pages: 1 - 1 = 0, loss: 0 B = 0.000% }
-17:07:12 0 D end_info_diff = { allocations: 1 - 1 = 0, requested: 4.000 KiB - 4.000 KiB = 0 B, allocated: 4.000 KiB - 4.000 KiB = 0 B, pages: 1 - 1 = 0, loss: 0 B = 0.000% }
+20:26:36 0 D start_info = { allocations: 0 - 0 = 0, requested: 0 B - 0 B = 0 B, allocated: 0 B - 0 B = 0 B, pages: 0 - 0 = 0, loss: 0 B = 0.000% }
+20:26:36 0 D info = { allocations: 1 - 0 = 1, requested: 4.000 KiB - 0 B = 4.000 KiB, allocated: 4.000 KiB - 0 B = 4.000 KiB, pages: 1 - 0 = 1, loss: 0 B = 0.000% }
+20:26:36 0 D info_diff = { allocations: 1 - 0 = 1, requested: 4.000 KiB - 0 B = 4.000 KiB, allocated: 4.000 KiB - 0 B = 4.000 KiB, pages: 1 - 0 = 1, loss: 0 B = 0.000% }
+20:26:36 0 D end_info = { allocations: 1 - 1 = 0, requested: 4.000 KiB - 4.000 KiB = 0 B, allocated: 4.000 KiB - 4.000 KiB = 0 B, pages: 1 - 1 = 0, loss: 0 B = 0.000% }
+20:26:36 0 D end_info_diff = { allocations: 1 - 1 = 0, requested: 4.000 KiB - 4.000 KiB = 0 B, allocated: 4.000 KiB - 4.000 KiB = 0 B, pages: 1 - 1 = 0, loss: 0 B = 0.000% }
 4_concurrency_1_memory_allocator::basic------------ [passed]
 
+4_concurrency_1_memory_allocator::shrink_is_not_a_noop------
+20:26:36 0 D old_block = [0v7FFFFFF3A000, 0v7FFFFFF3E000), size 16.000 KiB; new_block = [0v7FFFFFF3A000, 0v7FFFFFF3D000), size 12.000 KiB; no_remap_on_shrink = true
+4_concurrency_1_memory_allocator::shrink_is_not_a_noop [passed]
+
 4_concurrency_1_memory_allocator::grow_and_shrink-----------
-17:07:12 0 D start_info = { allocations: 1 - 1 = 0, requested: 4.000 KiB - 4.000 KiB = 0 B, allocated: 4.000 KiB - 4.000 KiB = 0 B, pages: 1 - 1 = 0, loss: 0 B = 0.000% }
-17:07:12 0 D info = { allocations: 7 - 6 = 1, requested: 256.000 KiB - 128.000 KiB = 128.000 KiB, allocated: 256.000 KiB - 128.000 KiB = 128.000 KiB, pages: 64 - 32 = 32, loss: 0 B = 0.000% }
-17:07:12 0 D info_diff = { allocations: 6 - 5 = 1, requested: 252.000 KiB - 124.000 KiB = 128.000 KiB, allocated: 252.000 KiB - 124.000 KiB = 128.000 KiB, pages: 63 - 31 = 32, loss: 0 B = 0.000% }
-17:07:12 0 D end_info = { allocations: 12 - 12 = 0, requested: 380.000 KiB - 380.000 KiB = 0 B, allocated: 380.000 KiB - 380.000 KiB = 0 B, pages: 95 - 95 = 0, loss: 0 B = 0.000% }
+20:26:37 0 D start_info = { allocations: 3 - 3 = 0, requested: 32.000 KiB - 32.000 KiB = 0 B, allocated: 32.000 KiB - 32.000 KiB = 0 B, pages: 8 - 8 = 0, loss: 0 B = 0.000% }
+20:26:37 0 D info = { allocations: 9 - 8 = 1, requested: 284.000 KiB - 156.000 KiB = 128.000 KiB, allocated: 284.000 KiB - 156.000 KiB = 128.000 KiB, pages: 71 - 39 = 32, loss: 0 B = 0.000% }
+20:26:37 0 D info_diff = { allocations: 6 - 5 = 1, requested: 252.000 KiB - 124.000 KiB = 128.000 KiB, allocated: 252.000 KiB - 124.000 KiB = 128.000 KiB, pages: 63 - 31 = 32, loss: 0 B = 0.000% }
+20:26:37 0 D end_info = { allocations: 14 - 14 = 0, requested: 408.000 KiB - 408.000 KiB = 0 B, allocated: 408.000 KiB - 408.000 KiB = 0 B, pages: 102 - 102 = 0, loss: 0 B = 0.000% }
 4_concurrency_1_memory_allocator::grow_and_shrink-- [passed]
 
 4_concurrency_1_memory_allocator::paged_realloc_is_cheap----
-17:07:12 0 D block = [0v7FFFFFEDF000, 0v7FFFFFEE0000), size 4.000 KiB; frames = [32540 @ 0p7F1C000 -WP]
-17:07:12 0 D block = [0v7FFFFFEDC000, 0v7FFFFFEDE000), size 8.000 KiB; frames = [32540 @ 0p7F1C000 -WP, 32537 @ 0p7F19000 -WP]
-17:07:12 0 D block = [0v7FFFFFED7000, 0v7FFFFFEDB000), size 16.000 KiB; frames = [32540 @ 0p7F1C000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP, 32533 @ 0p7F15000 -WP]
-17:07:12 0 D block = [0v7FFFFFECE000, 0v7FFFFFED6000), size 32.000 KiB; frames = [32540 @ 0p7F1C000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP, 32533 @ 0p7F15000 -WP, 32538 @ 0p7F1A000 -WP, 32535 @ 0p7F17000 -WP, 32536 @ 0p7F18000 -WP, 32525 @ 0p7F0D000 -WP]
-17:07:12 0 D block = [0v7FFFFFEBD000, 0v7FFFFFECD000), size 64.000 KiB; frames = [32540 @ 0p7F1C000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP, 32533 @ 0p7F15000 -WP, 32538 @ 0p7F1A000 -WP, 32535 @ 0p7F17000 -WP, 32536 @ 0p7F18000 -WP, 32525 @ 0p7F0D000 -WP, 32534 @ 0p7F16000 -WP, 32527 @ 0p7F0F000 -WP, 32528 @ 0p7F10000 -WP, 32529 @ 0p7F11000 -WP, 32530 @ 0p7F12000 -WP, 32531 @ 0p7F13000 -WP, 32532 @ 0p7F14000 -WP, 32509 @ 0p7EFD000 -WP]
-17:07:12 0 D block = [0v7FFFFFEAD000, 0v7FFFFFEBC000), size 60.000 KiB; frames = [32540 @ 0p7F1C000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP, 32533 @ 0p7F15000 -WP, 32538 @ 0p7F1A000 -WP, 32535 @ 0p7F17000 -WP, 32536 @ 0p7F18000 -WP, 32525 @ 0p7F0D000 -WP, 32534 @ 0p7F16000 -WP, 32527 @ 0p7F0F000 -WP, 32528 @ 0p7F10000 -WP, 32529 @ 0p7F11000 -WP, 32530 @ 0p7F12000 -WP, 32531 @ 0p7F13000 -WP, 32532 @ 0p7F14000 -WP]
-17:07:12 0 D block = [0v7FFFFFE9E000, 0v7FFFFFEAC000), size 56.000 KiB; frames = [32540 @ 0p7F1C000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP, 32533 @ 0p7F15000 -WP, 32538 @ 0p7F1A000 -WP, 32535 @ 0p7F17000 -WP, 32536 @ 0p7F18000 -WP, 32525 @ 0p7F0D000 -WP, 32534 @ 0p7F16000 -WP, 32527 @ 0p7F0F000 -WP, 32528 @ 0p7F10000 -WP, 32529 @ 0p7F11000 -WP, 32530 @ 0p7F12000 -WP, 32531 @ 0p7F13000 -WP]
-17:07:12 0 D block = [0v7FFFFFE90000, 0v7FFFFFE9D000), size 52.000 KiB; frames = [32540 @ 0p7F1C000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP, 32533 @ 0p7F15000 -WP, 32538 @ 0p7F1A000 -WP, 32535 @ 0p7F17000 -WP, 32536 @ 0p7F18000 -WP, 32525 @ 0p7F0D000 -WP, 32534 @ 0p7F16000 -WP, 32527 @ 0p7F0F000 -WP, 32528 @ 0p7F10000 -WP, 32529 @ 0p7F11000 -WP, 32530 @ 0p7F12000 -WP]
-17:07:12 0 D block = [0v7FFFFFE83000, 0v7FFFFFE8F000), size 48.000 KiB; frames = [32540 @ 0p7F1C000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP, 32533 @ 0p7F15000 -WP, 32538 @ 0p7F1A000 -WP, 32535 @ 0p7F17000 -WP, 32536 @ 0p7F18000 -WP, 32525 @ 0p7F0D000 -WP, 32534 @ 0p7F16000 -WP, 32527 @ 0p7F0F000 -WP, 32528 @ 0p7F10000 -WP, 32529 @ 0p7F11000 -WP]
-17:07:12 0 D block = [0v7FFFFFE77000, 0v7FFFFFE82000), size 44.000 KiB; frames = [32540 @ 0p7F1C000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP, 32533 @ 0p7F15000 -WP, 32538 @ 0p7F1A000 -WP, 32535 @ 0p7F17000 -WP, 32536 @ 0p7F18000 -WP, 32525 @ 0p7F0D000 -WP, 32534 @ 0p7F16000 -WP, 32527 @ 0p7F0F000 -WP, 32528 @ 0p7F10000 -WP]
-17:07:12 0 D block = [0v7FFFFFE6C000, 0v7FFFFFE76000), size 40.000 KiB; frames = [32540 @ 0p7F1C000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP, 32533 @ 0p7F15000 -WP, 32538 @ 0p7F1A000 -WP, 32535 @ 0p7F17000 -WP, 32536 @ 0p7F18000 -WP, 32525 @ 0p7F0D000 -WP, 32534 @ 0p7F16000 -WP, 32527 @ 0p7F0F000 -WP]
-17:07:12 0 D block = [0v7FFFFFE62000, 0v7FFFFFE6B000), size 36.000 KiB; frames = [32540 @ 0p7F1C000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP, 32533 @ 0p7F15000 -WP, 32538 @ 0p7F1A000 -WP, 32535 @ 0p7F17000 -WP, 32536 @ 0p7F18000 -WP, 32525 @ 0p7F0D000 -WP, 32534 @ 0p7F16000 -WP]
-17:07:12 0 D block = [0v7FFFFFE59000, 0v7FFFFFE61000), size 32.000 KiB; frames = [32540 @ 0p7F1C000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP, 32533 @ 0p7F15000 -WP, 32538 @ 0p7F1A000 -WP, 32535 @ 0p7F17000 -WP, 32536 @ 0p7F18000 -WP, 32525 @ 0p7F0D000 -WP]
-17:07:12 0 D block = [0v7FFFFFE51000, 0v7FFFFFE58000), size 28.000 KiB; frames = [32540 @ 0p7F1C000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP, 32533 @ 0p7F15000 -WP, 32538 @ 0p7F1A000 -WP, 32535 @ 0p7F17000 -WP, 32536 @ 0p7F18000 -WP]
-17:07:12 0 D block = [0v7FFFFFE4A000, 0v7FFFFFE50000), size 24.000 KiB; frames = [32540 @ 0p7F1C000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP, 32533 @ 0p7F15000 -WP, 32538 @ 0p7F1A000 -WP, 32535 @ 0p7F17000 -WP]
-17:07:12 0 D block = [0v7FFFFFE44000, 0v7FFFFFE49000), size 20.000 KiB; frames = [32540 @ 0p7F1C000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP, 32533 @ 0p7F15000 -WP, 32538 @ 0p7F1A000 -WP]
-17:07:12 0 D block = [0v7FFFFFE3F000, 0v7FFFFFE43000), size 16.000 KiB; frames = [32540 @ 0p7F1C000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP, 32533 @ 0p7F15000 -WP]
-17:07:12 0 D block = [0v7FFFFFE3B000, 0v7FFFFFE3E000), size 12.000 KiB; frames = [32540 @ 0p7F1C000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP]
-17:07:12 0 D block = [0v7FFFFFE38000, 0v7FFFFFE3A000), size 8.000 KiB; frames = [32540 @ 0p7F1C000 -WP, 32537 @ 0p7F19000 -WP]
-17:07:12 0 D block = [0v7FFFFFE36000, 0v7FFFFFE37000), size 4.000 KiB; frames = [32540 @ 0p7F1C000 -WP]
-17:07:12 0 D block = [0v1000, 0v1000), size 0 B; frames = []
+20:26:37 0 D block = [0v7FFFFFEFA000, 0v7FFFFFEFB000), size 4.000 KiB; frames = [32538 @ 0p7F1A000 -WP]
+20:26:37 0 D block = [0v7FFFFFEF7000, 0v7FFFFFEF9000), size 8.000 KiB; frames = [32538 @ 0p7F1A000 -WP, 32537 @ 0p7F19000 -WP]
+20:26:37 0 D block = [0v7FFFFFEF2000, 0v7FFFFFEF6000), size 16.000 KiB; frames = [32538 @ 0p7F1A000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP, 32533 @ 0p7F15000 -WP]
+20:26:37 0 D block = [0v7FFFFFEE9000, 0v7FFFFFEF1000), size 32.000 KiB; frames = [32538 @ 0p7F1A000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP, 32533 @ 0p7F15000 -WP, 32540 @ 0p7F1C000 -WP, 32535 @ 0p7F17000 -WP, 32536 @ 0p7F18000 -WP, 32525 @ 0p7F0D000 -WP]
+20:26:37 0 D block = [0v7FFFFFED8000, 0v7FFFFFEE8000), size 64.000 KiB; frames = [32538 @ 0p7F1A000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP, 32533 @ 0p7F15000 -WP, 32540 @ 0p7F1C000 -WP, 32535 @ 0p7F17000 -WP, 32536 @ 0p7F18000 -WP, 32525 @ 0p7F0D000 -WP, 32534 @ 0p7F16000 -WP, 32527 @ 0p7F0F000 -WP, 32528 @ 0p7F10000 -WP, 32529 @ 0p7F11000 -WP, 32530 @ 0p7F12000 -WP, 32531 @ 0p7F13000 -WP, 32532 @ 0p7F14000 -WP, 32509 @ 0p7EFD000 -WP]
+20:26:37 0 D block = [0v7FFFFFED8000, 0v7FFFFFEE7000), size 60.000 KiB; frames = [32538 @ 0p7F1A000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP, 32533 @ 0p7F15000 -WP, 32540 @ 0p7F1C000 -WP, 32535 @ 0p7F17000 -WP, 32536 @ 0p7F18000 -WP, 32525 @ 0p7F0D000 -WP, 32534 @ 0p7F16000 -WP, 32527 @ 0p7F0F000 -WP, 32528 @ 0p7F10000 -WP, 32529 @ 0p7F11000 -WP, 32530 @ 0p7F12000 -WP, 32531 @ 0p7F13000 -WP, 32532 @ 0p7F14000 -WP]
+20:26:37 0 D block = [0v7FFFFFED8000, 0v7FFFFFEE6000), size 56.000 KiB; frames = [32538 @ 0p7F1A000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP, 32533 @ 0p7F15000 -WP, 32540 @ 0p7F1C000 -WP, 32535 @ 0p7F17000 -WP, 32536 @ 0p7F18000 -WP, 32525 @ 0p7F0D000 -WP, 32534 @ 0p7F16000 -WP, 32527 @ 0p7F0F000 -WP, 32528 @ 0p7F10000 -WP, 32529 @ 0p7F11000 -WP, 32530 @ 0p7F12000 -WP, 32531 @ 0p7F13000 -WP]
+20:26:37 0 D block = [0v7FFFFFED8000, 0v7FFFFFEE5000), size 52.000 KiB; frames = [32538 @ 0p7F1A000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP, 32533 @ 0p7F15000 -WP, 32540 @ 0p7F1C000 -WP, 32535 @ 0p7F17000 -WP, 32536 @ 0p7F18000 -WP, 32525 @ 0p7F0D000 -WP, 32534 @ 0p7F16000 -WP, 32527 @ 0p7F0F000 -WP, 32528 @ 0p7F10000 -WP, 32529 @ 0p7F11000 -WP, 32530 @ 0p7F12000 -WP]
+20:26:37 0 D block = [0v7FFFFFED8000, 0v7FFFFFEE4000), size 48.000 KiB; frames = [32538 @ 0p7F1A000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP, 32533 @ 0p7F15000 -WP, 32540 @ 0p7F1C000 -WP, 32535 @ 0p7F17000 -WP, 32536 @ 0p7F18000 -WP, 32525 @ 0p7F0D000 -WP, 32534 @ 0p7F16000 -WP, 32527 @ 0p7F0F000 -WP, 32528 @ 0p7F10000 -WP, 32529 @ 0p7F11000 -WP]
+20:26:37 0 D block = [0v7FFFFFED8000, 0v7FFFFFEE3000), size 44.000 KiB; frames = [32538 @ 0p7F1A000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP, 32533 @ 0p7F15000 -WP, 32540 @ 0p7F1C000 -WP, 32535 @ 0p7F17000 -WP, 32536 @ 0p7F18000 -WP, 32525 @ 0p7F0D000 -WP, 32534 @ 0p7F16000 -WP, 32527 @ 0p7F0F000 -WP, 32528 @ 0p7F10000 -WP]
+20:26:37 0 D block = [0v7FFFFFED8000, 0v7FFFFFEE2000), size 40.000 KiB; frames = [32538 @ 0p7F1A000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP, 32533 @ 0p7F15000 -WP, 32540 @ 0p7F1C000 -WP, 32535 @ 0p7F17000 -WP, 32536 @ 0p7F18000 -WP, 32525 @ 0p7F0D000 -WP, 32534 @ 0p7F16000 -WP, 32527 @ 0p7F0F000 -WP]
+20:26:37 0 D block = [0v7FFFFFED8000, 0v7FFFFFEE1000), size 36.000 KiB; frames = [32538 @ 0p7F1A000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP, 32533 @ 0p7F15000 -WP, 32540 @ 0p7F1C000 -WP, 32535 @ 0p7F17000 -WP, 32536 @ 0p7F18000 -WP, 32525 @ 0p7F0D000 -WP, 32534 @ 0p7F16000 -WP]
+20:26:37 0 D block = [0v7FFFFFED8000, 0v7FFFFFEE0000), size 32.000 KiB; frames = [32538 @ 0p7F1A000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP, 32533 @ 0p7F15000 -WP, 32540 @ 0p7F1C000 -WP, 32535 @ 0p7F17000 -WP, 32536 @ 0p7F18000 -WP, 32525 @ 0p7F0D000 -WP]
+20:26:37 0 D block = [0v7FFFFFED8000, 0v7FFFFFEDF000), size 28.000 KiB; frames = [32538 @ 0p7F1A000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP, 32533 @ 0p7F15000 -WP, 32540 @ 0p7F1C000 -WP, 32535 @ 0p7F17000 -WP, 32536 @ 0p7F18000 -WP]
+20:26:37 0 D block = [0v7FFFFFED8000, 0v7FFFFFEDE000), size 24.000 KiB; frames = [32538 @ 0p7F1A000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP, 32533 @ 0p7F15000 -WP, 32540 @ 0p7F1C000 -WP, 32535 @ 0p7F17000 -WP]
+20:26:37 0 D block = [0v7FFFFFED8000, 0v7FFFFFEDD000), size 20.000 KiB; frames = [32538 @ 0p7F1A000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP, 32533 @ 0p7F15000 -WP, 32540 @ 0p7F1C000 -WP]
+20:26:37 0 D block = [0v7FFFFFED8000, 0v7FFFFFEDC000), size 16.000 KiB; frames = [32538 @ 0p7F1A000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP, 32533 @ 0p7F15000 -WP]
+20:26:37 0 D block = [0v7FFFFFED8000, 0v7FFFFFEDB000), size 12.000 KiB; frames = [32538 @ 0p7F1A000 -WP, 32537 @ 0p7F19000 -WP, 32539 @ 0p7F1B000 -WP]
+20:26:37 0 D block = [0v7FFFFFED8000, 0v7FFFFFEDA000), size 8.000 KiB; frames = [32538 @ 0p7F1A000 -WP, 32537 @ 0p7F19000 -WP]
+20:26:37 0 D block = [0v7FFFFFED8000, 0v7FFFFFED9000), size 4.000 KiB; frames = [32538 @ 0p7F1A000 -WP]
+20:26:37 0 D block = [0v1000, 0v1000), size 0 B; frames = []
 4_concurrency_1_memory_allocator::paged_realloc_is_cheap [passed]
+20:26:37 0 I exit qemu; exit_code = SUCCESS
 ```
 
 
@@ -184,6 +250,6 @@ $ (cd kernel; cargo test --test 4-concurrency-1-memory-allocator)
 
 ```console
  kernel/src/memory/address_space.rs |   22 ++++++++-
- ku/src/allocator/big.rs            |   89 +++++++++++++++++++++++++++++++------
- 2 files changed, 95 insertions(+), 16 deletions(-)
+ ku/src/allocator/big.rs            |   87 +++++++++++++++++++++++++++++++------
+ 2 files changed, 95 insertions(+), 14 deletions(-)
 ```

@@ -6,14 +6,17 @@
 [кольцо защиты](https://en.wikipedia.org/wiki/Protection_ring) 3.
 Иначе пользовательский процесс сможет испортить код или данные ядра и других процессов.
 Есть [несколько вариантов](https://wiki.osdev.org/Getting_to_Ring_3) сделать это.
-Воспользуемся инструкцией `iret`.
+Воспользуемся инструкцией
+[`iretq`](https://www.felixcloutier.com/x86/iret:iretd:iretq).
 
 
 ### Состояние регистров пользовательского процесса
 
 Состояние регистров пользовательского процесса хранится в структуре
 [`kernel::process::registers::Registers`](../../doc/kernel/process/registers/struct.Registers.html).
-Для использования `iret` нам понадобится её поле
+Для использования
+[`iretq`](https://www.felixcloutier.com/x86/iret:iretd:iretq)
+нам понадобится её поле
 [`Registers::user_context`](../../doc/kernel/process/registers/struct.Registers.html#structfield.user_context).
 Оно является структурой
 [`kernel::process::registers::ModeContext`](../../doc/kernel/process/registers/struct.ModeContext.html):
@@ -27,10 +30,12 @@ pub(crate) struct ModeContext {
     ss: usize,
 }
 ```
-имеющей в памяти ровно такое представление, какого требует инструкция `iret`.
+Которая имеет ровно такое представление в памяти, какого требует инструкция
+[`iretq`](https://www.felixcloutier.com/x86/iret:iretd:iretq).
 Если регистр `RSP` указывает на адрес
 [`ModeContext`](../../doc/kernel/process/registers/struct.ModeContext.html)
-в момент выполнения инструкции `iret`,
+в момент выполнения инструкции
+[`iretq`](https://www.felixcloutier.com/x86/iret:iretd:iretq),
 процессор загрузит
 
 - поле [`ModeContext::rip`](../../doc/kernel/process/registers/struct.ModeContext.html#structfield.rip) в регистр адреса команды `RIP`,
@@ -46,15 +51,15 @@ pub(crate) struct ModeContext {
 [`ModeContext::user_context()`](../../doc/kernel/process/registers/struct.ModeContext.html#method.user_context)
 заполним эти поля так:
 
-- Поле [`ModeContext::rip`](../../doc/kernel/process/registers/struct.ModeContext.html#structfield.rip) будет содержать точку входа в программу пользователя, которую возвращает функция [`load()`](../../doc/kernel/process/elf/fn.load.html).
+- Поле [`ModeContext::rip`](../../doc/kernel/process/registers/struct.ModeContext.html#structfield.rip) будет содержать точку входа в программу пользователя, которую возвращает функция [`kernel::process::elf::load()`](../../doc/kernel/process/elf/fn.load.html).
 - Поле [`ModeContext::cs`](../../doc/kernel/process/registers/struct.ModeContext.html#structfield.cs) --- селектор кода пользователя, который возвращает метод [`kernel::memory::gdt::Gdt::user_code()`](../../doc/kernel/memory/gdt/struct.SmpGdt.html#method.user_code).
 - Поле [`ModeContext::rflags`](../../doc/kernel/process/registers/struct.ModeContext.html#structfield.rflags) будет содержать единственный включённый флаг --- [`RFlags::INTERRUPT_FLAG`](../../doc/ku/process/registers/struct.RFlags.html#associatedconstant.INTERRUPT_FLAG). Это требуется чтобы по прерыванию, например, от таймера, процессор вернулся в ядро. И пользовательский код не смог его монополизировать.
 - Поле [`ModeContext::rsp`](../../doc/kernel/process/registers/struct.ModeContext.html#structfield.rsp) будет содержать адрес конца стека пользователя --- в [x86-64](https://en.wikipedia.org/wiki/X86-64) стек растёт от старших адресов к младшим. Стек для пользовательского процесса выделяет функция [`kernel::process::create()`](../../doc/kernel/process/fn.create.html) с помощью метода [`kernel::memory::stack::Stack::new()`](../../doc/kernel/memory/stack/struct.Stack.html#method.new). Метод [`Stack::new()`](../../doc/kernel/memory/stack/struct.Stack.html#method.new) аллоцирует [`kernel::memory::stack::STACK_SIZE`](../../doc/kernel/memory/stack/constant.STACK_SIZE.html) байт памяти и запрещает доступ к младшим [`kernel::memory::stack::GUARD_ZONE_SIZE`](../../doc/kernel/memory/stack/constant.GUARD_ZONE_SIZE.html) байтам из них, чтобы отлавливать переполнение стека. Начальное значение указателя стека возвращает метод [`Stack::pointer()`](../../doc/kernel/memory/stack/struct.Stack.html#method.pointer).
-- Поле [`ModeContext::ss`](../../doc/kernel/process/registers/struct.ModeContext.html#structfield.ss) --- селектор данных пользователя, который возвращает метод [`kernel::memory::gdt::Gdt::user_data()`](../../doc/kernel/memory/gdt/struct.SmpGdt.html#method.user_data).
+- Поле [`ModeContext::ss`](../../doc/kernel/process/registers/struct.ModeContext.html#structfield.ss) будет содержать селектор данных пользователя, который возвращает метод [`kernel::memory::gdt::Gdt::user_data()`](../../doc/kernel/memory/gdt/struct.SmpGdt.html#method.user_data).
 
 Конкретные значения остальных полей структуры
 [`Registers`](../../doc/kernel/process/registers/struct.Registers.html),
-в которых хранятся регистры общего назначения нас пока не интересуют.
+в которых хранятся регистры общего назначения кроме `RSP`, нас пока не интересуют.
 
 
 ### Задача 3 --- переключение процессора в режим пользователя и возврат из него
@@ -101,15 +106,15 @@ asm!(
 - Записать текущее состояние стека ядра. В следующей лабораторке мы реализуем это более продвинутым способом. Пока же предлагается положить `RSP` на стек. После чего сохранить новый указатель на стек, который фактически будет указывать на это сохранённое значение `RSP`, в базу регистра `FS`. Это можно сделать с помощью инструкции [wrmsr](https://www.felixcloutier.com/x86/wrmsr) процессора. Для неё нужно записать новое значение `RSP` в регистровую пару `EDX:EAX` --- младшие 32 бита `RSP` в `EAX`, а старшие 32 бита `RSP` в `EDX`. А также нужно записать идентификатор базы `FS` как [Model-specific register](https://en.wikipedia.org/wiki/Model-specific_register) --- константу [`x86::msr::IA32_FS_BASE`](../../doc/x86/msr/constant.IA32_FS_BASE.html) --- в регистр `ECX`. После чего вызвать [wrmsr](https://www.felixcloutier.com/x86/wrmsr). Теперь по логическому адресу `FS:0` будет доступно значение `RSP` ядра, сохранённое на его стеке.
 - Запретить прерывания инструкцией [cli](https://www.felixcloutier.com/x86/cli) процессора. Мы дальше будем переключать стек и не хотим чтобы прерывание записало адрес возврата в неподходящее место.
 - Переключить стек, то есть регистр `RSP`, на заданный ему на вход адрес `registers`.
-- Восстановить из стека, то есть на самом деле из структуры [`Registers`](../../doc/kernel/process/registers/struct.Registers.html), на которую он переключил свой стек, регистры общего назначения с `RAX` по `R15`.
-- Выполнить инструкцию `iretq`, чтобы переключиться в процесс пользователя заданный полем [`Registers::user_context`](../../doc/kernel/process/registers/struct.Registers.html#structfield.user_context).
+- Восстановить регистры общего назначения с `RAX` по `R15` (кроме `RSP`) из стека. То есть, на самом деле из структуры [`Registers`](../../doc/kernel/process/registers/struct.Registers.html). На которую он переключил свой стек.
+- Выполнить инструкцию [`iretq`](https://www.felixcloutier.com/x86/iret:iretd:iretq), чтобы переключиться в контекст пользователя, заданный полем [`Registers::user_context`](../../doc/kernel/process/registers/struct.Registers.html#structfield.user_context). Обратите внимание на суффикс `q` у [`iretq`](https://www.felixcloutier.com/x86/iret:iretd:iretq). Если его не указать, ассемблер сгенерирует машинный код для другого режима работы процессора и до некоторого момента это будет не заметно, так как делать он будет почти то же самое. А потом в неожиданный момент всё сломается и найти такую ошибку будет тяжело.
 
 Последующие инструкции метода
 [`Registers::switch_to()`](../../doc/kernel/process/registers/struct.Registers.html#method.switch_to)
 будут выполняться при возвращении в режим ядра.
 Начало этой части метода
 [`Registers::switch_to()`](../../doc/kernel/process/registers/struct.Registers.html#method.switch_to)
-помечено меткой `store_user_mode_context:`.
+помечено меткой `store_user_mode_context`.
 Парный метод
 [`Registers::switch_from()`](../../doc/kernel/process/registers/struct.Registers.html#method.switch_from)
 просто прыгает на эту метку:
@@ -129,11 +134,11 @@ pub(super) unsafe extern "C" fn switch_from() -> ! {
 [`Registers::switch_to()`](../../doc/kernel/process/registers/struct.Registers.html#method.switch_to).
 Например, это может быть контекст планировщика, который продолжит свой цикл исполнения, выберет следующий процесс и переключится уже в него.
 
-Итак, после метки `store_user_mode_context:` метод
+Итак, после метки `store_user_mode_context` метод
 [`Registers::switch_to()`](../../doc/kernel/process/registers/struct.Registers.html#method.switch_to)
 должен:
 
-- Вспомнить состояние стека ядра. Его можно прочитать по логическому адресу `FS:0`, так как мы ранее настроили базу `FS` на то место стека, куда сохранили `RSP`.
+- Вспомнить состояние стека ядра. Его можно прочитать по логическому адресу `FS:0`, так как мы ранее настроили базу `FS` на то место стека, куда сохранили `RSP`. Не пытайтесь прочитать из `FS` инструкцией [rdmsr](https://www.felixcloutier.com/x86/rdmsr), так как это испортит регистры пространства пользователя до того как нам есть куда их сохранить. Если бы мы могли прочитать из `FS` таким способом, записывать `RSP` на стек было бы не нужно. Но этот способ нам тут не подходит. Единственное что мы можем сделать --- фактически разыменовать `FS` читая по логическому адресу `FS:0`. В котором `FS` задаёт сегмент, а `0` --- смещение.
 - Восстановить из стека ядра сохранённый адрес `registers`.
 - Переключить стек на этот адрес плюс суммарный размер регистров общего назначения `user_registers_size = const mem::size_of::<Registers>() - mem::size_of::<ModeContext>()`.
 - Записать в стек, то есть на самом деле в заданную на вход структуру [`Registers`](../../doc/kernel/process/registers/struct.Registers.html), регистры общего назначения с `R15` по `RAX`. В обратном порядке, так как инструкции `push` и `pop` должны образовывать правильную скобочную последовательность с именами регистров в качестве типов скобок.

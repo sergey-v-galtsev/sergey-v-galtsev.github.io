@@ -294,6 +294,17 @@
 <span id="294">294</span>
 <span id="295">295</span>
 <span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
 </pre><pre class="rust"><code><span class="kw">use </span>core::{arch::asm, fmt, mem};
 
 <span class="kw">use </span>x86::msr::IA32_FS_BASE;
@@ -312,12 +323,23 @@
 </span><span class="attribute">#[derive(Clone, Copy, Debug)]
 #[repr(C)]
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>Registers {
-    rax: usize,
-    gpr1: [usize; <span class="number">3</span>],
-    rdi: usize,
-    rsi: usize,
-    gpr2: [usize; <span class="number">9</span>],
-    user_context: ModeContext,
+    <span class="doccomment">/// Содержимое регистра `RAX` контекста кода пользователя.
+    </span>rax: usize,
+
+    <span class="doccomment">/// Содержимое регистров `RBX`, `RCX` и `RDX` контекста кода пользователя.
+    </span>gpr1: [usize; <span class="number">3</span>],
+
+    <span class="doccomment">/// Содержимое регистра `RDI` контекста кода пользователя.
+    </span>rdi: usize,
+
+    <span class="doccomment">/// Содержимое регистра `RSI` контекста кода пользователя.
+    </span>rsi: usize,
+
+    <span class="doccomment">/// Содержимое регистров `RBP`, `R8`--`R15` контекста кода пользователя.
+    </span>gpr2: [usize; <span class="number">9</span>],
+
+    <span class="doccomment">/// Контекст исполнения, позволяющий задать уровень привилегий --- ядра или пользователя.
+    </span>user_context: ModeContext,
 }
 
 
@@ -493,7 +515,7 @@
     }
 
 
-    <span class="doccomment">/// Возвращает [`ModeContext`] для заданного `rsp` с привилегиями пользователя.
+    <span class="doccomment">/// Возвращает [`ModeContext`] для заданного `rsp` с привилегиями ядра.
     /// В качестве `rip` использует функцию [`Registers::switch_from()`],
     /// то есть при переходе в этот контекст будет запущена именно она.
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>kernel_context(rsp: Virt) -&gt; <span class="self">Self </span>{

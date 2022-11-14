@@ -158,6 +158,12 @@ AMD64 lacks SYSENTER/SYSEXIT in both sub-modes of long mode.</p>
 инструкции <a href="https://wiki.osdev.org/SYSENTER#AMD:_SYSCALL.2FSYSRET"><code>syscall</code> и <code>sysret</code></a>
 переносимы, в отличие от похожих инструкций
 <a href="https://wiki.osdev.org/SYSENTER#INTEL:_SYSENTER.2FSYSEXIT"><code>sysenter</code> и <code>sysexit</code></a>.</p>
+<p>Прежде чем приступать, изучите документацию производителя процессоров на нужные инструкции:</p>
+<ul>
+<li><a href="https://www.felixcloutier.com/x86/syscall"><code>syscall</code></a> и</li>
+<li><a href="https://www.felixcloutier.com/x86/sysret"><code>sysretq</code></a>,</li>
+<li>а также <a href="https://www.felixcloutier.com/x86/sti"><code>sti</code></a>.</li>
+</ul>
 <h3 id="Задача-4--поддержка-системных-вызовов"><a class="header" href="#Задача-4--поддержка-системных-вызовов">Задача 4 — поддержка системных вызовов</a></h3>
 <h4 id="Инициализация-системных-вызовов"><a class="header" href="#Инициализация-системных-вызовов">Инициализация системных вызовов</a></h4>
 <p>Реализуйте <a href="../../doc/kernel/process/syscall/fn.init.html">функцию</a></p>
@@ -183,7 +189,7 @@ AMD64 lacks SYSENTER/SYSEXIT in both sub-modes of long mode.</p>
 <span class="boring">}
 </span></code></pre></pre>
 <p>в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/process/syscall.rs"><code>kernel/src/process/syscall.rs</code></a>.</p>
-<p>Она получает управление при выполнении инструкции <code>syscall</code> и должна передать управление в
+<p>Она получает управление при выполнении инструкции <code>syscall</code> и должна передать управление в написанную на Rust
 <a href="../../doc/kernel/process/syscall/fn.syscall.html">функцию</a></p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -203,7 +209,7 @@ extern &quot;C&quot; fn kernel::process::syscall::syscall(
 ) -&gt; !
 <span class="boring">}
 </span></code></pre></pre>
-<p>написанную на Rust.
+<p>Указание
 <a href="https://doc.rust-lang.ru/book/ch19-01-unsafe-rust.html#%D0%98%D1%81%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5-extern-%D1%84%D1%83%D0%BD%D0%BA%D1%86%D0%B8%D0%B9-%D0%B4%D0%BB%D1%8F-%D0%B2%D1%8B%D0%B7%D0%BE%D0%B2%D0%B0-%D0%B2%D0%BD%D0%B5%D1%88%D0%BD%D0%B5%D0%B3%D0%BE-%D0%BA%D0%BE%D0%B4%D0%B0"><code>extern &quot;C&quot;</code></a>
 в её сигнатуре означает, что она подчиняется соглашениям
 <a href="https://wiki.osdev.org/System_V_ABI#x86-64">C ABI</a> текущей архитектуры.
@@ -214,7 +220,7 @@ extern &quot;C&quot; fn kernel::process::syscall::syscall(
 означает, что имя функции, доступное в ассемблере будет как написано в коде — <code>syscall</code>.
 Иначе оно будет искажено для уникализации, — чтобы не совпадать с таким же именем в другом модуле.
 (В C++ искажение имени учитывает ещё и типы аргументов для реализации перегрузки функций.)
-Если бы такой аннотации у <code>syscall()</code> в ассемблере имя было бы похоже на
+Без такой аннотации в ассемблере имя <code>syscall()</code> было бы похоже на
 <code>_ZN6kernel7process7syscall7syscall17hc1ae395af68eb49cE</code>.
 Программа <code>rustfilt</code> позволяет восстановить искажённое имя:</p>
 <pre><code class="language-console">$ rustfilt _ZN6kernel7process7syscall7syscall17hc1ae395af68eb49cE
@@ -222,9 +228,9 @@ kernel::process::syscall::syscall
 </code></pre>
 <p>Чтобы не писать в ассемблере что-нибудь вроде
 <code>call _ZN6kernel7process7syscall7syscall17hc1ae395af68eb49cE</code>,
-просто используем аннотацию
-<a href="https://doc.rust-lang.org/reference/abi.html#the-no_mangle-attribute"><code>#[no_mangle]</code></a>,
-но тогда мы сами должны гарантировать уникальность имени, как в ассемблере или C.</p>
+используем аннотацию
+<a href="https://doc.rust-lang.org/reference/abi.html#the-no_mangle-attribute"><code>#[no_mangle]</code></a>.
+Но тогда мы сами должны гарантировать уникальность имени, как в ассемблере или C.</p>
 <p>На момент входа в <a href="../../doc/kernel/process/syscall/fn.syscall_trampoline.html"><code>syscall_trampoline()</code></a>
 регистр <code>RSP</code> указывает на стек пользователя.
 Мы не можем ему доверять, — код режима пользователя мог его переполнить, неправильно выровнять, поместить на недоступный для пользователя адрес, например внутрь данных ядра.
@@ -321,9 +327,17 @@ panicked at 'kernel mode trap #14 - Page Fault, context: { mode: kernel, cs:rip:
 <a href="../../doc/kernel/process/syscall/fn.syscall.html"><code>syscall()</code></a>.
 Так как
 <a href="../../doc/kernel/process/syscall/fn.syscall.html"><code>syscall()</code></a>
-не возвращается, сохранять адрес возврата в стеке инструкцией <a href="https://www.felixcloutier.com/x86/call"><code>call</code></a> не обязательно, можно сделать <a href="https://www.felixcloutier.com/x86/jmp"><code>jmp</code></a>.
-Но если вы предпочли вариант с <a href="https://www.felixcloutier.com/x86/jmp"><code>jmp</code></a>, то скорректируйте значение регистра <code>RSP</code>, так как вызываемая функция при
-поиске части аргументов передаваемых через стек пропускает в нём адрес возврата, считая что он был сохранён инструкцией <a href="https://www.felixcloutier.com/x86/call"><code>call</code></a>.</p>
+не возвращается, сохранять адрес возврата в стеке инструкцией
+<a href="https://www.felixcloutier.com/x86/call"><code>call</code></a>
+не обязательно, можно сделать
+<a href="https://www.felixcloutier.com/x86/jmp"><code>jmp</code></a>.
+Но если вы предпочли вариант с
+<a href="https://www.felixcloutier.com/x86/jmp"><code>jmp</code></a>,
+то скорректируйте значение регистра <code>RSP</code>.
+Так как вызываемая функция при поиске аргументов, передаваемых через стек,
+пропускает в нём место с адресом возврата.
+То есть, считает что адрес возврата был сохранён инструкцией
+<a href="https://www.felixcloutier.com/x86/call"><code>call</code></a>.</p>
 <p>Реализуйте функцию <a href="../../doc/kernel/process/syscall/fn.syscall.html"><code>syscall()</code></a>.
 Она выполняет диспетчеризацию системных вызовов по аргументу <code>number</code>,
 передавая в реализующие конкретные системные вызовы функции нужную часть аргументов <code>arg0</code>–<code>arg4</code>.
@@ -374,9 +388,20 @@ panicked at 'kernel mode trap #14 - Page Fault, context: { mode: kernel, cs:rip:
 <a href="../../doc/kernel/process/table/struct.Table.html#method.free"><code>kernel::process::table::Table::free()</code></a>
 и возврате в контекст ядра, из которого пользовательский процесс был запущен.
 Это делается статическим методом
-<a href="../../doc/kernel/process/process/struct.Process.html#method.leave_user_mode"><code>kernel::process::process::Process::leave_user_mode()</code></a>,
-который не возвращает управление, как и сама функция
+<a href="../../doc/kernel/process/process/struct.Process.html#method.sched_yield"><code>kernel::process::process::Process::sched_yield()</code></a>,
+которые не возвращают управление, как и сама функция
 <a href="../../doc/kernel/process/syscall/fn.exit.html"><code>kernel::process::syscall::exit()</code></a>.</p>
+<p>Различие между
+<a href="../../doc/kernel/process/process/struct.Process.html#method.leave_user_mode"><code>kernel::process::process::Process::leave_user_mode()</code></a>
+и
+<a href="../../doc/kernel/process/process/struct.Process.html#method.sched_yield"><code>kernel::process::process::Process::sched_yield()</code></a>
+состоит в том, что первая сохраняет контекст пользователя.
+Пользовательский код готов к системному вызову и тому что тот испортит регистры.
+Поэтому контракт такой, что всё нужное ему состояние при системных вызовах он сохраняет сам.
+А
+<a href="../../doc/kernel/process/process/struct.Process.html#method.leave_user_mode"><code>kernel::process::process::Process::leave_user_mode()</code></a>
+пригодится чтобы принудительно вытеснять процесс в произвольные моменты времени,
+когда он к этому не готов.</p>
 <h4 id="Системный-вызов-log_value"><a class="header" href="#Системный-вызов-log_value">Системный вызов <code>log_value</code></a></h4>
 <p>Реализуйте <a href="../../doc/kernel/process/syscall/fn.log_value.html">функцию</a></p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
@@ -475,7 +500,7 @@ panicked at 'if the Page Fault was in the kernel mode, probably the `syscall` in
 <li>Передать свои аргументы через регистры, в которых их ожидают функции
 <a href="../../doc/kernel/process/syscall/fn.syscall_trampoline.html"><code>kernel::process::syscall::syscall_trampoline()</code></a> и
 <a href="../../doc/kernel/process/syscall/fn.syscall.html"><code>kernel::process::syscall::syscall()</code></a>.</li>
-<li>Запустить инструкцию <code>syscall</code>, которая выполнит требуемый системный вызов.</li>
+<li>Запустить инструкцию <a href="https://www.felixcloutier.com/x86/syscall"><code>syscall</code></a>, которая выполнит требуемый системный вызов.</li>
 <li>Восстановить <code>RBX</code> и <code>RBP</code>.</li>
 <li>Вернуть наружу результаты системного вызова из регистров, в которые их сохранила функция <a href="../../doc/kernel/process/syscall/fn.sysret.html"><code>kernel::process::syscall::sysret()</code></a>.</li>
 <li>Неиспользованные регистры общего назначения она должна пометить как испорченные уже знакомой конструкцией <code>lateout(...) _,</code>.</li>

@@ -180,7 +180,43 @@
 <span id="180">180</span>
 <span id="181">181</span>
 <span id="182">182</span>
-</pre><pre class="rust"><code><span class="doccomment">/// Загружает [ELF--файлы](https://en.wikipedia.org/wiki/Executable_and_Linkable_Format)
+<span id="183">183</span>
+<span id="184">184</span>
+<span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
+<span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
+<span id="201">201</span>
+<span id="202">202</span>
+<span id="203">203</span>
+<span id="204">204</span>
+<span id="205">205</span>
+<span id="206">206</span>
+<span id="207">207</span>
+<span id="208">208</span>
+<span id="209">209</span>
+<span id="210">210</span>
+<span id="211">211</span>
+<span id="212">212</span>
+<span id="213">213</span>
+<span id="214">214</span>
+</pre><pre class="rust"><code><span class="attribute">#![warn(clippy::missing_docs_in_private_items)]
+#![warn(missing_docs)]
+
+
+</span><span class="doccomment">/// Загружает [ELF--файлы](https://en.wikipedia.org/wiki/Executable_and_Linkable_Format)
 /// пользовательских процессов и их адресные пространства.
 </span><span class="kw">mod </span>elf;
 
@@ -192,12 +228,16 @@
 /// контекст исполнения содержажий уровень привилегий [`ModeContext`].
 </span><span class="kw">mod </span>registers;
 
-<span class="kw">mod </span>scheduler;
+<span class="doccomment">/// Планировщик процессов.
+/// Реализует простейшее
+/// [циклическое исполнение процессов](https://en.wikipedia.org/wiki/Round-robin_scheduling).
+</span><span class="kw">mod </span>scheduler;
 
 <span class="doccomment">/// Реализует системные вызовы.
 </span><span class="kw">mod </span>syscall;
 
-<span class="kw">mod </span>table;
+<span class="doccomment">/// Таблица процессов.
+</span><span class="kw">mod </span>table;
 
 
 <span class="kw">use </span>core::mem;
@@ -233,11 +273,7 @@
 <span class="kw">pub use </span>scheduler::Scheduler;
 <span class="kw">pub use </span>table::Table;
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">use </span>registers::ModeContext;
-
-<span class="comment">// Used in docs.
-</span><span class="attribute">#[allow(unused)]
-</span><span class="kw">use </span>registers::Registers;
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">use </span>registers::{ModeContext, Registers};
 
 
 <span class="doccomment">/// Инициализация подсистемы процессов.
@@ -245,8 +281,6 @@
     <span class="kw">if </span>subsystems.contains(Subsystems::SYSCALL) {
         syscall::init();
     }
-
-    <span class="kw">const </span>PROCESS_SLOT_COUNT: usize = <span class="number">1 </span>&lt;&lt; <span class="number">10</span>;
 
     <span class="kw">if </span>subsystems.contains(Subsystems::PROCESS_TABLE) {
         <span class="kw-2">*</span>TABLE.lock() = Table::new(PROCESS_SLOT_COUNT);
@@ -340,6 +374,10 @@
 }
 
 
+<span class="doccomment">/// Максимальное количество одновременно работающих процессов.
+</span><span class="kw">const </span>PROCESS_SLOT_COUNT: usize = <span class="number">1 </span>&lt;&lt; <span class="number">8</span>;
+
+
 <span class="attribute">#[doc(hidden)]
 </span><span class="kw">pub mod </span>test_scaffolding {
     <span class="kw">pub use super</span>::{
@@ -348,9 +386,16 @@
         table::test_scaffolding::<span class="kw-2">*</span>,
     };
 
-    <span class="kw">use </span>ku::RingBuffer;
+    <span class="kw">use </span>ku::{
+        process::{MiniContext, Pid},
+        RingBuffer,
+    };
 
-    <span class="kw">use crate</span>::{error::Result, memory::AddressSpace, process::Process};
+    <span class="kw">use crate</span>::{
+        error::Result,
+        memory::{AddressSpace, BASE_ADDRESS_SPACE},
+        process::{Process, Table},
+    };
 
 
     <span class="kw">pub fn </span>create_process(elf_file: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="prelude-ty">Result</span>&lt;Process&gt; {
@@ -358,9 +403,28 @@
     }
 
 
+    <span class="kw">pub fn </span>dummy_process() -&gt; <span class="prelude-ty">Result</span>&lt;Pid&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>address_space = BASE_ADDRESS_SPACE.lock().duplicate()<span class="question-mark">?</span>;
+
+        address_space.switch_to();
+
+        <span class="kw">let </span>process_info = <span class="kw">super</span>::map_process_info(<span class="kw-2">&amp;mut </span>address_space)<span class="question-mark">?</span>;
+
+        BASE_ADDRESS_SPACE.lock().switch_to();
+
+        <span class="kw">let </span>context = MiniContext::default();
+        <span class="kw">let </span>process = Process::new(address_space, context, process_info);
+
+        Table::allocate(process)
+    }
+
+
     <span class="kw">pub fn </span>map_log(address_space: <span class="kw-2">&amp;mut </span>AddressSpace) -&gt; <span class="prelude-ty">Result</span>&lt;RingBuffer&gt; {
         <span class="kw">super</span>::map_log(address_space)
     }
+
+
+    <span class="kw">pub const </span>PROCESS_SLOT_COUNT: usize = <span class="kw">super</span>::PROCESS_SLOT_COUNT;
 }
 </code></pre></div>
 </section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="kernel" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (bc4b39c27 2022-08-29)" ></div></body></html>

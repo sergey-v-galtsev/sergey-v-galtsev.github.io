@@ -691,6 +691,11 @@
 <span id="691">691</span>
 <span id="692">692</span>
 <span id="693">693</span>
+<span id="694">694</span>
+<span id="695">695</span>
+<span id="696">696</span>
+<span id="697">697</span>
+<span id="698">698</span>
 </pre><pre class="rust"><code><span class="kw">use </span>core::{
     convert::TryInto,
     fmt,
@@ -974,22 +979,28 @@
 }
 
 
-<span class="attribute">#[repr(transparent)]
+<span class="doccomment">/// Обёртка для [`ModeContext`].
+/// Она помечает запись в него как [`Volatile`], чтобы компилятор такую операцию записи не выкинул.
+</span><span class="attribute">#[repr(transparent)]
 </span><span class="kw">pub struct </span>InterruptContext(ModeContext);
 
 
 <span class="kw">impl </span>InterruptContext {
-    <span class="kw">pub fn </span>is_user_mode(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+    <span class="doccomment">/// Возвращает `true`, если контекст имеет привилегии пользователя.
+    </span><span class="kw">pub fn </span>is_user_mode(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
         <span class="self">self</span>.<span class="number">0</span>.is_user_mode()
     }
 
 
-    <span class="kw">pub fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ModeContext {
+    <span class="doccomment">/// Возвращает [`ModeContext`], содержащийся в этом [`InterruptContext`].
+    </span><span class="kw">pub fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ModeContext {
         <span class="self">self</span>.<span class="number">0
     </span>}
 
 
-    <span class="kw">pub fn </span>set(<span class="kw-2">&amp;mut </span><span class="self">self</span>, context: ModeContext) {
+    <span class="doccomment">/// Записывает `context` в этот [`InterruptContext`].
+    /// Помечает запись как [`Volatile`], чтобы компилятор такую операцию записи не выкинул.
+    </span><span class="kw">pub fn </span>set(<span class="kw-2">&amp;mut </span><span class="self">self</span>, context: ModeContext) {
         Volatile::new(<span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">0</span>).write(context);
     }
 }
@@ -1353,13 +1364,12 @@
 }
 
 
-<span class="attribute">#[allow(unused_mut)] </span><span class="comment">// TODO: remove before flight.
-</span><span class="kw">extern </span><span class="string">&quot;x86-interrupt&quot; </span><span class="kw">fn </span>apic_timer(<span class="kw-2">mut </span>context: InterruptContext) {
+<span class="kw">extern </span><span class="string">&quot;x86-interrupt&quot; </span><span class="kw">fn </span>apic_timer(<span class="kw-2">mut </span>context: InterruptContext) {
     INTERRUPT_STATS[APIC_TIMER].inc();
 
-    <span class="comment">// TODO: your code here.
+    Process::preempt(<span class="kw-2">&amp;mut </span>context);
 
-    </span>LocalApic::end_of_interrupt();
+    LocalApic::end_of_interrupt();
 }
 
 

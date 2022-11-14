@@ -145,8 +145,9 @@
                 <div id="content" class="content">
                     <main>
                         <h2 id="Загрузка-процесса-в-память"><a class="header" href="#Загрузка-процесса-в-память">Загрузка процесса в память</a></h2>
-<p>В Nikka ещё нет файловой системы.
-Код пользовательских программ линкуется прямо в бинарник ядра макросом <a href="https://doc.rust-lang.org/core/macro.include_bytes.html"><code>core::include_bytes!()</code></a>:</p>
+<p>У нас ещё нет файловой системы.
+Поэтому пока код пользовательских программ линкуется прямо в бинарник ядра макросом
+<a href="https://doc.rust-lang.org/core/macro.include_bytes.html"><code>core::include_bytes!()</code></a>:</p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>const LOOP_ELF: &amp;[u8] = include_bytes!(&quot;../../../user/loop/target/kernel/debug/loop&quot;);
@@ -209,14 +210,14 @@ process::create(LOOP_ELF);
 При загрузке первого из них
 <a href="../../doc/kernel/process/elf/fn.load_program_header.html"><code>load_program_header()</code></a>
 отобразит эту страницу в память и обновит <code>mapped_end</code>.
-А при загрузке последующих по значению <code>mapped_end</code> она поймёт, что отображать страницу в память уже не нужно
-и достаточно только записать в неё очередную порцию из данных из ELF–файла.</p>
+А при загрузке последующих, по значению <code>mapped_end</code> она поймёт, что отображать страницу в память уже не нужно
+и достаточно только записать в неё очередную порцию данных из ELF–файла.</p>
 <p>Таким образом,
 <a href="../../doc/kernel/process/elf/fn.load_program_header.html"><code>load_program_header()</code></a>
 делает две вещи:</p>
 <ul>
 <li>Расширяет отображённое в память пространство процесса.</li>
-<li>Копирует содержимое очередного сегмента <code>program_header</code> записанного в срезе <code>file</code> по смещению <a href="../../doc/xmas_elf/program/enum.ProgramHeader.html#method.offset"><code>ProgramHeader::offset()</code></a> в память по адресу <a href="../../doc/xmas_elf/program/enum.ProgramHeader.html#method.virtual_addr"><code>ProgramHeader::virtual_addr()</code></a>.</li>
+<li>Копирует содержимое очередного сегмента <code>program_header</code> в память по адресу <a href="../../doc/xmas_elf/program/enum.ProgramHeader.html#method.virtual_addr"><code>ProgramHeader::virtual_addr()</code></a>. Этот сегмент записан в срезе <code>file</code> по смещению <a href="../../doc/xmas_elf/program/enum.ProgramHeader.html#method.offset"><code>ProgramHeader::offset()</code></a>.</li>
 </ul>
 <p>Обратите внимание на то, что размер сегмента в файле
 <a href="../../doc/xmas_elf/program/enum.ProgramHeader.html#method.file_size"><code>ProgramHeader::file_size()</code></a>
@@ -225,7 +226,7 @@ process::create(LOOP_ELF);
 Тогда дополнительные байты памяти нужно занулить.
 Этого требует формат ELF — там может, например, располагаться секция
 <a href="https://en.wikipedia.org/wiki/.bss"><code>.bss</code></a>,
-предназначенная для неинициализированных или инициализированных нулями статических данных.
+предназначенная для неинициализированных или инициализированных нулями статических переменных.
 Также обратите внимание, что отображать в память образ процесса нужно с флагом
 <a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.USER_ACCESSIBLE"><code>PageTableFlags::USER_ACCESSIBLE</code></a>,
 иначе он просто не заработает в пространстве пользователя,
@@ -276,7 +277,6 @@ process::create(LOOP_ELF);
 <li><a href="https://wiki.osdev.org/ELF">ELF</a></li>
 <li><a href="https://www.uclibc.org/docs/elf-64-gen.pdf">ELF-64 Object File Format</a></li>
 </ul>
-<p><img src="https://upload.wikimedia.org/wikipedia/commons/e/e4/ELF_Executable_and_Linkable_Format_diagram_by_Ange_Albertini.png" alt="" /></p>
 <h3 id="Проверьте-себя"><a class="header" href="#Проверьте-себя">Проверьте себя</a></h3>
 <p>Запустите тест <code>3-process-1-elf</code> из файла
 <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/tests/3-process-1-elf.rs"><code>kernel/src/tests/3-process-1-elf.rs</code></a>:</p>

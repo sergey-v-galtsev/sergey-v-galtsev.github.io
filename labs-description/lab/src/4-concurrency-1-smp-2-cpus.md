@@ -1,7 +1,6 @@
 ## Состояние каждого процессора
 
-В мультипроцессорной системе нужно различать состояние системы в целом и состояние каждого отдельного процессора.
-В Nikka состояние отдельного процессора описано в
+В Nikka состояние отдельного процессора описано в структуре
 [`kernel::smp::cpu::Cpu`](../../doc/kernel/smp/cpu/struct.Cpu.html),
 определённой в [`kernel/src/smp/cpu.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/smp/cpu.rs).
 Номер процессора, на котором сейчас происходит выполнение кода, продублирован в этой структуре и его можно узнать с помощью метода
@@ -11,11 +10,11 @@
 текущего процессора можно получить из статического метода
 [`Cpu::get()`](../../doc/kernel/smp/cpu/struct.Cpu.html#method.get).
 
-Состояние отдельного процессора, которое стоит учитывать:
+Состояние каждого процессора включает:
 
 - Стек ядра [`Cpu::kernel_stack`](../../doc/kernel/smp/cpu/struct.Cpu.html#structfield.kernel_stack). Процессоры обрабатывают системные вызовы и прерывания независимо, так что у каждого должен быть свой стек для этого.
 - Также полезен дополнительный стек [`Cpu::page_fault_stack`](../../doc/kernel/smp/cpu/struct.Cpu.html#structfield.page_fault_stack), который используется во время обработки Page Fault. Он позволяет напечатать диагностику возникшего исключения даже в случае, когда оно вызвано исчерпанием основного стека ядра.
-- Task State Segment [`Cpu::tss`](../../doc/kernel/smp/cpu/struct.Cpu.html#structfield.tss). В TSS описано, где находится стек ядра для текущего процессора. Разумеется, раз стеки разные, то и TSS тоже должны быть разные.
+- [Task State Segment](https://en.wikipedia.org/wiki/Task_state_segment) [`Cpu::tss`](../../doc/kernel/smp/cpu/struct.Cpu.html#structfield.tss). В TSS хранится `RSP` ядра для текущего процессора. Разумеется, раз стеки разные, то и TSS тоже должны быть разные.
 - Исполняющийся на данном CPU в текущий момент пользовательский процесс [`Cpu::current_process`](../../doc/kernel/smp/cpu/struct.Cpu.html#structfield.current_process). Пользовательские процессы выполняются независимо на разных ядрах. Следовательно, у каждого ядра текущий процесс должен быть своим.
 - Системные регистры. У каждого процессора свои системные регистры. Так что функции их инициализации должны быть вызваны для каждого CPU. Явно в структуре [`Cpu`](../../doc/kernel/smp/cpu/struct.Cpu.html) регистры не хранятся.
   - [`GDTR`](https://wiki.osdev.org/GDT#GDTR) --- Global Descriptor Table Register, содержит адрес [kernel::memory::gdt::Gdt](../../doc/kernel/memory/gdt/type.Gdt.html).
@@ -78,18 +77,31 @@ fn Cpu::set_fs()
 для текущего CPU в его собственном регистре `FS`.
 Этот же адрес нужно будет записать в поле
 [`Cpu::this`](../../doc/kernel/smp/cpu/struct.Cpu.html#structfield.this).
-Дело в том, что адресовать память относительно регистра `FS` можно, но узнать его абсолютный адрес можно только прочитав его напрямую.
-Получить абсолютный адрес через инструкцию `lea` не получится.
+Дело в том, что адресовать память относительно регистра `FS` можно,
+но узнать его линейный адрес можно только прочитав его напрямую
+инструкцией [rdmsr](https://www.felixcloutier.com/x86/rdmsr).
+Получить линейный адрес через инструкцию
+[`lea`](https://www.felixcloutier.com/x86/lea)
+не получится.
 А адресовать что-либо через `FS` неудобно --- это можно сделать только в ассемблере.
-Самым удобным представляется такой вариант: прочитать адрес структуры
+Самым удобным представляется такой вариант.
+Прочитать адрес структуры
 [`Cpu`](../../doc/kernel/smp/cpu/struct.Cpu.html)
 из поля
 [`Cpu::this`](../../doc/kernel/smp/cpu/struct.Cpu.html#structfield.this),
-обращаясь к самому этому полю относительно регистра `FS`.
-А дальше, имея абсолютный адрес структуры
+обращаясь к самому этому полю относительно регистра `FS`,
+то есть используя логический адрес `<сегментный_регистр>:<смещение>`.
+А дальше, имея линейный адрес структуры
 [`Cpu`](../../doc/kernel/smp/cpu/struct.Cpu.html)
 получить её саму и дальше обращаться к её полям и методам без использования `FS`.
 Что уже можно делать в Rust безо всякого ассемблера.
+
+По умолчанию код пользователя не может менять регистры `FS` и `GS`, так это и оставим.
+Если бы мы разрешили ему их менять, например для реализации
+[thread-local storage](https://en.wikipedia.org/wiki/Thread-local_storage) (TLS),
+нам также понадобилась бы инструкция
+[swapgs](https://www.felixcloutier.com/x86/swapgs)
+при переключении между режимами ядра и пользователя.
 
 Для сохранения значения в регистр `FS` вам пригодится метод
 [`x86_64::registers::model_specific::FsBase::write()`](../../doc/x86_64/registers/model_specific/struct.FsBase.html#method.write).
@@ -122,7 +134,7 @@ unsafe fn Cpu::get() -> &'static mut Cpu
 [`Cpu::set_fs()`](../../doc/kernel/smp/cpu/struct.Cpu.html#method.set_fs).
 Иначе в лучшем случае будет паника, а в худшем --- обращение к невалидной или занятой другими данными памяти.
 
-Загрузите из инициализированного в предыдущей задаче
+Загрузите из инициализированного в предыдущей задаче поля
 [`Cpu::this`](../../doc/kernel/smp/cpu/struct.Cpu.html#structfield.this)
 адрес структуры
 [`Cpu`](../../doc/kernel/smp/cpu/struct.Cpu.html).
@@ -144,12 +156,13 @@ unsafe fn Cpu::get() -> &'static mut Cpu
 Для этого пригодится макрос
 [`memoffset::offset_of!()`](../../doc/memoffset/macro.offset_of.html).
 
-Полученный адрес нужно будет сохранить в переменной подходящего типа, поддерживаемом макросом `asm!()`, например `usize`.
+Полученный адрес нужно будет сохранить в переменной подходящего типа,
+поддерживаемого макросом `asm!()`, например `usize`.
 Преобразовать его в ссылку на структуру
 [`Cpu`](../../doc/kernel/smp/cpu/struct.Cpu.html)
 можно с помощью
 [`Virt`](../../doc/kernel/memory/type.Virt.html).
-Он выполнит необходимые проверки на валидность этого адреса.
+Который выполнит необходимые проверки на валидность этого адреса.
 В случае, если проверки не пройдут и вернётся ошибка, можно паниковать.
 
 Так как поменялось назначение сегментного регистра `FS`,
@@ -163,15 +176,23 @@ unsafe fn Cpu::get() -> &'static mut Cpu
 [диспетчеризации системных вызовов](../../lab/book/3-process-4-syscall.html#%D0%94%D0%B8%D1%81%D0%BF%D0%B5%D1%82%D1%87%D0%B5%D1%80%D0%B8%D0%B7%D0%B0%D1%86%D0%B8%D1%8F-%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D0%BD%D1%8B%D1%85-%D0%B2%D1%8B%D0%B7%D0%BE%D0%B2%D0%BE%D0%B2)
 и был добавлен в соответствующей
 [задаче](../../lab/book/3-process-4-syscall.html#%D0%97%D0%B0%D0%B4%D0%B0%D1%87%D0%B0-4--%D0%BF%D0%BE%D0%B4%D0%B4%D0%B5%D1%80%D0%B6%D0%BA%D0%B0-%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D0%BD%D1%8B%D1%85-%D0%B2%D1%8B%D0%B7%D0%BE%D0%B2%D0%BE%D0%B2).
+Теперь `RSP` нужно писать не в стек, а по адресу `FS:offset`, где `offset` --- смещение `RSP` ядра в структуре
+[`Cpu`](../../doc/kernel/smp/cpu/struct.Cpu.html).
+Для этого смещения есть константа
+[`kernel::smp::cpu::KERNEL_RSP_OFFSET_IN_CPU`](../../doc/kernel/smp/cpu/constant.KERNEL_RSP_OFFSET_IN_CPU.html).
 А запись `RSP` в стек и его сохранение в
 [`syscall_trampoline()`](../../doc/kernel/process/syscall/fn.syscall_trampoline.html)
 нужно будет удалить.
+Обратите внимание, что в ассемблере всё также нужно использовать запись `FS:offset`.
+Высокоуровневые методы вроде
+[`Cpu::get()`](../../doc/kernel/smp/cpu/struct.Cpu.html#method.get)
+доступны только для Rust--кода --- до переключения стека невозможно корректно позвать Rust--функцию.
 
 
 #### Инициализация вектора структур [`kernel::smp::cpu::Cpu`](../../doc/kernel/smp/cpu/struct.Cpu.html)
 
 Чтобы пользоваться структурами
-[`Cpu`](../../doc/kernel/smp/cpu/struct.Cpu.html)
+[`Cpu`](../../doc/kernel/smp/cpu/struct.Cpu.html),
 для них и для содержащихся в них стеках нужно выделить память.
 
 Реализуйте [функцию](../../doc/kernel/smp/cpu/fn.init_cpu_vec.html)
@@ -207,16 +228,16 @@ fn init_cpu_vec(cpu_count: usize) -> Result<Vec<Cpu>>
 $ (cd kernel; cargo test --test 4-concurrency-3-cpus)
 ...
 4_concurrency_3_cpus::initialized---------------------------
-19:57:54 0 I cpu = 0; local_apic_id = 0
-19:57:54 0 I cpu = 0; kernel_stack = 0v7FFFFFEB8000; frame = Frame(32427 @ 0p7EAB000); flags = PRESENT | WRITABLE | ACCESSED | DIRTY | NO_EXECUTE
+20:26:42 0 I cpu = 0; local_apic_id = 0
+20:26:42 0 I cpu = 0; kernel_stack = 0v7FFFFFEB8000; frame = Frame(32427 @ 0p7EAB000); flags = PRESENT | WRITABLE | ACCESSED | DIRTY | NO_EXECUTE
 4_concurrency_3_cpus::initialized------------------ [passed]
-19:57:54 0 I exit qemu; exit_code = SUCCESS
+20:26:43 0 I exit qemu; exit_code = SUCCESS
 ```
 
 
 ### Ориентировочный объём работ этой части лабораторки
 
 ```console
- kernel/src/smp/cpu.rs |   32 ++++++++++++++++++++++++++++----
- 1 file changed, 28 insertions(+), 4 deletions(-)
+ kernel/src/smp/cpu.rs |   54 ++++++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 46 insertions(+), 8 deletions(-)
 ```

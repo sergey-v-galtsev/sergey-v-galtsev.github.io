@@ -1,7 +1,8 @@
 ## Загрузка процесса в память
 
-В Nikka ещё нет файловой системы.
-Код пользовательских программ линкуется прямо в бинарник ядра макросом [`core::include_bytes!()`](https://doc.rust-lang.org/core/macro.include_bytes.html):
+У нас ещё нет файловой системы.
+Поэтому пока код пользовательских программ линкуется прямо в бинарник ядра макросом
+[`core::include_bytes!()`](https://doc.rust-lang.org/core/macro.include_bytes.html):
 
 ```rust
 const LOOP_ELF: &[u8] = include_bytes!("../../../user/loop/target/kernel/debug/loop");
@@ -66,15 +67,15 @@ fn kernel::process::elf::load_program_header(
 При загрузке первого из них
 [`load_program_header()`](../../doc/kernel/process/elf/fn.load_program_header.html)
 отобразит эту страницу в память и обновит `mapped_end`.
-А при загрузке последующих по значению `mapped_end` она поймёт, что отображать страницу в память уже не нужно
-и достаточно только записать в неё очередную порцию из данных из ELF--файла.
+А при загрузке последующих, по значению `mapped_end` она поймёт, что отображать страницу в память уже не нужно
+и достаточно только записать в неё очередную порцию данных из ELF--файла.
 
 Таким образом,
 [`load_program_header()`](../../doc/kernel/process/elf/fn.load_program_header.html)
 делает две вещи:
 
 - Расширяет отображённое в память пространство процесса.
-- Копирует содержимое очередного сегмента `program_header` записанного в срезе `file` по смещению [`ProgramHeader::offset()`](../../doc/xmas_elf/program/enum.ProgramHeader.html#method.offset) в память по адресу [`ProgramHeader::virtual_addr()`](../../doc/xmas_elf/program/enum.ProgramHeader.html#method.virtual_addr).
+- Копирует содержимое очередного сегмента `program_header` в память по адресу [`ProgramHeader::virtual_addr()`](../../doc/xmas_elf/program/enum.ProgramHeader.html#method.virtual_addr). Этот сегмент записан в срезе `file` по смещению [`ProgramHeader::offset()`](../../doc/xmas_elf/program/enum.ProgramHeader.html#method.offset).
 
 Обратите внимание на то, что размер сегмента в файле
 [`ProgramHeader::file_size()`](../../doc/xmas_elf/program/enum.ProgramHeader.html#method.file_size)
@@ -83,7 +84,7 @@ fn kernel::process::elf::load_program_header(
 Тогда дополнительные байты памяти нужно занулить.
 Этого требует формат ELF --- там может, например, располагаться секция
 [`.bss`](https://en.wikipedia.org/wiki/.bss),
-предназначенная для неинициализированных или инициализированных нулями статических данных.
+предназначенная для неинициализированных или инициализированных нулями статических переменных.
 Также обратите внимание, что отображать в память образ процесса нужно с флагом
 [`PageTableFlags::USER_ACCESSIBLE`](../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.USER_ACCESSIBLE),
 иначе он просто не заработает в пространстве пользователя,
@@ -137,8 +138,6 @@ fn kernel::process::elf::memory_block(
 - [Executable and Linkable Format](https://en.wikipedia.org/wiki/Executable_and_Linkable_Format)
 - [ELF](https://wiki.osdev.org/ELF)
 - [ELF-64 Object File Format](https://www.uclibc.org/docs/elf-64-gen.pdf)
-
-![](https://upload.wikimedia.org/wikipedia/commons/e/e4/ELF_Executable_and_Linkable_Format_diagram_by_Ange_Albertini.png)
 
 
 ### Проверьте себя

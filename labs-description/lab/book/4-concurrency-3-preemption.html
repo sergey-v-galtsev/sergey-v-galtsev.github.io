@@ -150,81 +150,129 @@
 то есть установлен флаг
 <a href="../../doc/ku/process/registers/struct.RFlags.html#associatedconstant.INTERRUPT_FLAG"><code>RFlags::INTERRUPT_FLAG</code></a>.
 См.
-<a href="../../lab/book/3-process-3-user-mode.html#%D0%97%D0%B0%D0%B4%D0%B0%D1%87%D0%B0-2--%D0%BF%D0%B5%D1%80%D0%B5%D0%BA%D0%BB%D1%8E%D1%87%D0%B5%D0%BD%D0%B8%D0%B5-%D0%BF%D1%80%D0%BE%D1%86%D0%B5%D1%81%D1%81%D0%BE%D1%80%D0%B0-%D0%B2-%D1%80%D0%B5%D0%B6%D0%B8%D0%BC-%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D1%8F-%D0%B8-%D0%B2%D0%BE%D0%B7%D0%B2%D1%80%D0%B0%D1%82-%D0%B8%D0%B7-%D0%BD%D0%B5%D0%B3%D0%BE">задачу</a>
+<a href="../../lab/book/3-process-3-user-mode.html#%D0%97%D0%B0%D0%B4%D0%B0%D1%87%D0%B0-3--%D0%BF%D0%B5%D1%80%D0%B5%D0%BA%D0%BB%D1%8E%D1%87%D0%B5%D0%BD%D0%B8%D0%B5-%D0%BF%D1%80%D0%BE%D1%86%D0%B5%D1%81%D1%81%D0%BE%D1%80%D0%B0-%D0%B2-%D1%80%D0%B5%D0%B6%D0%B8%D0%BC-%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D1%8F-%D0%B8-%D0%B2%D0%BE%D0%B7%D0%B2%D1%80%D0%B0%D1%82-%D0%B8%D0%B7-%D0%BD%D0%B5%D0%B3%D0%BE">задачу</a>
 про переключение процессора в режим пользователя и
 <a href="../../lab/book/3-process-3-user-mode.html#%D0%A1%D0%BE%D1%81%D1%82%D0%BE%D1%8F%D0%BD%D0%B8%D0%B5-%D1%80%D0%B5%D0%B3%D0%B8%D1%81%D1%82%D1%80%D0%BE%D0%B2-%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D1%81%D0%BA%D0%BE%D0%B3%D0%BE-%D0%BF%D1%80%D0%BE%D1%86%D0%B5%D1%81%D1%81%D0%B0">состояние регистров пользовательского процесса</a>.</p>
-<p>В функции обработки прерывания от таймера</p>
+<p>Реализуйте <a href="../../doc/kernel/process/process/struct.Process.html#method.preempt">метод</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn Process::preempt(context: &amp;mut InterruptContext)
+<span class="boring">}
+</span></code></pre></pre>
+<p>в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/process/process.rs"><code>kernel/src/process/process.rs</code></a>.</p>
+<p>Он должен выполнить переключение текущего контекста исполнения <code>context</code> на контекст ядра в случае,
+если текущий контекст исполняется в режиме пользователя.
+Текущий контекст пользователя нужно будет сохранить в структуре
+<a href="../../doc/kernel/process/process/struct.Process.html"><code>Process</code></a>.
+Но чтобы до неё добраться, нужно блокировать спинлок в таблице процессов.
+А брать блокировки из обработчиков прерываний не стоит.
+Поэтому для начала в самом прерывании сохраним контекст пользователя в промежуточном месте —
+в CPU–локальной структуре
+<a href="../../doc/kernel/smp/cpu/struct.Cpu.html"><code>kernel::smp::cpu::Cpu</code></a>.
+Захватывать блокировку для доступа ней не нужно, так как она не разделяется между разными CPU
+и доступ к ней не будет конкурентным.</p>
+<p>Метод
+<a href="../../doc/kernel/process/process/struct.Process.html#method.preempt"><code>Process::preempt</code></a>
+вызывается из
+<a href="../../doc/kernel/interrupts/fn.apic_timer.html">функции обработки прерывания от таймера</a></p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>extern &quot;x86-interrupt&quot; fn apic_timer(mut context: InterruptContext)
 <span class="boring">}
 </span></code></pre></pre>
-<p>в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/interrupts.rs"><code>kernel/src/interrupts.rs</code></a>
-добавьте переключение текущего контекста исполнения <code>context</code> на контекст ядра в случае, если текущий контекст исполняется в режиме пользователя.
-Текущий контекст пользователя нужно будет сохранить в структуре <code>Process</code>.
-Но чтобы до неё добраться, нужно блокировать мьютекс в таблице процессов.
-А блокировать мьютексы из обработчиков прерываний не стоит.
-Поэтому для начала в самом прерывании сохраним контекст пользователя в промежуточном месте —
-в CPU–локальной структуре <code>Cpu</code>.
-Захватывать блокировку для доступа ней не нужно, так как она не разделяется между разными CPU и доступ к ней не будет конкурентным.</p>
-<p>В методе</p>
+<p>находящейся в файле
+<a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/interrupts.rs"><code>kernel/src/interrupts.rs</code></a>.</p>
+<p><a href="../../doc/kernel/interrupts/struct.InterruptContext.html"><code>kernel::interrupts::InterruptContext</code></a> —
+обёртка для уже знакомого
+<a href="../../doc/kernel/process/registers/struct.ModeContext.html"><code>kernel::process::registers::ModeContext</code></a>.
+Она помечает запись в него как
+<a href="../../doc/volatile/struct.Volatile.html"><code>volatile::Volatile</code></a>,
+чтобы компилятор такую операцию записи не выкинул.
+Дело в том, что
+<a href="../../doc/kernel/interrupts/struct.InterruptContext.html"><code>InterruptContext</code></a>
+формально является изменяемым аргументом
+<a href="../../doc/kernel/interrupts/fn.apic_timer.html"><code>apic_timer()</code></a>,
+а не изменяемой ссылкой.
+Если бы функция была обычной, запись в <code>context</code> сделанную последней, никто снаружи функции бы не заметил.
+А значит, компилятор мог бы её выкинуть.
+В нашем случае
+<a href="../../doc/kernel/interrupts/fn.apic_timer.html"><code>apic_timer()</code></a> —
+<a href="https://github.com/rust-lang/rust/issues/40180"><code>extern &quot;x86-interrupt&quot;</code></a>
+и эту запись увидит инструкция процессора
+<a href="https://www.felixcloutier.com/x86/iret:iretd:iretq"><code>iretq</code></a>.
+Чтобы предотвратить выкидывание оптимизатором команд записи в <code>context</code> и нужен <code>Volatile</code>.</p>
+<p>В <a href="../../doc/kernel/process/process/struct.Process.html#method.enter_user_mode">методе</a></p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>fn Process::enter_user_mode(mut process: MutexGuard&lt;Process&gt;) -&gt; bool
 <span class="boring">}
 </span></code></pre></pre>
 <p>в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/process/process.rs"><code>kernel/src/process/process.rs</code></a>
-после возвращения из режима пользователя, то есть после возвращения из <code>Registers::switch_to()</code>,
-добавьте проверку, что в <code>Cpu</code> есть сохранённый контекст пользователя.
+после возвращения из режима пользователя, то есть после возвращения из
+<a href="../../doc/kernel/process/registers/struct.Registers.html#method.switch_to"><code>Registers::switch_to()</code></a>,
+добавьте проверку, что в
+<a href="../../doc/kernel/smp/cpu/struct.Cpu.html"><code>Cpu</code></a>
+есть сохранённый контекст пользователя.
 Если его нет, то процесс вернулся из режима пользователя синхронно, например через системный вызов
 <code>exit()</code> или <code>sched_yield()</code>, и дополнительно ничего делать не нужно.
-Если же в <code>Cpu</code> сохранён контекст пользователя, то его нужно перенести в структуру <code>Process</code>.
-Для этого, по идентификатору <code>Pid</code> текущего процесса получите из <code>Table</code> его заблокированную мьютексом структуру
-<code>Process</code> и запишите пользовательский контекст в неё.
+Если же в
+<a href="../../doc/kernel/smp/cpu/struct.Cpu.html"><code>Cpu</code></a>
+сохранён контекст пользователя, то его нужно перенести в структуру
+<a href="../../doc/kernel/process/process/struct.Process.html"><code>Process</code></a>.
+Для этого, по идентификатору
+<a href="../../doc/ku/process/pid/enum.Pid.html"><code>Pid</code></a>
+текущего процесса получите из
+<a href="../../doc/kernel/process/struct.Table.html"><code>Table</code></a>
+его заблокированную спинлоком структуру
+<a href="../../doc/kernel/process/process/struct.Process.html"><code>Process</code></a>.
+и запишите пользовательский контекст в неё.
 Верните из этого метода <code>true</code>, если процесс был вытеснен.</p>
 <p>Вам пригодятся</p>
 <ul>
-<li><code>InterruptContext::is_user_mode()</code></li>
-<li><code>InterruptContext::get()</code></li>
-<li><code>InterruptContext::set()</code></li>
-<li><code>Cpu::kernel_context()</code></li>
-<li><code>Cpu::set_user_context()</code></li>
-<li><code>Cpu::take_user_context()</code></li>
-<li><code>Table::get()</code></li>
-<li><code>Registers::set_mode_context()</code></li>
+<li><a href="../../doc/kernel/interrupts/struct.InterruptContext.html#method.is_user_mode"><code>InterruptContext::is_user_mode()</code></a>,</li>
+<li><a href="../../doc/kernel/interrupts/struct.InterruptContext.html#method.get"><code>InterruptContext::get()</code></a>,</li>
+<li><a href="../../doc/kernel/interrupts/struct.InterruptContext.html#method.set"><code>InterruptContext::set()</code></a>,</li>
+<li><a href="../../doc/kernel/smp/cpu/struct.Cpu.html#method.kernel_context"><code>Cpu::kernel_context()</code></a>,</li>
+<li><a href="../../doc/kernel/smp/cpu/struct.Cpu.html#method.set_user_context"><code>Cpu::set_user_context()</code></a>,</li>
+<li><a href="../../doc/kernel/smp/cpu/struct.Cpu.html#method.take_user_context"><code>Cpu::take_user_context()</code></a>,</li>
+<li><a href="../../doc/kernel/process/struct.Table.html#method.get"><code>Table::get()</code></a>,</li>
+<li><a href="../../doc/kernel/process/registers/struct.Registers.html#method.set_mode_context"><code>Registers::set_mode_context()</code></a>.</li>
 </ul>
-<p>После этого заработает тест <code>preemption()</code> в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/tests/process.rs"><code>kernel/src/tests/process.rs</code></a>:</p>
-<pre><code class="language-console">kernel::tests::process::preemption--------------------------
-14:11:24.149 0 I page allocator init; free_page_count = 33688649728; block = [2.000 TiB, 127.500 TiB), size 125.500 TiB
-14:11:24.160 0 I duplicate; address_space = &quot;process&quot; @ 0p30B0000
-14:11:24.164 0 I switch to; address_space = &quot;process&quot; @ 0p30B0000
-14:11:24.176 0 D extend mapping; block = [0x10000000, 0x10004e86), size 19.631 KiB; page_block = [0x10000, 0x10005), size 20.000 KiB; flags =   R; page_flags = PRESENT | WRITABLE | USER_ACCESSIBLE
-14:11:24.202 0 D elf loadable program header; file_block = [0x20290e, 0x207794), size 19.631 KiB; memory_block = [0x10000000, 0x10004e86), size 19.631 KiB; flags =   R
-14:11:24.221 0 D extend mapping; block = [0x10005000, 0x1002dde6), size 163.475 KiB; page_block = [0x10005, 0x1002e), size 164.000 KiB; flags = X R; page_flags = PRESENT | WRITABLE | USER_ACCESSIBLE
-14:11:24.229 0 D elf loadable program header; file_block = [0x20779e, 0x2306f4), size 163.834 KiB; memory_block = [0x10004e90, 0x1002dde6), size 163.834 KiB; flags = X R
-14:11:24.243 0 D elf loadable program header; file_block = [0x2306f6, 0x2307e6), size 240 B; memory_block = [0x1002dde8, 0x1002ded8), size 240 B; flags =  WR
-14:11:24.250 0 D extend mapping; block = [0x1002e000, 0x10030970), size 10.359 KiB; page_block = [0x1002e, 0x10031), size 12.000 KiB; flags =  WR; page_flags = PRESENT | WRITABLE | USER_ACCESSIBLE
-14:11:24.258 0 D elf loadable program header; file_block = [0x2307e6, 0x233256), size 10.609 KiB; memory_block = [0x1002ded8, 0x10030970), size 10.648 KiB; flags =  WR
-14:11:24.288 0 I switch to; address_space = &quot;base&quot; @ 0p1000
-14:11:24.304 0 I loaded ELF file; context = { rip: 0v10004F40, rsp: 0v7F7FFFFFF000 }; file_size = 408.516 KiB; process = { pid: &lt;current&gt;, address_space: &quot;process&quot; @ 0p30B0000, { rip: 0v10004F40, rsp: 0v7F7FFFFFF000 } }
-14:11:24.318 0 I switch to; address_space = &quot;0:5&quot; @ 0p30B0000
-14:11:24.323 0 I allocate; slot = Process { pid: 0:5, address_space: &quot;0:5&quot; @ 0p30B0000, { rip: 0v10004F40, rsp: 0v7F7FFFFFF000 } }; process_count = 1
-14:11:24.330 0 I user process page table entry; entry_point = 0v10004F40; frame = Frame(12340 @ 0p3034000); flags = PRESENT | WRITABLE | USER_ACCESSIBLE | ACCESSED | DIRTY
-14:11:24.339 0 D process_frames = 90
-14:11:24.342 0 I switch to; address_space = &quot;0:5&quot; @ 0p30B0000
-14:11:24.346 0 D entering the user mode; pid = 0:5; registers = { rax: 0x0, rdi: 0x7F7FFFFEB000, rsi: 0x0, { mode: user, cs:rip: 0x0023:0v10004F40, ss:rsp: 0x001B:0v7F7FFFFFF000, rflags: IF } }
-14:11:24.447 0 D leaving the user mode; pid = 0:5
-14:11:24.450 0 I the process was preempted; pid = 0:5; user_context = { mode: user, cs:rip: 0x0023:0v10004EFA, ss:rsp: 0x001B:0v7F7FFFFFEFB8, rflags: IF AF }
-14:11:24.458 0 D returned from the user space
-14:11:24.461 0 I free; slot = Process { pid: 0:5, address_space: &quot;0:5&quot; @ 0p30B0000, { rip: 0v10004EFA, rsp: 0v7F7FFFFFEFB8 } }; process_count = 0
-14:11:24.469 0 I switch to; address_space = &quot;base&quot; @ 0p1000
-14:11:24.472 0 I drop the current address space; address_space = &quot;0:5&quot; @ 0p30B0000; switch_to = &quot;base&quot; @ 0p1000
-kernel::tests::process::preemption----------------- [passed]
+<h3 id="Проверьте-себя"><a class="header" href="#Проверьте-себя">Проверьте себя</a></h3>
+<p>После этого заработает тест <code>preemption()</code> в файле
+<a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/tests/4-concurrency-6-preemption.rs"><code>kernel/src/tests/4-concurrency-6-preemption.rs</code></a>:</p>
+<pre><code class="language-console">$ (cd kernel; cargo test --test 4-concurrency-6-preemption)
+...
+4_concurrency_6_preemption::preemption----------------------
+20:27:28 0 I page allocator init; free_page_count = 33822867456; block = [0v18000000000, 0v7F8000000000), size 126.000 TiB
+20:27:28 0 I duplicate; address_space = &quot;process&quot; @ 0p7E8A000
+20:27:28 0 I switch to; address_space = &quot;process&quot; @ 0p7E8A000
+20:27:28 0 D extend mapping; block = [0v10000000, 0v10006DA4), size 27.410 KiB; page_block = [0v10000000, 0v10007000), size 28.000 KiB; flags =   R; page_flags = PRESENT | WRITABLE | USER_ACCESSIBLE
+20:27:28 0 D elf loadable program header; file_block = [0v201A9A, 0v20883E), size 27.410 KiB; memory_block = [0v10000000, 0v10006DA4), size 27.410 KiB; flags =   R
+20:27:28 0 D extend mapping; block = [0v10007000, 0v1004EAD2), size 286.705 KiB; page_block = [0v10007000, 0v1004F000), size 288.000 KiB; flags = X R; page_flags = PRESENT | WRITABLE | USER_ACCESSIBLE
+20:27:28 0 D elf loadable program header; file_block = [0v20884A, 0v25056C), size 287.283 KiB; memory_block = [0v10006DB0, 0v1004EAD2), size 287.283 KiB; flags = X R
+20:27:28 0 D elf loadable program header; file_block = [0v250572, 0v250662), size 240 B; memory_block = [0v1004EAD8, 0v1004EBC8), size 240 B; flags =  WR
+20:27:28 0 D extend mapping; block = [0v1004F000, 0v100547D0), size 21.953 KiB; page_block = [0v1004F000, 0v10055000), size 24.000 KiB; flags =  WR; page_flags = PRESENT | WRITABLE | USER_ACCESSIBLE
+20:27:28 0 D elf loadable program header; file_block = [0v250662, 0v256242), size 22.969 KiB; memory_block = [0v1004EBC8, 0v100547D0), size 23.008 KiB; flags =  WR
+20:27:28 0 I switch to; address_space = &quot;base&quot; @ 0p1000
+20:27:28 0 I loaded ELF file; context = { rip: 0v10006E60, rsp: 0v7F7FFFFFF000 }; file_size = 5.307 MiB; process = { pid: &lt;current&gt;, address_space: &quot;process&quot; @ 0p7E8A000, { rip: 0v10006E60, rsp: 0v7F7FFFFFF000 } }
+20:27:28 0 I allocate; slot = Process { pid: 0:0, address_space: &quot;0:0&quot; @ 0p7E8A000, { rip: 0v10006E60, rsp: 0v7F7FFFFFF000 } }; process_count = 1
+20:27:28 0 I user process page table entry; entry_point = 0v10006E60; frame = Frame(32366 @ 0p7E6E000); flags = PRESENT | WRITABLE | USER_ACCESSIBLE | ACCESSED | DIRTY
+20:27:28 0 D process_frames = 126
+20:27:28 0 I switch to; address_space = &quot;0:0&quot; @ 0p7E8A000
+20:27:28 0 D entering the user mode; pid = 0:0; registers = { rax: 0x0, rdi: 0x7F7FFFFED000, rsi: 0x0, { mode: user, cs:rip: 0x0023:0v10006E60, ss:rsp: 0x001B:0v7F7FFFFFF000, rflags: IF } }
+20:27:28 0 D leaving the user mode; pid = 0:0
+20:27:28 0 I the process was preempted; pid = 0:0; user_context = { mode: user, cs:rip: 0x0023:0v10006E1A, ss:rsp: 0x001B:0v7F7FFFFFEFB8, rflags: IF AF }
+20:27:28 0 D returned from the user space
+20:27:28 0 I free; slot = Process { pid: 0:0, address_space: &quot;0:0&quot; @ 0p7E8A000, { rip: 0v10006E1A, rsp: 0v7F7FFFFFEFB8 } }; process_count = 0
+20:27:28 0 I switch to; address_space = &quot;base&quot; @ 0p1000
+20:27:28 0 I drop the current address space; address_space = &quot;0:0&quot; @ 0p7E8A000; switch_to = &quot;base&quot; @ 0p1000
+4_concurrency_6_preemption::preemption------------- [passed]
+20:27:28 0 I exit qemu; exit_code = SUCCESS
 </code></pre>
 <h3 id="Ориентировочный-объём-работ-этой-части-лабораторки"><a class="header" href="#Ориентировочный-объём-работ-этой-части-лабораторки">Ориентировочный объём работ этой части лабораторки</a></h3>
-<pre><code class="language-console"> kernel/src/interrupts.rs      |    5 ++++-
- kernel/src/process/process.rs |   16 ++++++++++++++--
- 2 files changed, 18 insertions(+), 3 deletions(-)
+<pre><code class="language-console"> kernel/src/process/process.rs |   24 +++++++++++++++++++++---
+ 1 file changed, 21 insertions(+), 3 deletions(-)
 </code></pre>
 
                     </main>
