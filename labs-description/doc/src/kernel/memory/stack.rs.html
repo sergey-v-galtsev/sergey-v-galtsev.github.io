@@ -119,15 +119,24 @@
 <span id="119">119</span>
 <span id="120">120</span>
 <span id="121">121</span>
+<span id="122">122</span>
+<span id="123">123</span>
+<span id="124">124</span>
+<span id="125">125</span>
+<span id="126">126</span>
+<span id="127">127</span>
+<span id="128">128</span>
+<span id="129">129</span>
 </pre><pre class="rust"><code><span class="kw">use </span>core::mem;
 
 <span class="kw">use </span>lazy_static::lazy_static;
 <span class="kw">use </span>spin::Mutex;
-<span class="kw">use </span>x86_64::structures::paging::{page::Size4KiB, PageSize};
+
+<span class="kw">use </span>ku::memory::Page;
 
 <span class="kw">use crate</span>::{
     error::Result,
-    memory::{mmu::PageTableFlags, AddressSpace, Virt, BASE_ADDRESS_SPACE},
+    memory::{mmu::PageTableFlags, AddressSpace, Block, Virt, BASE_ADDRESS_SPACE},
 };
 
 <span class="comment">// Used in docs.
@@ -135,8 +144,8 @@
 </span><span class="kw">use crate as </span>kernel;
 
 
-<span class="kw">pub const </span>GUARD_ZONE_SIZE: usize = Size4KiB::SIZE <span class="kw">as </span>usize;
-<span class="kw">const </span>STACK_SIZE: usize = <span class="number">16 </span>* Size4KiB::SIZE <span class="kw">as </span>usize;
+<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">const </span>GUARD_ZONE_SIZE: usize = Page::SIZE <span class="kw">as </span>usize;
+<span class="kw">const </span>STACK_SIZE: usize = <span class="number">32 </span>* Page::SIZE <span class="kw">as </span>usize;
 
 
 <span class="attribute">#[repr(C, align(<span class="number">4096</span>))]
@@ -176,6 +185,13 @@
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>pointer(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Virt {
         Virt::from_ptr(<span class="self">self</span>.<span class="number">0</span>.as_ptr_range().end)
+    }
+
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>zones(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (Block&lt;Virt&gt;, Block&lt;Virt&gt;) {
+        <span class="kw">let </span>zones = <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>.split_at(GUARD_ZONE_SIZE);
+
+        (Block::from_slice(zones.<span class="number">0</span>), Block::from_slice(zones.<span class="number">1</span>))
     }
 
 

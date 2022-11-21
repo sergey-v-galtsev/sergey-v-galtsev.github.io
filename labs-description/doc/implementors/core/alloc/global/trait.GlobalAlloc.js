@@ -1,4 +1,4 @@
 (function() {var implementors = {
 "kernel":[["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/alloc/global/trait.GlobalAlloc.html\" title=\"trait core::alloc::global::GlobalAlloc\">GlobalAlloc</a> for <a class=\"struct\" href=\"kernel/allocator/struct.GlobalAllocator.html\" title=\"struct kernel::allocator::GlobalAllocator\">GlobalAllocator</a>"]],
-"lib":[["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/alloc/global/trait.GlobalAlloc.html\" title=\"trait core::alloc::global::GlobalAlloc\">GlobalAlloc</a> for <a class=\"struct\" href=\"lib/struct.NullAllocator.html\" title=\"struct lib::NullAllocator\">NullAllocator</a>"]]
+"lib":[["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/alloc/global/trait.GlobalAlloc.html\" title=\"trait core::alloc::global::GlobalAlloc\">GlobalAlloc</a> for <a class=\"struct\" href=\"lib/allocator/map/struct.MapAllocator.html\" title=\"struct lib::allocator::map::MapAllocator\">MapAllocator</a>"]]
 };if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

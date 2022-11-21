@@ -129,6 +129,9 @@
 <span id="129">129</span>
 <span id="130">130</span>
 <span id="131">131</span>
+<span id="132">132</span>
+<span id="133">133</span>
+<span id="134">134</span>
 </pre><pre class="rust"><code><span class="kw">use </span>alloc::collections::VecDeque;
 
 <span class="kw">use </span>lazy_static::lazy_static;
@@ -162,6 +165,9 @@
     /// Если в процессе выполнения пользовательского кода процесс был снят с CPU принудительно,
     /// перепланирует исполнение процесса, ставя его в конец очереди.
     /// Возвращает `true` если в очереди на исполнение нашёлся хотя бы один процесс.
+    ///
+    /// Должен корректно обрабатывать ситуацию, когда `pid` есть в очереди планирования,
+    /// но соответствующего процесса уже нет в [`Table`].
     </span><span class="kw">pub fn </span>run_one() -&gt; bool {
         <span class="comment">// TODO: your code here.
 

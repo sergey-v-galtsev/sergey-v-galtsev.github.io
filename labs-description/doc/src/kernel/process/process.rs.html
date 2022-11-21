@@ -367,16 +367,15 @@
 <span id="367">367</span>
 <span id="368">368</span>
 <span id="369">369</span>
-<span id="370">370</span>
-<span id="371">371</span>
-<span id="372">372</span>
-<span id="373">373</span>
-<span id="374">374</span>
 </pre><pre class="rust"><code><span class="kw">use </span>core::fmt;
 
 <span class="kw">use </span>spin::{Mutex, MutexGuard};
 
-<span class="kw">use </span>ku::{process::MiniContext, ProcessInfo, RingBuffer};
+<span class="kw">use </span>ku::{
+    process::{MiniContext, State},
+    ProcessInfo,
+    RingBuffer,
+};
 
 <span class="kw">use crate</span>::{
     allocator::MemoryAllocator,
@@ -388,20 +387,6 @@
 };
 
 <span class="kw">use super</span>::{registers::Registers, Pid, Table};
-
-
-<span class="doccomment">/// Состояние пользовательского процесса.
-</span><span class="attribute">#[derive(Clone, Copy, Debug, Eq, PartialEq)]
-</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">enum </span>State {
-    <span class="doccomment">/// Процесс только что создан и не готов к запуску.
-    </span>Exofork,
-
-    <span class="doccomment">/// Процесс готов к вытеснению, но не выполняется в данный момент.
-    </span>Runnable,
-
-    <span class="doccomment">/// Процесс выполняется в данный момент.
-    </span>Running,
-}
 
 
 <span class="doccomment">/// Описывает пользовательский процесс.
@@ -448,7 +433,7 @@
             parent: <span class="prelude-val">None</span>,
             pid: Pid::Current,
             registers: Registers::new(context, info.start_address().into_usize()),
-            state: State::Runnable,
+            state: State::RUNNABLE,
             trap_context: TrapContext::default(),
         }
     }
@@ -468,7 +453,7 @@
             parent: <span class="prelude-val">Some</span>(<span class="self">self</span>.pid),
             pid: Pid::Current,
             registers: <span class="self">self</span>.registers.duplicate(rax, rdi, info.start_address().into_usize()),
-            state: State::Exofork,
+            state: State::EXOFORK,
             trap_context: TrapContext::default(),
         })
     }
@@ -589,7 +574,7 @@
 
         <span class="kw">let </span>registers = <span class="kw-2">&amp;</span>process.registers <span class="kw">as </span><span class="kw-2">*const </span>Registers;
 
-        process.state = State::Running;
+        process.state = State::RUNNING;
 
         <span class="macro">debug!</span>(%pid, registers = %process.registers, <span class="string">&quot;entering the user mode&quot;</span>);
 
@@ -734,7 +719,7 @@
 
 <span class="attribute">#[doc(hidden)]
 </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">mod </span>test_scaffolding {
-    <span class="kw">use super</span>::{<span class="kw">super</span>::registers::test_scaffolding, Process};
+    <span class="kw">use super</span>::{<span class="kw">super</span>::registers::test_scaffolding, Pid, Process};
 
 
     <span class="kw">pub fn </span>disable_interrupts(process: <span class="kw-2">&amp;mut </span>Process) {
@@ -744,6 +729,11 @@
 
     <span class="kw">pub fn </span>registers(process: <span class="kw-2">&amp;</span>Process) -&gt; [usize; <span class="number">15</span>] {
         test_scaffolding::registers(<span class="kw-2">&amp;</span>process.registers)
+    }
+
+
+    <span class="kw">pub fn </span>set_pid(process: <span class="kw-2">&amp;mut </span>Process, pid: Pid) {
+        process.set_pid(pid);
     }
 }
 </code></pre></div>

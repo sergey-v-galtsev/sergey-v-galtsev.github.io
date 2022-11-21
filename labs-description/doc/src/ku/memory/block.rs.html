@@ -639,6 +639,18 @@
 <span id="639">639</span>
 <span id="640">640</span>
 <span id="641">641</span>
+<span id="642">642</span>
+<span id="643">643</span>
+<span id="644">644</span>
+<span id="645">645</span>
+<span id="646">646</span>
+<span id="647">647</span>
+<span id="648">648</span>
+<span id="649">649</span>
+<span id="650">650</span>
+<span id="651">651</span>
+<span id="652">652</span>
+<span id="653">653</span>
 </pre><pre class="rust"><code><span class="attribute">#![warn(clippy::missing_docs_in_private_items)]
 #![warn(missing_docs)]
 
@@ -738,6 +750,18 @@
     <span class="doccomment">/// Размер блока в байтах. Равно количеству элементов в блоке, умноженному на размер элемента.
     </span><span class="kw">pub const fn </span>size(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="self">self</span>.count() * T::SIZE_OF
+    }
+
+
+    <span class="doccomment">/// Индекс первого элемента в блоке.
+    </span><span class="kw">pub fn </span>start(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+        <span class="self">self</span>.start
+    }
+
+
+    <span class="doccomment">/// Индекс следующего за последним элементом в блоке.
+    </span><span class="kw">pub fn </span>end(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+        <span class="self">self</span>.end
     }
 
 

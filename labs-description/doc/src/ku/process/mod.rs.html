@@ -14,6 +14,23 @@
 <span id="14">14</span>
 <span id="15">15</span>
 <span id="16">16</span>
+<span id="17">17</span>
+<span id="18">18</span>
+<span id="19">19</span>
+<span id="20">20</span>
+<span id="21">21</span>
+<span id="22">22</span>
+<span id="23">23</span>
+<span id="24">24</span>
+<span id="25">25</span>
+<span id="26">26</span>
+<span id="27">27</span>
+<span id="28">28</span>
+<span id="29">29</span>
+<span id="30">30</span>
+<span id="31">31</span>
+<span id="32">32</span>
+<span id="33">33</span>
 </pre><pre class="rust"><code><span class="kw">pub mod </span>mini_context;
 <span class="kw">pub mod </span>pid;
 <span class="kw">pub mod </span>registers;
@@ -21,10 +38,27 @@
 <span class="kw">pub mod </span>trap_info;
 
 
+<span class="kw">use </span>bitflags::bitflags;
+
 <span class="kw">pub use </span>mini_context::MiniContext;
 <span class="kw">pub use </span>pid::Pid;
 <span class="kw">pub use </span>syscall::{ExitCode, ResultCode, Syscall, SyscallResult};
 <span class="kw">pub use </span>trap_info::{Info, TrapInfo, RSP_OFFSET_IN_TRAP_INFO};
+
+
+<span class="macro">bitflags! </span>{
+    <span class="doccomment">/// Состояние пользовательского процесса.
+    </span><span class="kw">pub struct </span>State: usize {
+        <span class="doccomment">/// Процесс только что создан и не готов к запуску.
+        </span><span class="kw">const </span>EXOFORK = <span class="number">0</span>;
+
+        <span class="doccomment">/// Процесс готов к вытеснению, но не выполняется в данный момент.
+        </span><span class="kw">const </span>RUNNABLE = <span class="number">1</span>;
+
+        <span class="doccomment">/// Процесс выполняется в данный момент.
+        </span><span class="kw">const </span>RUNNING = <span class="number">2</span>;
+    }
+}
 
 
 <span class="kw">pub fn </span>pid() -&gt; Pid {

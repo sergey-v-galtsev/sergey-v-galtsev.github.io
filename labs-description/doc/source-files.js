@@ -19,12 +19,13 @@ var sourcesIndex = JSON.parse('{\
 "kernel":["",[["allocator",[],["memory_allocator.rs","mod.rs"]],["memory",[],["address_space.rs","boot_frame_allocator.rs","gdt.rs","main_frame_allocator.rs","mapping.rs","mmu.rs","mod.rs","page_allocator.rs","stack.rs","tss.rs"]],["process",[],["elf.rs","mod.rs","process.rs","registers.rs","scheduler.rs","syscall.rs","table.rs"]],["smp",[],["acpi_info.rs","ap_init.rs","cpu.rs","local_apic.rs","mod.rs"]],["time",[],["mod.rs","pit8254.rs","rtc.rs"]]],["error.rs","interrupts.rs","lib.rs","log.rs"]],\
 "ku":["",[["allocator",[],["big.rs","dry.rs","info.rs","mod.rs"]],["memory",[],["addr.rs","block.rs","frage.rs","mmu.rs","mod.rs","page_fault_info.rs","size.rs"]],["process",[],["mini_context.rs","mod.rs","pid.rs","registers.rs","syscall.rs","trap_info.rs"]],["time",[],["correlation_interval.rs","correlation_point.rs","hz.rs","mod.rs","pit8254.rs","rtc.rs","tsc.rs"]]],["error.rs","info.rs","lib.rs","log.rs","ring_buffer.rs"]],\
 "lazy_static":["",[],["core_lazy.rs","lib.rs"]],\
-"lib":["",[["memory",[],["mod.rs"]]],["lib.rs","syscall.rs"]],\
+"lib":["",[["allocator",[],["map.rs","mod.rs"]],["memory",[],["mod.rs"]]],["lib.rs","syscall.rs"]],\
 "lock_api":["",[],["lib.rs","mutex.rs","remutex.rs","rwlock.rs"]],\
 "log":["",[],["lib.rs","macros.rs"]],\
 "log_value":["",[],["main.rs"]],\
 "loop":["",[],["main.rs"]],\
 "memoffset":["",[],["lib.rs","offset_of.rs","raw_field.rs","span_of.rs"]],\
+"memory_allocator":["",[["tests",[],["memory_allocator.rs"]]],["main.rs"]],\
 "num_integer":["",[],["average.rs","lib.rs","roots.rs"]],\
 "num_traits":["",[["ops",[],["checked.rs","euclid.rs","inv.rs","mod.rs","mul_add.rs","overflowing.rs","saturating.rs","wrapping.rs"]]],["bounds.rs","cast.rs","float.rs","identities.rs","int.rs","lib.rs","macros.rs","pow.rs","sign.rs"]],\
 "number_prefix":["",[],["lib.rs"]],\

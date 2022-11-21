@@ -91,6 +91,15 @@
 <span id="91">91</span>
 <span id="92">92</span>
 <span id="93">93</span>
+<span id="94">94</span>
+<span id="95">95</span>
+<span id="96">96</span>
+<span id="97">97</span>
+<span id="98">98</span>
+<span id="99">99</span>
+<span id="100">100</span>
+<span id="101">101</span>
+<span id="102">102</span>
 </pre><pre class="rust"><code><span class="attribute">#![allow(dead_code)]
 #![allow(unused_imports)]
 #![allow(unused_variables)]
@@ -120,8 +129,7 @@
         PageFaultInfo,
         Virt,
     },
-    process,
-    process::{ExitCode, Info, Pid, TrapInfo},
+    process::{<span class="self">self</span>, ExitCode, Info, Pid, State, TrapInfo},
 };
 
 <span class="kw">use </span>lib::{entry, memory, syscall};
@@ -136,11 +144,19 @@
     <span class="kw">let </span><span class="kw-2">mut </span>name = String::&lt;MAX_NAME&gt;::new();
     name.push_str(<span class="string">&quot;cow_fork &quot;</span>).unwrap();
 
-    fork_tree(<span class="kw-2">&amp;mut </span>pedigree, <span class="kw-2">&amp;mut </span>name, <span class="string">&#39;*&#39;</span>);
+    <span class="kw">let </span>trap_stack = Block::default(); <span class="comment">// TODO: remove before flight.
+    // TODO: your code here.
+
+    </span>fork_tree(<span class="kw-2">&amp;mut </span>pedigree, <span class="kw-2">&amp;mut </span>name, <span class="string">&#39;*&#39;</span>, trap_stack);
 }
 
 
-<span class="kw">fn </span>fork_tree(pedigree: <span class="kw-2">&amp;mut </span>Vec&lt;Pid, DEPTH&gt;, name: <span class="kw-2">&amp;mut </span>String&lt;MAX_NAME&gt;, suffix: char) {
+<span class="kw">fn </span>fork_tree(
+    pedigree: <span class="kw-2">&amp;mut </span>Vec&lt;Pid, DEPTH&gt;,
+    name: <span class="kw-2">&amp;mut </span>String&lt;MAX_NAME&gt;,
+    suffix: char,
+    trap_stack: Block&lt;Page&gt;,
+) {
     name.push(suffix).unwrap();
     pedigree.push(process::pid()).unwrap();
 
@@ -152,14 +168,16 @@
     );
 
     <span class="kw">for </span>child <span class="kw">in </span><span class="string">&#39;0&#39;</span>..<span class="string">&#39;3&#39; </span>{
-        <span class="kw">if </span>pedigree.len() &lt; pedigree.capacity() &amp;&amp; cow_fork().expect(<span class="string">&quot;failed to cow_fork()&quot;</span>) {
-            fork_tree(pedigree, name, child);
+        <span class="kw">if </span>pedigree.len() &lt; pedigree.capacity() &amp;&amp;
+            cow_fork(trap_stack).expect(<span class="string">&quot;failed to cow_fork()&quot;</span>)
+        {
+            fork_tree(pedigree, name, child, trap_stack);
         }
     }
 }
 
 
-<span class="kw">fn </span>cow_fork() -&gt; <span class="prelude-ty">Result</span>&lt;bool&gt; {
+<span class="kw">fn </span>cow_fork(trap_stack: Block&lt;Page&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;bool&gt; {
     <span class="comment">// TODO: your code here.
     </span><span class="macro">unimplemented!</span>();
 }

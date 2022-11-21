@@ -124,35 +124,6 @@
 <span id="124">124</span>
 <span id="125">125</span>
 <span id="126">126</span>
-<span id="127">127</span>
-<span id="128">128</span>
-<span id="129">129</span>
-<span id="130">130</span>
-<span id="131">131</span>
-<span id="132">132</span>
-<span id="133">133</span>
-<span id="134">134</span>
-<span id="135">135</span>
-<span id="136">136</span>
-<span id="137">137</span>
-<span id="138">138</span>
-<span id="139">139</span>
-<span id="140">140</span>
-<span id="141">141</span>
-<span id="142">142</span>
-<span id="143">143</span>
-<span id="144">144</span>
-<span id="145">145</span>
-<span id="146">146</span>
-<span id="147">147</span>
-<span id="148">148</span>
-<span id="149">149</span>
-<span id="150">150</span>
-<span id="151">151</span>
-<span id="152">152</span>
-<span id="153">153</span>
-<span id="154">154</span>
-<span id="155">155</span>
 </pre><pre class="rust"><code><span class="attribute">#![allow(dead_code)]
 #![allow(unused_imports)]
 #![allow(unused_variables)]
@@ -179,115 +150,86 @@
 <span class="macro">entry!</span>(main);
 
 
+<span class="macro">macro_rules! </span>my_assert {
+    (<span class="macro-nonterminal">$condition</span>:expr$(,)<span class="question-mark">?</span>) =&gt; {{
+        <span class="kw">if </span>!<span class="macro-nonterminal">$condition </span>{
+            generate_page_fault();
+        }
+    }};
+    (<span class="macro-nonterminal">$condition</span>:expr, <span class="macro-nonterminal">$message</span>:expr$(,)<span class="question-mark">?</span>) =&gt; {{
+        <span class="macro">my_assert!</span>(<span class="macro-nonterminal">$condition</span>, <span class="macro-nonterminal">$message</span>, <span class="number">0</span>);
+    }};
+    (<span class="macro-nonterminal">$condition</span>:expr, <span class="macro-nonterminal">$message</span>:expr, <span class="macro-nonterminal">$value</span>:expr$(,)<span class="question-mark">?</span>) =&gt; {{
+        <span class="kw">if </span>!<span class="macro-nonterminal">$condition </span>{
+            syscall::log_value(<span class="macro-nonterminal">$message</span>, <span class="macro-nonterminal">$value</span>).unwrap();
+            generate_page_fault();
+        }
+    }};
+}
+
+
 <span class="kw">fn </span>main() {
     <span class="kw">let </span>now = time::now();
     <span class="kw">let </span>timestamp = now.timestamp().try_into().unwrap();
 
-    <span class="kw">if </span>syscall::log_value(<span class="string">&quot;user space can read the system time&quot;</span>, timestamp).is_err() {
-        generate_page_fault();
-    }
+    <span class="macro">my_assert!</span>(syscall::log_value(<span class="string">&quot;user space can read the system time&quot;</span>, timestamp).is_ok());
 
     <span class="kw">let </span>block = Block::from_index(<span class="number">1</span>, <span class="number">1</span>);
-    <span class="kw">if </span>block.is_err() || log_block(block.unwrap(), <span class="number">0</span>).is_err() {
-        generate_page_fault();
-    }
+    <span class="macro">my_assert!</span>(block.is_ok(), <span class="string">&quot;the Block::from_index(1, 1) should be ok&quot;</span>);
+    <span class="macro">my_assert!</span>(log_block(block.unwrap(), <span class="number">0</span>).is_ok());
 
     <span class="kw">let </span>block = Block::from_index(<span class="number">1</span>, <span class="number">2</span>);
-    <span class="kw">if </span>block.is_err() {
-        syscall::log_value(<span class="string">&quot;the block should be ok&quot;</span>, <span class="number">0</span>).unwrap();
-        generate_page_fault();
-    }
+    <span class="macro">my_assert!</span>(block.is_ok(), <span class="string">&quot;the Block::from_index(1, 2) should be ok&quot;</span>);
+
     <span class="kw">let </span>result = log_block(block.unwrap(), <span class="number">0</span>);
-    <span class="kw">match </span>result {
-        <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; {
-            syscall::log_value(<span class="string">&quot;expected Err(PermissionDenied), got Ok&quot;</span>, <span class="number">0</span>).unwrap();
-            generate_page_fault();
-        },
-        <span class="prelude-val">Err</span>(PermissionDenied) =&gt; {},
-        <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; {
-            syscall::log_value(
-                <span class="string">&quot;expected Err(PermissionDenied), got another error&quot;</span>,
-                ResultCode::from(result).bits(),
-            )
-            .unwrap();
-            generate_page_fault();
-        },
-    }
+    <span class="macro">my_assert!</span>(result.is_err(), <span class="string">&quot;expected Err(PermissionDenied), got Ok&quot;</span>);
+    <span class="macro">my_assert!</span>(
+        result == <span class="prelude-val">Err</span>(PermissionDenied),
+        <span class="string">&quot;expected Err(PermissionDenied), got another error&quot;</span>,
+        ResultCode::from(result).bits(),
+    );
 
     <span class="kw">let </span>block = Block::from_index(<span class="number">0</span>, <span class="number">0</span>);
-    <span class="kw">if </span>block.is_err() {
-        syscall::log_value(<span class="string">&quot;the block should be ok&quot;</span>, <span class="number">0</span>).unwrap();
-        generate_page_fault();
-    }
+    <span class="macro">my_assert!</span>(block.is_ok(), <span class="string">&quot;the Block::from_index(0, 0) should be ok&quot;</span>);
+
     <span class="kw">let </span>result = log_block(block.unwrap(), <span class="number">0</span>);
-    <span class="kw">match </span>result {
-        <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; {
-            syscall::log_value(<span class="string">&quot;expected Err(InvalidArgument) or Err(Null), got Ok&quot;</span>, <span class="number">0</span>).unwrap();
-            generate_page_fault();
-        },
-        <span class="prelude-val">Err</span>(InvalidArgument | Null) =&gt; {},
-        <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; {
-            syscall::log_value(
-                <span class="string">&quot;expected Err(InvalidArgument) or Err(Null), got another error&quot;</span>,
-                ResultCode::from(result).bits(),
-            )
-            .unwrap();
-            generate_page_fault();
-        },
-    }
+    <span class="macro">my_assert!</span>(
+        result.is_err(),
+        <span class="string">&quot;expected Err(InvalidArgument) or Err(Null), got Ok&quot;</span>,
+    );
+    <span class="macro">my_assert!</span>(
+        result == <span class="prelude-val">Err</span>(InvalidArgument) || result == <span class="prelude-val">Err</span>(Null),
+        <span class="string">&quot;expected Err(InvalidArgument) or Err(Null), got another error&quot;</span>,
+        ResultCode::from(result).bits(),
+    );
 
     <span class="kw">let </span>invalid_utf8 = <span class="string">b&quot;\xFF&quot;</span>;
     <span class="kw">let </span>result = log_block(Block::from_slice(invalid_utf8), <span class="number">0</span>);
-    <span class="kw">match </span>result {
-        <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; {
-            syscall::log_value(<span class="string">&quot;expected Err(InvalidArgument), got Ok&quot;</span>, <span class="number">0</span>).unwrap();
-            generate_page_fault();
-        },
-        <span class="prelude-val">Err</span>(InvalidArgument) =&gt; {},
-        <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; {
-            syscall::log_value(
-                <span class="string">&quot;expected Err(InvalidArgument), got another error&quot;</span>,
-                ResultCode::from(result).bits(),
-            )
-            .unwrap();
-            generate_page_fault();
-        },
-    }
+    <span class="macro">my_assert!</span>(result.is_err(), <span class="string">&quot;expected Err(InvalidArgument), got Ok&quot;</span>);
+    <span class="macro">my_assert!</span>(
+        result == <span class="prelude-val">Err</span>(InvalidArgument),
+        <span class="string">&quot;expected Err(InvalidArgument), got another error&quot;</span>,
+        ResultCode::from(result).bits(),
+    );
 
     <span class="kw">let </span>result = log_something(<span class="number">0x1_0000</span>, <span class="number">0xFFFF_FFFF_0000_0000</span>, <span class="number">0</span>);
-    <span class="kw">match </span>result {
-        <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; {
-            syscall::log_value(<span class="string">&quot;expected Err(InvalidArgument), got Ok&quot;</span>, <span class="number">0</span>).unwrap();
-            generate_page_fault();
-        },
-        <span class="prelude-val">Err</span>(InvalidArgument) =&gt; {},
-        <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; {
-            syscall::log_value(
-                <span class="string">&quot;expected Err(InvalidArgument), got another error&quot;</span>,
-                ResultCode::from(result).bits(),
-            )
-            .unwrap();
-            generate_page_fault();
-        },
-    }
+    <span class="macro">my_assert!</span>(result.is_err(), <span class="string">&quot;expected Err(InvalidArgument), got Ok&quot;</span>);
+    <span class="macro">my_assert!</span>(
+        result == <span class="prelude-val">Err</span>(InvalidArgument),
+        <span class="string">&quot;expected Err(InvalidArgument), got another error&quot;</span>,
+        ResultCode::from(result).bits(),
+    );
 
     <span class="kw">let </span>result = log_something(<span class="number">0xFFFF_FFFF_FFFF_0000</span>, <span class="number">0x10_0000</span>, <span class="number">0</span>);
-    <span class="kw">match </span>result {
-        <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; {
-            syscall::log_value(<span class="string">&quot;expected Err(InvalidArgument) or Err(Overflow), got Ok&quot;</span>, <span class="number">0</span>)
-                .unwrap();
-            generate_page_fault();
-        },
-        <span class="prelude-val">Err</span>(InvalidArgument | Overflow) =&gt; {},
-        <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; {
-            syscall::log_value(
-                <span class="string">&quot;expected Err(InvalidArgument) or Err(Overflow), got another error&quot;</span>,
-                ResultCode::from(result).bits(),
-            )
-            .unwrap();
-            generate_page_fault();
-        },
-    }
+    <span class="macro">my_assert!</span>(
+        result.is_err(),
+        <span class="string">&quot;expected Err(InvalidArgument) or Err(Overflow), got Ok&quot;</span>,
+    );
+    <span class="macro">my_assert!</span>(
+        result == <span class="prelude-val">Err</span>(InvalidArgument) || result == <span class="prelude-val">Err</span>(Overflow),
+        <span class="string">&quot;expected Err(InvalidArgument) or Err(Overflow), got another error&quot;</span>,
+        ResultCode::from(result).bits(),
+    );
 }
 
 

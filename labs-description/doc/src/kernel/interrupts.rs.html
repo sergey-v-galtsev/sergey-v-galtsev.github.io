@@ -1091,7 +1091,7 @@
 
         <span class="kw">if </span>fatal == Fatal::Yes {
             Table::free(process);
-            Process::leave_user_mode();
+            Process::sched_yield();
         }
     } <span class="kw">else </span>{
         <span class="macro">error!</span>(

@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":[["pid",""]],"mod":[["mini_context",""],["pid",""],["registers",""],["syscall",""],["trap_info",""]]};
+window.SIDEBAR_ITEMS = {"fn":[["pid",""]],"mod":[["mini_context",""],["pid",""],["registers",""],["syscall",""],["trap_info",""]],"struct":[["State","Состояние пользовательского процесса."]]};

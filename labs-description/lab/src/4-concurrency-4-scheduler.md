@@ -19,7 +19,7 @@
 
 - [`fn Scheduler::enqueue(pid: Pid)`](../../doc/kernel/process/scheduler/struct.Scheduler.html#method.enqueue) ставит процесс, заданный идентификатором `pid`, в очередь исполнения.
 - [`fn Scheduler::dequeue() -> Option<Pid>`](../../doc/kernel/process/scheduler/struct.Scheduler.html#method.dequeue) достаёт из очереди первый процесс.
-- [`fn Scheduler::run_one() -> bool`](../../doc/kernel/process/scheduler/struct.Scheduler.html#method.run_one) выполняет один цикл работы --- берёт первый процесс из очереди и исполняет его пользовательский код. Если метод [`Process::enter_user_mode()`](../../doc/kernel/process/process/struct.Process.html#method.enter_user_mode) вернёт `true`, то есть процесс был снят с CPU принудительно по прерыванию таймера, [`Scheduler::run_one()`](../../doc/kernel/process/scheduler/struct.Scheduler.html#method.run_one) перепланирует исполнение процесса, ставя его в конец очереди. Метод [`Scheduler::run_one()`](../../doc/kernel/process/scheduler/struct.Scheduler.html#method.run_one) возвращает `true` если в очереди на исполнение нашёлся хотя бы один процесс.
+- [`fn Scheduler::run_one() -> bool`](../../doc/kernel/process/scheduler/struct.Scheduler.html#method.run_one) выполняет один цикл работы --- берёт первый процесс из очереди и исполняет его пользовательский код. Если метод [`Process::enter_user_mode()`](../../doc/kernel/process/process/struct.Process.html#method.enter_user_mode) вернёт `true`, то есть процесс был снят с CPU принудительно по прерыванию таймера, [`Scheduler::run_one()`](../../doc/kernel/process/scheduler/struct.Scheduler.html#method.run_one) перепланирует исполнение процесса, ставя его в конец очереди. Метод [`Scheduler::run_one()`](../../doc/kernel/process/scheduler/struct.Scheduler.html#method.run_one) возвращает `true` если в очереди на исполнение нашёлся хотя бы один процесс. Должен корректно обрабатывать ситуацию, когда `pid` есть в очереди планирования, но соответствующего процесса уже нет в [`kernel::process::Table`](../../doc/kernel/process/struct.Table.html).
 
 Метод
 [`fn Scheduler::run() -> !`](../../doc/kernel/process/scheduler/struct.Scheduler.html#method.run)
@@ -55,7 +55,11 @@ extern "x86-interrupt" fn apic_timer(mut context: InterruptContext)
 [`kernel::process::syscall::sched_yield()`](../../doc/kernel/process/syscall/fn.sched_yield.html)
 с номером
 [`ku::process::syscall::Syscall::SCHED_YIELD`](../../doc/ku/process/syscall/struct.Syscall.html#associatedconstant.SCHED_YIELD).
-Он должен перепланировать процесс в конец очереди и забрать у него CPU, вернувшись в цикл планировщика.
+Он должен перепланировать процесс в конец очереди и забрать у него CPU функцией
+[`kernel::process::process::Process::sched_yield()`](../../doc/kernel/process/process/struct.Process.html#method.sched_yield),
+которая вернёт управление в другой контекст ядра --- в контекст из которого была вызвана функция
+[`kernel::process::process::Process::enter_user_mode()`](../../doc/kernel/process/process/struct.Process.html#method.enter_user_mode).
+То есть, управление вернётся в цикл планировщика.
 
 
 ### Проверьте себя

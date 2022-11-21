@@ -305,14 +305,39 @@
 <span id="305">305</span>
 <span id="306">306</span>
 <span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
+<span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
 </pre><pre class="rust"><code><span class="kw">use </span>core::{arch::asm, fmt, mem};
 
-<span class="kw">use </span>x86::msr::IA32_FS_BASE;
+<span class="kw">use </span>x86::{bits64::registers, msr::IA32_FS_BASE};
 <span class="kw">use </span>x86_64::structures::gdt::SegmentSelector;
 
 <span class="kw">use </span>ku::process::{registers::RFlags, MiniContext};
 
 <span class="kw">use crate</span>::{
+    error::Result,
     gdt::Gdt,
     memory::Virt,
     smp::{<span class="self">self</span>, KERNEL_RSP_OFFSET_IN_CPU},
@@ -402,6 +427,8 @@
     </span><span class="attribute">#[allow(named_asm_labels)]
     #[inline(never)] </span><span class="comment">// For the named label to be a unique link symbol.
     </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">unsafe fn </span>switch_to(registers: <span class="kw-2">*const </span>Registers) {
+        <span class="kw">let </span>old_kernel_rsp = rsp();
+
         <span class="comment">// TODO: your code here.
 
         </span><span class="macro">asm!</span>(
@@ -419,6 +446,21 @@
 
             <span class="comment">// TODO: your code here.
         </span>);
+
+        <span class="kw">let </span>new_kernel_rsp = rsp();
+
+        <span class="macro">assert!</span>(
+            old_kernel_rsp.is_ok() &amp;&amp; new_kernel_rsp.is_ok(),
+            <span class="string">&quot;check that the kernel RSP is saved and restored correctly&quot;</span>,
+        );
+
+        <span class="macro">assert_eq!</span>(
+            old_kernel_rsp, new_kernel_rsp,
+            <span class="macro">concat!</span>(
+                <span class="string">&quot;check that the kernel RSP is saved and restored correctly and the code &quot;</span>,
+                <span class="string">&quot;pushes to the stack the same amount of information as it pops from it&quot;</span>,
+            ),
+        );
     }
 
 
@@ -589,6 +631,12 @@
             <span class="self">self</span>.rflags,
         )
     }
+}
+
+
+<span class="doccomment">/// Возвращает текущее значение регистра `RSP`.
+</span><span class="kw">fn </span>rsp() -&gt; <span class="prelude-ty">Result</span>&lt;Virt&gt; {
+    Virt::new_u64(registers::rsp())
 }
 
 

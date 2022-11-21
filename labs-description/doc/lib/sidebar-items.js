@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":[["_start",""],["alloc_error_handler",""],["panic",""]],"macro":[["entry",""]],"mod":[["memory",""],["syscall",""]],"static":[["ALLOCATOR",""]],"struct":[["NullAllocator",""]]};
+window.SIDEBAR_ITEMS = {"fn":[["_start",""],["panic",""]],"macro":[["entry",""]],"mod":[["allocator","Аллокатор памяти общего назначения в пространстве пользователя, реализованный через системные вызовы [`syscall::map()`], [`syscall::unmap()`] и [`syscall::copy_mapping()`]."],["memory",""],["syscall",""]]};

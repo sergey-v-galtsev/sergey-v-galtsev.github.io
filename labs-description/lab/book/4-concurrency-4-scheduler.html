@@ -161,7 +161,7 @@
 <ul>
 <li><a href="../../doc/kernel/process/scheduler/struct.Scheduler.html#method.enqueue"><code>fn Scheduler::enqueue(pid: Pid)</code></a> ставит процесс, заданный идентификатором <code>pid</code>, в очередь исполнения.</li>
 <li><a href="../../doc/kernel/process/scheduler/struct.Scheduler.html#method.dequeue"><code>fn Scheduler::dequeue() -&gt; Option&lt;Pid&gt;</code></a> достаёт из очереди первый процесс.</li>
-<li><a href="../../doc/kernel/process/scheduler/struct.Scheduler.html#method.run_one"><code>fn Scheduler::run_one() -&gt; bool</code></a> выполняет один цикл работы — берёт первый процесс из очереди и исполняет его пользовательский код. Если метод <a href="../../doc/kernel/process/process/struct.Process.html#method.enter_user_mode"><code>Process::enter_user_mode()</code></a> вернёт <code>true</code>, то есть процесс был снят с CPU принудительно по прерыванию таймера, <a href="../../doc/kernel/process/scheduler/struct.Scheduler.html#method.run_one"><code>Scheduler::run_one()</code></a> перепланирует исполнение процесса, ставя его в конец очереди. Метод <a href="../../doc/kernel/process/scheduler/struct.Scheduler.html#method.run_one"><code>Scheduler::run_one()</code></a> возвращает <code>true</code> если в очереди на исполнение нашёлся хотя бы один процесс.</li>
+<li><a href="../../doc/kernel/process/scheduler/struct.Scheduler.html#method.run_one"><code>fn Scheduler::run_one() -&gt; bool</code></a> выполняет один цикл работы — берёт первый процесс из очереди и исполняет его пользовательский код. Если метод <a href="../../doc/kernel/process/process/struct.Process.html#method.enter_user_mode"><code>Process::enter_user_mode()</code></a> вернёт <code>true</code>, то есть процесс был снят с CPU принудительно по прерыванию таймера, <a href="../../doc/kernel/process/scheduler/struct.Scheduler.html#method.run_one"><code>Scheduler::run_one()</code></a> перепланирует исполнение процесса, ставя его в конец очереди. Метод <a href="../../doc/kernel/process/scheduler/struct.Scheduler.html#method.run_one"><code>Scheduler::run_one()</code></a> возвращает <code>true</code> если в очереди на исполнение нашёлся хотя бы один процесс. Должен корректно обрабатывать ситуацию, когда <code>pid</code> есть в очереди планирования, но соответствующего процесса уже нет в <a href="../../doc/kernel/process/struct.Table.html"><code>kernel::process::Table</code></a>.</li>
 </ul>
 <p>Метод
 <a href="../../doc/kernel/process/scheduler/struct.Scheduler.html#method.run"><code>fn Scheduler::run() -&gt; !</code></a>
@@ -193,7 +193,11 @@
 <a href="../../doc/kernel/process/syscall/fn.sched_yield.html"><code>kernel::process::syscall::sched_yield()</code></a>
 с номером
 <a href="../../doc/ku/process/syscall/struct.Syscall.html#associatedconstant.SCHED_YIELD"><code>ku::process::syscall::Syscall::SCHED_YIELD</code></a>.
-Он должен перепланировать процесс в конец очереди и забрать у него CPU, вернувшись в цикл планировщика.</p>
+Он должен перепланировать процесс в конец очереди и забрать у него CPU функцией
+<a href="../../doc/kernel/process/process/struct.Process.html#method.sched_yield"><code>kernel::process::process::Process::sched_yield()</code></a>,
+которая вернёт управление в другой контекст ядра — в контекст из которого была вызвана функция
+<a href="../../doc/kernel/process/process/struct.Process.html#method.enter_user_mode"><code>kernel::process::process::Process::enter_user_mode()</code></a>.
+То есть, управление вернётся в цикл планировщика.</p>
 <h3 id="Проверьте-себя"><a class="header" href="#Проверьте-себя">Проверьте себя</a></h3>
 <p>Теперь должны заработать тесты <code>syscall_sched_yield()</code> и <code>scheduler()</code> в файле
 <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/tests/4-concurrency-7-scheduler.rs"><code>kernel/src/tests/4-concurrency-7-scheduler.rs</code></a>:</p>

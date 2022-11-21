@@ -178,6 +178,14 @@
 <span id="178">178</span>
 <span id="179">179</span>
 <span id="180">180</span>
+<span id="181">181</span>
+<span id="182">182</span>
+<span id="183">183</span>
+<span id="184">184</span>
+<span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
 </pre><pre class="rust"><code><span class="kw">use </span>core::arch::asm;
 
 <span class="kw">use </span>ku::{
@@ -185,7 +193,7 @@
     info,
     info::ProcessInfo,
     memory::{mmu::PageTableFlags, Block, Page, Virt},
-    process::{Pid, ResultCode, Syscall, TrapInfo, RSP_OFFSET_IN_TRAP_INFO},
+    process::{Pid, ResultCode, State, Syscall, TrapInfo, RSP_OFFSET_IN_TRAP_INFO},
 };
 
 
@@ -281,8 +289,16 @@
 }
 
 
-<span class="kw">pub fn </span>set_state(dst_pid: Pid) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
-    syscall(Syscall::SET_STATE.bits(), dst_pid.into_usize(), <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>).map(|<span class="kw">_</span>| ())
+<span class="kw">pub fn </span>set_state(dst_pid: Pid, state: State) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    syscall(
+        Syscall::SET_STATE.bits(),
+        dst_pid.into_usize(),
+        state.bits(),
+        <span class="number">0</span>,
+        <span class="number">0</span>,
+        <span class="number">0</span>,
+    )
+    .map(|<span class="kw">_</span>| ())
 }
 
 
