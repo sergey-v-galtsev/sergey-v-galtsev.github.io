@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"static":[["INFO",""]],"struct":[["MapAllocator","Аллокатор памяти общего назначения в пространстве пользователя, реализованный через системные вызовы [`syscall::map()`], [`syscall::unmap()`] и [`syscall::copy_mapping()`]."]]};
+window.SIDEBAR_ITEMS = {"static":[["INFO","Статистика аллокатора общего назначения."]],"struct":[["MapAllocator","Аллокатор памяти общего назначения в пространстве пользователя, реализованный через системные вызовы [`syscall::map()`], [`syscall::unmap()`] и [`syscall::copy_mapping()`]."]]};

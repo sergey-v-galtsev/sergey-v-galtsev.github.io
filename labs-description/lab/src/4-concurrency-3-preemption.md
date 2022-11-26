@@ -80,11 +80,11 @@ fn Process::enter_user_mode(mut process: MutexGuard<Process>) -> bool
 [`Process`](../../doc/kernel/process/process/struct.Process.html).
 Для этого, по идентификатору
 [`Pid`](../../doc/ku/process/pid/enum.Pid.html)
-текущего процесса получите из
+текущего процесса, получите из
 [`Table`](../../doc/kernel/process/struct.Table.html)
 его заблокированную спинлоком структуру
 [`Process`](../../doc/kernel/process/process/struct.Process.html).
-и запишите пользовательский контекст в неё.
+И запишите пользовательский контекст в неё.
 Верните из этого метода `true`, если процесс был вытеснен.
 
 Вам пригодятся
@@ -102,7 +102,7 @@ fn Process::enter_user_mode(mut process: MutexGuard<Process>) -> bool
 ### Проверьте себя
 
 После этого заработает тест `preemption()` в файле
-[`kernel/src/tests/4-concurrency-6-preemption.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/tests/4-concurrency-6-preemption.rs):
+[`kernel/tests/4-concurrency-6-preemption.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/tests/4-concurrency-6-preemption.rs):
 
 ```console
 $ (cd kernel; cargo test --test 4-concurrency-6-preemption)

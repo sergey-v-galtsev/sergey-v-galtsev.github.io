@@ -53,6 +53,7 @@ var sourcesIndex = JSON.parse('{\
 "text":["",[],["cursor.rs","grid.rs","lib.rs"]],\
 "tracing":["",[],["collect.rs","dispatch.rs","field.rs","instrument.rs","level_filters.rs","lib.rs","macros.rs","span.rs"]],\
 "tracing_core":["",[["spin",[],["mod.rs","once.rs"]]],["callsite.rs","collect.rs","dispatch.rs","event.rs","field.rs","lib.rs","metadata.rs","parent.rs","span.rs"]],\
+"trap_handler":["",[],["main.rs"]],\
 "unicode_ident":["",[],["lib.rs","tables.rs"]],\
 "volatile":["",[],["access.rs","lib.rs"]],\
 "x86":["",[["apic",[],["ioapic.rs","mod.rs","x2apic.rs","xapic.rs"]],["bits16",[],["mod.rs","segmentation.rs"]],["bits32",[],["eflags.rs","mod.rs","paging.rs","segmentation.rs","task.rs"]],["bits64",[],["mod.rs","paging.rs","registers.rs","rflags.rs","segmentation.rs","sgx.rs","syscall.rs","task.rs","vmx.rs"]],["vmx",[],["mod.rs","vmcs.rs"]]],["controlregs.rs","debugregs.rs","dtables.rs","fence.rs","io.rs","irq.rs","lib.rs","msr.rs","random.rs","segmentation.rs","task.rs","time.rs","tlb.rs"]],\

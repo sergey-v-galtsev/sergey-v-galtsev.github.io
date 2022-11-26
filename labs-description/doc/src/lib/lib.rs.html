@@ -73,25 +73,49 @@
 <span id="73">73</span>
 <span id="74">74</span>
 <span id="75">75</span>
+<span id="76">76</span>
+<span id="77">77</span>
+<span id="78">78</span>
+<span id="79">79</span>
+<span id="80">80</span>
+<span id="81">81</span>
+<span id="82">82</span>
+<span id="83">83</span>
+<span id="84">84</span>
+<span id="85">85</span>
+<span id="86">86</span>
+<span id="87">87</span>
+<span id="88">88</span>
+<span id="89">89</span>
 </pre><pre class="rust"><code><span class="attribute">#![allow(dead_code)]
 #![allow(unused_imports)]
 #![allow(unused_variables)]
 
-#![feature(alloc_error_handler)]
+</span><span class="doccomment">//! Библиотека для пользовательских процессов.
+
+
+</span><span class="attribute">#![feature(alloc_error_handler)]
 #![feature(allocator_api)]
 #![feature(asm_const)]
 #![feature(naked_functions)]
 #![feature(slice_ptr_get)]
 #![no_std]
-#![allow(clippy::missing_safety_doc)]
+#![warn(clippy::missing_docs_in_private_items)]
+#![warn(missing_docs)]
 
 
 </span><span class="doccomment">/// Аллокатор памяти общего назначения в пространстве пользователя, реализованный через
 /// системные вызовы [`syscall::map()`], [`syscall::unmap()`] и [`syscall::copy_mapping()`].
 </span><span class="kw">pub mod </span>allocator;
 
-<span class="kw">pub mod </span>memory;
-<span class="kw">pub mod </span>syscall;
+<span class="doccomment">/// Вспомогательные функции для работы с виртуальными страницами
+/// [`memory::copy_page`] и [`memory::temp_page()`],
+/// а также с таблицами страниц [`memory::page_table()`].
+</span><span class="kw">pub mod </span>memory;
+
+<span class="doccomment">/// Системные вызовы.
+</span><span class="kw">pub mod </span>syscall;
+
 
 <span class="kw">extern crate </span>alloc;
 
@@ -107,7 +131,9 @@
 };
 
 
-<span class="attribute">#[no_mangle]
+<span class="doccomment">/// Точка входа в процесс пользователя.
+/// Получает от ядра ссылку `process_info` на информацию о текущем процессе.
+</span><span class="attribute">#[no_mangle]
 </span><span class="kw">pub extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>_start(process_info: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span><span class="kw-2">mut </span>ProcessInfo) -&gt; ! {
     info::set_process_info(process_info);
 
@@ -127,7 +153,8 @@
 }
 
 
-<span class="attribute">#[cold]
+<span class="doccomment">/// Обработчик паники.
+</span><span class="attribute">#[cold]
 #[inline(never)]
 #[no_mangle]
 #[panic_handler]
@@ -137,7 +164,8 @@
 }
 
 
-<span class="attribute">#[macro_export]
+<span class="doccomment">/// Задаёт функцию `main()` пользовательского процесса.
+</span><span class="attribute">#[macro_export]
 </span><span class="macro">macro_rules! </span>entry {
     (<span class="macro-nonterminal">$path</span>:path) =&gt; {
         <span class="attribute">#[export_name = <span class="string">&quot;main&quot;</span>]

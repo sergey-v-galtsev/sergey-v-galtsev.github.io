@@ -117,8 +117,8 @@ fn switch_from_real_mode_to_long_mode() -> !
 - Запускается в [16-битном реальном режиме](https://en.wikipedia.org/wiki/Real_mode) и в процессе работы переключается в [64-битный режим](https://en.wikipedia.org/wiki/Long_mode) напрямую, минуя [32-х битный защищённый режим](https://en.wikipedia.org/wiki/Protected_mode). Это делается аналогично статье [Entering Long Mode Directly](https://wiki.osdev.org/Entering_Long_Mode_Directly). Но гораздо проще, так как все нужные структуры и значения регистров код на Rust копирует с BSP в [`kernel::smp::ap_init::BootStack`](../../doc/kernel/smp/ap_init/struct.BootStack.html).
 - Должна настроить сегментные регистры и переключиться на временный стек по адресу записанному в константе [`kernel::smp::ap_init::BOOT_STACK`](../../doc/kernel/smp/ap_init/constant.BOOT_STACK.html).
 - Инициализирует системные регистры, переданные через временный стек. В частности, страничное отображение и GDT.
-- После инициализации GDT, переинициализирует сегментные регистры селекторами новой GDT. Для переинициализации `CS` можно использовать `far ret`. Использовать `far jmp` не получится, так как для него селектор сегмента кода должен быть константой, а нам хочется передать селектор кода переменной. Она записана в поле [`BootStack::kernel_code`](../../doc/kernel/smp/ap_init/struct.BootStack.html#structfield.kernel_code).
-- Далее, забирает с временного стека аргументы для функции [`init_ap()`](../../doc/kernel/smp/ap_init/fn.init_ap.html). И помещает их в регистры, в соответствии с [x86-64 C ABI](https://wiki.osdev.org/System_V_ABI#x86-64).
+- После инициализации GDT, переинициализирует сегментные регистры селекторами новой GDT. Для переинициализации `CS` можно использовать [`far ret`](https://www.felixcloutier.com/x86/ret). Использовать [`far jmp`](https://www.felixcloutier.com/x86/jmp) не получится, так как для него селектор сегмента кода должен быть константой, а нам хочется передать селектор кода переменной. Она записана в поле [`BootStack::kernel_code`](../../doc/kernel/smp/ap_init/struct.BootStack.html#structfield.kernel_code). Обратите внимание на следующий момент в документации [`far ret`](https://www.felixcloutier.com/x86/ret): `In 64-bit mode ... the default operation size of far returns is 32 bits`.
+- Далее, после метки `set_cs_rip_to_64bit`, забирает с временного стека аргументы для функции [`init_ap()`](../../doc/kernel/smp/ap_init/fn.init_ap.html). И помещает их в регистры, в соответствии с [x86-64 C ABI](https://wiki.osdev.org/System_V_ABI#x86-64).
 - Финальным аккордом переключается в выделенный данному CPU в [предыдущей задаче](../../lab/book/4-concurrency-1-smp-2-cpus.html#%D0%97%D0%B0%D0%B4%D0%B0%D1%87%D0%B0-3--%D0%B2%D0%B5%D0%BA%D1%82%D0%BE%D1%80-%D1%81%D1%82%D1%80%D1%83%D0%BA%D1%82%D1%83%D1%80-kernelsmpcpucpu) стек ядра и передаёт управление в функцию [`init_ap()`](../../doc/kernel/smp/ap_init/fn.init_ap.html).
 
 Поля в
@@ -131,17 +131,34 @@ fn switch_from_real_mode_to_long_mode() -> !
 метки `set_cs_rip_to_64bit:` лежат так, что образуют
 [far pointer](https://en.wikipedia.org/wiki/Far_pointer)
 `kernel_code:set_cs_rip_to_64bit`, который может быть использован инструкцией `far ret` как есть.
-Вы можете менять порядо полей и их состав, так как удобнее вам.
+Вы можете менять порядок полей и их состав, так как удобнее вам.
+
+Метки `switch_mode_start` и `switch_mode_end` отмечают границы загрузочного кода,
+который должен быть скопирован.
+Поэтому пишите код загрузки AP строго внутри них.
 
 Для передачи управления в функцию
 [`init_ap()`](../../doc/kernel/smp/ap_init/fn.init_ap.html)
-стоит использовать косвенный `jmp` по её абсолютному адресу.
+стоит использовать косвенный
+[`jmp`](https://www.felixcloutier.com/x86/jmp)
+по её абсолютному адресу.
 Так как код вызывающей функции
 [`switch_from_real_mode_to_long_mode()`](../../doc/kernel/smp/ap_init/fn.switch_from_real_mode_to_long_mode.html)
 будет релоцирован по адресу
 [`BOOT_CODE`](../../doc/kernel/smp/ap_init/constant.BOOT_CODE.html),
 относительные адреса в нём работать не будут.
-А `jmp` предпочтительнее чем `call`, так как возвращаться функция
+Непосредственный
+[`jmp`](https://www.felixcloutier.com/x86/jmp)
+перешёл бы по относительному адресу, то есть гарантированно сломался бы из-за релокации кода загрузки AP.
+Это было бы видно в его машинном коде в дизасемблере --- у непосредственного
+[`jmp`](https://www.felixcloutier.com/x86/jmp)
+в машинном коде было бы смещение, которое не совпадало бы с абсолютным адресом
+[`init_ap()`](../../doc/kernel/smp/ap_init/fn.init_ap.html).
+При этом для удобства пользователя в мнемонике дизасемблер показал бы абсолютный адрес.
+А [`jmp`](https://www.felixcloutier.com/x86/jmp)
+предпочтительнее чем
+[`call`](https://www.felixcloutier.com/x86/call),
+так как возвращаться функция
 [`init_ap()`](../../doc/kernel/smp/ap_init/fn.init_ap.html)
 не будет.
 Это видно по возвращаемому
@@ -163,13 +180,30 @@ fn switch_from_real_mode_to_long_mode() -> !
 [`switch_from_real_mode_to_long_mode()`](../../doc/kernel/smp/ap_init/fn.switch_from_real_mode_to_long_mode.html)
 пошагово.
 
-Однако, будьте готовы к тому что на написание и отладку этой задачи может потребоваться много времени.
+При использовании отладчика и дизассемблера, учтите что `.code16` и `.code64` --- макрокоманды,
+которые не записываются в машинный код сами по себе.
+Но они влияют на порождаемый машинный код --- декодирование инструкций в
+[x86-64](https://en.wikipedia.org/wiki/X86-64)
+зависит от режима работы процессора.
+Дизассемблер ничего не знает про макрокоманды, так как их нет в машинном коде.
+И, чтобы знать в каком режиме дизасемблировать код, ему либо нужна подсказка,
+либо он должен хранить состояние процессора.
+Иначе он будет показывать ерунду, которая сбивает с толку.
+Теоретически понимать в каком режиме находится процессор мог бы отладчик,
+но не произвольный дизассемблер вроде `objdump`.
+Поэтому кроме мнемоник в дизассемблере в этой задаче полезно обращать внимание и на машинные коды.
+Для подобных подсказок в `gdb` есть команда:
+```console
+(gdb) set architecture i8086
+```
+
+Будьте готовы к тому что на написание и отладку этой задачи может потребоваться много времени.
 
 
 ### Проверьте себя
 
 Запустите тест `4-concurrency-4-ap-init` из файла
-[`kernel/src/tests/4-concurrency-4-ap-init.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/tests/4-concurrency-4-ap-init.rs).
+[`kernel/tests/4-concurrency-4-ap-init.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/tests/4-concurrency-4-ap-init.rs).
 Сразу после времени логирование печатает номер текущего процессора.
 Теперь их у нас четыре:
 

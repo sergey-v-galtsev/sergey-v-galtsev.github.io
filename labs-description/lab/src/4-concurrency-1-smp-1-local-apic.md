@@ -72,7 +72,7 @@ fn LocalApic::map(address: Phys) -> Result<()>
 ### Проверьте себя
 
 Запустите тест `4-concurrency-2-local-apic` из файла
-[`kernel/src/tests/4-concurrency-2-local-apic.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/tests/4-concurrency-2-local-apic.rs):
+[`kernel/tests/4-concurrency-2-local-apic.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/tests/4-concurrency-2-local-apic.rs):
 
 ```console
 $ (cd kernel; cargo test --test 4-concurrency-2-local-apic)

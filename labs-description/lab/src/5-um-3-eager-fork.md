@@ -1,27 +1,39 @@
 ## Eager `fork()`
 
-Системный вызов форк долгое время считался удачной абстракцией.
+Системный вызов
+[`fork()`](https://pubs.opengroup.org/onlinepubs/9699919799/functions/fork.html)
+долгое время считался удачной абстракцией.
 Но время показало, что у него есть и большое количество недостатков,
 см. статью
 [A `fork()` in the road](https://www.microsoft.com/en-us/research/uploads/prod/2019/04/fork-hotos19.pdf).
-Хотя не стоит воспринимать `fork()` как удачный интерфейс порождения процессов,
+Хотя не стоит воспринимать
+[`fork()`](https://pubs.opengroup.org/onlinepubs/9699919799/functions/fork.html)
+как удачный интерфейс порождения процессов,
 его реализация является хорошим упражнением.
 
 Nikka воплощает некоторые идеи [экзоядра](https://en.wikipedia.org/wiki/Exokernel),
-поэтому реализовывать `fork()` будем в пространстве пользователя.
+поэтому реализовывать
+[`fork()`](https://pubs.opengroup.org/onlinepubs/9699919799/functions/fork.html)
+будем в пространстве пользователя.
 Естественно, от ядра потребуется небольшая помощь.
 Тем более то, что реализует ядро, пригодится и для других целей.
 Например, можно будет реализовать аналог современного системного вызова для порождения процессов ---
 [`posix_spawn()`](https://pubs.opengroup.org/onlinepubs/9699919799/functions/posix_spawn.html).
 Естественно, также в пространстве пользователя.
 
+Подробнее про концепцию экзоядра можно почитать в оригинальной статье ---
+[Exokernel: an operating system architecture for application-level resource management](https://pdos.csail.mit.edu/6.828/2008/readings/engler95exokernel.pdf).
 
-### Системный вызов `exofork()`
 
-Реализуйте системный вызов
+### Системный вызов [`kernel::process::syscall::exofork()`](../../doc/kernel/process/syscall/fn.exofork.html)
+
+Реализуйте [системный вызов](../../doc/kernel/process/syscall/fn.exofork.html)
 
 ```rust
-fn exofork(process: MutexGuard<Process>) -> Result<SyscallResult>
+fn exofork(
+    process: MutexGuard<Process>,
+    context: MiniContext,
+) -> Result<SyscallResult>
 ```
 
 в файле [`kernel/src/process/syscall.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/process/syscall.rs).
@@ -36,12 +48,61 @@ fn exofork(process: MutexGuard<Process>) -> Result<SyscallResult>
 А вот пользовательскую часть адресного пространства он не копирует.
 Этим займётся код на стороне пользователя.
 
-`exofork()` возвращает `Pid::Id` с идентификатором потомка в процессе родителя и константу `Pid::Current` в процессе потомка.
+Системный вызов `exofork()` возвращает `Pid::Id` с идентификатором потомка в процессе родителя и константу `Pid::Current` в процессе потомка.
+
+Текущий контекст родителя --- `context` --- нужно записать в потомка.
+Вы уже делали аналогично для
+[`sched_yield()`](../../doc/kernel/process/syscall/fn.sched_yield.html).
+В родителя
+[`exofork()`](../../doc/kernel/process/syscall/fn.exofork.html)
+вернётся через функцию
+[`kernel::process::syscall::sysret()`](../../doc/kernel/process/syscall/fn.sysret.html),
+которая получает `context` на вход и восстанавливает его.
+А вот потомок будет позже запущен планировщиком через цепочку
+[`kernel::process::process::Process::enter_user_mode()`](../../doc/kernel/process/process/struct.Process.html#method.enter_user_mode) ->
+[`kernel::process::registers::Registers::switch_to()`](../../doc/kernel/process/registers/struct.Registers.html#method.switch_to) ->
+[`iretq`](https://www.felixcloutier.com/x86/iret:iretd:iretq).
+И для
+[`iretq`](https://www.felixcloutier.com/x86/iret:iretd:iretq)
+нужно предоставить правильный контекст пользователя, в который нужно будет переключиться.
+
+Обратите внимание на код библиотечной обёртки
+[`lib::syscall::exofork()`](../../doc/lib/syscall/fn.exofork.html)
+для этого системного вызова
+в файле [`user/lib/src/syscall.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/user/lib/src/syscall.rs).
+Она предполагает, что ваша реализация функции
+[`lib::syscall::syscall()`](../../doc/lib/syscall/fn.syscall.html)
+возвращает два поля в кортеже --- `child_pid` и `process_info`:
+```rust
+let (child_pid, process_info) = syscall(Syscall::EXOFORK.bits(), 0, 0, 0, 0, 0)?;
+```
+В поле `child_pid` должен быть `Pid::Id` с идентификатором потомка в процессе родителя или
+`Pid::Current` в процессе потомка.
+А в `process_info` --- ссылка на системную информацию о текущем процессе
+[`ku::info::ProcessInfo`](../../doc/ku/info/struct.ProcessInfo.html).
+Это поле имеет смысл только для потомка.
+Соглашение такое: ядро при запуске нового процесса и через метод
+[`kernel::process::Process::new()`](../../doc/kernel/process/struct.Process.html#method.new)
+и через метод
+[`kernel::process::Process::duplicate()`](../../doc/kernel/process/struct.Process.html#method.duplicate)
+передаёт в одном из регистров ссылку на
+[`ku::info::ProcessInfo`](../../doc/ku/info/struct.ProcessInfo.html).
+Метод
+[`kernel::process::Process::new()`](../../doc/kernel/process/struct.Process.html#method.new)
+использует регистр `rdi`.
+А метод
+[`kernel::process::Process::duplicate()`](../../doc/kernel/process/struct.Process.html#method.duplicate) ---
+`rsi`, предполагая что ошибка из системного вызова передаётся через `rax`, а `pid` --- через `rdi`.
+Вы можете поменять эти соглашения.
+Но в любом случае проверьте, что в
+[`lib::syscall::exofork()`](../../doc/lib/syscall/fn.exofork.html)
+приходит правильные и `pid` и ссылка на
+[`ku::info::ProcessInfo`](../../doc/ku/info/struct.ProcessInfo.html).
 
 
-### Системный вызов `set_state()`
+### Системный вызов [`kernel::process::syscall::set_state()`](../../doc/kernel/process/syscall/fn.set_state.html)
 
-Реализуйте системный вызов
+Реализуйте [системный вызов](../../doc/kernel/process/syscall/fn.set_state.html)
 
 ```rust
 fn set_state(
@@ -73,7 +134,9 @@ fn Mapping::make_recursive_mapping(&mut self) -> Result<usize>
 в файле [`kernel/src/memory/mapping.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/memory/mapping.rs).
 Выберете, например ближе к концу таблицы страниц корневого уровня свободную запись,
 которую используйте как рекурсивную.
-Сохраните её в поле `Mapping::recursive_mapping` и верните наружу.
+Сохраните её в поле
+[`Mapping::recursive_mapping`](../../doc/kernel/memory/mapping/struct.Mapping.html#structfield.recursive_mapping)
+и верните наружу.
 Поправьте методы
 [`Mapping::duplicate_page_table()`](../../doc/kernel/memory/mapping/struct.Mapping.html#method.duplicate_page_table) и
 [`Mapping::drop_page_table()`](../../doc/kernel/memory/mapping/struct.Mapping.html#method.drop_page_table),
@@ -85,17 +148,21 @@ fn Mapping::make_recursive_mapping(&mut self) -> Result<usize>
 В файле [`user/lib/src/memory/mod.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/user/lib/src/memory/mod.rs) реализуйте вспомогательные функции кода пользователя.
 
 
-#### `temp_page()`
+#### [`lib::memory::temp_page()`](../../doc/lib/memory/fn.temp_page.html)
 
 ```rust
 fn temp_page() -> Result<Page>
 ```
 
 Заводит в адресном пространстве страницу памяти для временных нужд.
-Использует системный вызов `syscall::map()`, определённый в файле [`user/lib/src/syscall.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/user/lib/src/syscall.rs), реализацию которого в ядре [вы уже написали](../../lab/book/5-um-2-memory.html#map).
+Использует системный вызов
+[`lib::syscall::map()`](../../doc/lib/syscall/fn.map.html),
+определённый в файле
+[`user/lib/src/syscall.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/user/lib/src/syscall.rs),
+реализацию которого в ядре [вы уже написали](../../lab/book/5-um-2-memory.html#map).
 
 
-#### `copy_page()`
+#### [`lib::memory::copy_page()`](../../doc/lib/memory/fn.copy_page.html)
 
 ```rust
 unsafe fn copy_page(src: Page, dst: Page)
@@ -105,15 +172,20 @@ unsafe fn copy_page(src: Page, dst: Page)
 [core::ptr::copy_nonoverlapping()](https://doc.rust-lang.org/nightly/core/ptr/fn.copy_nonoverlapping.html).
 
 
-#### `page_table()`
+#### [`lib::memory::page_table()`](../../doc/lib/memory/fn.page_table.html)
 
 ```rust
 fn page_table(address: Virt, level: u32) -> &'static PageTable
 ```
 
-Пользуясь рекурсивной записью таблицы страниц, узнать номер которой в пространстве пользователя можно методом
-`ku::process_info().recursive_mapping()`,
+Пользуясь рекурсивной записью таблицы страниц,
 выдаёт ссылку на таблицу страниц заданного уровня `level` для заданного виртуального адреса `address`.
+Узнать номер рекурсивной записи в пространстве пользователя можно методом
+[`ProcessInfo::recursive_mapping()`](../../doc/ku/info/struct.ProcessInfo.html#method.recursive_mapping),
+а получить саму структуру
+[`ku::info::ProcessInfo`](../../doc/ku/info/struct.ProcessInfo.html)
+можно функцией
+[`ku::info::process_info()`](../../doc/ku/info/fn.process_info.html).
 
 
 ### Основной код пользовательского процесса `eager_fork`
@@ -150,7 +222,10 @@ fn copy_address_space(child: Pid) -> Result<()> {
 Копирует текущую отображаемую страницу туда с помощью
 [реализованной вами ранее](../../lab/book/5-um-3-eager-fork.html#copy_page)
 функции `lib::memory::copy_page()`.
-Затем, с помощью системных вызовов `syscall::copy_mapping()` и `syscall::unmap()`
+Затем, с помощью системных вызовов
+[`lib::syscall::copy_mapping()`](../../doc/lib/syscall/fn.copy_mapping.html)
+и
+[`lib::syscall::unmap()`](../../doc/lib/syscall/fn.unmap.html)
 передаёт скопированную временную страницу потомку `child`, отображая её в его адресном пространстве
 по адресу исходной страницы в своём адресном пространстве.
 
@@ -177,8 +252,8 @@ fn eager_fork() -> Result<bool>
 
 ### Проверьте себя
 
-Теперь должены заработать тесты `exofork_syscall()` и `eager_fork()` в файле
-[`kernel/src/tests/5-um-3-eager-fork.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/tests/5-um-3-eager-fork.rs):
+Теперь должны заработать тесты `exofork_syscall()` и `eager_fork()` в файле
+[`kernel/tests/5-um-3-eager-fork.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/tests/5-um-3-eager-fork.rs):
 
 ```console
 $ (cd kernel; cargo test --test 5-um-3-eager-fork)

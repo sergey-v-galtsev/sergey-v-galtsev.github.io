@@ -334,8 +334,6 @@
 <span id="334">334</span>
 <span id="335">335</span>
 <span id="336">336</span>
-<span id="337">337</span>
-<span id="338">338</span>
 </pre><pre class="rust"><code><span class="kw">use </span>core::{
     convert::From,
     hint,
@@ -402,8 +400,6 @@
             timestamp().unwrap_or(<span class="number">0</span>) * TICKS_PER_SECOND,
         ));
 
-        enable_next_interrupt();
-
         <span class="kw">if </span>is_time_valid() {
             <span class="macro">info!</span>(<span class="question-mark">?</span>acknowledged_settings, <span class="string">&quot;RTC init&quot;</span>);
         } <span class="kw">else </span>{
@@ -417,6 +413,15 @@
             <span class="string">&quot;RTC did not acknowledge the new settings&quot;</span>,
         );
     }
+}
+
+
+<span class="doccomment">/// Говорит микросхеме RTC, что процессор обработал [прерывание](https://en.wikipedia.org/wiki/Interrupt) от неё.
+/// То есть, посылает ей [end of interrupt (EOI)](https://en.wikipedia.org/wiki/End_of_interrupt).
+///
+/// См. [Interrupts and Register C](https://wiki.osdev.org/RTC#Interrupts_and_Register_C).
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>enable_next_interrupt() {
+    interrupt_status();
 }
 
 
@@ -596,15 +601,6 @@
 </span><span class="kw">fn </span>is_time_valid() -&gt; bool {
     <span class="kw">let </span>register_d = RegisterD::from_bits_truncate(rtc_read(REGISTER_D));
     register_d.contains(RegisterD::VALID_RAM_AND_TIME)
-}
-
-
-<span class="doccomment">/// Говорит микросхеме RTC, что процессор обработал [прерывание](https://en.wikipedia.org/wiki/Interrupt) от неё.
-/// То есть, посылает ей [end of interrupt (EOI)](https://en.wikipedia.org/wiki/End_of_interrupt).
-///
-/// См. [Interrupts and Register C](https://wiki.osdev.org/RTC#Interrupts_and_Register_C).
-</span><span class="kw">fn </span>enable_next_interrupt() {
-    interrupt_status();
 }
 
 

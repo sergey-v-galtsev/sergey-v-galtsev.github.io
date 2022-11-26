@@ -377,7 +377,7 @@ $ (cd kernel; cargo test --test 2-mm-1-block --test 2-mm-1-boot-frame-allocator)
 - За [счёт](../../doc/spin/mutex/struct.MutexGuard.html#impl-Deref) [реализации](../../doc/spin/mutex/struct.MutexGuard.html#impl-DerefMut) типажей [`core::ops::Deref`](https://doc.rust-lang.org/nightly/core/ops/trait.Deref.html) и [`core::ops::DerefMut`](https://doc.rust-lang.org/nightly/core/ops/trait.DerefMut.html) предоставляет прозрачный доступ к внутреннему [`FrameAllocator`](../../doc/kernel/memory/enum.FrameAllocator.html).
 - При разрушении, например при выходе из своей зоны видимости или [явном вызове `drop(guard)`](../../doc/spin/mutex/struct.Mutex.html#thread-safety-example), автоматически освобождает захваченную блокировку.
 
-Пример использования с блокировками, которые освобождаются сразу, в том же выражении, есть в тестах [`kernel/src/tests/memory.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/tests/memory.rs):
+Пример использования с блокировками, которые освобождаются сразу, в том же выражении, есть в тестах [`kernel/tests/memory.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/tests/memory.rs):
 ```rust
     let frame = FRAME_ALLOCATOR
         .lock()

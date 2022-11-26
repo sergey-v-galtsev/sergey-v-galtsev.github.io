@@ -116,7 +116,7 @@ fn Table::new(len: usize) -> Self
 [`Pid::Id::slot`](../../doc/ku/process/pid/enum.Pid.html#variant.Id.field.slot).
 Эти пустые слоты он провязывает в односвязный список с головой в поле
 [`Table::free`](../../doc/kernel/process/struct.Table.html#structfield.free).
-Чтобы избежать переаллокаций рекомендуется использовать метод
+Чтобы избежать переаллокаций, рекомендуется использовать метод
 [`alloc::vec::Vec::with_capacity()`](https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html#method.with_capacity).
 
 
@@ -180,7 +180,7 @@ fn Table::get(pid: Pid) -> Result<MutexGuard<'static, Process>>
 
 Так как размер таблицы процессов
 [`static ref TABLE: Mutex<Table>`](../../doc/kernel/process/table/struct.TABLE.html)
-после инициализации мы никода не меняем, и в частности не уменьшаем,
+после инициализации мы никогда не меняем, и в частности не уменьшаем,
 время жизни каждого её слота --- практически `'static`.
 Который и указан в результирующем типе метода
 [`Table::get()`](../../doc/kernel/process/struct.Table.html#method.get).
@@ -227,7 +227,7 @@ fn Table::free(process: MutexGuard<Process>)
 ### Проверьте себя
 
 Теперь должны заработать тесты `basic()` и `full_capacity()` в файле
-[`kernel/src/tests/4-concurrency-5-table.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/tests/4-concurrency-5-table.rs):
+[`kernel/tests/4-concurrency-5-table.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/tests/4-concurrency-5-table.rs):
 
 ```console
 $ (cd kernel; cargo test --test 4-concurrency-5-table)

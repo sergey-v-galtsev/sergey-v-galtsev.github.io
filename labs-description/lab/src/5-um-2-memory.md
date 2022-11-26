@@ -12,7 +12,7 @@
 Реализуйте функции валидации аргументов системных вызовов.
 
 
-#### `check_block()`
+#### [`kernel::process::syscall::check_block()`](../../doc/kernel/process/syscall/fn.check_block.html)
 
 ```rust
 fn check_block(
@@ -26,25 +26,18 @@ fn check_block(
 адресного пространства.
 
 
-#### `check_page()`
-
-```rust
-fn check_page(address: usize) -> Result<Page>
-```
-
-Проверяет, что адрес выровнен на границу страниц и возвращает соответствующую виртуальную страницу.
-
-
-#### `check_page_flags()`
+#### [`kernel::process::syscall::check_page_flags()`](../../doc/kernel/process/syscall/fn.check_page_flags.html)
 
 ```rust
 fn check_page_flags(flags: usize) -> Result<PageTableFlags>
 ```
 
-Проверяет, что `flags` задаёт валидный набор флагов отображения страниц, в котором обязательно должны быть включены флаги присутствия страницы в памяти и разрешения доступа со стороны кода пользователя.
+Проверяет, что `flags` задаёт валидный набор флагов отображения страниц,
+в котором обязательно должны быть включены флаги присутствия страницы в памяти и
+разрешения доступа со стороны кода пользователя.
 
 
-#### `check_frame()`
+#### [`kernel::process::syscall::check_frame()`](../../doc/kernel/process/syscall/fn.check_frame.html)
 
 ```rust
 fn check_frame(
@@ -54,11 +47,13 @@ fn check_frame(
 ) -> Result<Frame>
 ```
 
-Проверяет, что заданная виртуальная страница `page` отображена в адресное пространство процесса `process` с корректно заданными флагами `flags` и возвращает физический фрейм, в который она отображена.
+Проверяет, что заданная виртуальная страница `page` отображена
+в адресное пространство процесса `process` с корректно заданными флагами `flags` и
+возвращает физический фрейм, в который она отображена.
 Используйте предыдущую проверку флагов.
 
 
-#### `check_process_permissions()`
+#### [`kernel::process::syscall::check_process_permissions()`](../../doc/kernel/process/syscall/fn.check_process_permissions.html)
 
 ```rust
 fn check_process_permissions(
@@ -82,7 +77,7 @@ fn check_process_permissions(
 Используя написанные вспомогательные функции реализуйте системные вызовы.
 
 
-#### `map()`
+#### [`kernel::process::syscall::map()`](../../doc/kernel/process/syscall/fn.map.html)
 
 ```rust
 fn map(
@@ -96,9 +91,43 @@ fn map(
 
 Отображает в памяти процесса, заданного `dst_pid`, блок страниц размера `dst_size` байт начиная с виртуального адреса `dst_address` с флагами доступа `flags`.
 Если `dst_address` равен нулю, ядро само выбирает свободный участок адресного пространства размера `dst_size`.
+Выбранный виртуальный адрес возвращается как результирующее значение системного вызова.
+Размер при этом не возвращается, так как он должен быть равен аргументу `dst_address`.
+
+Обратите внимание, что выбранный ядром виртуальный адрес должен быть корректно доставлен в
+функцию пользователя, которая вызвала
+[`lib::syscall::map()`](../../doc/lib/syscall/fn.map.html).
+Референсная реализация этой функции в файле
+[`user/lib/src/syscall.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/user/lib/src/syscall.rs)
+предполагает, что ваша реализация функции
+[`lib::syscall::syscall()`](../../doc/lib/syscall/fn.syscall.html)
+помещает этот адрес в первый элемент возвращаемого кортежа.
+Вы можете изменить это соглашение, но тогда поправьте и реализацию
+[`lib::syscall::map()`](../../doc/lib/syscall/fn.map.html).
+
+Также системный вызов
+[`kernel::process::syscall::map()`](../../doc/kernel/process/syscall/fn.map.html)
+должен поддерживать отсутствие флага
+[`PageTableFlags::PRESENT`](../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.PRESENT)
+во входном аргументе `flags`.
+В этом случае происходит выделение адресного пространства --- виртуальных страниц.
+Но не происходит выделения физических фреймов и их отображения.
+Такой режим используется для реализации
+[`lib::allocator::map::MapAllocator::reserve()`](../../doc/lib/allocator/map/struct.MapAllocator.html#method.reserve).
+Сама структура
+[`lib::allocator::map::MapAllocator`](../../doc/lib/allocator/map/struct.MapAllocator.html),
+код которой уже написан, реализует
+[знакомый](../../lab/book/4-concurrency-1-memory-allocator.html#%D0%A2%D0%B8%D0%BF%D0%B0%D0%B6-kuallocatorbigbigallocator)
+вам типаж
+[`ku::allocator::big::BigAllocator`](../../doc/ku/allocator/big/trait.BigAllocator.html)
+через системные вызовы
+[`map()`](../../doc/kernel/process/syscall/fn.map.html),
+[`unmap()`](../../doc/kernel/process/syscall/fn.unmap.html) и
+[`copy_mapping()`](../../doc/kernel/process/syscall/fn.copy_mapping.html).
+И позволяет аллоцировать память уже в пространстве пользователя.
 
 
-### `unmap()`
+### [`kernel::process::syscall::unmap()`](../../doc/kernel/process/syscall/fn.unmap.html)
 
 ```rust
 fn unmap(
@@ -109,10 +138,12 @@ fn unmap(
 ) -> Result<SyscallResult>
 ```
 
-Выполняет противоположную `map()` операцию --- удаляет заданный диапазон из виртуальной памяти целевого процесса.
+Выполняет противоположную
+[`kernel::process::syscall::map()`](../../doc/kernel/process/syscall/fn.map.html)
+операцию --- удаляет заданный диапазон из виртуальной памяти целевого процесса.
 
 
-### `copy_mapping()`
+### [`kernel::process::syscall::copy_mapping()`](../../doc/kernel/process/syscall/fn.copy_mapping.html)
 
 ```rust
 fn copy_mapping(
@@ -129,14 +160,17 @@ fn copy_mapping(
 Исходный диапазон начинается с виртуального адреса `src_address`, целевой --- с виртуального адреса `dst_address`.
 Размер диапазона --- `dst_size` байт.
 В целевом процессе диапазон должен быть отображён с флагами `flags`.
-Естественно, `copy_mapping()` не должен допускать целевое отображение с более широким набором флагов, чем исходное.
-После его выполнения у процессов появляется область [разделяемой памяти](https://en.wikipedia.org/wiki/Shared_memory).
+Естественно,
+[`kernel::process::syscall::copy_mapping()`](../../doc/kernel/process/syscall/fn.copy_mapping.html)
+не должен допускать целевое отображение с более широким набором флагов, чем исходное.
+После его выполнения у процессов появляется область
+[разделяемой памяти](https://en.wikipedia.org/wiki/Shared_memory).
 
 
 ### Проверьте себя
 
-Теперь должены заработать тесты `map_syscall_group()` и `user_space_memory_allocator()` в файле
-[`kernel/src/tests/5-um-2-memory-allocator.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/tests/5-um-2-memory-allocator.rs):
+Теперь должны заработать тесты `map_syscall_group()` и `user_space_memory_allocator()` в файле
+[`kernel/tests/5-um-2-memory-allocator.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/tests/5-um-2-memory-allocator.rs):
 
 ```console
 $ (cd kernel; cargo test --test 5-um-2-memory-allocator)
@@ -209,6 +243,11 @@ $ (cd kernel; cargo test --test 5-um-2-memory-allocator)
 5_um_2_memory_allocator::user_space_memory_allocator [passed]
 18:00:19.707 0 I exit qemu; exit_code = SUCCESS
 ```
+
+Как видно, тест `user_space_memory_allocator()` запускает те же проверки,
+что и тесты `basic()` и `grow_and_shrink()` из
+[задачи про аллокатор памяти общего назначения в ядре](../../lab/book/4-concurrency-1-memory-allocator.html#%D0%97%D0%B0%D0%B4%D0%B0%D1%87%D0%B0-1--%D0%B0%D0%BB%D0%BB%D0%BE%D0%BA%D0%B0%D1%82%D0%BE%D1%80-%D0%BF%D0%B0%D0%BC%D1%8F%D1%82%D0%B8-%D0%BE%D0%B1%D1%89%D0%B5%D0%B3%D0%BE-%D0%BD%D0%B0%D0%B7%D0%BD%D0%B0%D1%87%D0%B5%D0%BD%D0%B8%D1%8F).
+Но делает это в пространстве пользователя.
 
 
 ### Ориентировочный объём работ этой части лабораторки

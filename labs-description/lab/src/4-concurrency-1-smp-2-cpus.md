@@ -222,7 +222,7 @@ fn init_cpu_vec(cpu_count: usize) -> Result<Vec<Cpu>>
 ### Проверьте себя
 
 Запустите тест `4-concurrency-3-cpus` из файла
-[`kernel/src/tests/4-concurrency-3-cpus.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/tests/4-concurrency-3-cpus.rs):
+[`kernel/tests/4-concurrency-3-cpus.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/tests/4-concurrency-3-cpus.rs):
 
 ```console
 $ (cd kernel; cargo test --test 4-concurrency-3-cpus)

@@ -132,7 +132,7 @@ Nikka сама по себе не сломается от получения п�
 А все промежуточные пропали из-за того, что во время исполнения системных вызовов прерывания были отключены.
 
 То что прерывания запрещены до переключения стека, проверяется в тесте `3-process-4-syscall` из файла
-[`kernel/src/tests/3-process-4-syscall.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/tests/3-process-4-syscall.rs)
+[`kernel/tests/3-process-4-syscall.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/tests/3-process-4-syscall.rs)
 следующим образом.
 Код пользователя из файла
 [`user/exit/src/main.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/user/exit/src/main.rs)
@@ -328,7 +328,7 @@ fn kernel::process::syscall::log_value(
 После этого системный вызов возвращает управление.
 
 С помощью этого системного вызова тест `3-process-4-syscall` из файла
-[`kernel/src/tests/3-process-4-syscall.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/tests/3-process-4-syscall.rs)
+[`kernel/tests/3-process-4-syscall.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/tests/3-process-4-syscall.rs)
 проверяет возможность чтения системного времени из непривилегированного режима пользователя.
 Код в файле
 [`user/log_value/src/main.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/user/log_value/src/main.rs)
@@ -409,7 +409,7 @@ fn lib::syscall::syscall(
 ### Проверьте себя
 
 Запустите тест `3-process-4-syscall` из файла
-[`kernel/src/tests/3-process-4-syscall.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/tests/3-process-4-syscall.rs):
+[`kernel/tests/3-process-4-syscall.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/tests/3-process-4-syscall.rs):
 
 ```console
 $ (cd kernel; cargo test --test 3-process-4-syscall)
@@ -463,6 +463,24 @@ $ (cd kernel; cargo test --test 3-process-4-syscall)
 3_process_4_syscall::syscall_log_value--------------- [passed]
 05:13:27 0 I exit qemu; exit_code = SUCCESS
 ```
+
+Если вы увидите в тесте `3_process_4_syscall::syscall_log_value`
+Page Fault на чтении `0v1` в режиме пользователя (не ядра),
+это просто замена `panic!()` в коде пользователя в тесте.
+В логе выше этого Page Fault должно быть написано, что ему не нравится,
+если конечно `log_value()` хоть немного работает.
+Например, --- `expected Err(InvalidArgument), got Ok`:
+```console
+...
+06:00:33 0 I expected Err(InvalidArgument), got Ok; value = 0; hex_value = 0x0; pid = 0:0
+06:00:33 0 D trap = "Page Fault"; context = { mode: user, cs:rip: 0x0023:0v10012E32, ss:rsp: 0x001B:0v7F7FFFFFEA38, rflags: AF PF }; info = { address: 0v1, code: 0b100 = non-present page | read | user }
+06:00:33 0 D leaving the user mode; pid = 0:0
+panicked at 'the user mode code has detected an error in syscall::log_value() implementation', kernel/tests/3-process-4-syscall.rs:60:5
+--------------------------------------------------- [failed]
+```
+Либо можно по коду теста в файле
+[`user/log_value/src/main.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/user/log_value/src/main.rs)
+посмотреть какая проверка не прошла.
 
 
 ### Ориентировочный объём работ этой части лабораторки

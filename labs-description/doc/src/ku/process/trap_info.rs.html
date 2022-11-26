@@ -179,8 +179,8 @@
     <span class="prelude-val">None</span>,
     Code(u64),
     PageFault {
-        code: PageFaultInfo,
         address: Virt,
+        code: PageFaultInfo,
     },
 }
 
@@ -190,8 +190,8 @@
         <span class="kw">match </span><span class="self">self </span>{
             Info::None =&gt; <span class="macro">write!</span>(formatter, <span class="string">&quot;{{ }}&quot;</span>),
             Info::Code(code) =&gt; <span class="macro">write!</span>(formatter, <span class="string">&quot;{{ code: {} }}&quot;</span>, code),
-            Info::PageFault { code, address } =&gt; {
-                <span class="macro">write!</span>(formatter, <span class="string">&quot;{{ code: {}, address: {} }}&quot;</span>, code, address)
+            Info::PageFault { address, code } =&gt; {
+                <span class="macro">write!</span>(formatter, <span class="string">&quot;{{ address: {}, code: {} }}&quot;</span>, address, code)
             },
         }
     }

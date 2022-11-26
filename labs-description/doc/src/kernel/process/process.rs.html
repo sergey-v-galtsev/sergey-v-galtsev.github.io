@@ -367,12 +367,46 @@
 <span id="367">367</span>
 <span id="368">368</span>
 <span id="369">369</span>
+<span id="370">370</span>
+<span id="371">371</span>
+<span id="372">372</span>
+<span id="373">373</span>
+<span id="374">374</span>
+<span id="375">375</span>
+<span id="376">376</span>
+<span id="377">377</span>
+<span id="378">378</span>
+<span id="379">379</span>
+<span id="380">380</span>
+<span id="381">381</span>
+<span id="382">382</span>
+<span id="383">383</span>
+<span id="384">384</span>
+<span id="385">385</span>
+<span id="386">386</span>
+<span id="387">387</span>
+<span id="388">388</span>
+<span id="389">389</span>
+<span id="390">390</span>
+<span id="391">391</span>
+<span id="392">392</span>
+<span id="393">393</span>
+<span id="394">394</span>
+<span id="395">395</span>
+<span id="396">396</span>
+<span id="397">397</span>
+<span id="398">398</span>
+<span id="399">399</span>
+<span id="400">400</span>
+<span id="401">401</span>
+<span id="402">402</span>
 </pre><pre class="rust"><code><span class="kw">use </span>core::fmt;
 
 <span class="kw">use </span>spin::{Mutex, MutexGuard};
 
 <span class="kw">use </span>ku::{
-    process::{MiniContext, State},
+    memory::mmu::PageTableFlags,
+    process::{Info, MiniContext, State, TrapInfo},
     ProcessInfo,
     RingBuffer,
 };
@@ -380,8 +414,8 @@
 <span class="kw">use crate</span>::{
     allocator::MemoryAllocator,
     error::{Error::InvalidArgument, <span class="prelude-ty">Result</span>},
-    interrupts::InterruptContext,
-    log::{debug, info},
+    interrupts::{InterruptContext, INTERRUPT_STATS},
+    log::{<span class="self">self</span>, debug, info, trace, warn},
     memory::{AddressSpace, Block, Virt, USER_RW},
     smp::Cpu,
 };
@@ -486,23 +520,6 @@
     }
 
 
-    <span class="doccomment">/// Возвращает [`RingBuffer`] в который код пользователя записывает свои логи.
-    </span><span class="kw">pub fn </span>log(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;mut </span>RingBuffer&gt; {
-        <span class="kw">let </span>info = <span class="kw">unsafe </span>{ <span class="self">self</span>.info()<span class="question-mark">? </span>};
-        <span class="kw">let </span>log = Block::from_ref(info.log());
-        <span class="kw">let </span>address_space = <span class="self">self</span>.address_space.get_mut();
-
-        <span class="kw">let </span>log = address_space.check_permission_mut::&lt;RingBuffer&gt;(log, USER_RW)<span class="question-mark">?</span>;
-
-        <span class="kw">if </span>log.len() == <span class="number">1 </span>{
-            address_space.check_permission_mut::&lt;u8&gt;(log[<span class="number">0</span>].block(), USER_RW)<span class="question-mark">?</span>;
-            <span class="prelude-val">Ok</span>(<span class="kw-2">&amp;mut </span>log[<span class="number">0</span>])
-        } <span class="kw">else </span>{
-            <span class="prelude-val">Err</span>(InvalidArgument)
-        }
-    }
-
-
     <span class="doccomment">/// Возвращает идентификатор процесса--родителя, который создал данный процесс.
     </span><span class="kw">pub fn </span>parent(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Pid&gt; {
         <span class="self">self</span>.parent
@@ -545,7 +562,7 @@
     <span class="doccomment">/// Возвращает контекст пользователя, в который передаются исключения и прерывания,
     /// относящиеся к данному процессу.
     /// Например, Page Fault при некорректном доступе к памяти в коде пользователя.
-    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>trap_context(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TrapContext {
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>trap_context(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TrapContext {
         <span class="self">self</span>.trap_context
     }
 
@@ -636,6 +653,38 @@
     }
 
 
+    <span class="doccomment">/// Подготавливает контекст `context` к вызову
+    /// пользовательского обработчика исключения или прерывания номер `number`, если он установлен.
+    ///
+    /// Возвращает `true`, если пользовательский обработчик установлен и
+    /// инфромация об исключении или прерывании успешно записана в его стек.
+    </span><span class="attribute">#[allow(unused_mut)] </span><span class="comment">// TODO: remove before flight.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>trap(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        context: <span class="kw-2">&amp;mut </span>InterruptContext,
+        number: usize,
+        info: Info,
+    ) -&gt; bool {
+        <span class="self">self</span>.flush_log();
+
+        <span class="comment">// TODO: your code here.
+        </span><span class="bool-val">false </span><span class="comment">// TODO: remove before flight.
+    </span>}
+
+
+    <span class="doccomment">/// Сбрасывает буферизованные записи из пользовательского пространства в лог.
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>flush_log(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="kw">let </span>pid = <span class="self">self</span>.pid;
+
+        <span class="kw">if let </span><span class="prelude-val">Ok</span>(log) = <span class="self">self</span>.log() {
+            log::user_events(pid, log);
+            <span class="macro">trace!</span>(read_stats = <span class="question-mark">?</span>log.read_stats(), write_stats = <span class="question-mark">?</span>log.write_stats());
+        } <span class="kw">else </span>{
+            <span class="macro">warn!</span>(%pid, <span class="string">&quot;log is not mapped properly&quot;</span>);
+        }
+    }
+
+
     <span class="doccomment">/// Возвращает ссылку на структуру [`ProcessInfo`],
     /// через которую ядро предоставляет процессу информацию о нём.
     </span><span class="kw">unsafe fn </span>info(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;mut </span>ProcessInfo&gt; {
@@ -646,6 +695,23 @@
 
         <span class="kw">if </span>info.len() == <span class="number">1 </span>{
             <span class="prelude-val">Ok</span>(<span class="kw-2">&amp;mut </span>info[<span class="number">0</span>])
+        } <span class="kw">else </span>{
+            <span class="prelude-val">Err</span>(InvalidArgument)
+        }
+    }
+
+
+    <span class="doccomment">/// Возвращает [`RingBuffer`] в который код пользователя записывает свои логи.
+    </span><span class="kw">fn </span>log(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;mut </span>RingBuffer&gt; {
+        <span class="kw">let </span>info = <span class="kw">unsafe </span>{ <span class="self">self</span>.info()<span class="question-mark">? </span>};
+        <span class="kw">let </span>log = Block::from_ref(info.log());
+        <span class="kw">let </span>address_space = <span class="self">self</span>.address_space.get_mut();
+
+        <span class="kw">let </span>log = address_space.check_permission_mut::&lt;RingBuffer&gt;(log, USER_RW)<span class="question-mark">?</span>;
+
+        <span class="kw">if </span>log.len() == <span class="number">1 </span>{
+            address_space.check_permission_mut::&lt;u8&gt;(log[<span class="number">0</span>].block(), USER_RW)<span class="question-mark">?</span>;
+            <span class="prelude-val">Ok</span>(<span class="kw-2">&amp;mut </span>log[<span class="number">0</span>])
         } <span class="kw">else </span>{
             <span class="prelude-val">Err</span>(InvalidArgument)
         }
@@ -670,7 +736,7 @@
 /// относящиеся к данному процессу.
 /// Например, Page Fault при некорректном доступе к памяти в коде пользователя.
 </span><span class="attribute">#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
-</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>TrapContext {
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct </span>TrapContext {
     <span class="doccomment">/// Контекст пользовательского обработчика исключений и прерываний.
     </span>mini_context: MiniContext,
 
@@ -692,19 +758,19 @@
 
     <span class="doccomment">/// Возвращает `true` если указатель стека `rsp` указывает в стек
     /// пользовательского обработчика исключений и прерываний.
-    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>contains(<span class="kw-2">&amp;</span><span class="self">self</span>, rsp: Virt) -&gt; bool {
+    </span><span class="kw">fn </span>contains(<span class="kw-2">&amp;</span><span class="self">self</span>, rsp: Virt) -&gt; bool {
         <span class="self">self</span>.stack.contains_address(rsp)
     }
 
 
     <span class="doccomment">/// Возвращает `true` если пользователь установил свой обработчик исключений.
-    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>is_valid(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+    </span><span class="kw">fn </span>is_valid(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
         <span class="self">self</span>.stack != Block::default()
     }
 
 
     <span class="doccomment">/// Возвращает контекст пользовательского обработчика исключений и прерываний.
-    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>mini_context(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; MiniContext {
+    </span><span class="kw">fn </span>mini_context(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; MiniContext {
         <span class="self">self</span>.mini_context
     }
 }

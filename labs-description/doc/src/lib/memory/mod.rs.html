@@ -38,6 +38,20 @@
 <span id="38">38</span>
 <span id="39">39</span>
 <span id="40">40</span>
+<span id="41">41</span>
+<span id="42">42</span>
+<span id="43">43</span>
+<span id="44">44</span>
+<span id="45">45</span>
+<span id="46">46</span>
+<span id="47">47</span>
+<span id="48">48</span>
+<span id="49">49</span>
+<span id="50">50</span>
+<span id="51">51</span>
+<span id="52">52</span>
+<span id="53">53</span>
+<span id="54">54</span>
 </pre><pre class="rust"><code><span class="kw">use </span>core::{mem, ptr};
 
 <span class="kw">use </span>ku::{
@@ -61,20 +75,34 @@
 
 <span class="kw">use </span><span class="kw">super</span>::syscall;
 
+<span class="comment">// Used in docs.
+</span><span class="attribute">#[allow(unused)]
+</span><span class="kw">use crate as </span>lib;
 
-<span class="kw">pub fn </span>temp_page() -&gt; <span class="prelude-ty">Result</span>&lt;Page&gt; {
+
+<span class="doccomment">/// Заводит в адресном пространстве страницу памяти для временных нужд.
+/// Использует системный вызов [`lib::syscall::map()`].
+</span><span class="kw">pub fn </span>temp_page() -&gt; <span class="prelude-ty">Result</span>&lt;Page&gt; {
     <span class="comment">// TODO: your code here.
     </span><span class="macro">unimplemented!</span>();
 }
 
 
-<span class="kw">pub unsafe fn </span>copy_page(src: Page, dst: Page) {
+<span class="doccomment">/// Копирует содержимое страницы `src` в страницу `dst` с помощью
+/// [`core::ptr::copy_nonoverlapping()`].
+///
+/// # Safety
+///
+/// Страницы должны быть отображены в память и различны.
+</span><span class="kw">pub unsafe fn </span>copy_page(src: Page, dst: Page) {
     <span class="comment">// TODO: your code here.
     </span><span class="macro">unimplemented!</span>();
 }
 
 
-<span class="kw">pub fn </span>page_table(address: Virt, level: u32) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>PageTable {
+<span class="doccomment">/// Пользуясь рекурсивной записью таблицы страниц, выдаёт ссылку
+/// на таблицу страниц заданного уровня `level` для заданного виртуального адреса `address`.
+</span><span class="kw">pub fn </span>page_table(address: Virt, level: u32) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>PageTable {
     <span class="comment">// TODO: your code here.
     </span><span class="macro">unimplemented!</span>();
 }

@@ -57,15 +57,43 @@ extern "x86-interrupt" fn apic_timer(mut context: InterruptContext)
 [`ku::process::syscall::Syscall::SCHED_YIELD`](../../doc/ku/process/syscall/struct.Syscall.html#associatedconstant.SCHED_YIELD).
 Он должен перепланировать процесс в конец очереди и забрать у него CPU функцией
 [`kernel::process::process::Process::sched_yield()`](../../doc/kernel/process/process/struct.Process.html#method.sched_yield),
-которая вернёт управление в другой контекст ядра --- в контекст из которого была вызвана функция
+которая вернёт управление в другой контекст ядра.
+А именно, в контекст из которого была вызвана функция
 [`kernel::process::process::Process::enter_user_mode()`](../../doc/kernel/process/process/struct.Process.html#method.enter_user_mode).
 То есть, управление вернётся в цикл планировщика.
+
+Функция
+[`kernel::process::syscall::sched_yield()`](../../doc/kernel/process/syscall/fn.sched_yield.html)
+не вернётся в диспетчер системных вызовов
+[`kernel::process::syscall::syscall()`](../../doc/kernel/process/syscall/fn.syscall.html)
+и далее в возврат из системного вызова
+[`kernel::process::syscall::sysret()`](../../doc/kernel/process/syscall/fn.sysret.html).
+Но, тем не менее, когда-нибудь управление нужно будет передать вызывающему процессу.
+Это сделает планировщик через цепочку
+[`kernel::process::process::Process::enter_user_mode()`](../../doc/kernel/process/process/struct.Process.html#method.enter_user_mode) ->
+[`kernel::process::registers::Registers::switch_to()`](../../doc/kernel/process/registers/struct.Registers.html#method.switch_to) ->
+[`iretq`](https://www.felixcloutier.com/x86/iret:iretd:iretq).
+И для
+[`iretq`](https://www.felixcloutier.com/x86/iret:iretd:iretq)
+нужно предоставить правильный контекст пользователя, в который нужно будет переключиться.
+Это ровно тот контекст пользователя, который есть у
+[`kernel::process::syscall::sched_yield()`](../../doc/kernel/process/syscall/fn.sched_yield.html).
+И который она обычно передаёт в
+[`kernel::process::syscall::sysret()`](../../doc/kernel/process/syscall/fn.sysret.html).
+А в
+[`kernel::process::syscall::sched_yield()`](../../doc/kernel/process/syscall/fn.sched_yield.html)
+этот контекст пользователя нужно явно сохранить методом
+[`kernel::process::process::Process::set_context()`](../../doc/kernel/process/process/struct.Process.html#method.set_context).
+Флаги и сегментные регистры тут сохранять не требуется.
+Флаги должен сохранить пользовательский код, если они ему нужны.
+Так как это syscall, то есть пользователь готов к тому что регистры, и в том числе флаги, будут изменены.
+А сегментные регистры не меняются на протяжении жизни процесса.
 
 
 ### Проверьте себя
 
 Теперь должны заработать тесты `syscall_sched_yield()` и `scheduler()` в файле
-[`kernel/src/tests/4-concurrency-7-scheduler.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/tests/4-concurrency-7-scheduler.rs):
+[`kernel/tests/4-concurrency-7-scheduler.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/tests/4-concurrency-7-scheduler.rs):
 
 ```console
 $ (cd kernel; cargo test --test 4-concurrency-7-scheduler)

@@ -682,20 +682,6 @@
 <span id="682">682</span>
 <span id="683">683</span>
 <span id="684">684</span>
-<span id="685">685</span>
-<span id="686">686</span>
-<span id="687">687</span>
-<span id="688">688</span>
-<span id="689">689</span>
-<span id="690">690</span>
-<span id="691">691</span>
-<span id="692">692</span>
-<span id="693">693</span>
-<span id="694">694</span>
-<span id="695">695</span>
-<span id="696">696</span>
-<span id="697">697</span>
-<span id="698">698</span>
 </pre><pre class="rust"><code><span class="kw">use </span>core::{
     convert::TryInto,
     fmt,
@@ -718,14 +704,14 @@
 
 <span class="kw">use </span>ku::{
     memory::PageFaultInfo,
-    process::{Info, MiniContext, TrapInfo},
+    process::{Info, MiniContext},
 };
 
 <span class="kw">use crate</span>::{
     error::Result,
     log,
     log::{debug, error, info, trace, warn},
-    memory::{mmu::PageTableFlags, size, Virt, DOUBLE_FAULT_IST_INDEX, PAGE_FAULT_IST_INDEX},
+    memory::{size, Virt, DOUBLE_FAULT_IST_INDEX, PAGE_FAULT_IST_INDEX},
     process::{ModeContext, Pid, Process, Table},
     smp::{Cpu, LocalApic},
     time::{pit8254, rtc},
@@ -896,6 +882,8 @@
     IDT.load();
 
     interrupts::enable();
+
+    rtc::enable_next_interrupt();
 
     <span class="macro">info!</span>(<span class="string">&quot;interrupts init&quot;</span>);
 }
@@ -1071,16 +1059,11 @@
         <span class="kw">let </span><span class="kw-2">mut </span>process =
             Table::get(pid).expect(<span class="string">&quot;failed to find the current process in the process table&quot;</span>);
 
-        <span class="kw">if let </span><span class="prelude-val">Ok</span>(log) = process.log() {
-            log::user_events(pid, log);
-            <span class="macro">trace!</span>(read_stats = <span class="question-mark">?</span>log.read_stats(), write_stats = <span class="question-mark">?</span>log.write_stats());
-        } <span class="kw">else </span>{
-            <span class="macro">warn!</span>(%pid, <span class="string">&quot;log is not mapped properly&quot;</span>);
+        <span class="kw">if </span>process.trap(context, number, info) {
+            <span class="kw">return</span>;
         }
 
-        <span class="comment">// TODO: your code here.
-
-        </span><span class="macro">info!</span>(
+        <span class="macro">info!</span>(
             trap = INTERRUPT_STATS[number].name,
             number,
             %info,
@@ -1094,32 +1077,21 @@
             Process::sched_yield();
         }
     } <span class="kw">else </span>{
-        <span class="macro">error!</span>(
-            trap = INTERRUPT_STATS[number].name,
-            number,
-            %info,
-            %context,
-            <span class="string">&quot;kernel mode trap&quot;</span>,
-        );
-
         <span class="kw">if </span>fatal == Fatal::Yes {
             <span class="macro">panic!</span>(
-                <span class="string">&quot;kernel mode trap #{:?} - {}, context: {}&quot;</span>,
-                number, INTERRUPT_STATS[number].name, context,
+                <span class="string">&quot;kernel mode trap #{:?} - {}, context: {}, info: {}&quot;</span>,
+                number, INTERRUPT_STATS[number].name, context, info,
+            );
+        } <span class="kw">else </span>{
+            <span class="macro">error!</span>(
+                trap = INTERRUPT_STATS[number].name,
+                number,
+                %info,
+                %context,
+                <span class="string">&quot;kernel mode trap&quot;</span>,
             );
         }
     }
-}
-
-
-<span class="kw">fn </span>user_trap_handler(
-    process: <span class="kw-2">&amp;mut </span>MutexGuard&lt;Process&gt;,
-    original_context: <span class="kw-2">&amp;mut </span>InterruptContext,
-    number: usize,
-    info: Info,
-) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
-    <span class="comment">// TODO: your code here.
-    </span><span class="macro">unimplemented!</span>();
 }
 
 
@@ -1225,8 +1197,8 @@
         <span class="kw-2">&amp;mut </span>context,
         PAGE_FAULT,
         Info::PageFault {
-            code: PageFaultInfo::from_bits_truncate(size::into_usize(error_code)),
             address: Cr2::read().into(),
+            code: PageFaultInfo::from_bits_truncate(size::into_usize(error_code)),
         },
         Fatal::Yes,
     );

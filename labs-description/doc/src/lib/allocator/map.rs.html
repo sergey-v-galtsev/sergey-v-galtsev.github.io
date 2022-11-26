@@ -137,6 +137,8 @@
 <span id="137">137</span>
 <span id="138">138</span>
 <span id="139">139</span>
+<span id="140">140</span>
+<span id="141">141</span>
 </pre><pre class="rust"><code><span class="kw">use </span>core::{
     alloc::{AllocError, Allocator, Layout},
     ptr::NonNull,
@@ -169,7 +171,8 @@
     }
 
 
-    <span class="kw">pub fn </span>info(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Info {
+    <span class="doccomment">/// Статистика аллокатора общего назначения.
+    </span><span class="kw">pub fn </span>info(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Info {
         INFO.load()
     }
 }
@@ -275,6 +278,7 @@
 }
 
 
-<span class="kw">static </span>INFO: AtomicInfo = AtomicInfo::new();
+<span class="doccomment">/// Статистика аллокатора общего назначения.
+</span><span class="kw">static </span>INFO: AtomicInfo = AtomicInfo::new();
 </code></pre></div>
 </section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="lib" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (bc4b39c27 2022-08-29)" ></div></body></html>

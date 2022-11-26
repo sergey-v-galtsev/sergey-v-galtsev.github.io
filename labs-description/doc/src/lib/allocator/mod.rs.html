@@ -77,6 +77,7 @@
 <span id="77">77</span>
 <span id="78">78</span>
 <span id="79">79</span>
+<span id="80">80</span>
 </pre><pre class="rust"><code><span class="attribute">#![warn(clippy::missing_docs_in_private_items)]
 #![warn(missing_docs)]
 
@@ -106,7 +107,8 @@
 }
 
 
-<span class="attribute">#[alloc_error_handler]
+<span class="doccomment">/// Обработчик ошибок глобального аллокатора памяти общего назначения.
+</span><span class="attribute">#[alloc_error_handler]
 #[cold]
 #[inline(never)]
 </span><span class="kw">fn </span>alloc_error_handler(layout: Layout) -&gt; ! {

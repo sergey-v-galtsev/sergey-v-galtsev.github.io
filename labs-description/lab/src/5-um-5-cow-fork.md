@@ -27,7 +27,7 @@ fn copy_page_table(
 
 Когда программа попытается записать в страницу, помеченную в `copy_page_table()` как `COPY_ON_WRITE` и только на чтение,
 возникнет Page Fault и ядро передаст управление в
-[реализованный вами ранее](../../lab/book/5-um-4-traps.html#%D0%A2%D1%80%D0%B0%D0%BC%D0%BF%D0%BB%D0%B8%D0%BD-%D0%BE%D0%B1%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%B0-%D0%BF%D1%80%D0%B5%D1%80%D1%8B%D0%B2%D0%B0%D0%BD%D0%B8%D0%B9)
+[реализованный вами ранее](../../lab/book/5-um-4-trap-handler.html#%D0%A2%D1%80%D0%B0%D0%BC%D0%BF%D0%BB%D0%B8%D0%BD-%D0%BE%D0%B1%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%B0-%D0%BF%D1%80%D0%B5%D1%80%D1%8B%D0%B2%D0%B0%D0%BD%D0%B8%D0%B9)
 `trap_trampoline()`, который в свою очередь запустит
 
 ```rust
@@ -48,7 +48,7 @@ fn trap_handler(info: &TrapInfo)
 Вторая неприятность заключается в том, что в процессе--потомке в `trap_handler()` не доступны
 `ku::ProcessInfo` и `ku::SystemInfo` даже на чтение.
 Поэтому потомок не может узнать свой идентификатор `Pid`.
-Так как не работает в том числе функция `ku::process::pid()`.
+Так как не работает, в том числе функция `ku::process::pid()`.
 Поэтому в `trap_handler()` идентифицировать процесс для выполняемых системных вызовов нужно как `Pid::Current`.
 
 Также учтите, что эти ограничения распространяются на вспомогательные функции, которые `trap_handler()` использует.
@@ -84,7 +84,7 @@ fn cow_fork() -> Result<bool>
 
 ### Проверьте себя
 
-Теперь должен заработать тест `cow_fork()` в файле [`kernel/src/tests/process.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/tests/process.rs):
+Теперь должен заработать тест `cow_fork()` в файле [`kernel/tests/process.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/tests/process.rs):
 
 ```console
 kernel::tests::process::cow_fork----------------------------

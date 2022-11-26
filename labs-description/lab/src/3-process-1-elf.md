@@ -143,7 +143,7 @@ fn kernel::process::elf::memory_block(
 ### Проверьте себя
 
 Запустите тест `3-process-1-elf` из файла
-[`kernel/src/tests/3-process-1-elf.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/tests/3-process-1-elf.rs):
+[`kernel/tests/3-process-1-elf.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/tests/3-process-1-elf.rs):
 
 ```console
 $ (cd kernel; cargo test --test 3-process-1-elf)

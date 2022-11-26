@@ -186,7 +186,74 @@
 <span id="186">186</span>
 <span id="187">187</span>
 <span id="188">188</span>
-</pre><pre class="rust"><code><span class="kw">use </span>core::arch::asm;
+<span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
+<span id="201">201</span>
+<span id="202">202</span>
+<span id="203">203</span>
+<span id="204">204</span>
+<span id="205">205</span>
+<span id="206">206</span>
+<span id="207">207</span>
+<span id="208">208</span>
+<span id="209">209</span>
+<span id="210">210</span>
+<span id="211">211</span>
+<span id="212">212</span>
+<span id="213">213</span>
+<span id="214">214</span>
+<span id="215">215</span>
+<span id="216">216</span>
+<span id="217">217</span>
+<span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
+<span id="221">221</span>
+<span id="222">222</span>
+<span id="223">223</span>
+<span id="224">224</span>
+<span id="225">225</span>
+<span id="226">226</span>
+<span id="227">227</span>
+<span id="228">228</span>
+<span id="229">229</span>
+<span id="230">230</span>
+<span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
+<span id="237">237</span>
+<span id="238">238</span>
+<span id="239">239</span>
+<span id="240">240</span>
+<span id="241">241</span>
+<span id="242">242</span>
+<span id="243">243</span>
+<span id="244">244</span>
+<span id="245">245</span>
+<span id="246">246</span>
+<span id="247">247</span>
+<span id="248">248</span>
+</pre><pre class="rust"><code><span class="kw">use </span>core::{
+    arch::asm,
+    mem,
+    ptr,
+    sync::atomic::{AtomicPtr, Ordering},
+};
+
+<span class="kw">use </span>static_assertions::const_assert;
 
 <span class="kw">use </span>ku::{
     error::{Error::InvalidArgument, <span class="prelude-ty">Result</span>},
@@ -196,15 +263,24 @@
     process::{Pid, ResultCode, State, Syscall, TrapInfo, RSP_OFFSET_IN_TRAP_INFO},
 };
 
+<span class="comment">// Used in docs.
+</span><span class="attribute">#[allow(unused)]
+</span><span class="kw">use </span><span class="kw">crate</span>::syscall;
 
-<span class="kw">pub fn </span>exit(code: usize) -&gt; ! {
+
+<span class="doccomment">/// Системный вызов [`syscall::exit()`].
+/// Освобождает слот таблицы процессов и возвращается в контекст ядра,
+/// из которого пользовательский процесс был запущен.
+</span><span class="kw">pub fn </span>exit(code: usize) -&gt; ! {
     syscall(Syscall::EXIT.bits(), code, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>).unwrap();
 
     <span class="macro">unreachable!</span>();
 }
 
 
-<span class="kw">pub fn </span>log_value(message: <span class="kw-2">&amp;</span>str, value: usize) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+<span class="doccomment">/// Системный вызов [`syscall::log_value()`].
+/// Логирует строку `message` и число `value`.
+</span><span class="kw">pub fn </span>log_value(message: <span class="kw-2">&amp;</span>str, value: usize) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
     <span class="kw">let </span>block = Block::&lt;Virt&gt;::from_slice(message.as_bytes());
 
     syscall(
@@ -219,13 +295,23 @@
 }
 
 
-<span class="attribute">#[allow(unused_must_use)]
+<span class="doccomment">/// Системный вызов [`syscall::sched_yield()`].
+/// Перепланирует процесс в конец очереди готовых к исполнению процессов и
+/// забирает у него CPU.
+</span><span class="attribute">#[allow(unused_must_use)]
 </span><span class="kw">pub fn </span>sched_yield() {
     syscall(Syscall::SCHED_YIELD.bits(), <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>);
 }
 
 
-<span class="comment">// Inline is needed for the correctness of exofork().
+<span class="doccomment">/// Системный вызов [`syscall::exofork()`].
+/// Создаёт копию вызывающего процесса и возвращает исходному процессу [`Pid`] копии.
+/// Внутри копии возвращает [`Pid::Current`].
+/// При этом новый процесс создаётся практически без адресного пространства и не готовый к работе.
+/// Поэтому он, в частности, не ставится в очередь планировщика.
+/// Текущий контекст исходного процесса записывает в копию, чтобы в копии
+/// вернуться туда же, куда происходит возврат из системного вызова для вызывающего процесса.
+</span><span class="comment">// Inline is needed for the correctness of exofork().
 </span><span class="attribute">#[inline(always)]
 </span><span class="kw">pub fn </span>exofork() -&gt; <span class="prelude-ty">Result</span>&lt;Pid&gt; {
     <span class="kw">let </span>(child_pid, process_info) = syscall(Syscall::EXOFORK.bits(), <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>)<span class="question-mark">?</span>;
@@ -237,7 +323,12 @@
 }
 
 
-<span class="kw">pub fn </span>map(dst_pid: Pid, dst_block: Block&lt;Page&gt;, flags: PageTableFlags) -&gt; <span class="prelude-ty">Result</span>&lt;Block&lt;Page&gt;&gt; {
+<span class="doccomment">/// Системный вызов [`syscall::map()`].
+/// Отображает в памяти процесса, заданного `dst_pid`, блок страниц `dst_block`
+/// с флагами доступа `flags`.
+/// Если `dst_block.start_address()` равен нулю,
+/// сам выбирает свободный участок адресного пространства размера `dst_block.size()`.
+</span><span class="kw">pub fn </span>map(dst_pid: Pid, dst_block: Block&lt;Page&gt;, flags: PageTableFlags) -&gt; <span class="prelude-ty">Result</span>&lt;Block&lt;Page&gt;&gt; {
     <span class="kw">let </span>(address, <span class="kw">_</span>) = syscall(
         Syscall::MAP.bits(),
         dst_pid.into_usize(),
@@ -254,7 +345,9 @@
 }
 
 
-<span class="kw">pub fn </span>unmap(dst_pid: Pid, dst_block: Block&lt;Page&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+<span class="doccomment">/// Системный вызов [`syscall::unmap()`].
+/// Удаляет из виртуальной памяти целевого процесса `dst_pid` блок страниц `dst_block`.
+</span><span class="kw">pub fn </span>unmap(dst_pid: Pid, dst_block: Block&lt;Page&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
     syscall(
         Syscall::UNMAP.bits(),
         dst_pid.into_usize(),
@@ -267,7 +360,15 @@
 }
 
 
-<span class="kw">pub fn </span>copy_mapping(
+<span class="doccomment">/// Системный вызов [`syscall::copy_mapping()`].
+/// Создаёт копию отображения виртуальной памяти из вызывающего процесса
+/// в процесс, заданный `dst_pid`.
+/// Исходный диапазон задаёт `src_block`, целевой --- `dst_block`.
+/// В целевом процессе диапазон будет отображён с флагами `flags`.
+/// Не допускает целевое отображение с более широким набором флагов, чем исходное.
+/// После выполнения у процессов появляется область
+/// [разделяемой памяти](https://en.wikipedia.org/wiki/Shared_memory).
+</span><span class="kw">pub fn </span>copy_mapping(
     dst_pid: Pid,
     src_block: Block&lt;Page&gt;,
     dst_block: Block&lt;Page&gt;,
@@ -289,7 +390,10 @@
 }
 
 
-<span class="kw">pub fn </span>set_state(dst_pid: Pid, state: State) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+<span class="doccomment">/// Системный вызов [`syscall::set_state()`].
+/// Переводит целевой процесс, заданный идентификатором `dst_pid`, в заданное состояние `state`.
+/// Ставит его в очередь планировщика в случае [`State::RUNNABLE`].
+</span><span class="kw">pub fn </span>set_state(dst_pid: Pid, state: State) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
     syscall(
         Syscall::SET_STATE.bits(),
         dst_pid.into_usize(),
@@ -302,14 +406,15 @@
 }
 
 
-<span class="kw">pub fn </span>set_trap_handler(
+<span class="doccomment">/// Системный вызов [`syscall::set_trap_handler()`].
+/// Устанавливает для целевого процесса, заданного идентификатором `dst_pid`,
+/// пользовательский обработчик прерывания `trap_handler()` со стеком `trap_stack`.
+</span><span class="kw">pub fn </span>set_trap_handler(
     dst_pid: Pid,
     trap_handler: <span class="kw">fn</span>(<span class="kw-2">&amp;</span>TrapInfo),
     trap_stack: Block&lt;Page&gt;,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
-    <span class="kw">unsafe </span>{
-        TRAP_HANDLER = trap_handler;
-    }
+    TRAP_HANDLER.store(trap_handler <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_</span>, Ordering::Relaxed);
 
     syscall(
         Syscall::SET_TRAP_HANDLER.bits(),
@@ -323,7 +428,8 @@
 }
 
 
-<span class="comment">// Inline is needed for the correctness of exofork().
+<span class="doccomment">/// Системный вызовов номер `number` с аргументами `arg0`--`arg4`.
+</span><span class="comment">// Inline is needed for the correctness of exofork().
 </span><span class="attribute">#[inline(always)]
 </span><span class="kw">pub fn </span>syscall(
     number: usize,
@@ -338,7 +444,13 @@
 }
 
 
-<span class="attribute">#[cold]
+<span class="doccomment">/// Получает управление, если в коде пользователя возникло исключение.
+/// Сохраняет контекст исключения и передаёт управление обработчику `trap_handler()`
+/// установленному с помощью [`syscall::set_trap_handler()`]
+/// через вспомогательную функцию [`trap_handler_invoker()`].
+/// После выполнения установленного обработчика `trap_handler()` восстанавливает
+/// сохранённый контекст.
+</span><span class="attribute">#[cold]
 #[naked]
 </span><span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>trap_trampoline() -&gt; ! {
     <span class="kw">unsafe </span>{
@@ -356,23 +468,31 @@
 }
 
 
-<span class="attribute">#[cold]
+<span class="doccomment">/// Передаёт управление обработчику `trap_handler()`
+/// установленному с помощью [`syscall::set_trap_handler()`].
+</span><span class="attribute">#[cold]
 #[inline(never)]
 #[no_mangle]
-</span><span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>trap_handler_invoker(info: <span class="kw-2">&amp;mut </span>TrapInfo, <span class="comment">// rdi
-</span>) {
-    <span class="kw">unsafe </span>{
-        TRAP_HANDLER(info);
+</span><span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>trap_handler_invoker(
+    <span class="comment">// rdi
+    </span>info: <span class="kw-2">&amp;mut </span>TrapInfo,
+) {
+    <span class="kw">let </span>trap_handler = TRAP_HANDLER.load(Ordering::Relaxed);
+    <span class="kw">if </span>!trap_handler.is_null() {
+        <span class="kw">unsafe </span>{
+            <span class="macro">const_assert!</span>(mem::size_of::&lt;<span class="kw-2">*const </span>()&gt;() == mem::size_of::&lt;<span class="kw">fn</span>(<span class="kw-2">&amp;</span>TrapInfo)&gt;());
+            <span class="kw">let </span>trap_handler = mem::transmute::&lt;<span class="kw-2">*const </span>(), <span class="kw">fn</span>(<span class="kw-2">&amp;</span>TrapInfo)&gt;(trap_handler);
+            (trap_handler)(info);
+        }
+    }
 
+    <span class="kw">unsafe </span>{
         info.prepare_for_ret().unwrap();
     }
 }
 
 
-<span class="kw">fn </span>dummy_trap_handler(_info: <span class="kw-2">&amp;</span>TrapInfo) {
-}
-
-
-<span class="kw">static </span><span class="kw-2">mut </span>TRAP_HANDLER: <span class="kw">fn</span>(<span class="kw-2">&amp;</span>TrapInfo) = dummy_trap_handler;
+<span class="doccomment">/// Адрес обработчика `trap_handler()`, установленный с помощью [`syscall::set_trap_handler()`].
+</span><span class="kw">static </span>TRAP_HANDLER: AtomicPtr&lt;()&gt; = AtomicPtr::new(ptr::null_mut());
 </code></pre></div>
 </section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="lib" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (bc4b39c27 2022-08-29)" ></div></body></html>

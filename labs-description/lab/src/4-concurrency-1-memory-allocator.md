@@ -195,7 +195,7 @@ unsafe fn remap(&mut self, old_block: Block<Page>, new_block: Block<Page>) -> Re
 ### Проверьте себя
 
 Запустите тест `4-concurrency-1-memory-allocator` из файла
-[`kernel/src/tests/4-concurrency-1-memory-allocator.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/tests/4-concurrency-1-memory-allocator.rs):
+[`kernel/tests/4-concurrency-1-memory-allocator.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/tests/4-concurrency-1-memory-allocator.rs):
 
 ```console
 $ (cd kernel; cargo test --test 4-concurrency-1-memory-allocator)

@@ -54,7 +54,7 @@ fn AddressSpace::check_permission_common(
 ### Проверьте себя
 
 Запустите тест `3-process-2-permission-checks` из файлa
-[`kernel/src/tests/3-process-2-permission-checks.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/tests/3-process-2-permission-checks.rs):
+[`kernel/tests/3-process-2-permission-checks.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/tests/3-process-2-permission-checks.rs):
 
 ```console
 $ (cd kernel; cargo test --test 3-process-2-permission-checks)
