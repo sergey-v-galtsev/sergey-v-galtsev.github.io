@@ -52,6 +52,8 @@
 <span id="52">52</span>
 <span id="53">53</span>
 <span id="54">54</span>
+<span id="55">55</span>
+<span id="56">56</span>
 </pre><pre class="rust"><code><span class="kw">use </span>core::{mem, ptr};
 
 <span class="kw">use </span>ku::{
@@ -95,6 +97,8 @@
 ///
 /// Страницы должны быть отображены в память и различны.
 </span><span class="kw">pub unsafe fn </span>copy_page(src: Page, dst: Page) {
+    <span class="macro">assert_ne!</span>(src, dst);
+
     <span class="comment">// TODO: your code here.
     </span><span class="macro">unimplemented!</span>();
 }

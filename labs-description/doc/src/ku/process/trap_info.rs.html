@@ -99,6 +99,7 @@
 <span id="99">99</span>
 <span id="100">100</span>
 <span id="101">101</span>
+<span id="102">102</span>
 </pre><pre class="rust"><code><span class="kw">use </span>core::{fmt, mem};
 
 <span class="kw">use </span>memoffset::offset_of;
@@ -118,10 +119,11 @@
     info: Info,
     context: MiniContext,
 
-    <span class="doccomment">/// `TrapInfo` can be pushed into the same stack the `context` is pointing to.
+    <span class="doccomment">/// `TrapInfo` can be pushed onto the same stack the `context` is pointing to.
     /// Eg. if the trap is recursive - the trap has happened inside a trap handler.
-    /// In this case `lib::syscall::trap_trampoline()` and `lib::syscall::trap_handler_invoker()`
-    /// will push on the `context` stack a return address effectively overwriting the `TrapInfo`.
+    /// In this case `lib::syscall::trap_trampoline` and `lib::syscall::trap_handler_invoker`
+    /// will push a return address onto the `context` stack.
+    /// That will effectively overwrite the `TrapInfo`.
     /// This field exists only to protect meaningfull fields of the `TrapInfo` from beeing overwritten.
     </span>return_address_placeholder: [u8; <span class="self">Self</span>::PLACEHOLDER_SIZE],
 }

@@ -100,6 +100,15 @@
 <span id="100">100</span>
 <span id="101">101</span>
 <span id="102">102</span>
+<span id="103">103</span>
+<span id="104">104</span>
+<span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
 </pre><pre class="rust"><code><span class="attribute">#![allow(dead_code)]
 #![allow(unused_imports)]
 #![allow(unused_variables)]
@@ -167,12 +176,21 @@
         capacity = pedigree.capacity()
     );
 
+    <span class="kw">let </span><span class="kw-2">mut </span>is_child = <span class="bool-val">false</span>;
+    <span class="kw">let </span><span class="kw-2">mut </span>suffix = <span class="string">&#39;x&#39;</span>;
+
     <span class="kw">for </span>child <span class="kw">in </span><span class="string">&#39;0&#39;</span>..<span class="string">&#39;3&#39; </span>{
-        <span class="kw">if </span>pedigree.len() &lt; pedigree.capacity() &amp;&amp;
-            cow_fork(trap_stack).expect(<span class="string">&quot;failed to cow_fork()&quot;</span>)
-        {
-            fork_tree(pedigree, name, child, trap_stack);
+        <span class="kw">if </span>pedigree.len() &lt; pedigree.capacity() {
+            is_child = cow_fork(trap_stack).expect(<span class="string">&quot;failed to cow_fork()&quot;</span>)
         }
+        <span class="kw">if </span>is_child {
+            suffix = child;
+            <span class="kw">break</span>;
+        }
+    }
+
+    <span class="kw">if </span>is_child {
+        fork_tree(pedigree, name, suffix, trap_stack);
     }
 }
 

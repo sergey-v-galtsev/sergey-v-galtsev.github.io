@@ -137,7 +137,7 @@
 
 
 <span class="doccomment">/// Идентификатор процесса.
-</span><span class="attribute">#[derive(Clone, Copy, Eq, PartialEq)]
+</span><span class="attribute">#[derive(Clone, Copy, Eq, Ord, PartialEq, PartialOrd)]
 </span><span class="kw">pub enum </span>Pid {
     <span class="doccomment">/// Текущий процесс, это удобно для использования тех системных вызовов,
     /// что принимают на вход [`Pid`].

@@ -177,13 +177,15 @@
 <p>в файле
 <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/user/lib/src/syscall.rs"><code>user/lib/src/syscall.rs</code></a>.</p>
 <p>Она будет получать управление, если в коде пользователя возникло прерывание, например Page Fault.
-Прерывание может возникнуть в произвольный момент, поэтому нужно сохранить содержимое всех регистров в стеке.
-Стек, на котором эта функция будет запущена, специальный, он может отличаться от стека в момент возникновения исключения.
+Прерывание может возникнуть в неожиданный момент, поэтому нужно сохранить содержимое всех регистров в стеке.
+Стек, на котором эта функция будет запущена, — специальный.
+Он может отличаться от стека в момент возникновения исключения.
 Причём на момент вызова
 <a href="../../doc/lib/syscall/fn.trap_trampoline.html"><code>lib::syscall::trap_trampoline()</code></a>
 в стеке лежит структура
 <a href="../../doc/ku/process/trap_info/struct.TrapInfo.html"><code>ku::process::trap_info::TrapInfo</code></a>
-с информацией о возникшем прерывании.</p>
+с информацией о возникшем прерывании.
+Эту инофрмацию записывает в стек процесса ядро.</p>
 <p>Это похоже на метод
 <a href="../../doc/kernel/process/registers/struct.Registers.html#method.switch_to"><code>Registers::switch_to()</code></a>
 <a href="../../lab/book/3-process-3-user-mode.html#%D0%97%D0%B0%D0%B4%D0%B0%D1%87%D0%B0-7--%D0%BF%D0%B5%D1%80%D0%B5%D0%BA%D0%BB%D1%8E%D1%87%D0%B5%D0%BD%D0%B8%D0%B5-%D0%BF%D1%80%D0%BE%D1%86%D0%B5%D1%81%D1%81%D0%BE%D1%80%D0%B0-%D0%B2-%D1%80%D0%B5%D0%B6%D0%B8%D0%BC-%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D1%8F-%D0%B8-%D0%B2%D0%BE%D0%B7%D0%B2%D1%80%D0%B0%D1%82-%D0%B8%D0%B7-%D0%BD%D0%B5%D0%B3%D0%BE">который вы реализовали</a>
@@ -204,12 +206,12 @@
 Мы только что положили в стек регистры, и <code>RSP</code> сдвинулся.
 Поэтому для получения адреса
 <a href="../../doc/ku/process/trap_info/struct.TrapInfo.html"><code>ku::process::trap_info::TrapInfo</code></a>,
-нужно прибавить к нему объём сохранённых регистров.
+нужно прибавить к <code>RSP</code> объём сохранённых регистров.
 После вызова
 <a href="../../doc/lib/syscall/fn.trap_handler_invoker.html"><code>lib::syscall::trap_handler_invoker()</code></a>
 нужно восстановить регистры из стека.</p>
-<p>Далее нужно переключить стек — <code>RSP</code> — на состояние в котором он был в момент возникновения исключения.
-И вернуть <code>RIP</code> в точку, в которой исключение возникло.
+<p>Далее нужно переключить стек — <code>RSP</code> — на состояние, в котором он был в момент возникновения прерывания.
+И вернуть <code>RIP</code> в точку, в которой прерывание возникло.
 Посмотрите, что делает
 <a href="../../doc/lib/syscall/fn.trap_handler_invoker.html"><code>lib::syscall::trap_handler_invoker()</code></a>:</p>
 <ul>
@@ -218,13 +220,16 @@
 </ul>
 <p>А
 <a href="../../doc/ku/process/trap_info/struct.TrapInfo.html#method.prepare_for_ret"><code>TrapInfo::prepare_for_ret()</code></a>
-кладёт в стек времени возникновения исключения регистр <code>RIP</code> — адрес кода, который исполнялся в этот момент.
+кладёт в стек времени возникновения прерывания регистр <code>RIP</code> — адрес кода, который исполнялся в этот момент.
 Значит, если мы установим <code>RSP</code> на место в памяти, где сохранён <code>RIP</code> и сделаем <code>ret</code>, то инструкция <code>ret</code> одновременно</p>
 <ul>
-<li>Вернёт управление в то место, которое исполнялось в момент исключения.</li>
-<li>Вернёт стек — регистр <code>RSP</code> — в состояние на момент возникновения исключения.</li>
+<li>Вернёт управление в то место, которое исполнялось в момент прерывания.</li>
+<li>Вернёт стек — регистр <code>RSP</code> — в состояние на момент возникновения прерывания.</li>
 </ul>
-<p>Что нам и нужно. Таким образом, <code>trap_trampoline()</code> должна переключить <code>RSP</code> на этот адрес и выполнить <code>ret</code>.
+<p>Что нам и нужно. Таким образом,
+<a href="../../doc/lib/syscall/fn.trap_trampoline.html"><code>lib::syscall::trap_trampoline()</code></a>
+должна переключить <code>RSP</code> на этот адрес и выполнить инструкцию
+<a href="https://www.felixcloutier.com/x86/ret"><code>ret</code></a>.
 Лежит нужный нам <code>RSP</code> в поле
 <code>TrapInfo::context</code>(../../doc/ku/process/trap_info/struct.TrapInfo.html#structfield.context)
 структуры</p>
@@ -237,10 +242,11 @@ pub struct TrapInfo {
     info: Info,
     context: MiniContext,
 
-    /// `TrapInfo` can be pushed into the same stack the `context` is pointing to.
+    /// `TrapInfo` can be pushed onto the same stack the `context` is pointing to.
     /// Eg. if the trap is recursive - the trap has happened inside a trap handler.
     /// In this case [`lib::syscall::trap_trampoline`] and [`lib::syscall::trap_handler_invoker`]
-    /// will push on the `context` stack a return address effectively overwriting the `TrapInfo`.
+    /// will push a return address onto the `context` stack.
+    /// That will effectively overwrite the `TrapInfo`.
     /// This field exists only to protect meaningfull fields of the `TrapInfo` from beeing overwritten.
     return_address_placeholder: [u8; Self::PLACEHOLDER_SIZE],
 }
@@ -272,11 +278,15 @@ pub struct TrapInfo {
 </span></code></pre></pre>
 <p>в файле
 <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/process/syscall.rs"><code>kernel/src/process/syscall.rs</code></a>.</p>
-<p>Он устанавливает для целевого процесса, заданного идентификатором <code>dst_pid</code> пользовательский обработчик прерывания с виртуальным адресом <code>rip</code> и стеком, который задаётся блоком виртуальных адресов начиная с <code>stack_address</code> и размера <code>stack_size</code>.
+<p>Он устанавливает для целевого процесса, заданного идентификатором <code>dst_pid</code>,
+пользовательский обработчик прерывания с виртуальным адресом <code>rip</code>.
+И стеком, который задаётся блоком виртуальных адресов начиная с <code>stack_address</code> и размера <code>stack_size</code>.
 Стек может быть не выровнен по границе страниц.
 Проверять его на права доступа пока бессмысленно, так как пользовательский код может изменить доступы к этим адресам позже.
 Проверять права доступа к памяти надо непосредственно перед доступом.
-В случае обработчика исключений доступ будет позднее, в функции <code>Process::trap()</code>, и проверку придётся отложить до соответствующего момента.</p>
+В случае обработчика прерываний доступ будет позднее, в методе
+<a href="../../doc/kernel/process/process/struct.Process.html#method.trap"><code>Process::trap()</code></a>,
+и проверку придётся отложить до соответствующего момента.</p>
 <p>Вам пригодятся методы
 <a href="../../doc/kernel/process/process/struct.Process.html#method.set_trap_context"><code>Process::set_trap_context()</code></a> и
 <a href="../../doc/kernel/process/process/struct.TrapContext.html#method.new"><code>TrapContext::new()</code></a>.
@@ -444,10 +454,10 @@ pub(crate) struct TrapContext {
 20:23:48.341 0 I exit qemu; exit_code = SUCCESS
 </code></pre>
 <h3 id="Ориентировочный-объём-работ-этой-части-лабораторки"><a class="header" href="#Ориентировочный-объём-работ-этой-части-лабораторки">Ориентировочный объём работ этой части лабораторки</a></h3>
-<pre><code class="language-console"> kernel/src/interrupts.rs      |   40 ++++++++++++++++++++-
- kernel/src/process/syscall.rs |    8 +++-
- user/lib/src/syscall.rs       |   79 +++++++++++++++++++++++++++++++++++++++++-
- 3 files changed, 123 insertions(+), 4 deletions(-)
+<pre><code class="language-console"> kernel/src/process/process.rs |   50 ++++++++++++++++++++++++++++++++++++++++++++++++--
+ kernel/src/process/syscall.rs |   12 ++++++++++--
+ user/lib/src/syscall.rs       |   48 ++++++++++++++++++++++++++++++++++++++++++++++--
+ 3 files changed, 104 insertions(+), 6 deletions(-)
 </code></pre>
 
                     </main>

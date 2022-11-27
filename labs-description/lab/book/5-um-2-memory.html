@@ -147,8 +147,20 @@
                         <h2 id="Системные-вызовы-для-работы-с-виртуальной-памятью"><a class="header" href="#Системные-вызовы-для-работы-с-виртуальной-памятью">Системные вызовы для работы с виртуальной памятью</a></h2>
 <p>Добавим новые системные вызовы в файл <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/process/syscall.rs"><code>kernel/src/process/syscall.rs</code></a>.</p>
 <p>Эти системные вызовы будут принимать идентификатор <code>Pid</code> целевого процесса.
-То есть они будут позволять вызывающему процессу выполнить действие как над самим собой, задав <code>Pid::Current</code> или явно собственный идентификатор <code>Pid::Id</code>.
-Так и над другим процессом, указав его <code>Pid::Id</code>.</p>
+То есть, они будут позволять вызывающему процессу выполнить действие над самим собой,
+задав
+<a href="../../doc/ku/process/pid/enum.Pid.html#variant.Current"><code>Pid::Current</code></a>
+или явно собственный идентификатор
+<a href="../../doc/ku/process/pid/enum.Pid.html#variant.Id"><code>Pid::Id</code></a>.
+Или же над другим процессом, указав его
+<a href="../../doc/ku/process/pid/enum.Pid.html#variant.Id"><code>Pid::Id</code></a>.</p>
+<p>Системные вызовы, которые требуется реализовать в этой задаче —
+<a href="../../doc/kernel/process/syscall/fn.map.html"><code>map()</code></a>,
+<a href="../../doc/kernel/process/syscall/fn.unmap.html"><code>unmap()</code></a> и
+<a href="../../doc/kernel/process/syscall/fn.copy_mapping.html"><code>copy_mapping()</code></a>, —
+принимают на вход область памяти, которая должна быть выровнена на границы страниц.
+В случае, когда либо её адрес либо её размер не выровнен, системные вызовы должны возвращать ошибку
+<a href="../../doc/ku/error/enum.Error.html#variant.WrongAlignment"><code>Error::WrongAlignment</code></a>.</p>
 <h3 id="Валидация-аргументов"><a class="header" href="#Валидация-аргументов">Валидация аргументов</a></h3>
 <p>Реализуйте функции валидации аргументов системных вызовов.</p>
 <h4 id="kernelprocesssyscallcheck_block"><a class="header" href="#kernelprocesssyscallcheck_block"><a href="../../doc/kernel/process/syscall/fn.check_block.html"><code>kernel::process::syscall::check_block()</code></a></a></h4>
@@ -171,7 +183,7 @@
 </span></code></pre></pre>
 <p>Проверяет, что <code>flags</code> задаёт валидный набор флагов отображения страниц,
 в котором обязательно должны быть включены флаги присутствия страницы в памяти и
-разрешения доступа со стороны кода пользователя.</p>
+разрешения доступа для пространства пользователя.</p>
 <h4 id="kernelprocesssyscallcheck_frame"><a class="header" href="#kernelprocesssyscallcheck_frame"><a href="../../doc/kernel/process/syscall/fn.check_frame.html"><code>kernel::process::syscall::check_frame()</code></a></a></h4>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -184,8 +196,7 @@
 </span></code></pre></pre>
 <p>Проверяет, что заданная виртуальная страница <code>page</code> отображена
 в адресное пространство процесса <code>process</code> с корректно заданными флагами <code>flags</code> и
-возвращает физический фрейм, в который она отображена.
-Используйте предыдущую проверку флагов.</p>
+возвращает физический фрейм, в который она отображена.</p>
 <h4 id="kernelprocesssyscallcheck_process_permissions"><a class="header" href="#kernelprocesssyscallcheck_process_permissions"><a href="../../doc/kernel/process/syscall/fn.check_process_permissions.html"><code>kernel::process::syscall::check_process_permissions()</code></a></a></h4>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -251,6 +262,27 @@
 <a href="../../doc/kernel/process/syscall/fn.unmap.html"><code>unmap()</code></a> и
 <a href="../../doc/kernel/process/syscall/fn.copy_mapping.html"><code>copy_mapping()</code></a>.
 И позволяет аллоцировать память уже в пространстве пользователя.</p>
+<p>Делать этот системный вызов транзакционным не требуется, но вы можете попробовать.</p>
+<blockquote>
+<p>Под транзакционностью подразумевается что сначала выполняются проверки всех доступов и физических фреймов.
+И только если они прошли, начинается копирование отображения виртуальных страниц.
+То есть, либо будет скопировано отображение всех виртуальных страниц и вызов завершится успешно.
+Либо вызов вернёт ошибку, не скопировав ни одно из отображений.
+Такая реализация сложнее чем наивная, которая может скопировать часть отображений страниц,
+а после этого вернуть ошибку.
+И для неё придётся очень аккуратно работать с двумя блокировками на процессы и корректностью кода
+с точки зрения семантики владения.
+Чтобы реализовать транзакционность придётся пожертвовать либо значительным дополнительным временем,
+либо дополнительным временем и значительной дополнительной памятью.
+Если вы пойдёте по пути использования дополнительной памяти, вам также придётся правильно
+ответить на вопрос в каком адресном пространстве её выделять.
+И в этом случае вам могут пригодиться:</p>
+<ul>
+<li>Метод <a href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html#method.new_in"><code>Vec::new_in()</code></a>.</li>
+<li>Вспомогательная функция <a href="../../doc/kernel/process/syscall/fn.check_frames.html"><code>kernel::process::syscall::check_frames(process, block, flags)</code></a>. Она проверяет, что заданный блок виртуальных страниц <code>block</code> отображён в адресное пространство процесса <code>process</code> с корректно заданными флагами <code>flags</code>. И возвращает вектор физических фреймов, в которые отображены эти страницы.</li>
+<li>Вспомогательная функция <a href="../../doc/kernel/process/syscall/fn.map_pages_to_frames.html"><code>kernel::process::syscall::map_pages_to_frames(process, src_frames, dst_pages, flags)</code></a>. Она выполняет отображение <code>src_frames</code> в <code>dst_pages</code> с флагами <code>flags</code> в адресное пространство процесса <code>process</code>.</li>
+</ul>
+</blockquote>
 <h3 id="kernelprocesssyscallunmap"><a class="header" href="#kernelprocesssyscallunmap"><a href="../../doc/kernel/process/syscall/fn.unmap.html"><code>kernel::process::syscall::unmap()</code></a></a></h3>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -365,8 +397,8 @@
 <a href="../../lab/book/4-concurrency-1-memory-allocator.html#%D0%97%D0%B0%D0%B4%D0%B0%D1%87%D0%B0-1--%D0%B0%D0%BB%D0%BB%D0%BE%D0%BA%D0%B0%D1%82%D0%BE%D1%80-%D0%BF%D0%B0%D0%BC%D1%8F%D1%82%D0%B8-%D0%BE%D0%B1%D1%89%D0%B5%D0%B3%D0%BE-%D0%BD%D0%B0%D0%B7%D0%BD%D0%B0%D1%87%D0%B5%D0%BD%D0%B8%D1%8F">задачи про аллокатор памяти общего назначения в ядре</a>.
 Но делает это в пространстве пользователя.</p>
 <h3 id="Ориентировочный-объём-работ-этой-части-лабораторки"><a class="header" href="#Ориентировочный-объём-работ-этой-части-лабораторки">Ориентировочный объём работ этой части лабораторки</a></h3>
-<pre><code class="language-console"> kernel/src/process/syscall.rs |  123 +++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 115 insertions(+), 8 deletions(-)
+<pre><code class="language-console"> syscall.rs |  163 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 145 insertions(+), 18 deletions(-)
 </code></pre>
 
                     </main>

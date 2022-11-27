@@ -40,13 +40,15 @@ extern "C" fn trap_trampoline() -> !
 [`user/lib/src/syscall.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/user/lib/src/syscall.rs).
 
 Она будет получать управление, если в коде пользователя возникло прерывание, например Page Fault.
-Прерывание может возникнуть в произвольный момент, поэтому нужно сохранить содержимое всех регистров в стеке.
-Стек, на котором эта функция будет запущена, специальный, он может отличаться от стека в момент возникновения исключения.
+Прерывание может возникнуть в неожиданный момент, поэтому нужно сохранить содержимое всех регистров в стеке.
+Стек, на котором эта функция будет запущена, --- специальный.
+Он может отличаться от стека в момент возникновения исключения.
 Причём на момент вызова
 [`lib::syscall::trap_trampoline()`](../../doc/lib/syscall/fn.trap_trampoline.html)
 в стеке лежит структура
 [`ku::process::trap_info::TrapInfo`](../../doc/ku/process/trap_info/struct.TrapInfo.html)
 с информацией о возникшем прерывании.
+Эту инофрмацию записывает в стек процесса ядро.
 
 Это похоже на метод
 [`Registers::switch_to()`](../../doc/kernel/process/registers/struct.Registers.html#method.switch_to)
@@ -68,13 +70,13 @@ extern "C" fn lib::syscall::trap_handler_invoker(
 Мы только что положили в стек регистры, и `RSP` сдвинулся.
 Поэтому для получения адреса
 [`ku::process::trap_info::TrapInfo`](../../doc/ku/process/trap_info/struct.TrapInfo.html),
-нужно прибавить к нему объём сохранённых регистров.
+нужно прибавить к `RSP` объём сохранённых регистров.
 После вызова
 [`lib::syscall::trap_handler_invoker()`](../../doc/lib/syscall/fn.trap_handler_invoker.html)
 нужно восстановить регистры из стека.
 
-Далее нужно переключить стек --- `RSP` --- на состояние в котором он был в момент возникновения исключения.
-И вернуть `RIP` в точку, в которой исключение возникло.
+Далее нужно переключить стек --- `RSP` --- на состояние, в котором он был в момент возникновения прерывания.
+И вернуть `RIP` в точку, в которой прерывание возникло.
 Посмотрите, что делает
 [`lib::syscall::trap_handler_invoker()`](../../doc/lib/syscall/fn.trap_handler_invoker.html):
 
@@ -83,13 +85,16 @@ extern "C" fn lib::syscall::trap_handler_invoker(
 
 А
 [`TrapInfo::prepare_for_ret()`](../../doc/ku/process/trap_info/struct.TrapInfo.html#method.prepare_for_ret)
-кладёт в стек времени возникновения исключения регистр `RIP` --- адрес кода, который исполнялся в этот момент.
+кладёт в стек времени возникновения прерывания регистр `RIP` --- адрес кода, который исполнялся в этот момент.
 Значит, если мы установим `RSP` на место в памяти, где сохранён `RIP` и сделаем `ret`, то инструкция `ret` одновременно
 
-- Вернёт управление в то место, которое исполнялось в момент исключения.
-- Вернёт стек --- регистр `RSP` --- в состояние на момент возникновения исключения.
+- Вернёт управление в то место, которое исполнялось в момент прерывания.
+- Вернёт стек --- регистр `RSP` --- в состояние на момент возникновения прерывания.
 
-Что нам и нужно. Таким образом, `trap_trampoline()` должна переключить `RSP` на этот адрес и выполнить `ret`.
+Что нам и нужно. Таким образом,
+[`lib::syscall::trap_trampoline()`](../../doc/lib/syscall/fn.trap_trampoline.html)
+должна переключить `RSP` на этот адрес и выполнить инструкцию
+[`ret`](https://www.felixcloutier.com/x86/ret).
 Лежит нужный нам `RSP` в поле
 `TrapInfo::context`(../../doc/ku/process/trap_info/struct.TrapInfo.html#structfield.context)
 структуры
@@ -102,10 +107,11 @@ pub struct TrapInfo {
     info: Info,
     context: MiniContext,
 
-    /// `TrapInfo` can be pushed into the same stack the `context` is pointing to.
+    /// `TrapInfo` can be pushed onto the same stack the `context` is pointing to.
     /// Eg. if the trap is recursive - the trap has happened inside a trap handler.
     /// In this case [`lib::syscall::trap_trampoline`] and [`lib::syscall::trap_handler_invoker`]
-    /// will push on the `context` stack a return address effectively overwriting the `TrapInfo`.
+    /// will push a return address onto the `context` stack.
+    /// That will effectively overwrite the `TrapInfo`.
     /// This field exists only to protect meaningfull fields of the `TrapInfo` from beeing overwritten.
     return_address_placeholder: [u8; Self::PLACEHOLDER_SIZE],
 }
@@ -141,11 +147,15 @@ fn kernel::process::syscall::set_trap_handler(
 в файле
 [`kernel/src/process/syscall.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/process/syscall.rs).
 
-Он устанавливает для целевого процесса, заданного идентификатором `dst_pid` пользовательский обработчик прерывания с виртуальным адресом `rip` и стеком, который задаётся блоком виртуальных адресов начиная с `stack_address` и размера `stack_size`.
+Он устанавливает для целевого процесса, заданного идентификатором `dst_pid`,
+пользовательский обработчик прерывания с виртуальным адресом `rip`.
+И стеком, который задаётся блоком виртуальных адресов начиная с `stack_address` и размера `stack_size`.
 Стек может быть не выровнен по границе страниц.
 Проверять его на права доступа пока бессмысленно, так как пользовательский код может изменить доступы к этим адресам позже.
 Проверять права доступа к памяти надо непосредственно перед доступом.
-В случае обработчика исключений доступ будет позднее, в функции `Process::trap()`, и проверку придётся отложить до соответствующего момента.
+В случае обработчика прерываний доступ будет позднее, в методе
+[`Process::trap()`](../../doc/kernel/process/process/struct.Process.html#method.trap),
+и проверку придётся отложить до соответствующего момента.
 
 Вам пригодятся методы
 [`Process::set_trap_context()`](../../doc/kernel/process/process/struct.Process.html#method.set_trap_context) и
@@ -329,8 +339,8 @@ $ (cd kernel; cargo test --test 5-um-4-trap-handler)
 ### Ориентировочный объём работ этой части лабораторки
 
 ```console
- kernel/src/interrupts.rs      |   40 ++++++++++++++++++++-
- kernel/src/process/syscall.rs |    8 +++-
- user/lib/src/syscall.rs       |   79 +++++++++++++++++++++++++++++++++++++++++-
- 3 files changed, 123 insertions(+), 4 deletions(-)
+ kernel/src/process/process.rs |   50 ++++++++++++++++++++++++++++++++++++++++++++++++--
+ kernel/src/process/syscall.rs |   12 ++++++++++--
+ user/lib/src/syscall.rs       |   48 ++++++++++++++++++++++++++++++++++++++++++++++--
+ 3 files changed, 104 insertions(+), 6 deletions(-)
 ```

@@ -411,6 +411,29 @@
 <span id="411">411</span>
 <span id="412">412</span>
 <span id="413">413</span>
+<span id="414">414</span>
+<span id="415">415</span>
+<span id="416">416</span>
+<span id="417">417</span>
+<span id="418">418</span>
+<span id="419">419</span>
+<span id="420">420</span>
+<span id="421">421</span>
+<span id="422">422</span>
+<span id="423">423</span>
+<span id="424">424</span>
+<span id="425">425</span>
+<span id="426">426</span>
+<span id="427">427</span>
+<span id="428">428</span>
+<span id="429">429</span>
+<span id="430">430</span>
+<span id="431">431</span>
+<span id="432">432</span>
+<span id="433">433</span>
+<span id="434">434</span>
+<span id="435">435</span>
+<span id="436">436</span>
 </pre><pre class="rust"><code><span class="kw">use </span>core::{
     arch,
     arch::asm,
@@ -423,6 +446,7 @@
 
 <span class="kw">use </span>chrono::Duration;
 <span class="kw">use </span>memoffset::offset_of;
+<span class="kw">use </span>static_assertions::const_assert;
 <span class="kw">use </span>x86::msr::IA32_EFER;
 <span class="kw">use </span>x86_64::{
     instructions::interrupts,
@@ -532,8 +556,8 @@
 ///
 /// Через этот стек в [`switch_from_real_mode_to_long_mode()`] передаётся дополнительная информация,
 /// необходимая для загрузки AP.
-/// Например, дескриптор описывающий GDT, который можно передать инструкции `lgdt` как есть,
-/// или адрес корневой таблицы страниц, который можно как есть записать в `CR3`.
+/// Например, дескриптор описывающий GDT, который можно передать инструкции `lgdt` как есть.
+/// Или адрес корневой таблицы страниц, который можно как есть записать в `CR3`.
 /// Это сделано, чтобы:
 ///
 /// - Не нужно было в функции [`switch_from_real_mode_to_long_mode()`] на 16-битном ассемблере строить GDT,
@@ -599,6 +623,9 @@
     /// которую использует ассемблерный код.
     </span>small_gdt: SmallGdt,
 }
+
+
+<span class="macro">const_assert!</span>(<span class="macro">offset_of!</span>(BootStack, cpu) % mem::size_of::&lt;Virt&gt;() == <span class="number">0</span>);
 
 
 <span class="kw">impl </span>BootStack {
@@ -687,7 +714,9 @@
 /// Все нужные структуры и значения регистров копируются с BSP.
 </span><span class="attribute">#[allow(named_asm_labels)]
 #[cold]
+#[link_section = <span class="string">&quot;.switch_from_real_mode_to_long_mode&quot;</span>]
 #[naked]
+#[no_mangle]
 </span><span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>switch_from_real_mode_to_long_mode() -&gt; ! {
     <span class="kw">unsafe </span>{
         <span class="macro">asm!</span>(
@@ -696,16 +725,33 @@
 
         switch_mode_start:
 
+            // Ваш код для 16-битного режима работы процессора.
+            // Он должен использовать только 16-битные и 32-битные регистры ---
+            // AX, EAX, SP, ESP, DS, SS, ..., CR*.
+            // 64-битные регистры --- RAX--R15 пока недоступны.
+            // Используйте только инструкции ассемблера,
+            // макрокоманды вроде .code16 и .code64 не добавляйте и не двигайте.
+
             // TODO: your code here.
 
             .code64
+
+            // Не пишите тут свой код, скорее всего это будет неверно.
 
             // Perform a far return to `set_cs_rip_to_64bit` in order to set `CS:RIP` right.
             retf
         set_cs_rip_to_64bit:
 
+            // Теперь процессор полностью настроен для 64-битного режима и работает в нём.
+            // Можно использовать 64-битные регистры RAX--R15.
+            // Используйте только инструкции ассемблера,
+            // макрокоманды вроде .code16 и .code64 не добавляйте и не двигайте.
+
             // TODO: your code here.
 
+            // Метки `switch_mode_start` и `switch_mode_end` отмечают границы
+            // загрузочного кода, который должен быть скопирован.
+            // Поэтому пишите код загрузки AP строго внутри них.
         switch_mode_end:
             &quot;</span>,
 

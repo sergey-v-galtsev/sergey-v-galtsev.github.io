@@ -286,11 +286,11 @@ Application Processor переключится на основную GDT ядр�
 Непосредственный
 <a href="https://www.felixcloutier.com/x86/jmp"><code>jmp</code></a>
 перешёл бы по относительному адресу, то есть гарантированно сломался бы из-за релокации кода загрузки AP.
-Это было бы видно в его машинном коде в дизасемблере — у непосредственного
+Это было бы видно в его машинном коде в дизассемблере — у непосредственного
 <a href="https://www.felixcloutier.com/x86/jmp"><code>jmp</code></a>
 в машинном коде было бы смещение, которое не совпадало бы с абсолютным адресом
 <a href="../../doc/kernel/smp/ap_init/fn.init_ap.html"><code>init_ap()</code></a>.
-При этом для удобства пользователя в мнемонике дизасемблер показал бы абсолютный адрес.
+При этом для удобства пользователя в мнемонике дизассемблер показал бы абсолютный адрес.
 А <a href="https://www.felixcloutier.com/x86/jmp"><code>jmp</code></a>
 предпочтительнее чем
 <a href="https://www.felixcloutier.com/x86/call"><code>call</code></a>,
@@ -313,20 +313,146 @@ Application Processor переключится на основную GDT ядр�
 Кроме того, эмулятор <a href="../../lab/book/0-intro-5-gdb.html">позволяет подключиться к ядру отладчиком</a> и выполнять код функции
 <a href="../../doc/kernel/smp/ap_init/fn.switch_from_real_mode_to_long_mode.html"><code>switch_from_real_mode_to_long_mode()</code></a>
 пошагово.</p>
+<h4 id="Дизассемблирование-с-помощью-objdump"><a class="header" href="#Дизассемблирование-с-помощью-objdump">Дизассемблирование с помощью <code>objdump</code></a></h4>
 <p>При использовании отладчика и дизассемблера, учтите что <code>.code16</code> и <code>.code64</code> — макрокоманды,
 которые не записываются в машинный код сами по себе.
 Но они влияют на порождаемый машинный код — декодирование инструкций в
 <a href="https://en.wikipedia.org/wiki/X86-64">x86-64</a>
 зависит от режима работы процессора.
 Дизассемблер ничего не знает про макрокоманды, так как их нет в машинном коде.
-И, чтобы знать в каком режиме дизасемблировать код, ему либо нужна подсказка,
+И, чтобы знать в каком режиме дизассемблировать код, ему либо нужна подсказка,
 либо он должен хранить состояние процессора.
 Иначе он будет показывать ерунду, которая сбивает с толку.
 Теоретически понимать в каком режиме находится процессор мог бы отладчик,
 но не произвольный дизассемблер вроде <code>objdump</code>.
-Поэтому кроме мнемоник в дизассемблере в этой задаче полезно обращать внимание и на машинные коды.
-Для подобных подсказок в <code>gdb</code> есть команда:</p>
+Поэтому кроме мнемоник в дизассемблере в этой задаче полезно обращать внимание и на машинные коды.</p>
+<p>Дизассемблировать ваш код до метки <code>set_cs_rip_to_64bit</code> можно указав архитектуру <code>i8086</code>:</p>
+<pre><code class="language-console">$ objdump --disassemble --architecture=i8086 --section=.switch_from_real_mode_to_long_mode --demangle --stop-address=$(objdump --syms target/kernel/debug/kernel | grep set_cs_rip_to_64bit | sed 's/^0*\([^ ]*\).*$/0x\1/') target/kernel/debug/kernel
+
+target/kernel/debug/kernel:     file format elf64-x86-64
+
+
+Disassembly of section .switch_from_real_mode_to_long_mode:
+
+0000000000312c30 &lt;kernel::smp::ap_init::switch_from_real_mode_to_long_mode&gt;:
+  312c30:	.. /* машинный код */	...    /* мнемоники вашего кода *
+  ...
+  ......:	cb                   	lret   /* то как дизассемблируется retf в неправильном режиме (он в коде уже в .code64) */
+
+</code></pre>
+<p>А после метки <code>set_cs_rip_to_64bit</code> код уже сформирован для 64–битного режима, как и весь файл.
+Поэтому после неё архитектуру указывать не нужно:</p>
+<pre><code class="language-code">$ objdump -d --section=.switch_from_real_mode_to_long_mode --demangle --start-address=$(objdump --syms target/kernel/debug/kernel | grep set_cs_rip_to_64bit | sed 's/^0*\([^ ]*\).*$/0x\1/') target/kernel/debug/kernel
+
+target/kernel/debug/kernel:     file format elf64-x86-64
+
+
+Disassembly of section .switch_from_real_mode_to_long_mode:
+
+0000000000...... &lt;set_cs_rip_to_64bit&gt;:
+  ......:	.. /* машинный код */	...    /* мнемоники вашего кода *
+  ...
+
+0000000000...... &lt;switch_mode_end&gt;:
+  ......:	0f 0b                	ud2
+</code></pre>
+<p>В этом дампе вы можете разглядеть ошибки.
+Например, если вы воспользуетесь относительным
+<a href="https://www.felixcloutier.com/x86/jmp"><code>jmp</code></a>
+вместо абсолютного, то увидите что-то вроде:</p>
+<pre><code class="language-console">  312c75:	e9 a6 63 f6 ff       	jmp    279020 &lt;init_ap&gt;
+
+0000000000312c7a &lt;switch_mode_end&gt;:
+</code></pre>
+<p>В машинном коде нет ни намёка на правильный адрес, хотя дизассемблер и подставил его в
+мнемонику <code>jmp    279020 &lt;init_ap&gt;</code>.
+Так как в машинном коде в обратном порядке байтов указано смещение <code>a6 63 f6 ff</code>
+абсолютного адреса <code>0x279020 &lt;init_ap&gt;</code> относительно адреса следующей инструкции:</p>
+<pre><code class="language-console">(gdb) print /x 0x279020 - 0x312c7a
+$1 = 0xfff663a6
+</code></pre>
+<p>А значит, после релокации такой код сломается, так как адрес следующей инструкции будет уже другой.</p>
+<h4 id="Дизассемблирование-в-gdb"><a class="header" href="#Дизассемблирование-в-gdb">Дизассемблирование в <code>gdb</code></a></h4>
+<p>Для указания архитектуры в <code>gdb</code> есть команда <code>set architecture</code>:</p>
+<pre><code class="language-console">(gdb) file target/kernel/debug/kernel
+(gdb) set architecture
+Requires an argument. Valid arguments are i386, i386:x86-64, i386:x64-32, i8086, i386:intel, i386:x86-64:intel, i386:x64-32:intel, auto.
+(gdb) set architecture i8086
+The target architecture is set to &quot;i8086&quot;.
+(gdb) disassemble switch_from_real_mode_to_long_mode, set_cs_rip_to_64bit
+Dump of assembler code from 0x312c30 to 0x......:
+   0x00312c30 &lt;...+0&gt;:	...	/* мнемоники вашего кода *
+   ...
+   0x00...... &lt;...+..&gt;:	lret	/* то как дизассемблируется retf в неправильном режиме (он в коде уже в .code64) */
+End of assembler dump.
+(gdb) set architecture i386:x86-64
+The target architecture is set to &quot;i386:x86-64&quot;.
+(gdb) disassemble set_cs_rip_to_64bit, switch_mode_end
+Dump of assembler code from 0x...... to 0x......:
+   0x0000000000...... &lt;...+..&gt;:	...	/* мнемоники вашего кода *
+   ...
+End of assembler dump.
+</code></pre>
+<h4 id="Пошаговое-выполнение-в-gdb"><a class="header" href="#Пошаговое-выполнение-в-gdb">Пошаговое выполнение в <code>gdb</code></a></h4>
+<p>Аналогично можно указать архитектуру при подключении <code>gdb</code> к <code>qemu</code>.
+Сначала запустите тест, чтобы подглядеть нужные аргументы <code>qemu</code>:</p>
+<pre><code class="language-console">$ cd kernel; cargo test --test 4-concurrency-4-ap-init 2&gt;/dev/null | grep qemu
+Running: `qemu-system-x86_64 -drive format=raw,file=/.../target/kernel/debug/deps/bootimage-4_concurrency_4_ap_init-91a7e203d980f479.bin -no-reboot -m size=128M -smp cpus=4 -device isa-debug-exit,iobase=0xF4,iosize=0x04 -serial stdio -display none`
+...
+</code></pre>
+<p>Дальше в одной консоли запустите <code>qemu</code>, взяв команду из теста и добавив к ней опции <code>-gdb tcp::1234 -S</code>:</p>
+<pre><code class="language-console">$ qemu-system-x86_64 -drive format=raw,file=/.../target/kernel/debug/deps/bootimage-4_concurrency_4_ap_init-91a7e203d980f479.bin -no-reboot -m size=128M -smp cpus=4 -device isa-debug-exit,iobase=0xF4,iosize=0x04 -serial stdio -display none -gdb tcp::1234 -S
+</code></pre>
+<p>Он будет ждать подключения <code>gdb</code>.</p>
+<p>То же самое сделает запуск скрипта</p>
+<pre><code class="language-console">$ ./run-gdb.sh 4-concurrency-4-ap-init
+</code></pre>
+<p>Теперь в другой консоли запустите <code>gdb</code>:</p>
+<pre><code class="language-console">$ gdb
+...
+</code></pre>
+<p>Команду <code>file</code> можно указать, но это не обязательно:</p>
+<pre><code class="language-console">(gdb) file target/kernel/debug/kernel
+</code></pre>
+<p>Подключитесь к <code>localhost:1234</code>:</p>
+<pre><code class="language-console">(gdb) target remote localhost:1234
+Remote debugging using localhost:1234
+0x000000000000fff0 in ?? ()
+(gdb) break *0x7000
+Breakpoint 1 at 0x7000
+(gdb) continue
+Continuing.
+
+Thread 2 received signal SIGTRAP, Trace/breakpoint trap.
+[Switching to Thread 1.2]
+0x0000000000000000 in ?? ()
+</code></pre>
+<p>Установите архитектуру, хотя <code>gdb</code> и выдаст предупреждения:</p>
 <pre><code class="language-console">(gdb) set architecture i8086
+warning: Selected architecture i8086 is not compatible with reported target architecture i386:x86-64
+warning: A handler for the OS ABI &quot;GNU/Linux&quot; is not built into this configuration
+of GDB.  Attempting to continue with the default i8086 settings.
+
+Architecture `i8086' not recognized.
+The target architecture is set to &quot;i8086&quot;.
+</code></pre>
+<p>Ноль в качестве текущего адреса — <code>0x0000000000000000 in ?? ()</code> показывается потому что <code>CS:IP</code> равно <code>0x700:0x0</code>, а не эквивалентное <code>0x0:0x7000</code>:</p>
+<pre><code class="language-console">(gdb) info registers
+...
+rip            0x0                 0x0
+eflags         0x2                 [ IOPL=0 ]
+cs             0x700               1792
+...
+(gdb) print /x $cs * 16 + $rip
+$1 = 0x7000
+</code></pre>
+<p>Теперь можно дизассемблировать и пройти по коду пошагово:</p>
+<pre><code class="language-console">(gdb) disassemble 0x7000, 0x7100
+Dump of assembler code from 0x7000 to 0x7100:
+   0x0000000000007000:	...	/* мнемоники вашего кода *
+   ...
+(gdb) stepi
+0x00000000000000.. in ?? ()
 </code></pre>
 <p>Будьте готовы к тому что на написание и отладку этой задачи может потребоваться много времени.</p>
 <h3 id="Проверьте-себя"><a class="header" href="#Проверьте-себя">Проверьте себя</a></h3>

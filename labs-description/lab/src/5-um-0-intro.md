@@ -7,14 +7,14 @@
 ### Ориентировочный объём работ этой лабораторки
 
 ```console
- kernel/src/interrupts.rs      |   40 ++++++++++
- kernel/src/memory/mapping.rs  |   21 +++++
- kernel/src/process/mod.rs     |   24 ++++++
- kernel/src/process/syscall.rs |  154 +++++++++++++++++++++++++++++++++++++++---
- ku/src/ring_buffer.rs         |   47 +++++++++++-
- user/cow_fork/src/main.rs     |   77 ++++++++++++++++++++-
- user/eager_fork/src/main.rs   |   49 ++++++++++++-
- user/lib/src/memory/mod.rs    |   31 +++++++-
- user/lib/src/syscall.rs       |   79 +++++++++++++++++++++
- 9 files changed, 493 insertions(+), 29 deletions(-)
+ kernel/src/memory/mapping.rs  |   16 +++++
+ kernel/src/process/mod.rs     |   28 +++++++++-
+ kernel/src/process/process.rs |   50 +++++++++++++++++-
+ kernel/src/process/syscall.rs |  214 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++---------
+ ku/src/ring_buffer.rs         |   50 ++++++++++++++----
+ user/cow_fork/src/main.rs     |   74 +++++++++++++++++++++++++--
+ user/eager_fork/src/main.rs   |   54 ++++++++++++++++++--
+ user/lib/src/memory/mod.rs    |   34 ++++++++++--
+ user/lib/src/syscall.rs       |   48 +++++++++++++++++
+ 9 files changed, 510 insertions(+), 58 deletions(-)
 ```
