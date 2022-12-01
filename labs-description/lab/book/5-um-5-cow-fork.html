@@ -197,7 +197,7 @@
 <li>Проверяет, что прерывание — это действительно <code>PageFault</code> и он вызван записью. Иначе обработчик прекращает исполнение программы, вызвав <code>syscall::exit()</code> с кодом ошибки.</li>
 <li>С помощью <a href="../../lab/book/5-um-3-eager-fork.html#temp_page">реализованной ранее</a> функции <code>lib::memory::temp_page()</code> находит временную страницу.</li>
 <li>Копирует содержимое страницы, обращение к которой привело к Page Fault, во временную, с помощью <a href="../../lab/book/5-um-3-eager-fork.html#copy_page">реализованной вами ранее</a> функции <code>lib::memory::copy_page()</code>.</li>
-<li>С помощью системного вызова <code>syscall::map()</code> заменяет физический фрейм под скопированной страницей на фрейм временной страницы, одновременно меняя флаг <code>COPY_ON_WRITE</code> на <code>WRITABLE</code> в её отображении.</li>
+<li>С помощью системного вызова <code>syscall::copy_mapping()</code> заменяет физический фрейм под скопированной страницей на фрейм временной страницы, одновременно меняя флаг <code>COPY_ON_WRITE</code> на <code>WRITABLE</code> в её отображении.</li>
 <li>С помощью системного вызова <code>syscall::unmap()</code> удаляет из адресного пространства не нужную более временную страницу.</li>
 </ul>
 <h4 id="cow_fork"><a class="header" href="#cow_fork"><code>cow_fork()</code></a></h4>
