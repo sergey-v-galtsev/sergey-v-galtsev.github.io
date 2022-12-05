@@ -164,8 +164,6 @@
 <span id="164">164</span>
 <span id="165">165</span>
 <span id="166">166</span>
-<span id="167">167</span>
-<span id="168">168</span>
 </pre><pre class="rust"><code><span class="kw">use </span>alloc::vec::Vec;
 <span class="kw">use </span>core::{fmt, mem};
 
@@ -301,14 +299,12 @@
 
 <span class="attribute">#[doc(hidden)]
 </span><span class="kw">pub mod </span>test_scaffolding {
-    <span class="kw">use </span>alloc::vec;
-
     <span class="kw">use </span>lazy_static::lazy_static;
     <span class="kw">use </span>spin::{Mutex, MutexGuard};
 
     <span class="kw">use </span><span class="kw">crate</span>::error::{Error::NoProcess, <span class="prelude-ty">Result</span>};
 
-    <span class="kw">use super</span>::{forge_static_lifetime, Pid, Process, Slot, Table, TABLE};
+    <span class="kw">use super</span>::{forge_static_lifetime, Pid, Process, TABLE};
 
 
     <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>process() -&gt; <span class="prelude-ty">Result</span>&lt;MutexGuard&lt;<span class="lifetime">&#39;static</span>, Process&gt;&gt; {

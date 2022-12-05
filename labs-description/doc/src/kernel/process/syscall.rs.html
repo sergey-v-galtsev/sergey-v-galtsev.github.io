@@ -398,45 +398,23 @@
 <span id="398">398</span>
 <span id="399">399</span>
 <span id="400">400</span>
-<span id="401">401</span>
-<span id="402">402</span>
-<span id="403">403</span>
-<span id="404">404</span>
-<span id="405">405</span>
-<span id="406">406</span>
-<span id="407">407</span>
-<span id="408">408</span>
-<span id="409">409</span>
-<span id="410">410</span>
-<span id="411">411</span>
 </pre><pre class="rust"><code><span class="kw">use </span>alloc::vec::Vec;
 <span class="kw">use </span>core::{arch::asm, str};
 
-<span class="kw">use </span>bitflags::bitflags;
 <span class="kw">use </span>spin::MutexGuard;
 <span class="kw">use </span>x86_64::registers::model_specific::{Efer, EferFlags, LStar, SFMask, Star};
 
-<span class="kw">use </span>ku::process::{
-    registers::RFlags,
-    ExitCode,
-    MiniContext,
-    ResultCode,
-    State,
-    Syscall,
-    SyscallResult,
-};
+<span class="kw">use </span>ku::process::{ExitCode, MiniContext, RFlags, ResultCode, State, Syscall, SyscallResult};
 
 <span class="kw">use crate</span>::{
     allocator::MemoryAllocator,
     error::{
-        Error,
         Error::{InvalidArgument, NoPage, NoProcess, Overflow, PermissionDenied, WrongAlignment},
         <span class="prelude-ty">Result</span>,
     },
     gdt::Gdt,
-    log,
     log::{debug, error, info, trace, warn},
-    memory::{mmu::PageTableFlags, AddressSpace, Block, Frame, Page, Virt, FRAME_ALLOCATOR, USER},
+    memory::{mmu::PageTableFlags, Block, Frame, Page, Virt, FRAME_ALLOCATOR, USER},
     smp::{Cpu, KERNEL_RSP_OFFSET_IN_CPU},
 };
 

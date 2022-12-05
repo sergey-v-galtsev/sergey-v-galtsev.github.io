@@ -608,6 +608,20 @@
 <span id="608">608</span>
 <span id="609">609</span>
 <span id="610">610</span>
+<span id="611">611</span>
+<span id="612">612</span>
+<span id="613">613</span>
+<span id="614">614</span>
+<span id="615">615</span>
+<span id="616">616</span>
+<span id="617">617</span>
+<span id="618">618</span>
+<span id="619">619</span>
+<span id="620">620</span>
+<span id="621">621</span>
+<span id="622">622</span>
+<span id="623">623</span>
+<span id="624">624</span>
 </pre><pre class="rust"><code><span class="attribute">#![warn(clippy::missing_docs_in_private_items)]
 #![warn(missing_docs)]
 
@@ -725,6 +739,20 @@
                     <span class="prelude-val">Err</span>(Overflow)
                 }
             })
+    }
+}
+
+
+<span class="kw">impl</span>&lt;T: Tag&gt; Sub&lt;Addr&lt;T&gt;&gt; <span class="kw">for </span>Addr&lt;T&gt; {
+    <span class="kw">type </span>Output = <span class="prelude-ty">Result</span>&lt;usize&gt;;
+
+
+    <span class="kw">fn </span>sub(<span class="self">self</span>, rhs: Addr&lt;T&gt;) -&gt; <span class="self">Self</span>::Output {
+        <span class="kw">if </span>T::is_same_area(<span class="self">self</span>, rhs) {
+            <span class="self">self</span>.<span class="number">0</span>.checked_sub(rhs.<span class="number">0</span>).ok_or(Overflow)
+        } <span class="kw">else </span>{
+            <span class="prelude-val">Err</span>(Overflow)
+        }
     }
 }
 

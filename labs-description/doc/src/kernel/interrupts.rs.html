@@ -682,6 +682,8 @@
 <span id="682">682</span>
 <span id="683">683</span>
 <span id="684">684</span>
+<span id="685">685</span>
+<span id="686">686</span>
 </pre><pre class="rust"><code><span class="kw">use </span>core::{
     convert::TryInto,
     fmt,
@@ -690,7 +692,7 @@
 };
 
 <span class="kw">use </span>lazy_static::lazy_static;
-<span class="kw">use </span>spin::{Mutex, MutexGuard};
+<span class="kw">use </span>spin::Mutex;
 <span class="kw">use </span>volatile::Volatile;
 <span class="kw">use </span>x86_64::{
     instructions::{interrupts, tables},
@@ -702,15 +704,11 @@
     VirtAddr,
 };
 
-<span class="kw">use </span>ku::{
-    memory::PageFaultInfo,
-    process::{Info, MiniContext},
-};
+<span class="kw">use </span>ku::{memory::PageFaultInfo, process::Info};
 
 <span class="kw">use crate</span>::{
-    error::Result,
-    log,
-    log::{debug, error, info, trace, warn},
+    fs::BlockCache,
+    log::{error, info, trace},
     memory::{size, Virt, DOUBLE_FAULT_IST_INDEX, PAGE_FAULT_IST_INDEX},
     process::{ModeContext, Pid, Process, Table},
     smp::{Cpu, LocalApic},
@@ -1046,7 +1044,7 @@
 
 
 <span class="kw">fn </span>generic_trap(context: <span class="kw-2">&amp;mut </span>InterruptContext, number: usize, info: Info, fatal: Fatal) {
-    <span class="macro">debug!</span>(trap = INTERRUPT_STATS[number].name, %context, %info);
+    <span class="macro">trace!</span>(trap = INTERRUPT_STATS[number].name, %context, %info);
 
     INTERRUPT_STATS[number].inc();
 
@@ -1077,6 +1075,12 @@
             Process::sched_yield();
         }
     } <span class="kw">else </span>{
+        <span class="kw">match </span>BlockCache::trap_handler(<span class="kw-2">&amp;</span>info) {
+            <span class="prelude-val">Ok</span>(<span class="bool-val">true</span>) =&gt; <span class="kw">return</span>,
+            <span class="prelude-val">Ok</span>(<span class="bool-val">false</span>) =&gt; {},
+            <span class="prelude-val">Err</span>(error) =&gt; <span class="macro">error!</span>(<span class="question-mark">?</span>error, <span class="string">&quot;failed to handle a page fault in the block cache&quot;</span>),
+        }
+
         <span class="kw">if </span>fatal == Fatal::Yes {
             <span class="macro">panic!</span>(
                 <span class="string">&quot;kernel mode trap #{:?} - {}, context: {}, info: {}&quot;</span>,

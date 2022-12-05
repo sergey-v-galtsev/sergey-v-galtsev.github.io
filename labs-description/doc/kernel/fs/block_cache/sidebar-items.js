@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":[["SECTORS_PER_BLOCK",""]],"struct":[["BLOCK_CACHE",""],["BlockCache",""]]};

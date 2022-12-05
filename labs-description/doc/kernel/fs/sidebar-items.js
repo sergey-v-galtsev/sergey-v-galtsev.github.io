@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":[["BLOCK_SIZE",""],["FIRST_BITMAP_BLOCK",""],["MAX_NAME_LEN",""],["SUPERBLOCK_BLOCK",""]],"enum":[["Kind",""]],"mod":[["block_bitmap",""],["block_cache",""],["directory_entry",""],["disk",""],["file",""],["file_system",""],["inode",""],["superblock",""]],"struct":[["File",""],["FileSystem",""]]};

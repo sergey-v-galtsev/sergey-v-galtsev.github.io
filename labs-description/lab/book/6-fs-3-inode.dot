@@ -1,0 +1,124 @@
+digraph file {
+    rankdir = LR
+    ranksep = 1.0
+
+    fontname = "Helvetica,Arial,sans-serif"
+
+    node [shape = none, margin = 0]
+
+    subgraph cluster_inode {
+        label = "struct Inode"
+        labelloc = "t"
+
+        inode [label = <
+            <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+            <tr><td align="left" width="200" port="name">kind</td></tr>
+            <tr><td align="left" width="200">modify_time</td></tr>
+            <tr><td align="left" width="200">size</td></tr>
+            <tr><td align="left" width="200" port="direct">root_blocks[0]</td></tr>
+            <tr><td align="left" width="200" port="indirect">root_blocks[1]</td></tr>
+            <tr><td align="left" width="200" port="indirect_2">root_blocks[2]</td></tr>
+            <tr><td align="left" width="200">...</td></tr>
+            </table>
+        >]
+    }
+
+    dummy [style = invis]
+
+    inode:name -> dummy [style = invis]
+    dummy -> data:d0 [style = invis]
+
+    subgraph cluster_indirect {
+        label = "Косвенный блок"
+        labelloc = "t"
+
+        indirect [label = <
+            <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+            <tr><td align="left" width="200" port="id1">номер блока 1</td></tr>
+            <tr><td align="left" width="200" port="id2">номер блока 2</td></tr>
+            <tr><td align="left" width="200" port="id3">...</td></tr>
+            <tr><td align="left" width="200" port="id512">номер блока 512</td></tr>
+            </table>
+        >]
+    }
+
+    subgraph cluster_indirect_2 {
+        label = "Косвенный блок"
+        labelloc = "t"
+
+        indirect_2 [label = <
+            <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+            <tr><td align="left" width="200" port="id1">номер косвенного блока</td></tr>
+            <tr><td align="left" width="200" port="id2">номер косвенного блока</td></tr>
+            <tr><td align="left" width="200">...</td></tr>
+            </table>
+        >]
+    }
+
+    subgraph cluster_indirect_2_1 {
+        label = "Косвенный блок"
+        labelloc = "t"
+
+        indirect_2_1 [label = <
+            <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+            <tr><td align="left" width="200" port="id513">номер блока 513</td></tr>
+            <tr><td align="left" width="200" port="id514">...</td></tr>
+            <tr><td align="left" width="200" port="id1024">номер блока 1024</td></tr>
+            </table>
+        >]
+    }
+
+    subgraph cluster_indirect_2_2 {
+        label = "Косвенный блок"
+        labelloc = "t"
+
+        indirect_2_2 [label = <
+            <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+            <tr><td align="left" width="200" port="id1025">номер блока 1025</td></tr>
+            <tr><td align="left" width="200">...</td></tr>
+            </table>
+        >]
+    }
+
+    subgraph cluster_data {
+        label = "Блоки данных"
+        labelloc = "t"
+
+        data [label = <
+            <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+            <tr><td align="left" width="200" port="d0">блок 0</td></tr>
+            <tr><td align="left" width="200" port="d1">блок 1</td></tr>
+            <tr><td align="left" width="200" port="d2">блок 2</td></tr>
+            <tr><td align="left" width="200" port="d3">...</td></tr>
+            <tr><td align="left" width="200" port="d512">блок 512</td></tr>
+            <tr><td align="left" width="200" port="d513">блок 513</td></tr>
+            <tr><td align="left" width="200" port="d514">...</td></tr>
+            <tr><td align="left" width="200" port="d1024">блок 1024</td></tr>
+            <tr><td align="left" width="200" port="d1025">блок 1025</td></tr>
+            <tr><td align="left" width="200">...</td></tr>
+            </table>
+        >]
+    }
+
+    edge [arrowhead = vee]
+
+    inode:direct -> data:d0 [weight = 3]
+
+    inode:indirect -> indirect:id1:nw
+
+    indirect:id1 -> data:d1
+    indirect:id2 -> data:d2
+    indirect:id3 -> data:d3
+    indirect:id512 -> data:d512
+
+    inode:indirect_2 -> indirect_2:id1:nw
+
+    indirect_2:id1 -> indirect_2_1:id513:nw
+    indirect_2:id2 -> indirect_2_2:id1025:nw
+
+    indirect_2_1:id513 -> data:d513
+    indirect_2_1:id514 -> data:d514
+    indirect_2_1:id1024 -> data:d1024
+
+    indirect_2_2:id1025 -> data:d1025
+}

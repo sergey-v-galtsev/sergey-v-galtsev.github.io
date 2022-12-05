@@ -1,0 +1,29 @@
+digraph block_cache {
+    rankdir = LR
+    ranksep = 2.5
+
+    fontname = "Helvetica,Arial,sans-serif"
+
+    node [shape = record, width = 2.5]
+
+    subgraph cluster_memory {
+        label = "Блочный кеш в памяти"
+        labelloc = "t"
+
+        memory [label = "{{страница_0\l | страница_1\l | страница_2\l | ...\l | страница_N\l} | {<m0> Present = 0\l | <m1> Present = 1, Dirty = 0\l | <m2> Present = 1, Dirty = 1\l | | }}"]
+    }
+
+    subgraph cluster_disk {
+        label = "Диск"
+        labelloc = "t"
+
+        disk [label = "<d0> блок_0 | <d1> блок_1 | <d2> блок_2 | <d3> блок_3 | ... | ... | ... | ... | ... | ... | <d4>... | блок_M"]
+    }
+
+    edge [dir = both, arrowhead = vee, arrowtail = vee]
+
+    memory:m1 -> disk:d4 [constraint = false, headlabel = "    запись    "]
+    memory:m2 -> disk:d1 [constraint = false, taillabel = "    чтение    "]
+
+    memory:m0 -> disk:d0 [style = invis]
+}

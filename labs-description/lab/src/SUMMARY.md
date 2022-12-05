@@ -62,3 +62,12 @@
   - [Eager fork](5-um-3-eager-fork.md)
   - [Обработка исключений в режиме пользователя](5-um-4-trap-handler.md)
   - [Copy-on-write fork](5-um-5-cow-fork.md)
+
+# Лабораторная работа №6
+
+- [Файловая система](6-fs-0-intro.md)
+  - [Блочный кеш](6-fs-1-block-cache.md)
+  - [Битмап занятых блоков](6-fs-2-block-bitmap.md)
+  - [Index node (inode)](6-fs-3-inode.md)
+  - [Операции с директориями](6-fs-4-directory.md)
+  - [Поиск файла по пути](6-fs-5-open.md)
