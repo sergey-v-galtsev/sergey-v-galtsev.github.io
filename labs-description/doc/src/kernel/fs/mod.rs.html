@@ -35,19 +35,6 @@
 <span id="35">35</span>
 <span id="36">36</span>
 <span id="37">37</span>
-<span id="38">38</span>
-<span id="39">39</span>
-<span id="40">40</span>
-<span id="41">41</span>
-<span id="42">42</span>
-<span id="43">43</span>
-<span id="44">44</span>
-<span id="45">45</span>
-<span id="46">46</span>
-<span id="47">47</span>
-<span id="48">48</span>
-<span id="49">49</span>
-<span id="50">50</span>
 </pre><pre class="rust"><code><span class="kw">mod </span>block_bitmap;
 <span class="kw">mod </span>block_cache;
 <span class="kw">mod </span>directory_entry;
@@ -58,21 +45,7 @@
 <span class="kw">mod </span>superblock;
 
 
-<span class="kw">use </span>ku::{
-    error::{
-        Error::{FileNotFound, NoData, NotDirectory},
-        <span class="prelude-ty">Result</span>,
-    },
-    info::process_info,
-    log::{debug, error, info},
-    memory::{size::Size, Block, Page, Virt},
-};
-
-<span class="kw">use </span>block_bitmap::BlockBitmap;
-<span class="kw">use </span>directory_entry::DirectoryEntry;
-<span class="kw">use </span>disk::{Disk, SECTOR_SIZE};
-<span class="kw">use </span>inode::Inode;
-<span class="kw">use </span>superblock::Superblock;
+<span class="kw">use </span>ku::memory::Page;
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">use </span>block_cache::BlockCache;
 
@@ -92,6 +65,7 @@
     <span class="kw">pub use super</span>::{
         block_bitmap::test_scaffolding::<span class="kw-2">*</span>,
         block_cache::test_scaffolding::<span class="kw-2">*</span>,
+        file::test_scaffolding::<span class="kw-2">*</span>,
         inode::test_scaffolding::<span class="kw-2">*</span>,
     };
 

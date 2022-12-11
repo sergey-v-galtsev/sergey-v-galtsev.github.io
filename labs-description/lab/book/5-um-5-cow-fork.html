@@ -163,10 +163,12 @@
 Отличается от которой в паре моментов:</p>
 <ul>
 <li>К игнорируемым страницам добавляется <code>trap_stack</code>, его копировать не нужно. У потомка изначально будет полностью отдельный стек для обработки исключений.</li>
-<li>Вместо копирования страниц функцией <code>lib::memory::copy_page()</code> создаёт в потомке отображение. Оно ссылается на тот же физический фрейм, на который ссылается соответствующая виртуальная страница в родителе. При этом для страниц, которые отображены с одним из флагов <code>PageTableFlags::WRITABLE</code> или <code>PageTableFlags::COPY_ON_WRITE</code>, в обоих адресных пространствах меняет флаги отображения страницы так, чтобы <code>PageTableFlags::COPY_ON_WRITE</code> был включён, а <code>PageTableFlags::WRITABLE</code> выключен. Копирование содержимого страницы функцией <code>lib::memory::copy_page()</code> таким образом лениво откладывается до возникновения Page Fault.</li>
+<li>Вместо копирования страниц функцией <code>lib::memory::copy_page()</code> создаёт в потомке отображение. Оно ссылается на тот же физический фрейм, на который ссылается соответствующая виртуальная страница в родителе. При этом для страниц, которые отображены с одним из флагов <a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.WRITABLE"><code>PageTableFlags::WRITABLE</code></a> или <a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.COPY_ON_WRITE"><code>PageTableFlags::COPY_ON_WRITE</code></a>, в обоих адресных пространствах меняет флаги отображения страницы так, чтобы <a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.COPY_ON_WRITE"><code>PageTableFlags::COPY_ON_WRITE</code></a> был включён, а <a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.WRITABLE"><code>PageTableFlags::WRITABLE</code></a> — выключен. Копирование содержимого страницы функцией <code>lib::memory::copy_page()</code> таким образом лениво откладывается до возникновения Page Fault.</li>
 </ul>
 <h4 id="Пользовательский-обработчик-исключений-page-fault"><a class="header" href="#Пользовательский-обработчик-исключений-page-fault">Пользовательский обработчик исключений Page Fault</a></h4>
-<p>Когда программа попытается записать в страницу, помеченную в <code>copy_page_table()</code> как <code>COPY_ON_WRITE</code> и только на чтение,
+<p>Когда программа попытается записать в страницу, помеченную в <code>copy_page_table()</code> как
+<a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.COPY_ON_WRITE"><code>PageTableFlags::COPY_ON_WRITE</code></a>
+и только на чтение,
 возникнет Page Fault и ядро передаст управление в
 <a href="../../lab/book/5-um-4-trap-handler.html#%D0%A2%D1%80%D0%B0%D0%BC%D0%BF%D0%BB%D0%B8%D0%BD-%D0%BE%D0%B1%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%B0-%D0%BF%D1%80%D0%B5%D1%80%D1%8B%D0%B2%D0%B0%D0%BD%D0%B8%D0%B9">реализованный вами ранее</a>
 <code>trap_trampoline()</code>, который в свою очередь запустит</p>
@@ -197,7 +199,7 @@
 <li>Проверяет, что прерывание — это действительно <code>PageFault</code> и он вызван записью. Иначе обработчик прекращает исполнение программы, вызвав <code>syscall::exit()</code> с кодом ошибки.</li>
 <li>С помощью <a href="../../lab/book/5-um-3-eager-fork.html#temp_page">реализованной ранее</a> функции <code>lib::memory::temp_page()</code> находит временную страницу.</li>
 <li>Копирует содержимое страницы, обращение к которой привело к Page Fault, во временную, с помощью <a href="../../lab/book/5-um-3-eager-fork.html#copy_page">реализованной вами ранее</a> функции <code>lib::memory::copy_page()</code>.</li>
-<li>С помощью системного вызова <code>syscall::copy_mapping()</code> заменяет физический фрейм под скопированной страницей на фрейм временной страницы, одновременно меняя флаг <code>COPY_ON_WRITE</code> на <code>WRITABLE</code> в её отображении.</li>
+<li>С помощью системного вызова <code>syscall::copy_mapping()</code> заменяет физический фрейм под скопированной страницей на фрейм временной страницы, одновременно меняя флаг <a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.COPY_ON_WRITE"><code>PageTableFlags::COPY_ON_WRITE</code></a> на <a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.WRITABLE"><code>PageTableFlags::WRITABLE</code></a> в её отображении.</li>
 <li>С помощью системного вызова <code>syscall::unmap()</code> удаляет из адресного пространства не нужную более временную страницу.</li>
 </ul>
 <h4 id="cow_fork"><a class="header" href="#cow_fork"><code>cow_fork()</code></a></h4>

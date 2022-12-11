@@ -217,10 +217,28 @@
 <ul>
 <li>Блок отображён в память. Это означает что нему были обращения.</li>
 <li>И помечен как <code>PageTableFlags::DIRTY</code>. То есть, в память были записи, а значит блок на диске потенциально содержит устаревшие данные. Если обращения к блоку были только на чтение, то данные в памяти такие же как на диске, и можно их не записывать. А процессор в этом случае не установит бит <code>PageTableFlags::DIRTY</code>.</li>
+<li>После записи блока, сбросьте бит <code>PageTableFlags::DIRTY</code>. Он фактически означает одинаковость данных на диске и в памяти блочного кеша. Которая только что восстановлена. При этом нужно сбросить и соответствующую запись в <a href="https://en.wikipedia.org/wiki/Translation_lookaside_buffer">TLB</a> с помощью функции <a href="../../doc/kernel/memory/mmu/fn.flush.html"><code>kernel::memory::mmu::flush()</code></a>. Иначе процессор не узнает, что вы сбросили <code>PageTableFlags::DIRTY</code> и не проставит его в таблице страниц при следующей записи. И обновлённый блок на диск записан не будет.</li>
 </ul>
-<p>После записи блока, сбросьте бит <code>PageTableFlags::DIRTY</code>.
-Он фактически означает одинаковость данных на диске и в памяти блочного кеша.
-Которая только что восстановлена.</p>
+<h3 id="Проверьте-себя"><a class="header" href="#Проверьте-себя">Проверьте себя</a></h3>
+<p>Теперь должны заработать тесты в файлах
+<a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/tests/6-fs-1-block-cache-1-write.rs"><code>kernel/tests/6-fs-1-block-cache-1-write.rs</code></a> и
+<a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/tests/6-fs-1-block-cache-2-read.rs"><code>kernel/tests/6-fs-1-block-cache-2-read.rs</code></a>:</p>
+<pre><code class="language-console">$ (cd kernel; cargo test --test 6-fs-1-block-cache-1-write --test 6-fs-1-block-cache-2-read)
+...
+6_fs_1_block_cache_1_write::write---------------------------
+20:37:19 0 D block_count = 8192
+6_fs_1_block_cache_1_write::write------------------ [passed]
+20:37:19 0 I exit qemu; exit_code = SUCCESS
+...
+6_fs_1_block_cache_2_read::read_what_was_written------------
+20:37:21 0 D block_count = 8192
+6_fs_1_block_cache_2_read::read_what_was_written--- [passed]
+20:37:21 0 I exit qemu; exit_code = SUCCESS
+</code></pre>
+<h3 id="Ориентировочный-объём-работ-этой-части-лабораторки"><a class="header" href="#Ориентировочный-объём-работ-этой-части-лабораторки">Ориентировочный объём работ этой части лабораторки</a></h3>
+<pre><code class="language-console"> kernel/src/fs/block_cache.rs |   64 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 56 insertions(+), 8 deletions(-)
+</code></pre>
 
                     </main>
 

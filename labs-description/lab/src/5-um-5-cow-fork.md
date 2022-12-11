@@ -20,12 +20,14 @@ fn copy_page_table(
 Отличается от которой в паре моментов:
 
 - К игнорируемым страницам добавляется `trap_stack`, его копировать не нужно. У потомка изначально будет полностью отдельный стек для обработки исключений.
-- Вместо копирования страниц функцией `lib::memory::copy_page()` создаёт в потомке отображение. Оно ссылается на тот же физический фрейм, на который ссылается соответствующая виртуальная страница в родителе. При этом для страниц, которые отображены с одним из флагов `PageTableFlags::WRITABLE` или `PageTableFlags::COPY_ON_WRITE`, в обоих адресных пространствах меняет флаги отображения страницы так, чтобы `PageTableFlags::COPY_ON_WRITE` был включён, а `PageTableFlags::WRITABLE` выключен. Копирование содержимого страницы функцией `lib::memory::copy_page()` таким образом лениво откладывается до возникновения Page Fault.
+- Вместо копирования страниц функцией `lib::memory::copy_page()` создаёт в потомке отображение. Оно ссылается на тот же физический фрейм, на который ссылается соответствующая виртуальная страница в родителе. При этом для страниц, которые отображены с одним из флагов [`PageTableFlags::WRITABLE`](../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.WRITABLE) или [`PageTableFlags::COPY_ON_WRITE`](../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.COPY_ON_WRITE), в обоих адресных пространствах меняет флаги отображения страницы так, чтобы [`PageTableFlags::COPY_ON_WRITE`](../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.COPY_ON_WRITE) был включён, а [`PageTableFlags::WRITABLE`](../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.WRITABLE) --- выключен. Копирование содержимого страницы функцией `lib::memory::copy_page()` таким образом лениво откладывается до возникновения Page Fault.
 
 
 #### Пользовательский обработчик исключений Page Fault
 
-Когда программа попытается записать в страницу, помеченную в `copy_page_table()` как `COPY_ON_WRITE` и только на чтение,
+Когда программа попытается записать в страницу, помеченную в `copy_page_table()` как
+[`PageTableFlags::COPY_ON_WRITE`](../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.COPY_ON_WRITE)
+и только на чтение,
 возникнет Page Fault и ядро передаст управление в
 [реализованный вами ранее](../../lab/book/5-um-4-trap-handler.html#%D0%A2%D1%80%D0%B0%D0%BC%D0%BF%D0%BB%D0%B8%D0%BD-%D0%BE%D0%B1%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%B0-%D0%BF%D1%80%D0%B5%D1%80%D1%8B%D0%B2%D0%B0%D0%BD%D0%B8%D0%B9)
 `trap_trampoline()`, который в свою очередь запустит
@@ -60,7 +62,7 @@ fn trap_handler(info: &TrapInfo)
 - Проверяет, что прерывание --- это действительно `PageFault` и он вызван записью. Иначе обработчик прекращает исполнение программы, вызвав `syscall::exit()` с кодом ошибки.
 - С помощью [реализованной ранее](../../lab/book/5-um-3-eager-fork.html#temp_page) функции `lib::memory::temp_page()` находит временную страницу.
 - Копирует содержимое страницы, обращение к которой привело к Page Fault, во временную, с помощью [реализованной вами ранее](../../lab/book/5-um-3-eager-fork.html#copy_page) функции `lib::memory::copy_page()`.
-- С помощью системного вызова `syscall::copy_mapping()` заменяет физический фрейм под скопированной страницей на фрейм временной страницы, одновременно меняя флаг `COPY_ON_WRITE` на `WRITABLE` в её отображении.
+- С помощью системного вызова `syscall::copy_mapping()` заменяет физический фрейм под скопированной страницей на фрейм временной страницы, одновременно меняя флаг [`PageTableFlags::COPY_ON_WRITE`](../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.COPY_ON_WRITE) на [`PageTableFlags::WRITABLE`](../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.WRITABLE) в её отображении.
 - С помощью системного вызова `syscall::unmap()` удаляет из адресного пространства не нужную более временную страницу.
 
 

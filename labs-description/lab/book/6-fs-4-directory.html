@@ -169,6 +169,24 @@
 <h4 id="kernelfsinodeiternext"><a class="header" href="#kernelfsinodeiternext"><a href="../../doc/kernel/fs/inode/struct.Iter.html#method.next"><code>kernel::fs::inode::Iter::next()</code></a></a></h4>
 <p>Это вспомогательный метод для
 <a href="../../doc/kernel/fs/inode/struct.Inode.html#method.list"><code>kernel::fs::inode::Inode::list()</code></a>.</p>
+<h3 id="Проверьте-себя"><a class="header" href="#Проверьте-себя">Проверьте себя</a></h3>
+<p>Теперь должны заработать тесты в файле
+<a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/tests/6-fs-4-directory.rs"><code>kernel/tests/6-fs-4-directory.rs</code></a>:</p>
+<pre><code class="language-console">$ (cd kernel; cargo test --test 6-fs-4-directory)
+...
+6_fs_4_directory::basic_operations--------------------------
+20:38:42 0 D block_count = 8192
+6_fs_4_directory::basic_operations----------------- [passed]
+
+6_fs_4_directory::max_name_len------------------------------
+20:38:42 0 D block_count = 8192
+6_fs_4_directory::max_name_len--------------------- [passed]
+20:38:42 0 I exit qemu; exit_code = SUCCESS
+</code></pre>
+<h3 id="Ориентировочный-объём-работ-этой-части-лабораторки"><a class="header" href="#Ориентировочный-объём-работ-этой-части-лабораторки">Ориентировочный объём работ этой части лабораторки</a></h3>
+<pre><code class="language-console"> kernel/src/fs/inode.rs |   70 ++++++++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 64 insertions(+), 6 deletions(-)
+</code></pre>
 
                     </main>
 

@@ -171,10 +171,15 @@ fn copy_mapping(
 Создаёт копию отображения виртуальной памяти из вызывающего процесса в процесс, заданный `dst_pid`.
 Исходный диапазон начинается с виртуального адреса `src_address`, целевой --- с виртуального адреса `dst_address`.
 Размер диапазона --- `dst_size` байт.
-В целевом процессе диапазон должен быть отображён с флагами `flags`.
+Системный вызов должен отобразить целевой диапазон в целевой процесс с флагами `flags`.
 Естественно,
 [`kernel::process::syscall::copy_mapping()`](../../doc/kernel/process/syscall/fn.copy_mapping.html)
-не должен допускать целевое отображение с более широким набором флагов, чем исходное.
+не должен допускать целевое отображение с более широким по логическим привилегиям набором флагов, чем исходное.
+При этом флаги
+[`PageTableFlags::WRITABLE`](../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.WRITABLE) и
+[`PageTableFlags::COPY_ON_WRITE`](../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.COPY_ON_WRITE)
+с точки зрения ядра имеют одинаковые логические привилегии, --- доступность страницы на запись.
+
 После его выполнения у процессов появляется область
 [разделяемой памяти](https://en.wikipedia.org/wiki/Shared_memory).
 

@@ -36,3 +36,26 @@ fn BlockBitmap::allocate(&mut self) -> Result<usize>
 - Искать каждый раз с самого начала `BlockBitmap::bitmap` не эффективно. Лучше, например, обходить его по циклу с того места, на котором остановились в прошлый раз. Для хранения этой позиции между вызовами `BlockBitmap::allocate()` служит поле `BlockBitmap::cursor`.
 - Проверять каждый бит тоже не эффективно. Лучше сначала найти элемент `BlockBitmap::bitmap`, в котором есть хотя бы один свободный бит. Поэтому биты сгруппированы именно по `u64`, а не например по `u8`.
 - Верните ошибку [`Error::NoDisk`](../../doc/kernel/error/enum.Error.html#variant.NoDisk), если свободных блоков не осталось.
+
+
+### Проверьте себя
+
+Теперь должен заработать тест `allocation()` в файле
+[`kernel/tests/6-fs-2-block-bitmap.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/tests/6-fs-2-block-bitmap.rs):
+
+```console
+$ (cd kernel; cargo test --test 6-fs-2-block-bitmap)
+...
+6_fs_2_block_bitmap::allocation-----------------------------
+20:37:24 0 D block_count = 8192
+6_fs_2_block_bitmap::allocation-------------------- [passed]
+20:37:30.657 0 I exit qemu; exit_code = SUCCESS
+```
+
+
+### Ориентировочный объём работ этой части лабораторки
+
+```console
+ kernel/src/fs/block_bitmap.rs |   26 ++++++++++++++++++++++++--
+ 1 file changed, 24 insertions(+), 2 deletions(-)
+```

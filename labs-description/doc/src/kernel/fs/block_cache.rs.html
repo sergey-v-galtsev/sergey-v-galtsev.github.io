@@ -89,12 +89,25 @@
 <span id="89">89</span>
 <span id="90">90</span>
 <span id="91">91</span>
+<span id="92">92</span>
+<span id="93">93</span>
+<span id="94">94</span>
+<span id="95">95</span>
+<span id="96">96</span>
+<span id="97">97</span>
+<span id="98">98</span>
+<span id="99">99</span>
+<span id="100">100</span>
+<span id="101">101</span>
+<span id="102">102</span>
+<span id="103">103</span>
+<span id="104">104</span>
 </pre><pre class="rust"><code><span class="kw">use </span>lazy_static::lazy_static;
 <span class="kw">use </span>spin::Mutex;
 
 <span class="kw">use </span>ku::{
     error::{Error::NoDisk, <span class="prelude-ty">Result</span>},
-    log::{debug, trace},
+    log::trace,
     memory::{
         mmu::{PageTableFlags, KERNEL_RW},
         Block,
@@ -104,7 +117,7 @@
     process::Info,
 };
 
-<span class="kw">use </span><span class="kw">crate</span>::memory::BASE_ADDRESS_SPACE;
+<span class="kw">use </span><span class="kw">crate</span>::memory::{mmu, BASE_ADDRESS_SPACE};
 
 <span class="kw">use super</span>::{
     disk::{Disk, SECTOR_SIZE},
@@ -149,8 +162,8 @@
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>trap_handler(info: <span class="kw-2">&amp;</span>Info) -&gt; <span class="prelude-ty">Result</span>&lt;bool&gt; {
         <span class="comment">// TODO: your code here.
-        </span><span class="macro">unimplemented!</span>();
-    }
+        </span><span class="prelude-val">Ok</span>(<span class="bool-val">false</span>) <span class="comment">// TODO: remove before flight.
+    </span>}
 
 
     <span class="kw">fn </span>get(address: Virt) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>&gt; {
@@ -171,13 +184,26 @@
 
 <span class="attribute">#[doc(hidden)]
 </span><span class="kw">pub mod </span>test_scaffolding {
-    <span class="kw">use </span>ku::error::Result;
+    <span class="kw">use </span>ku::{
+        error::{Error::NoDisk, <span class="prelude-ty">Result</span>},
+        memory::{Block, Page},
+    };
 
-    <span class="kw">use super</span>::{BlockCache, Disk};
+    <span class="kw">use super</span>::{BlockCache, Disk, BLOCK_CACHE};
 
 
     <span class="kw">pub fn </span>block_cache_init(disk: usize, block_count: usize) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         BlockCache::init(Disk::list()[disk], block_count)
+    }
+
+
+    <span class="kw">pub fn </span>cache() -&gt; <span class="prelude-ty">Result</span>&lt;Block&lt;Page&gt;&gt; {
+        <span class="prelude-val">Ok</span>(BLOCK_CACHE.lock().ok_or(NoDisk)<span class="question-mark">?</span>.cache)
+    }
+
+
+    <span class="kw">pub fn </span>flush_block(block_number: usize) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+        BlockCache::flush_block(block_number)
     }
 }
 </code></pre></div>

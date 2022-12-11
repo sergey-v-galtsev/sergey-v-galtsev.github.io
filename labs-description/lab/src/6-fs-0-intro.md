@@ -106,3 +106,14 @@ $ make fs-dump
 0000c040: 6669 6c65 2d33 0000 0000 0000 0000 0000  file-3..........
 ...
 ```
+
+
+### Ориентировочный объём работ этой лабораторки
+
+```console
+ kernel/src/fs/block_bitmap.rs |   26 ++++
+ kernel/src/fs/block_cache.rs  |   64 ++++++++++-
+ kernel/src/fs/file_system.rs  |   21 +++
+ kernel/src/fs/inode.rs        |  234 +++++++++++++++++++++++++++++++++++++++---
+ 4 files changed, 318 insertions(+), 27 deletions(-)
+```

@@ -292,11 +292,15 @@
 <p>Создаёт копию отображения виртуальной памяти из вызывающего процесса в процесс, заданный <code>dst_pid</code>.
 Исходный диапазон начинается с виртуального адреса <code>src_address</code>, целевой — с виртуального адреса <code>dst_address</code>.
 Размер диапазона — <code>dst_size</code> байт.
-В целевом процессе диапазон должен быть отображён с флагами <code>flags</code>.
+Системный вызов должен отобразить целевой диапазон в целевой процесс с флагами <code>flags</code>.
 Естественно,
 <a href="../../doc/kernel/process/syscall/fn.copy_mapping.html"><code>kernel::process::syscall::copy_mapping()</code></a>
-не должен допускать целевое отображение с более широким набором флагов, чем исходное.
-После его выполнения у процессов появляется область
+не должен допускать целевое отображение с более широким по логическим привилегиям набором флагов, чем исходное.
+При этом флаги
+<a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.WRITABLE"><code>PageTableFlags::WRITABLE</code></a> и
+<a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.COPY_ON_WRITE"><code>PageTableFlags::COPY_ON_WRITE</code></a>
+с точки зрения ядра имеют одинаковые логические привилегии, — доступность страницы на запись.</p>
+<p>После его выполнения у процессов появляется область
 <a href="https://en.wikipedia.org/wiki/Shared_memory">разделяемой памяти</a>.</p>
 <p>Делать этот системный вызов транзакционным не требуется, но вы можете попробовать.</p>
 <blockquote>

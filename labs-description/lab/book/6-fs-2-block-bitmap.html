@@ -177,6 +177,20 @@
 <li>Проверять каждый бит тоже не эффективно. Лучше сначала найти элемент <code>BlockBitmap::bitmap</code>, в котором есть хотя бы один свободный бит. Поэтому биты сгруппированы именно по <code>u64</code>, а не например по <code>u8</code>.</li>
 <li>Верните ошибку <a href="../../doc/kernel/error/enum.Error.html#variant.NoDisk"><code>Error::NoDisk</code></a>, если свободных блоков не осталось.</li>
 </ul>
+<h3 id="Проверьте-себя"><a class="header" href="#Проверьте-себя">Проверьте себя</a></h3>
+<p>Теперь должен заработать тест <code>allocation()</code> в файле
+<a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/tests/6-fs-2-block-bitmap.rs"><code>kernel/tests/6-fs-2-block-bitmap.rs</code></a>:</p>
+<pre><code class="language-console">$ (cd kernel; cargo test --test 6-fs-2-block-bitmap)
+...
+6_fs_2_block_bitmap::allocation-----------------------------
+20:37:24 0 D block_count = 8192
+6_fs_2_block_bitmap::allocation-------------------- [passed]
+20:37:30.657 0 I exit qemu; exit_code = SUCCESS
+</code></pre>
+<h3 id="Ориентировочный-объём-работ-этой-части-лабораторки"><a class="header" href="#Ориентировочный-объём-работ-этой-части-лабораторки">Ориентировочный объём работ этой части лабораторки</a></h3>
+<pre><code class="language-console"> kernel/src/fs/block_bitmap.rs |   26 ++++++++++++++++++++++++--
+ 1 file changed, 24 insertions(+), 2 deletions(-)
+</code></pre>
 
                     </main>
 

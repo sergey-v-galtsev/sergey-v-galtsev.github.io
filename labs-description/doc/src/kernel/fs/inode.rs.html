@@ -260,6 +260,9 @@
 <span id="260">260</span>
 <span id="261">261</span>
 <span id="262">262</span>
+<span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
 </pre><pre class="rust"><code><span class="kw">use </span>core::{cmp, fmt, iter::Filter, mem, ops::Add};
 
 <span class="kw">use </span>chrono::{DateTime, Utc};
@@ -267,7 +270,7 @@
 
 <span class="kw">use </span>ku::{
     error::{
-        Error::{FileExists, FileNotFound, InvalidArgument, NoDisk, NotDirectory},
+        Error::{FileExists, FileNotFound, InvalidArgument, NoDisk, NotDirectory, NotFile},
         <span class="prelude-ty">Result</span>,
     },
     memory::{size::Size, Block, Virt},
@@ -282,7 +285,7 @@
 };
 
 
-<span class="attribute">#[derive(Clone, Copy, Debug, Default, PartialEq)]
+<span class="attribute">#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 #[repr(usize)]
 </span><span class="kw">pub enum </span>Kind {
     <span class="attribute">#[default]
@@ -346,7 +349,13 @@
 
 
     <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>find(<span class="kw-2">&amp;mut </span><span class="self">self</span>, name: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;mut </span>Inode&gt; {
-        <span class="self">self</span>.find_entry(name, <span class="prelude-val">None</span>).map(|entry| entry.inode_mut())
+        <span class="self">self</span>.find_entry(name, <span class="prelude-val">None</span>).and_then(|entry| {
+            <span class="kw">if </span>entry.inode().kind == Kind::Unused {
+                <span class="prelude-val">Err</span>(FileNotFound)
+            } <span class="kw">else </span>{
+                <span class="prelude-val">Ok</span>(entry.inode_mut())
+            }
+        })
     }
 
 
@@ -492,34 +501,31 @@
 
 <span class="attribute">#[doc(hidden)]
 </span><span class="kw">pub mod </span>test_scaffolding {
-    <span class="kw">use </span>ku::{
-        error::Result,
-        memory::{Block, Virt},
-    };
+    <span class="kw">use </span>ku::error::Result;
 
     <span class="kw">use </span><span class="kw">super</span>::<span class="kw">super</span>::test_scaffolding::BlockBitmap;
 
     <span class="kw">use </span><span class="kw">super</span>::Kind;
 
 
-    <span class="kw">pub struct </span>Inode(<span class="kw">super</span>::Inode);
+    <span class="kw">pub struct </span>Inode(<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">super</span>::<span class="kw">super</span>) <span class="kw">super</span>::Inode);
 
 
     <span class="kw">impl </span>Inode {
-        <span class="kw">pub fn </span>new() -&gt; <span class="self">Self </span>{
+        <span class="kw">pub fn </span>new(kind: Kind) -&gt; <span class="self">Self </span>{
             <span class="kw">let </span><span class="kw-2">mut </span>inode = <span class="kw">super</span>::Inode::default();
-            inode.set_kind(Kind::File);
+            inode.set_kind(kind);
             <span class="self">Self</span>(inode)
         }
-    }
 
 
-    <span class="kw">pub fn </span>block_entry&lt;<span class="lifetime">&#39;a</span>&gt;(
-        inode: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Inode,
-        inode_block_number: usize,
-        block_bitmap: <span class="kw-2">&amp;mut </span>BlockBitmap,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>usize&gt; {
-        inode.<span class="number">0</span>.block_entry(inode_block_number, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut </span>block_bitmap.<span class="number">0</span>))
+        <span class="kw">pub fn </span>block_entry(
+            <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+            inode_block_number: usize,
+            block_bitmap: <span class="kw-2">&amp;mut </span>BlockBitmap,
+        ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;mut </span>usize&gt; {
+            <span class="self">self</span>.<span class="number">0</span>.block_entry(inode_block_number, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut </span>block_bitmap.<span class="number">0</span>))
+        }
     }
 }
 </code></pre></div>

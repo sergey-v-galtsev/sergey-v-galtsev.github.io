@@ -97,7 +97,33 @@ fn BlockCache::flush_block(block_number: usize) -> Result<()>
 
 - Блок отображён в память. Это означает что нему были обращения.
 - И помечен как `PageTableFlags::DIRTY`. То есть, в память были записи, а значит блок на диске потенциально содержит устаревшие данные. Если обращения к блоку были только на чтение, то данные в памяти такие же как на диске, и можно их не записывать. А процессор в этом случае не установит бит `PageTableFlags::DIRTY`.
+- После записи блока, сбросьте бит `PageTableFlags::DIRTY`. Он фактически означает одинаковость данных на диске и в памяти блочного кеша. Которая только что восстановлена. При этом нужно сбросить и соответствующую запись в [TLB](https://en.wikipedia.org/wiki/Translation_lookaside_buffer) с помощью функции [`kernel::memory::mmu::flush()`](../../doc/kernel/memory/mmu/fn.flush.html). Иначе процессор не узнает, что вы сбросили `PageTableFlags::DIRTY` и не проставит его в таблице страниц при следующей записи. И обновлённый блок на диск записан не будет.
 
-После записи блока, сбросьте бит `PageTableFlags::DIRTY`.
-Он фактически означает одинаковость данных на диске и в памяти блочного кеша.
-Которая только что восстановлена.
+
+### Проверьте себя
+
+Теперь должны заработать тесты в файлах
+[`kernel/tests/6-fs-1-block-cache-1-write.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/tests/6-fs-1-block-cache-1-write.rs) и
+[`kernel/tests/6-fs-1-block-cache-2-read.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/tests/6-fs-1-block-cache-2-read.rs):
+
+```console
+$ (cd kernel; cargo test --test 6-fs-1-block-cache-1-write --test 6-fs-1-block-cache-2-read)
+...
+6_fs_1_block_cache_1_write::write---------------------------
+20:37:19 0 D block_count = 8192
+6_fs_1_block_cache_1_write::write------------------ [passed]
+20:37:19 0 I exit qemu; exit_code = SUCCESS
+...
+6_fs_1_block_cache_2_read::read_what_was_written------------
+20:37:21 0 D block_count = 8192
+6_fs_1_block_cache_2_read::read_what_was_written--- [passed]
+20:37:21 0 I exit qemu; exit_code = SUCCESS
+```
+
+
+### Ориентировочный объём работ этой части лабораторки
+
+```console
+ kernel/src/fs/block_cache.rs |   64 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 56 insertions(+), 8 deletions(-)
+```

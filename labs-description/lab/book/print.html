@@ -7671,11 +7671,15 @@ pub enum Pid {
 <p>Создаёт копию отображения виртуальной памяти из вызывающего процесса в процесс, заданный <code>dst_pid</code>.
 Исходный диапазон начинается с виртуального адреса <code>src_address</code>, целевой — с виртуального адреса <code>dst_address</code>.
 Размер диапазона — <code>dst_size</code> байт.
-В целевом процессе диапазон должен быть отображён с флагами <code>flags</code>.
+Системный вызов должен отобразить целевой диапазон в целевой процесс с флагами <code>flags</code>.
 Естественно,
 <a href="../../doc/kernel/process/syscall/fn.copy_mapping.html"><code>kernel::process::syscall::copy_mapping()</code></a>
-не должен допускать целевое отображение с более широким набором флагов, чем исходное.
-После его выполнения у процессов появляется область
+не должен допускать целевое отображение с более широким по логическим привилегиям набором флагов, чем исходное.
+При этом флаги
+<a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.WRITABLE"><code>PageTableFlags::WRITABLE</code></a> и
+<a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.COPY_ON_WRITE"><code>PageTableFlags::COPY_ON_WRITE</code></a>
+с точки зрения ядра имеют одинаковые логические привилегии, — доступность страницы на запись.</p>
+<p>После его выполнения у процессов появляется область
 <a href="https://en.wikipedia.org/wiki/Shared_memory">разделяемой памяти</a>.</p>
 <p>Делать этот системный вызов транзакционным не требуется, но вы можете попробовать.</p>
 <blockquote>
@@ -8750,10 +8754,12 @@ pub(crate) struct TrapContext {
 Отличается от которой в паре моментов:</p>
 <ul>
 <li>К игнорируемым страницам добавляется <code>trap_stack</code>, его копировать не нужно. У потомка изначально будет полностью отдельный стек для обработки исключений.</li>
-<li>Вместо копирования страниц функцией <code>lib::memory::copy_page()</code> создаёт в потомке отображение. Оно ссылается на тот же физический фрейм, на который ссылается соответствующая виртуальная страница в родителе. При этом для страниц, которые отображены с одним из флагов <code>PageTableFlags::WRITABLE</code> или <code>PageTableFlags::COPY_ON_WRITE</code>, в обоих адресных пространствах меняет флаги отображения страницы так, чтобы <code>PageTableFlags::COPY_ON_WRITE</code> был включён, а <code>PageTableFlags::WRITABLE</code> выключен. Копирование содержимого страницы функцией <code>lib::memory::copy_page()</code> таким образом лениво откладывается до возникновения Page Fault.</li>
+<li>Вместо копирования страниц функцией <code>lib::memory::copy_page()</code> создаёт в потомке отображение. Оно ссылается на тот же физический фрейм, на который ссылается соответствующая виртуальная страница в родителе. При этом для страниц, которые отображены с одним из флагов <a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.WRITABLE"><code>PageTableFlags::WRITABLE</code></a> или <a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.COPY_ON_WRITE"><code>PageTableFlags::COPY_ON_WRITE</code></a>, в обоих адресных пространствах меняет флаги отображения страницы так, чтобы <a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.COPY_ON_WRITE"><code>PageTableFlags::COPY_ON_WRITE</code></a> был включён, а <a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.WRITABLE"><code>PageTableFlags::WRITABLE</code></a> — выключен. Копирование содержимого страницы функцией <code>lib::memory::copy_page()</code> таким образом лениво откладывается до возникновения Page Fault.</li>
 </ul>
 <h4 id="Пользовательский-обработчик-исключений-page-fault"><a class="header" href="#Пользовательский-обработчик-исключений-page-fault">Пользовательский обработчик исключений Page Fault</a></h4>
-<p>Когда программа попытается записать в страницу, помеченную в <code>copy_page_table()</code> как <code>COPY_ON_WRITE</code> и только на чтение,
+<p>Когда программа попытается записать в страницу, помеченную в <code>copy_page_table()</code> как
+<a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.COPY_ON_WRITE"><code>PageTableFlags::COPY_ON_WRITE</code></a>
+и только на чтение,
 возникнет Page Fault и ядро передаст управление в
 <a href="../../lab/book/5-um-4-trap-handler.html#%D0%A2%D1%80%D0%B0%D0%BC%D0%BF%D0%BB%D0%B8%D0%BD-%D0%BE%D0%B1%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%B0-%D0%BF%D1%80%D0%B5%D1%80%D1%8B%D0%B2%D0%B0%D0%BD%D0%B8%D0%B9">реализованный вами ранее</a>
 <code>trap_trampoline()</code>, который в свою очередь запустит</p>
@@ -8784,7 +8790,7 @@ pub(crate) struct TrapContext {
 <li>Проверяет, что прерывание — это действительно <code>PageFault</code> и он вызван записью. Иначе обработчик прекращает исполнение программы, вызвав <code>syscall::exit()</code> с кодом ошибки.</li>
 <li>С помощью <a href="../../lab/book/5-um-3-eager-fork.html#temp_page">реализованной ранее</a> функции <code>lib::memory::temp_page()</code> находит временную страницу.</li>
 <li>Копирует содержимое страницы, обращение к которой привело к Page Fault, во временную, с помощью <a href="../../lab/book/5-um-3-eager-fork.html#copy_page">реализованной вами ранее</a> функции <code>lib::memory::copy_page()</code>.</li>
-<li>С помощью системного вызова <code>syscall::copy_mapping()</code> заменяет физический фрейм под скопированной страницей на фрейм временной страницы, одновременно меняя флаг <code>COPY_ON_WRITE</code> на <code>WRITABLE</code> в её отображении.</li>
+<li>С помощью системного вызова <code>syscall::copy_mapping()</code> заменяет физический фрейм под скопированной страницей на фрейм временной страницы, одновременно меняя флаг <a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.COPY_ON_WRITE"><code>PageTableFlags::COPY_ON_WRITE</code></a> на <a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.WRITABLE"><code>PageTableFlags::WRITABLE</code></a> в её отображении.</li>
 <li>С помощью системного вызова <code>syscall::unmap()</code> удаляет из адресного пространства не нужную более временную страницу.</li>
 </ul>
 <h4 id="cow_fork"><a class="header" href="#cow_fork"><code>cow_fork()</code></a></h4>
@@ -9661,6 +9667,13 @@ pub(crate) struct TrapContext {
 0000c040: 6669 6c65 2d33 0000 0000 0000 0000 0000  file-3..........
 ...
 </code></pre>
+<h3 id="Ориентировочный-объём-работ-этой-лабораторки-5"><a class="header" href="#Ориентировочный-объём-работ-этой-лабораторки-5">Ориентировочный объём работ этой лабораторки</a></h3>
+<pre><code class="language-console"> kernel/src/fs/block_bitmap.rs |   26 ++++
+ kernel/src/fs/block_cache.rs  |   64 ++++++++++-
+ kernel/src/fs/file_system.rs  |   21 +++
+ kernel/src/fs/inode.rs        |  234 +++++++++++++++++++++++++++++++++++++++---
+ 4 files changed, 318 insertions(+), 27 deletions(-)
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h2 id="Блочный-кеш"><a class="header" href="#Блочный-кеш">Блочный кеш</a></h2>
 <p>В Nikka диск отображается в память, чтобы удобнее было с ним работать.
 Для отслеживания с какого диска, куда именно и сколько памяти отображено, служит структура
@@ -9734,10 +9747,28 @@ pub(crate) struct TrapContext {
 <ul>
 <li>Блок отображён в память. Это означает что нему были обращения.</li>
 <li>И помечен как <code>PageTableFlags::DIRTY</code>. То есть, в память были записи, а значит блок на диске потенциально содержит устаревшие данные. Если обращения к блоку были только на чтение, то данные в памяти такие же как на диске, и можно их не записывать. А процессор в этом случае не установит бит <code>PageTableFlags::DIRTY</code>.</li>
+<li>После записи блока, сбросьте бит <code>PageTableFlags::DIRTY</code>. Он фактически означает одинаковость данных на диске и в памяти блочного кеша. Которая только что восстановлена. При этом нужно сбросить и соответствующую запись в <a href="https://en.wikipedia.org/wiki/Translation_lookaside_buffer">TLB</a> с помощью функции <a href="../../doc/kernel/memory/mmu/fn.flush.html"><code>kernel::memory::mmu::flush()</code></a>. Иначе процессор не узнает, что вы сбросили <code>PageTableFlags::DIRTY</code> и не проставит его в таблице страниц при следующей записи. И обновлённый блок на диск записан не будет.</li>
 </ul>
-<p>После записи блока, сбросьте бит <code>PageTableFlags::DIRTY</code>.
-Он фактически означает одинаковость данных на диске и в памяти блочного кеша.
-Которая только что восстановлена.</p>
+<h3 id="Проверьте-себя-21"><a class="header" href="#Проверьте-себя-21">Проверьте себя</a></h3>
+<p>Теперь должны заработать тесты в файлах
+<a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/tests/6-fs-1-block-cache-1-write.rs"><code>kernel/tests/6-fs-1-block-cache-1-write.rs</code></a> и
+<a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/tests/6-fs-1-block-cache-2-read.rs"><code>kernel/tests/6-fs-1-block-cache-2-read.rs</code></a>:</p>
+<pre><code class="language-console">$ (cd kernel; cargo test --test 6-fs-1-block-cache-1-write --test 6-fs-1-block-cache-2-read)
+...
+6_fs_1_block_cache_1_write::write---------------------------
+20:37:19 0 D block_count = 8192
+6_fs_1_block_cache_1_write::write------------------ [passed]
+20:37:19 0 I exit qemu; exit_code = SUCCESS
+...
+6_fs_1_block_cache_2_read::read_what_was_written------------
+20:37:21 0 D block_count = 8192
+6_fs_1_block_cache_2_read::read_what_was_written--- [passed]
+20:37:21 0 I exit qemu; exit_code = SUCCESS
+</code></pre>
+<h3 id="Ориентировочный-объём-работ-этой-части-лабораторки-25"><a class="header" href="#Ориентировочный-объём-работ-этой-части-лабораторки-25">Ориентировочный объём работ этой части лабораторки</a></h3>
+<pre><code class="language-console"> kernel/src/fs/block_cache.rs |   64 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 56 insertions(+), 8 deletions(-)
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h2 id="Битмап-занятых-блоков"><a class="header" href="#Битмап-занятых-блоков">Битмап занятых блоков</a></h2>
 <p>Для отслеживания какие именно блоки файловой системы заняты,
 а какие свободны, служит структура
@@ -9771,6 +9802,20 @@ pub(crate) struct TrapContext {
 <li>Проверять каждый бит тоже не эффективно. Лучше сначала найти элемент <code>BlockBitmap::bitmap</code>, в котором есть хотя бы один свободный бит. Поэтому биты сгруппированы именно по <code>u64</code>, а не например по <code>u8</code>.</li>
 <li>Верните ошибку <a href="../../doc/kernel/error/enum.Error.html#variant.NoDisk"><code>Error::NoDisk</code></a>, если свободных блоков не осталось.</li>
 </ul>
+<h3 id="Проверьте-себя-22"><a class="header" href="#Проверьте-себя-22">Проверьте себя</a></h3>
+<p>Теперь должен заработать тест <code>allocation()</code> в файле
+<a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/tests/6-fs-2-block-bitmap.rs"><code>kernel/tests/6-fs-2-block-bitmap.rs</code></a>:</p>
+<pre><code class="language-console">$ (cd kernel; cargo test --test 6-fs-2-block-bitmap)
+...
+6_fs_2_block_bitmap::allocation-----------------------------
+20:37:24 0 D block_count = 8192
+6_fs_2_block_bitmap::allocation-------------------- [passed]
+20:37:30.657 0 I exit qemu; exit_code = SUCCESS
+</code></pre>
+<h3 id="Ориентировочный-объём-работ-этой-части-лабораторки-26"><a class="header" href="#Ориентировочный-объём-работ-этой-части-лабораторки-26">Ориентировочный объём работ этой части лабораторки</a></h3>
+<pre><code class="language-console"> kernel/src/fs/block_bitmap.rs |   26 ++++++++++++++++++++++++--
+ 1 file changed, 24 insertions(+), 2 deletions(-)
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h2 id="index-node-inode"><a class="header" href="#index-node-inode">Index node (inode)</a></h2>
 <p>В <a href="https://en.wikipedia.org/wiki/Inode">inode</a> хранится метаинформация об объекте с данными.
 Имя объекта не хранится, оно хранится в директории.
@@ -9832,6 +9877,37 @@ const MAX_HEIGHT: usize = 4;
 <h4 id="kernelfsinodeinodeset_size"><a class="header" href="#kernelfsinodeinodeset_size"><a href="../../doc/kernel/fs/inode/struct.Inode.html#method.set_size"><code>kernel::fs::inode::Inode::set_size()</code></a></a></h4>
 <h4 id="kernelfsinodeinoderead"><a class="header" href="#kernelfsinodeinoderead"><a href="../../doc/kernel/fs/inode/struct.Inode.html#method.read"><code>kernel::fs::inode::Inode::read()</code></a></a></h4>
 <h4 id="kernelfsinodeinodewrite"><a class="header" href="#kernelfsinodeinodewrite"><a href="../../doc/kernel/fs/inode/struct.Inode.html#method.write"><code>kernel::fs::inode::Inode::write()</code></a></a></h4>
+<h3 id="Проверьте-себя-23"><a class="header" href="#Проверьте-себя-23">Проверьте себя</a></h3>
+<p>Теперь должены заработать тесты в файле
+<a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/tests/6-fs-3-inode.rs"><code>kernel/tests/6-fs-3-inode.rs</code></a>:</p>
+<pre><code class="language-console">$ (cd kernel; cargo test --test 6-fs-3-inode)
+...
+6_fs_3_inode::block_entry-----------------------------------
+20:37:33 0 D block_count = 8192
+20:38:04.275 0 D block entry allocation is done, checking the entries
+6_fs_3_inode::block_entry-------------------------- [passed]
+
+6_fs_3_inode::read_write_speed------------------------------
+20:38:28.769 0 D block_count = 8192
+20:38:29.161 0 D disk read speed; elapsed = 360.269 ms; size = 1.000 MiB
+20:38:29.219 0 D file system read speed; elapsed = 49.309 ms; timeout = 200.000 ms; size = 1.000 MiB
+20:38:29.277 0 D file system write speed; elapsed = 47.858 ms; timeout = 200.000 ms; size = 1.000 MiB
+6_fs_3_inode::read_write_speed--------------------- [passed]
+
+6_fs_3_inode::write_read------------------------------------
+20:38:29.299 0 D block_count = 8192
+20:38:30.431 0 D actual = [0, 2, 6, 12, 20, 30, 42, 56, 72, 90]; expected = [0, 2, 6, 12, 20, 30, 42, 56, 72, 90]
+6_fs_3_inode::write_read--------------------------- [passed]
+
+6_fs_3_inode::set_size--------------------------------------
+20:38:31.227 0 D block_count = 8192
+6_fs_3_inode::set_size----------------------------- [passed]
+20:38:39.909 0 I exit qemu; exit_code = SUCCESS
+</code></pre>
+<h3 id="Ориентировочный-объём-работ-этой-части-лабораторки-27"><a class="header" href="#Ориентировочный-объём-работ-этой-части-лабораторки-27">Ориентировочный объём работ этой части лабораторки</a></h3>
+<pre><code class="language-console"> kernel/src/fs/inode.rs |  125 ++++++++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 119 insertions(+), 6 deletions(-)
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h2 id="Операции-с-директориями"><a class="header" href="#Операции-с-директориями">Операции с директориями</a></h2>
 <p>Директории — это
 <a href="https://en.wikipedia.org/wiki/Inode">inode</a>,
@@ -9857,6 +9933,24 @@ const MAX_HEIGHT: usize = 4;
 <h4 id="kernelfsinodeiternext"><a class="header" href="#kernelfsinodeiternext"><a href="../../doc/kernel/fs/inode/struct.Iter.html#method.next"><code>kernel::fs::inode::Iter::next()</code></a></a></h4>
 <p>Это вспомогательный метод для
 <a href="../../doc/kernel/fs/inode/struct.Inode.html#method.list"><code>kernel::fs::inode::Inode::list()</code></a>.</p>
+<h3 id="Проверьте-себя-24"><a class="header" href="#Проверьте-себя-24">Проверьте себя</a></h3>
+<p>Теперь должны заработать тесты в файле
+<a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/tests/6-fs-4-directory.rs"><code>kernel/tests/6-fs-4-directory.rs</code></a>:</p>
+<pre><code class="language-console">$ (cd kernel; cargo test --test 6-fs-4-directory)
+...
+6_fs_4_directory::basic_operations--------------------------
+20:38:42 0 D block_count = 8192
+6_fs_4_directory::basic_operations----------------- [passed]
+
+6_fs_4_directory::max_name_len------------------------------
+20:38:42 0 D block_count = 8192
+6_fs_4_directory::max_name_len--------------------- [passed]
+20:38:42 0 I exit qemu; exit_code = SUCCESS
+</code></pre>
+<h3 id="Ориентировочный-объём-работ-этой-части-лабораторки-28"><a class="header" href="#Ориентировочный-объём-работ-этой-части-лабораторки-28">Ориентировочный объём работ этой части лабораторки</a></h3>
+<pre><code class="language-console"> kernel/src/fs/inode.rs |   70 ++++++++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 64 insertions(+), 6 deletions(-)
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h2 id="Поиск-файла-по-пути"><a class="header" href="#Поиск-файла-по-пути">Поиск файла по пути</a></h2>
 <h3 id="Задача-5--поиск-файла-по-пути"><a class="header" href="#Задача-5--поиск-файла-по-пути">Задача 5 — поиск файла по пути</a></h3>
 <p>Реализуйте <a href="../../doc/kernel/fs/file_system/struct.FileSystem.html#method.open">метод</a></p>
@@ -9866,6 +9960,28 @@ const MAX_HEIGHT: usize = 4;
 <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/fs/file_system.rs"><code>kernel/src/fs/file_system.rs</code></a>.</p>
 <p>Он должен пройти от корня файловой системы по заданному полному пути <code>path</code>.
 И вернуть соответствующий <code>File</code>.</p>
+<h3 id="Проверьте-себя-25"><a class="header" href="#Проверьте-себя-25">Проверьте себя</a></h3>
+<p>Теперь должен заработать тест <code>fs()</code> в файле
+<a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/tests/6-fs-5-open.rs"><code>kernel/tests/6-fs-5-open.rs</code></a>:</p>
+<pre><code class="language-console">$ (cd kernel; cargo test --test 6-fs-5-open)
+...
+6_fs_5_open::fs---------------------------------------------
+20:38:44 0 I formatted the file system; free_space = 31.988 MiB; disk = { id: 1, base_port: 0x1F0, disk: 1 }; block_count = 8192; reserved_block_count = 3; inode_size = 64 B; directory_entry_size = 128 B; max_file_size = 513.002 GiB
+20:38:44 0 I path = /file-1; entry = file-1, File, 5678 B = 5.545 KiB, 2022-12-11 20:38:44 UTC
+20:38:44 0 I path = /file-2; entry = file-2, File, 9876 B = 9.645 KiB, 2022-12-11 20:38:44 UTC
+20:38:44 0 I path = /dir-1; entry = dir-1, Directory, 4096 B = 4.000 KiB, 2022-12-11 20:38:44 UTC
+20:38:44 0 I path = /dir-1/file-4; entry = file-4, File, 0 B = 0 B, 2022-12-11 20:38:44 UTC
+20:38:44 0 I path = /dir-1/file-5; entry = file-5, File, 0 B = 0 B, 2022-12-11 20:38:44 UTC
+20:38:44 0 I path = /dir-1/dir-2; entry = dir-2, Directory, 4096 B = 4.000 KiB, 2022-12-11 20:38:44 UTC
+20:38:44 0 I path = /dir-1/dir-2/dir-3; entry = dir-3, Directory, 4096 B = 4.000 KiB, 2022-12-11 20:38:44 UTC
+20:38:44 0 I path = /dir-1/dir-2/dir-3/file-3; entry = file-3, File, 0 B = 0 B, 2022-12-11 20:38:44 UTC
+6_fs_5_open::fs------------------------------------ [passed]
+20:38:45.049 0 I exit qemu; exit_code = SUCCESS
+</code></pre>
+<h3 id="Ориентировочный-объём-работ-этой-части-лабораторки-29"><a class="header" href="#Ориентировочный-объём-работ-этой-части-лабораторки-29">Ориентировочный объём работ этой части лабораторки</a></h3>
+<pre><code class="language-console"> kernel/src/fs/file_system.rs |   21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
+</code></pre>
 
                     </main>
 

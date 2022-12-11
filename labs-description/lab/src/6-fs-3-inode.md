@@ -77,3 +77,43 @@ const MAX_HEIGHT: usize = 4;
 
 
 #### [`kernel::fs::inode::Inode::write()`](../../doc/kernel/fs/inode/struct.Inode.html#method.write)
+
+
+### Проверьте себя
+
+Теперь должены заработать тесты в файле
+[`kernel/tests/6-fs-3-inode.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/tests/6-fs-3-inode.rs):
+
+```console
+$ (cd kernel; cargo test --test 6-fs-3-inode)
+...
+6_fs_3_inode::block_entry-----------------------------------
+20:37:33 0 D block_count = 8192
+20:38:04.275 0 D block entry allocation is done, checking the entries
+6_fs_3_inode::block_entry-------------------------- [passed]
+
+6_fs_3_inode::read_write_speed------------------------------
+20:38:28.769 0 D block_count = 8192
+20:38:29.161 0 D disk read speed; elapsed = 360.269 ms; size = 1.000 MiB
+20:38:29.219 0 D file system read speed; elapsed = 49.309 ms; timeout = 200.000 ms; size = 1.000 MiB
+20:38:29.277 0 D file system write speed; elapsed = 47.858 ms; timeout = 200.000 ms; size = 1.000 MiB
+6_fs_3_inode::read_write_speed--------------------- [passed]
+
+6_fs_3_inode::write_read------------------------------------
+20:38:29.299 0 D block_count = 8192
+20:38:30.431 0 D actual = [0, 2, 6, 12, 20, 30, 42, 56, 72, 90]; expected = [0, 2, 6, 12, 20, 30, 42, 56, 72, 90]
+6_fs_3_inode::write_read--------------------------- [passed]
+
+6_fs_3_inode::set_size--------------------------------------
+20:38:31.227 0 D block_count = 8192
+6_fs_3_inode::set_size----------------------------- [passed]
+20:38:39.909 0 I exit qemu; exit_code = SUCCESS
+```
+
+
+### Ориентировочный объём работ этой части лабораторки
+
+```console
+ kernel/src/fs/inode.rs |  125 ++++++++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 119 insertions(+), 6 deletions(-)
+```

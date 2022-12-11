@@ -159,6 +159,13 @@
 <span id="159">159</span>
 <span id="160">160</span>
 <span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
 </pre><pre class="rust"><code><span class="kw">use </span>core::mem;
 
 <span class="kw">use </span>ku::error::{
@@ -295,10 +302,7 @@
 
 <span class="attribute">#[doc(hidden)]
 </span><span class="kw">pub mod </span>test_scaffolding {
-    <span class="kw">use </span>ku::{
-        error::Result,
-        memory::{Block, Virt},
-    };
+    <span class="kw">use </span>ku::error::Result;
 
 
     <span class="kw">pub struct </span>BlockBitmap(<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">super</span>::<span class="kw">super</span>) <span class="kw">super</span>::BlockBitmap);
@@ -312,6 +316,16 @@
 
         <span class="kw">pub fn </span>format(block_count: usize) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
             <span class="kw">super</span>::BlockBitmap::format(block_count)
+        }
+
+
+        <span class="kw">pub fn </span>is_free(<span class="kw-2">&amp;</span><span class="self">self</span>, number: usize) -&gt; bool {
+            <span class="self">self</span>.<span class="number">0</span>.is_free(number)
+        }
+
+
+        <span class="kw">pub fn </span>set_free(<span class="kw-2">&amp;mut </span><span class="self">self</span>, number: usize) {
+            <span class="self">self</span>.<span class="number">0</span>.set_free(number)
         }
 
 
