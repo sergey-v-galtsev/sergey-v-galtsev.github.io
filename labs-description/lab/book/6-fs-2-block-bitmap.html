@@ -157,24 +157,30 @@
 }
 <span class="boring">}
 </span></code></pre></pre>
-<p>Каждый элемент среза <code>BlockBitmap::bitmap</code> отвечает за 64 блока.
+<p>Каждый элемент среза
+<a href="../../doc/kernel/fs/block_bitmap/struct.BlockBitmap.html#structfield.bitmap"><code>BlockBitmap::bitmap</code></a>
+отвечает за 64 блока.
 Блоку с меньшим номером соответствует бит с меньшим весом в соответствующем элементе.
 Блок свободен тогда и только тогда, когда соответствующий ему бит равен <code>0</code>.</p>
 <h3 id="Задача-2--битмап-занятых-блоков"><a class="header" href="#Задача-2--битмап-занятых-блоков">Задача 2 — битмап занятых блоков</a></h3>
-<p>Реализуйте метод</p>
+<p>Реализуйте <a href="../../doc/kernel/fs/block_bitmap/struct.BlockBitmap.html#method.allocate">метод</a></p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span>fn BlockBitmap::allocate(&amp;mut self) -&gt; Result&lt;usize&gt;
+</span>fn BlockBitmap::allocate(
+    &amp;mut self,
+) -&gt; Result&lt;usize&gt;
 <span class="boring">}
 </span></code></pre></pre>
 <p>в файле
 <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/fs/block_bitmap.rs"><code>kernel/src/fs/block_bitmap.rs</code></a>.</p>
-<p>Функция должна найти по <code>BlockBitmap::bitmap</code> свободный блок и аллоцировать его.</p>
+<p>Функция должна найти по
+<a href="../../doc/kernel/fs/block_bitmap/struct.BlockBitmap.html#structfield.bitmap"><code>BlockBitmap::bitmap</code></a>
+свободный блок и аллоцировать его.</p>
 <ul>
 <li>Верните номер выделенного блока.</li>
-<li>После того как новый блок аллоцирован, сбросьте изменившийся блок самого <code>bitmap</code> на диск с помощью реализованной вами функции <code>BlockCache::flush_block()</code>. Когда меняете метаданные, лучше сразу сбрасывать их на диск, так меньше вероятность поломки файловой системы, например, при сбое питания.</li>
-<li>Искать каждый раз с самого начала <code>BlockBitmap::bitmap</code> не эффективно. Лучше, например, обходить его по циклу с того места, на котором остановились в прошлый раз. Для хранения этой позиции между вызовами <code>BlockBitmap::allocate()</code> служит поле <code>BlockBitmap::cursor</code>.</li>
-<li>Проверять каждый бит тоже не эффективно. Лучше сначала найти элемент <code>BlockBitmap::bitmap</code>, в котором есть хотя бы один свободный бит. Поэтому биты сгруппированы именно по <code>u64</code>, а не например по <code>u8</code>.</li>
+<li>После того как новый блок аллоцирован, сбросьте изменившийся блок самого <a href="../../doc/kernel/fs/block_bitmap/struct.BlockBitmap.html#structfield.bitmap"><code>BlockBitmap::bitmap</code></a> на диск с помощью реализованной вами функции <a href="../../doc/kernel/fs/block_cache/struct.BlockCache.html#method.flush_block"><code>BlockCache::flush_block()</code></a>. Когда меняете метаданные, лучше сразу сбрасывать их на диск, так меньше вероятность поломки файловой системы, например, при сбое питания.</li>
+<li>Искать каждый раз с самого начала <a href="../../doc/kernel/fs/block_bitmap/struct.BlockBitmap.html#structfield.bitmap"><code>BlockBitmap::bitmap</code></a> не эффективно. Лучше, например, обходить его по циклу с того места, на котором остановились в прошлый раз. Для хранения этой позиции между вызовами <a href="../../doc/kernel/fs/block_bitmap/struct.BlockBitmap.html#method.allocate"><code>BlockBitmap::allocate()</code></a> служит поле <a href="../../doc/kernel/fs/block_bitmap/struct.BlockBitmap.html#structfield.cursor"><code>BlockBitmap::cursor</code></a>.</li>
+<li>Проверять каждый бит тоже не эффективно. Лучше сначала найти элемент <a href="../../doc/kernel/fs/block_bitmap/struct.BlockBitmap.html#structfield.bitmap"><code>BlockBitmap::bitmap</code></a>, в котором есть хотя бы один свободный бит. Поэтому биты сгруппированы именно по <a href="https://doc.rust-lang.org/nightly/core/primitive.u64.html"><code>u64</code></a>, а не например по <a href="https://doc.rust-lang.org/nightly/core/primitive.u8.html"><code>u8</code></a>.</li>
 <li>Верните ошибку <a href="../../doc/kernel/error/enum.Error.html#variant.NoDisk"><code>Error::NoDisk</code></a>, если свободных блоков не осталось.</li>
 </ul>
 <h3 id="Проверьте-себя"><a class="header" href="#Проверьте-себя">Проверьте себя</a></h3>
@@ -183,9 +189,10 @@
 <pre><code class="language-console">$ (cd kernel; cargo test --test 6-fs-2-block-bitmap)
 ...
 6_fs_2_block_bitmap::allocation-----------------------------
-20:37:24 0 D block_count = 8192
+19:00:01 0 D block_count = 8192
+19:00:04.863 0 D allocated_head = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12]; allocated_tail = [8182, 8183, 8184, 8185, 8186, 8187, 8188, 8189, 8190, 8191]
+19:00:10.693 0 D reallocated_head = [8129, 8131, 8133, 8135, 8137, 8139, 8141, 8143, 8145, 8147]; reallocated_tail = [8109, 8111, 8113, 8115, 8117, 8119, 8121, 8123, 8125, 8127]
 6_fs_2_block_bitmap::allocation-------------------- [passed]
-20:37:30.657 0 I exit qemu; exit_code = SUCCESS
 </code></pre>
 <h3 id="Ориентировочный-объём-работ-этой-части-лабораторки"><a class="header" href="#Ориентировочный-объём-работ-этой-части-лабораторки">Ориентировочный объём работ этой части лабораторки</a></h3>
 <pre><code class="language-console"> kernel/src/fs/block_bitmap.rs |   26 ++++++++++++++++++++++++--

@@ -190,47 +190,232 @@ const MAX_HEIGHT: usize = 4;
 <p>Реализуйте недостающие методы структуры
 <a href="../../doc/kernel/fs/inode/struct.Inode.html"><code>kernel::fs::inode::Inode</code></a>
 в файле
-<a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/fs/inode.rs"><code>kernel/src/fs/inode.rs</code></a>.</p>
-<p>Вам могут пригодиться методы <code>size::div_ceil()</code> и <code>size::next_multiple_of()</code>.</p>
+<a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/fs/inode.rs"><code>kernel/src/fs/inode.rs</code></a>.
+При записи в
+<a href="../../doc/kernel/fs/inode/struct.Inode.html"><code>Inode</code></a>
+обновляйте время его модификации —
+<a href="../../doc/kernel/fs/inode/struct.Inode.html#structfield.modify_time"><code>Inode::modify_time</code></a>.</p>
+<p>Вам могут пригодиться методы
+<a href="https://doc.rust-lang.org/nightly/core/primitive.usize.html#method.div_ceil"><code>usize::div_ceil()</code></a> и
+<a href="https://doc.rust-lang.org/nightly/core/primitive.usize.html#method.next_multiple_of"><code>usize::next_multiple_of()</code></a>.</p>
 <h4 id="kernelfsinodeinodeblock_entry"><a class="header" href="#kernelfsinodeinodeblock_entry"><a href="../../doc/kernel/fs/inode/struct.Inode.html#method.block_entry"><code>kernel::fs::inode::Inode::block_entry()</code></a></a></h4>
+<p>Вспомогательный <a href="../../doc/kernel/fs/inode/struct.Inode.html#method.block_entry">метод</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn Inode::block_entry(
+    &amp;mut self,
+    inode_block_number: usize,
+    block_bitmap: Option&lt;&amp;mut BlockBitmap&gt;,
+) -&gt; Result&lt;&amp;mut usize&gt;
+<span class="boring">}
+</span></code></pre></pre>
+<p>по номеру блока <code>inode_block_number</code> внутри данных
+<a href="../../doc/kernel/fs/inode/struct.Inode.html"><code>Inode</code></a>
+возвращает ссылку на запись из метаданных этого
+<a href="../../doc/kernel/fs/inode/struct.Inode.html"><code>Inode</code></a>.
+Эта запись предназначена для номера блока на диске, хранящего указанный блок данных
+<a href="../../doc/kernel/fs/inode/struct.Inode.html"><code>Inode</code></a>.
+С помощью этого метода происходит отображение смещения внутри данных файла в номер блока на диске,
+хранящего эти данные.
+Номер <code>inode_block_number</code> равен смещению внутри данных файла, делённому на размер блока.
+Нужная запись находится либо непосредственно в
+<a href="../../doc/kernel/fs/inode/struct.Inode.html"><code>Inode</code></a>,
+и тогда это <code>&amp;mut Inode::root_blocks[0]</code>.
+Либо в одном из листьевых косвенных блоков леса
+<a href="../../doc/kernel/fs/inode/struct.Inode.html#structfield.root_blocks"><code>Inode::root_blocks</code></a>.</p>
 <ul>
-<li>Если при обходе леса встречается не выделенный косвенный блок, то его нужно выделить из <code>block_bitmap</code>. Не выделенные блоки имеют зарезервированный номер <code>NO_BLOCK</code>.</li>
+<li>Если при обходе леса встречается не выделенный косвенный блок, то его нужно выделить из <code>block_bitmap</code>. Не выделенные блоки имеют зарезервированный номер <a href="../../doc/kernel/fs/inode/constant.NO_BLOCK.html"><code>kernel::fs::inode::NO_BLOCK</code></a>. Если при этом <code>block_bitmap</code> равен <code>None</code>, верните ошибку <a href="../../doc/kernel/error/enum.Error.html#variant.NoDisk"><code>Error::NoDisk</code></a>.</li>
 <li>А вот выделять блок для данных, на который указывает результирующая запись, не нужно.</li>
 </ul>
 <p>Этот метод похож на
 <a href="../../doc/kernel/memory/mapping/struct.Mapping.html#method.translate"><code>kernel::memory::mapping::Mapping::translate()</code></a>,
 <a href="../../lab/book/2-mm-6-address-space-2-translate.html#%D0%9E%D1%82%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5-%D0%B2%D0%B8%D1%80%D1%82%D1%83%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B%D1%85-%D1%81%D1%82%D1%80%D0%B0%D0%BD%D0%B8%D1%86-%D0%BD%D0%B0-%D1%84%D0%B8%D0%B7%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B5-%D1%84%D1%80%D0%B5%D0%B9%D0%BC%D1%8B">который вы уже реализовали</a>.
-Только в <code>Inode</code> для блоков не одно дерево фиксированной высоты,
-а последовательность деревьев возрастающей высоты.</p>
+Только в
+<a href="../../doc/kernel/fs/inode/struct.Inode.html"><code>Inode</code></a>
+для блоков не одно дерево фиксированной высоты, а последовательность деревьев возрастающей высоты.</p>
+<p>Дополнительный <a href="../../doc/kernel/fs/inode/struct.Inode.html#method.block">метод</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn Inode::block(&amp;mut self, inode_block_number: usize) -&gt; Result&lt;Block&lt;Virt&gt;&gt;
+<span class="boring">}
+</span></code></pre></pre>
+<p>оборачивает реализованный вами
+<a href="../../doc/kernel/fs/inode/struct.Inode.html#method.block_entry"><code>Inode::block_entry()</code></a>
+и возвращает блок в памяти блочного кеша, где хранится заданный блок
+<a href="../../doc/kernel/fs/inode/struct.Inode.html"><code>Inode</code></a>.</p>
 <h4 id="kernelfsinodeinodeset_size"><a class="header" href="#kernelfsinodeinodeset_size"><a href="../../doc/kernel/fs/inode/struct.Inode.html#method.set_size"><code>kernel::fs::inode::Inode::set_size()</code></a></a></h4>
+<p><a href="../../doc/kernel/fs/inode/struct.Inode.html#method.set_size">Метод</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn Inode::set_size(
+    &amp;mut self,
+    size: usize,
+    block_bitmap: &amp;mut BlockBitmap,
+) -&gt; Result&lt;()&gt;
+<span class="boring">}
+</span></code></pre></pre>
+<p>изменяет размер данных
+<a href="../../doc/kernel/fs/inode/struct.Inode.html"><code>Inode</code></a>
+в большую или меньшую сторону.
+При этом он должен отдавать в <code>block_bitmap</code> не используемые больше блоки данных.
+Если новый размер <code>size</code> равен <code>0</code>, то все косвенные блоки также нужно освободить.
+Так как с таким аргументом этот метод вызывается при удалении
+<a href="../../doc/kernel/fs/inode/struct.Inode.html"><code>Inode</code></a>.
+А при удалении, естественно, нужно освободить все ресурсы.
+Также имеет смысл освобождать хотя бы часть не нужных более косвенных блоков.
+Например, можно освобождать не нужные более деревья леса блоков целиком.</p>
+<p>Если файл расширяется, то новые блоки с данными должны содержать нули.
+Как вариант, вы можете не хранить такие блоки на диске, заменяя их номера на
+<a href="../../doc/kernel/fs/inode/constant.NO_BLOCK.html"><code>NO_BLOCK</code></a>.
+И выделять реальные блоки только в момент записи.
+Косвенные блоки тоже можно выделять лениво в момент записи.</p>
+<p>Вам могут пригодиться:</p>
+<ul>
+<li><a href="../../doc/kernel/fs/inode/struct.Inode.html#method.block_entry"><code>Inode::block_entry()</code></a>.</li>
+<li>Функция <a href="https://doc.rust-lang.org/nightly/core/cmp/fn.min.html"><code>core::cmp::min()</code></a>.</li>
+<li>Метод <a href="https://doc.rust-lang.org/nightly/core/primitive.slice.html#method.fill"><code>slice::fill()</code></a> <a href="https://doc.rust-lang.ru/book/ch04-03-slices.html">срезов</a>. Заполнять нулями имеет смысл не побайтно, а целыми <a href="https://doc.rust-lang.org/nightly/core/primitive.u64.html"><code>u64</code></a> или <a href="https://doc.rust-lang.org/nightly/core/primitive.usize.html"><code>usize</code></a>.</li>
+</ul>
 <h4 id="kernelfsinodeinoderead"><a class="header" href="#kernelfsinodeinoderead"><a href="../../doc/kernel/fs/inode/struct.Inode.html#method.read"><code>kernel::fs::inode::Inode::read()</code></a></a></h4>
+<p><a href="../../doc/kernel/fs/inode/struct.Inode.html#method.read">Метод</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn Inode::read(
+    &amp;mut self,
+    offset: usize,
+    buffer: &amp;mut [u8],
+) -&gt; Result&lt;usize&gt;
+<span class="boring">}
+</span></code></pre></pre>
+<p>читает из данных
+<a href="../../doc/kernel/fs/inode/struct.Inode.html"><code>Inode</code></a>
+по смещению <code>offset</code> в буфер <code>buffer</code> столько байт,
+сколько остаётся до конца файла или до конца буфера.
+И возвращает количество прочитанных байт.
+Если
+<a href="../../doc/kernel/fs/inode/struct.Inode.html"><code>Inode</code></a>
+не является файлом, верните ошибку
+<a href="../../doc/kernel/error/enum.Error.html#variant.NotFile"><code>Error::NotFile</code></a>.
+Если <code>offset</code> превышает размер файла, верните ошибку
+<a href="../../doc/kernel/error/enum.Error.html#variant.InvalidArgument"><code>Error::InvalidArgument</code></a>.
+Если <code>offset</code> равен размеру файла, верните <code>0</code> прочитанных байт.</p>
+<p>Вам могут пригодиться:</p>
+<ul>
+<li><a href="../../doc/kernel/fs/inode/struct.Inode.html#method.block"><code>Inode::block()</code></a>.</li>
+<li>Функция <a href="https://doc.rust-lang.org/nightly/core/cmp/fn.min.html"><code>core::cmp::min()</code></a>.</li>
+<li>Метод <a href="https://doc.rust-lang.org/nightly/core/primitive.slice.html#method.copy_from_slice"><code>slice::copy_from_slice()</code></a> <a href="https://doc.rust-lang.ru/book/ch04-03-slices.html">срезов</a>.</li>
+</ul>
 <h4 id="kernelfsinodeinodewrite"><a class="header" href="#kernelfsinodeinodewrite"><a href="../../doc/kernel/fs/inode/struct.Inode.html#method.write"><code>kernel::fs::inode::Inode::write()</code></a></a></h4>
+<p><a href="../../doc/kernel/fs/inode/struct.Inode.html#method.read">Метод</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub(super) fn write(
+    &amp;mut self,
+    offset: usize,
+    buffer: &amp;[u8],
+    block_bitmap: &amp;mut BlockBitmap,
+) -&gt; Result&lt;usize&gt;
+<span class="boring">}
+</span></code></pre></pre>
+<p>записывает в данные
+<a href="../../doc/kernel/fs/inode/struct.Inode.html"><code>Inode</code></a>
+по смещению <code>offset</code> байты из буфера <code>buffer</code>.
+При необходимости расширяет размер файла.
+И возвращает количество записанных байт.
+Если
+<a href="../../doc/kernel/fs/inode/struct.Inode.html"><code>Inode</code></a>
+не является файлом, верните ошибку <a href="../../doc/kernel/error/enum.Error.html#variant.NotFile"><code>Error::NotFile</code></a>.
+Если <code>offset</code> превышает размер файла, — это нормальная ситуация.
+Расширьте файл нулями до заданного <code>offset</code>.</p>
+<p>Вам могут пригодиться:</p>
+<ul>
+<li><a href="../../doc/kernel/fs/inode/struct.Inode.html#method.block"><code>Inode::block()</code></a>.</li>
+<li><a href="../../doc/kernel/fs/inode/struct.Inode.html#method.set_size"><code>Inode::set_size()</code></a>.</li>
+<li>Функция <a href="https://doc.rust-lang.org/nightly/core/cmp/fn.min.html"><code>core::cmp::min()</code></a>.</li>
+<li>Метод <a href="https://doc.rust-lang.org/nightly/core/primitive.slice.html#method.copy_from_slice"><code>slice::copy_from_slice()</code></a> <a href="https://doc.rust-lang.ru/book/ch04-03-slices.html">срезов</a>.</li>
+</ul>
 <h3 id="Проверьте-себя"><a class="header" href="#Проверьте-себя">Проверьте себя</a></h3>
-<p>Теперь должены заработать тесты в файле
+<p>Теперь должны заработать тесты в файле
 <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/tests/6-fs-3-inode.rs"><code>kernel/tests/6-fs-3-inode.rs</code></a>:</p>
 <pre><code class="language-console">$ (cd kernel; cargo test --test 6-fs-3-inode)
 ...
 6_fs_3_inode::block_entry-----------------------------------
-20:37:33 0 D block_count = 8192
-20:38:04.275 0 D block entry allocation is done, checking the entries
+19:00:13 0 D block_count = 8192
+19:00:13 0 D i = 0; prev_entry = 0v0; current_entry = 0v100002014B0
+19:00:16.717 0 D i = 100000; prev_entry = 0v7FFFFE0064F0; current_entry = 0v7FFFFE0064F8
+19:00:20.135 0 D i = 200000; prev_entry = 0v7FFFFE0C99F0; current_entry = 0v7FFFFE0C99F8
+19:00:24.005 0 D i = 300000; prev_entry = 0v7FFFFE18EEF0; current_entry = 0v7FFFFE18EEF8
+19:00:28.593 0 D i = 400000; prev_entry = 0v7FFFFE2523F0; current_entry = 0v7FFFFE2523F8
+19:00:33.199 0 D i = 500000; prev_entry = 0v7FFFFE3158F0; current_entry = 0v7FFFFE3158F8
+19:00:37.833 0 D i = 600000; prev_entry = 0v7FFFFE3D9DF0; current_entry = 0v7FFFFE3D9DF8
+19:00:42.467 0 D i = 700000; prev_entry = 0v7FFFFE49D2F0; current_entry = 0v7FFFFE49D2F8
+19:00:46.455 0 D block entry allocation is done, checking the entries
+19:00:46.461 0 D i = 0; actual = 0; expected = 0
+19:00:49.115 0 D i = 100000; actual = 100000; expected = 100000
+19:00:51.789 0 D i = 200000; actual = 200000; expected = 200000
+19:00:54.879 0 D i = 300000; actual = 300000; expected = 300000
+19:00:58.697 0 D i = 400000; actual = 400000; expected = 400000
+19:01:02.513 0 D i = 500000; actual = 500000; expected = 500000
+19:01:06.305 0 D i = 600000; actual = 600000; expected = 600000
+19:01:10.045 0 D i = 700000; actual = 700000; expected = 700000
 6_fs_3_inode::block_entry-------------------------- [passed]
 
 6_fs_3_inode::read_write_speed------------------------------
-20:38:28.769 0 D block_count = 8192
-20:38:29.161 0 D disk read speed; elapsed = 360.269 ms; size = 1.000 MiB
-20:38:29.219 0 D file system read speed; elapsed = 49.309 ms; timeout = 200.000 ms; size = 1.000 MiB
-20:38:29.277 0 D file system write speed; elapsed = 47.858 ms; timeout = 200.000 ms; size = 1.000 MiB
+19:01:13.299 0 D block_count = 8192
+19:01:13.683 0 D disk read speed; size = 1.000 MiB; elapsed = 350.522 ms
+19:01:14.165 0 D file system read speed; size = 1.000 MiB; elapsed = 47.620 ms; timeout = 200.000 ms
+19:01:14.649 0 D file system write speed; size = 1.000 MiB; elapsed = 47.640 ms; timeout = 200.000 ms
+19:01:15.071 0 D disk write speed; size = 1.000 MiB; elapsed = 411.271 ms
 6_fs_3_inode::read_write_speed--------------------- [passed]
 
 6_fs_3_inode::write_read------------------------------------
-20:38:29.299 0 D block_count = 8192
-20:38:30.431 0 D actual = [0, 2, 6, 12, 20, 30, 42, 56, 72, 90]; expected = [0, 2, 6, 12, 20, 30, 42, 56, 72, 90]
+19:01:15.091 0 D block_count = 8192
+19:01:16.095 0 D actual = [0, 2, 6, 12, 20, 30, 42, 56, 72, 90]; expected = [0, 2, 6, 12, 20, 30, 42, 56, 72, 90]
 6_fs_3_inode::write_read--------------------------- [passed]
 
+6_fs_3_inode::big_file--------------------------------------
+19:01:17.009 0 D block_count = 8192
+19:01:26.767 0 D file_block_count = 8107; file_size = 31.668 MiB
+19:01:33.575 0 D free_block_count = 65; used_block_count = 8124
+19:01:33.807 0 D start_free_block_count = 8189; end_free_block_count = 8189; leaked_block_count = 0
+6_fs_3_inode::big_file----------------------------- [passed]
+
 6_fs_3_inode::set_size--------------------------------------
-20:38:31.227 0 D block_count = 8192
+19:01:33.829 0 D block_count = 8192
+19:01:33.837 0 D offset = 0; size = 0
+19:01:34.555 0 D offset = 1; size = 1
+19:01:35.225 0 D offset = 2; size = 2
+19:01:35.895 0 D offset = 1363; size = 1363
+19:01:36.565 0 D offset = 1364; size = 1364
+19:01:37.231 0 D offset = 1365; size = 1365
+19:01:37.913 0 D offset = 1366; size = 1366
+19:01:38.589 0 D offset = 1367; size = 1367
+19:01:39.275 0 D offset = 2728; size = 2728
+19:01:39.951 0 D offset = 2729; size = 2729
+19:01:40.635 0 D offset = 2730; size = 2730
+19:01:41.321 0 D offset = 2731; size = 2731
+19:01:42.013 0 D offset = 2732; size = 2732
+19:01:42.703 0 D offset = 4093; size = 4093
+19:01:43.387 0 D offset = 4094; size = 4094
+19:01:44.063 0 D offset = 4095; size = 4095
+19:01:44.771 0 D offset = 4096; size = 4096
+19:01:45.491 0 D offset = 4097; size = 4097
+19:01:46.159 0 D offset = 5458; size = 5458
+19:01:46.811 0 D offset = 5459; size = 5459
+19:01:47.463 0 D offset = 5460; size = 5460
+19:01:48.121 0 D offset = 5461; size = 5461
+19:01:48.777 0 D offset = 5462; size = 5462
+19:01:49.427 0 D offset = 6823; size = 6823
+19:01:50.073 0 D offset = 6824; size = 6824
+19:01:50.723 0 D offset = 6825; size = 6825
+19:01:51.387 0 D offset = 6826; size = 6826
+19:01:52.041 0 D offset = 6827; size = 6827
+19:01:52.681 0 D offset = 8188; size = 8188
+19:01:53.321 0 D offset = 8189; size = 8189
+19:01:53.955 0 D offset = 8190; size = 8190
+19:01:54.591 0 D offset = 8191; size = 8191
+19:01:55.305 0 D offset = 8192; size = 8192
 6_fs_3_inode::set_size----------------------------- [passed]
-20:38:39.909 0 I exit qemu; exit_code = SUCCESS
+19:01:55.355 0 I exit qemu; exit_code = SUCCESS
 </code></pre>
 <h3 id="Ориентировочный-объём-работ-этой-части-лабораторки"><a class="header" href="#Ориентировочный-объём-работ-этой-части-лабораторки">Ориентировочный объём работ этой части лабораторки</a></h3>
 <pre><code class="language-console"> kernel/src/fs/inode.rs |  125 ++++++++++++++++++++++++++++++++++++++++++++++---

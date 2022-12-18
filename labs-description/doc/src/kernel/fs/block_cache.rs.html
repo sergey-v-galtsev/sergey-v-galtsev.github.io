@@ -193,7 +193,7 @@
 
 
     <span class="kw">pub fn </span>block_cache_init(disk: usize, block_count: usize) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
-        BlockCache::init(Disk::list()[disk], block_count)
+        BlockCache::init(Disk::new(disk)<span class="question-mark">?</span>, block_count)
     }
 
 

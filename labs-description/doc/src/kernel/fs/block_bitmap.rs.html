@@ -166,7 +166,21 @@
 <span id="166">166</span>
 <span id="167">167</span>
 <span id="168">168</span>
-</pre><pre class="rust"><code><span class="kw">use </span>core::mem;
+<span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
+<span id="177">177</span>
+<span id="178">178</span>
+<span id="179">179</span>
+<span id="180">180</span>
+<span id="181">181</span>
+<span id="182">182</span>
+</pre><pre class="rust"><code><span class="kw">use </span>core::{mem, ops::Add};
 
 <span class="kw">use </span>ku::error::{
     Error::{Medium, NoDisk},
@@ -228,6 +242,15 @@
     <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>allocate(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;usize&gt; {
         <span class="comment">// TODO: your code here.
         </span><span class="macro">unimplemented!</span>();
+    }
+
+
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>free_block_count(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+        <span class="self">self</span>.bitmap
+            .iter()
+            .map(|bits| bits.count_zeros().try_into().unwrap())
+            .reduce(Add::add)
+            .unwrap_or(<span class="number">0</span>)
     }
 
 
@@ -331,6 +354,11 @@
 
         <span class="kw">pub fn </span>allocate(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;usize&gt; {
             <span class="self">self</span>.<span class="number">0</span>.allocate()
+        }
+
+
+        <span class="kw">pub fn </span>free_block_count(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+            <span class="self">self</span>.<span class="number">0</span>.free_block_count()
         }
     }
 }

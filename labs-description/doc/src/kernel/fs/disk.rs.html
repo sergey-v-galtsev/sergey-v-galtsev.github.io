@@ -202,6 +202,15 @@
 <span id="202">202</span>
 <span id="203">203</span>
 <span id="204">204</span>
+<span id="205">205</span>
+<span id="206">206</span>
+<span id="207">207</span>
+<span id="208">208</span>
+<span id="209">209</span>
+<span id="210">210</span>
+<span id="211">211</span>
+<span id="212">212</span>
+<span id="213">213</span>
 </pre><pre class="rust"><code><span class="kw">use </span>core::{arch::asm, hint, mem, ops::Range};
 
 <span class="kw">use </span>bitflags::bitflags;
@@ -212,7 +221,7 @@
 
 <span class="kw">use </span>ku::{
     error::{
-        Error::{Medium, Timeout},
+        Error::{Medium, NoDisk, Timeout},
         <span class="prelude-ty">Result</span>,
     },
     log::{error, trace},
@@ -222,38 +231,27 @@
 
 <span class="attribute">#[derive(Clone, Copy, Debug, Display)]
 #[display(
-    fmt = <span class="string">&quot;{{ id: {}, base_port: {:#04X}, disk: {} }}&quot;</span>,
+    fmt = <span class="string">&quot;{{ id: {}, io_port: {:#04X}, io_disk: {} }}&quot;</span>,
     id,
-    base_port,
-    disk
+    io_port,
+    io_disk
 )]
 </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct </span>Disk {
-    base_port: u16,
-    disk: u8,
     id: u8,
+    io_disk: u8,
+    io_port: u16,
 }
 
 
 <span class="kw">impl </span>Disk {
-    <span class="kw">fn </span>new(base_port: u16, disk: u8, id: u8) -&gt; <span class="self">Self </span>{
-        <span class="self">Self </span>{
-            base_port,
-            disk,
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>new(id: usize) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
+        <span class="kw">let </span>id = id.try_into().map_err(|<span class="kw">_</span>| NoDisk)<span class="question-mark">?</span>;
+
+        <span class="prelude-val">Ok</span>(<span class="self">Self </span>{
+            io_port: <span class="self">Self</span>::io_port(id)<span class="question-mark">?</span>,
+            io_disk: <span class="self">Self</span>::io_disk(id),
             id,
-        }
-    }
-
-
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>list() -&gt; [<span class="self">Self</span>; <span class="number">4</span>] {
-        <span class="kw">const </span>ATA0_BASE_PORT: u16 = <span class="number">0x01F0</span>;
-        <span class="kw">const </span>ATA1_BASE_PORT: u16 = <span class="number">0x0170</span>;
-
-        [
-            <span class="self">Self</span>::new(ATA0_BASE_PORT, <span class="number">0</span>, <span class="number">0</span>),
-            <span class="self">Self</span>::new(ATA0_BASE_PORT, <span class="number">1</span>, <span class="number">1</span>),
-            <span class="self">Self</span>::new(ATA1_BASE_PORT, <span class="number">0</span>, <span class="number">2</span>),
-            <span class="self">Self</span>::new(ATA1_BASE_PORT, <span class="number">1</span>, <span class="number">3</span>),
-        ]
+        })
     }
 
 
@@ -270,7 +268,7 @@
             <span class="self">self</span>.wait_ready()<span class="question-mark">?</span>;
 
             <span class="kw">unsafe </span>{
-                ins32(<span class="self">self</span>.base_port, sector);
+                ins32(<span class="self">self</span>.io_port, sector);
             }
         }
 
@@ -291,7 +289,7 @@
             <span class="self">self</span>.wait_ready()<span class="question-mark">?</span>;
 
             <span class="kw">unsafe </span>{
-                outs32(<span class="self">self</span>.base_port, sector);
+                outs32(<span class="self">self</span>.io_port, sector);
             }
         }
 
@@ -313,15 +311,18 @@
 
         <span class="self">self</span>.wait_ready()<span class="question-mark">?</span>;
 
-        io::outb(<span class="self">self</span>.base_port + <span class="number">2</span>, sector_count <span class="kw">as </span>u8);
-        io::outb(<span class="self">self</span>.base_port + <span class="number">3</span>, start_sector <span class="kw">as </span>u8);
-        io::outb(<span class="self">self</span>.base_port + <span class="number">4</span>, (start_sector &gt;&gt; <span class="number">8</span>) <span class="kw">as </span>u8);
-        io::outb(<span class="self">self</span>.base_port + <span class="number">5</span>, (start_sector &gt;&gt; <span class="number">16</span>) <span class="kw">as </span>u8);
+        io::outb(<span class="self">self</span>.io_port + <span class="number">2</span>, sector_count <span class="kw">as </span>u8);
+        io::outb(<span class="self">self</span>.io_port + <span class="number">3</span>, start_sector <span class="kw">as </span>u8);
+        io::outb(<span class="self">self</span>.io_port + <span class="number">4</span>, (start_sector &gt;&gt; <span class="number">8</span>) <span class="kw">as </span>u8);
+        io::outb(<span class="self">self</span>.io_port + <span class="number">5</span>, (start_sector &gt;&gt; <span class="number">16</span>) <span class="kw">as </span>u8);
         io::outb(
-            <span class="self">self</span>.base_port + <span class="number">6</span>,
-            RESERVED_SHOULD_BE_ONES | LBA | (<span class="self">self</span>.disk &lt;&lt; <span class="number">4</span>) | ((start_sector &gt;&gt; <span class="number">24</span>) &amp; <span class="number">0xF</span>) <span class="kw">as </span>u8,
+            <span class="self">self</span>.io_port + <span class="number">6</span>,
+            RESERVED_SHOULD_BE_ONES |
+                LBA |
+                (<span class="self">self</span>.io_disk &lt;&lt; <span class="number">4</span>) |
+                ((start_sector &gt;&gt; <span class="number">24</span>) &amp; <span class="number">0xF</span>) <span class="kw">as </span>u8,
         );
-        io::outb(<span class="self">self</span>.base_port + <span class="number">7</span>, command.bits());
+        io::outb(<span class="self">self</span>.io_port + <span class="number">7</span>, command.bits());
 
         <span class="prelude-val">Ok</span>(())
     }
@@ -343,7 +344,7 @@
         <span class="kw">let </span>timeout = Duration::seconds(TIMEOUT_IN_SECONDS);
 
         <span class="kw">while </span>last_status.is_none() || !start.has_passed(timeout) {
-            <span class="kw">let </span>status = Status::from_bits_truncate(<span class="kw">unsafe </span>{ io::inb(<span class="self">self</span>.base_port + <span class="number">7</span>) });
+            <span class="kw">let </span>status = Status::from_bits_truncate(<span class="kw">unsafe </span>{ io::inb(<span class="self">self</span>.io_port + <span class="number">7</span>) });
             last_status = <span class="prelude-val">Some</span>(status);
 
             <span class="kw">if </span>status.contains(Status::READY) &amp;&amp; !status.contains(Status::BUSY) {
@@ -364,6 +365,23 @@
 
         <span class="prelude-val">Err</span>(Timeout)
     }
+
+
+    <span class="kw">fn </span>io_port(id: u8) -&gt; <span class="prelude-ty">Result</span>&lt;u16&gt; {
+        <span class="kw">const </span>ATA0_BASE_PORT: u16 = <span class="number">0x01F0</span>;
+        <span class="kw">const </span>ATA1_BASE_PORT: u16 = <span class="number">0x0170</span>;
+
+        <span class="kw">match </span>id / <span class="number">2 </span>{
+            <span class="number">0 </span>=&gt; <span class="prelude-val">Ok</span>(ATA0_BASE_PORT),
+            <span class="number">1 </span>=&gt; <span class="prelude-val">Ok</span>(ATA1_BASE_PORT),
+            <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(NoDisk),
+        }
+    }
+
+
+    <span class="kw">fn </span>io_disk(id: u8) -&gt; u8 {
+        id % <span class="number">2
+    </span>}
 }
 
 

@@ -149,7 +149,8 @@
 <a href="https://en.wikipedia.org/wiki/Inode">inode</a>,
 с фиксированным форматом данных.
 А именно, размер данных для директорий должен быть кратен размеру блока.
-А сами данные — это массив записей типа</p>
+А сами данные — это массив записей типа
+<a href="../../doc/kernel/fs/directory_entry/struct.DirectoryEntry.html"><code>kernel::fs::directory_entry::DirectoryEntry</code></a>:</p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>struct DirectoryEntry {
@@ -160,28 +161,127 @@
 </span></code></pre></pre>
 <p>Отсутствующие или удалённые записи при этом помечаются как <code>inode.kind == Kind::Unused</code>.</p>
 <h3 id="Задача-4--операции-с-директориями"><a class="header" href="#Задача-4--операции-с-директориями">Задача 4 — операции с директориями</a></h3>
-<p>Реализуйте методы <code>Inode</code>, которые работают с данными директорий.</p>
-<h4 id="kernelfsinodeinodefind_entry"><a class="header" href="#kernelfsinodeinodefind_entry"><a href="../../doc/kernel/fs/inode/struct.Inode.html#method.find_entry"><code>kernel::fs::inode::Inode::find_entry()</code></a></a></h4>
-<p>Это вспомогательный метод для
-<a href="../../doc/kernel/fs/inode/struct.Inode.html#method.find"><code>kernel::fs::inode::Inode::find()</code></a> и
-<a href="../../doc/kernel/fs/inode/struct.Inode.html#method.insert"><code>kernel::fs::inode::Inode::insert()</code></a>.</p>
-<h4 id="kernelfsinodeinodeinsert"><a class="header" href="#kernelfsinodeinodeinsert"><a href="../../doc/kernel/fs/inode/struct.Inode.html#method.insert"><code>kernel::fs::inode::Inode::insert()</code></a></a></h4>
+<p>Реализуйте методы
+<a href="../../doc/kernel/fs/inode/struct.Inode.html"><code>Inode</code></a>,
+которые работают с данными директорий в файле
+<a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/fs/inode.rs"><code>kernel/src/fs/inode.rs</code></a>.
+Эти методы должны возвращать ошибку
+<a href="../../doc/kernel/error/enum.Error.html#variant.NotDirectory"><code>Error::NotDirectory</code></a>,
+если вызвать их для
+<a href="../../doc/kernel/fs/inode/struct.Inode.html"><code>Inode</code></a>
+который не является директорией.</p>
 <h4 id="kernelfsinodeiternext"><a class="header" href="#kernelfsinodeiternext"><a href="../../doc/kernel/fs/inode/struct.Iter.html#method.next"><code>kernel::fs::inode::Iter::next()</code></a></a></h4>
-<p>Это вспомогательный метод для
+<p>Это вспомогательный <a href="../../doc/kernel/fs/inode/struct.Iter.html#method.next">метод</a> для
+<a href="../../doc/kernel/fs/inode/struct.Inode.html#method.find_entry"><code>kernel::fs::inode::Inode::find_entry()</code></a> и
 <a href="../../doc/kernel/fs/inode/struct.Inode.html#method.list"><code>kernel::fs::inode::Inode::list()</code></a>.</p>
+<p>Он продвигает итератор</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>struct Iter&lt;'a&gt; {
+    block: Block&lt;Virt&gt;,
+    block_number: usize,
+    entry: usize,
+    inode: &amp;'a mut Inode,
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>по записям директории
+<a href="../../doc/kernel/fs/inode/struct.Iter.html#structfield.inode"><code>Iter::inode</code></a>.
+Поле
+<a href="../../doc/kernel/fs/inode/struct.Iter.html#structfield.block_number"><code>Iter::block_number</code></a>
+задаёт номер блока внутри данных
+<a href="../../doc/kernel/fs/inode/struct.Inode.html"><code>Inode</code></a>
+в котором находится текущая запись.
+Поле
+<a href="../../doc/kernel/fs/inode/struct.Iter.html#structfield.block"><code>Iter::block</code></a> —
+сам этот блок в памяти блочного кеша.
+А <a href="../../doc/kernel/fs/inode/struct.Iter.html#structfield.entry"><code>Iter::entry</code></a> —
+номер текущей записи внутри блока.</p>
+<p>Вам могут пригодиться:</p>
+<ul>
+<li><a href="../../doc/kernel/fs/inode/struct.Inode.html#method.block"><code>Inode::block()</code></a>.</li>
+<li><a href="https://doc.rust-lang.org/nightly/core/mem/fn.size_of.html"><code>mem::size_of::&lt;DirectoryEntry&gt;()</code></a> — размер записи директории <a href="../../doc/kernel/fs/directory_entry/struct.DirectoryEntry.html"><code>DirectoryEntry</code></a>.</li>
+</ul>
+<h4 id="kernelfsinodeinodefind_entry"><a class="header" href="#kernelfsinodeinodefind_entry"><a href="../../doc/kernel/fs/inode/struct.Inode.html#method.find_entry"><code>kernel::fs::inode::Inode::find_entry()</code></a></a></h4>
+<p>Вспомогательный <a href="../../doc/kernel/fs/inode/struct.Inode.html#method.find_entry">метод</a> для
+<a href="../../doc/kernel/fs/inode/struct.Inode.html#method.find"><code>kernel::fs::inode::Inode::find()</code></a> и
+<a href="../../doc/kernel/fs/inode/struct.Inode.html#method.insert"><code>kernel::fs::inode::Inode::insert()</code></a>:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn Inode::find_entry(
+    &amp;mut self,
+    name: &amp;str,
+    block_bitmap: Option&lt;&amp;mut BlockBitmap&gt;,
+) -&gt; Result&lt;&amp;mut DirectoryEntry&gt;
+<span class="boring">}
+</span></code></pre></pre>
+<p>Он находит запись в директории с именем <code>name</code>.
+Если такой записи нет, то верните свободную запись — <code>Kind::Unused</code>.
+Если и таких нет, и при этом <code>block_bitmap</code> является <code>Some</code>, попробуйте расширить директорию
+и вернуть новую свободную запись.
+Директорию имеет смысл расширять несколькими записями сразу на один целый блок.
+Так как блок в любом случае будет выделен, его стоит сразу весь отдать под записи директории.</p>
+<p>Чтобы не дублировать код, для обхода директории воспользуйтесь методом
+<a href="../../doc/kernel/fs/inode/struct.Inode.html#method.iter"><code>Inode::iter()</code></a>
+и соответствующим
+<a href="../../doc/kernel/fs/inode/struct.Iter.html#method.next"><code>Iter::next()</code></a>.
+Также вам может пригодиться метод
+<a href="../../doc/kernel/fs/inode/struct.Iter.html#method.extend"><code>Iter::extend()</code></a>,
+который расширяет директорию на один блок.</p>
+<h4 id="kernelfsinodeinodeinsert"><a class="header" href="#kernelfsinodeinodeinsert"><a href="../../doc/kernel/fs/inode/struct.Inode.html#method.insert"><code>kernel::fs::inode::Inode::insert()</code></a></a></h4>
+<p>Реализуйте <a href="../../doc/kernel/fs/inode/struct.Inode.html#method.insert">метод</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn Inode::insert(
+    &amp;mut self,
+    name: &amp;str,
+    kind: Kind,
+    block_bitmap: &amp;mut BlockBitmap,
+) -&gt; Result&lt;&amp;mut Inode&gt;
+<span class="boring">}
+</span></code></pre></pre>
+<p>Он вставляет в директорию запись с именем <code>name</code> и типом <code>kind</code>.
+Если запись с таким именем уже есть, верните ошибку
+<a href="../../doc/kernel/error/enum.Error.html#variant.FileExists"><code>Error::FileExists</code></a>.
+Если <code>kind == Kind::Unused</code>, верните ошибку
+<a href="../../doc/kernel/error/enum.Error.html#variant.InvalidArgument"><code>Error::InvalidArgument</code></a>.
+Используйте любую свободную запись — <code>Kind::Unused</code>.
+Не забудьте обновить как время модификации выделенной записи, так и время модификации самой директории.
+Используйте вспомогательный метод
+<a href="../../doc/kernel/fs/inode/struct.Inode.html#method.find_entry"><code>Inode::find_entry()</code></a>.</p>
 <h3 id="Проверьте-себя"><a class="header" href="#Проверьте-себя">Проверьте себя</a></h3>
 <p>Теперь должны заработать тесты в файле
 <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/tests/6-fs-4-directory.rs"><code>kernel/tests/6-fs-4-directory.rs</code></a>:</p>
 <pre><code class="language-console">$ (cd kernel; cargo test --test 6-fs-4-directory)
 ...
 6_fs_4_directory::basic_operations--------------------------
-20:38:42 0 D block_count = 8192
+19:01:57 0 D block_count = 8192
+19:01:57 0 D list = [Entry { kind: File, modify_time: 2022-12-17T19:01:57Z, name: &quot;file-1&quot;, size: 0 }]
+19:01:57 0 D list = [Entry { kind: File, modify_time: 2022-12-17T19:01:57Z, name: &quot;file-1&quot;, size: 1 }]
+19:01:57 0 D list = [Entry { kind: File, modify_time: 2022-12-17T19:01:57Z, name: &quot;file-1&quot;, size: 1 }, Entry { kind: File, modify_time: 2022-12-17T19:01:57Z, name: &quot;file-2&quot;, size: 1235 }]
 6_fs_4_directory::basic_operations----------------- [passed]
 
+6_fs_4_directory::big_directory-----------------------------
+19:01:57 0 D block_count = 8192
+19:01:57 0 D file_count = 100; directory_size = 16.000 KiB
+19:01:57 0 D file_count = 200; directory_size = 28.000 KiB
+19:01:58.265 0 D file_count = 300; directory_size = 40.000 KiB
+19:01:58.927 0 D file_count = 400; directory_size = 52.000 KiB
+19:01:59.769 0 D file_count = 500; directory_size = 64.000 KiB
+19:02:00.791 0 D file_count = 600; directory_size = 76.000 KiB
+19:02:01.995 0 D file_count = 700; directory_size = 88.000 KiB
+19:02:03.379 0 D file_count = 800; directory_size = 100.000 KiB
+19:02:04.947 0 D file_count = 900; directory_size = 116.000 KiB
+19:02:06.691 0 D file_count = 1000; directory_size = 128.000 KiB
+19:02:06.695 0 D free_block_count = 8156; used_block_count = 33
+19:02:06.705 0 D start_free_block_count = 8189; end_free_block_count = 8189; leaked_block_count = 0
+6_fs_4_directory::big_directory-------------------- [passed]
+
 6_fs_4_directory::max_name_len------------------------------
-20:38:42 0 D block_count = 8192
+19:02:06.725 0 D block_count = 8192
+19:02:06.737 0 D list = [Entry { kind: File, modify_time: 2022-12-17T19:02:06.735Z, name: &quot;xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&quot;, size: 0 }]
 6_fs_4_directory::max_name_len--------------------- [passed]
-20:38:42 0 I exit qemu; exit_code = SUCCESS
+19:02:06.755 0 I exit qemu; exit_code = SUCCESS
 </code></pre>
 <h3 id="Ориентировочный-объём-работ-этой-части-лабораторки"><a class="header" href="#Ориентировочный-объём-работ-этой-части-лабораторки">Ориентировочный объём работ этой части лабораторки</a></h3>
 <pre><code class="language-console"> kernel/src/fs/inode.rs |   70 ++++++++++++++++++++++++++++++++++++++++++++-----

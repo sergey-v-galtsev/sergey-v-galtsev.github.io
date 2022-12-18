@@ -94,6 +94,22 @@
 <span id="94">94</span>
 <span id="95">95</span>
 <span id="96">96</span>
+<span id="97">97</span>
+<span id="98">98</span>
+<span id="99">99</span>
+<span id="100">100</span>
+<span id="101">101</span>
+<span id="102">102</span>
+<span id="103">103</span>
+<span id="104">104</span>
+<span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
+<span id="112">112</span>
 </pre><pre class="rust"><code><span class="kw">use </span>ku::{
     error::{
         Error::{FileNotFound, NotDirectory},
@@ -125,7 +141,7 @@
 
 <span class="kw">impl </span>FileSystem {
     <span class="kw">pub fn </span>mount(disk: usize) -&gt; <span class="prelude-ty">Result</span>&lt;FileSystem&gt; {
-        <span class="kw">let </span>disk = Disk::list()[disk];
+        <span class="kw">let </span>disk = Disk::new(disk)<span class="question-mark">?</span>;
 
         BlockCache::init(disk, SUPERBLOCK_BLOCK + <span class="number">1</span>)<span class="question-mark">?</span>;
 
@@ -143,7 +159,8 @@
 
 
     <span class="kw">pub fn </span>format(disk: usize, size: usize) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
-        <span class="kw">let </span>disk = Disk::list()[disk];
+        <span class="kw">let </span>disk = Disk::new(disk)<span class="question-mark">?</span>;
+
         <span class="kw">let </span>block_count = size / BLOCK_SIZE;
 
         BlockCache::init(disk, block_count)<span class="question-mark">?</span>;
@@ -179,6 +196,21 @@
     <span class="kw">pub fn </span>open(<span class="kw-2">&amp;mut </span><span class="self">self</span>, path: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;File&gt; {
         <span class="comment">// TODO: your code here.
         </span><span class="macro">unimplemented!</span>();
+    }
+
+
+    <span class="kw">pub fn </span>free_space(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+        <span class="self">self</span>.block_bitmap.free_block_count() * BLOCK_SIZE
+    }
+
+
+    <span class="kw">pub fn </span>reserved_space(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+        <span class="self">self</span>.block_bitmap.reserved_block_count() * BLOCK_SIZE
+    }
+
+
+    <span class="kw">pub fn </span>used_space(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+        <span class="self">self</span>.superblock.block_count() * BLOCK_SIZE - <span class="self">self</span>.free_space() - <span class="self">self</span>.reserved_space()
     }
 }
 

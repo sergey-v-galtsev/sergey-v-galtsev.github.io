@@ -161,10 +161,15 @@
 <p>В память блоки зачитываются по необходимости.
 Для этого, изначально все страницы помечаются недоступными.
 А при возникновении ошибки обращения к памяти, страницы нужного блока считывается с диска обработчиком
-<code>BlockCache::trap_handler()</code>.
-Запись блока выполняется при необходимости вызовом <code>BlockCache::flush_block()</code>.
-Все блоки можно записать вызовом <code>BlockCache::flush()</code>.
-Для простоты, размер блока <code>BLOCK_SIZE</code> берётся равным размеру страницы <code>Page::SIZE</code>.</p>
+<a href="../../doc/kernel/fs/block_cache/struct.BlockCache.html#method.trap_handler"><code>BlockCache::trap_handler()</code></a>.
+Запись блока выполняется при необходимости вызовом
+<a href="../../doc/kernel/fs/block_cache/struct.BlockCache.html#method.flush_block"><code>BlockCache::flush_block()</code></a>.
+Все блоки можно записать вызовом
+<a href="../../doc/kernel/fs/block_cache/struct.BlockCache.html#method.flush"><code>BlockCache::flush()</code></a>.
+Для простоты, размер блока
+<a href="../../doc/kernel/fs/constant.BLOCK_SIZE.html"><code>kernel::fs::BLOCK_SIZE</code></a>
+берётся равным размеру страницы
+<a href="../../doc/ku/memory/frage/struct.Frage.html#associatedconstant.SIZE"><code>Page::SIZE</code></a>.</p>
 <h3 id="Блочный-кеш-в-общем-случае"><a class="header" href="#Блочный-кеш-в-общем-случае">Блочный кеш в общем случае</a></h3>
 <p>Обычно размер кеша в памяти гораздо меньше, чем размер кешируемого диска:</p>
 <p><img src="6-fs-1-block-cache.svg" alt="" /></p>
@@ -175,23 +180,31 @@
 <p><img src="6-fs-1-block-cache-nikka.svg" alt="" /></p>
 <h3 id="Задача-1--блочный-кеш"><a class="header" href="#Задача-1--блочный-кеш">Задача 1 — блочный кеш</a></h3>
 <h4 id="Инициализация"><a class="header" href="#Инициализация">Инициализация</a></h4>
-<p>Реализуйте метод инициализации блочного кеша</p>
+<p>Реализуйте
+<a href="../../doc/kernel/fs/block_cache/struct.BlockCache.html#method.init">метод</a>
+инициализации блочного кеша</p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span>fn BlockCache::init(disk: Disk, block_count: usize) -&gt; Result&lt;()&gt;
+</span>fn BlockCache::init(
+    disk: Disk,
+    block_count: usize,
+) -&gt; Result&lt;()&gt;
 <span class="boring">}
 </span></code></pre></pre>
 <p>в файле
 <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/fs/block_cache.rs"><code>kernel/src/fs/block_cache.rs</code></a>.</p>
-<p>Он должен зарезервировать в <code>BASE_ADDRESS_SPACE</code> блок виртуальных страниц, достаточный для хранения
-<code>block_count</code> блоков файловой системы.
+<p>Он должен зарезервировать в
+<a href="../../doc/kernel/memory/struct.BASE_ADDRESS_SPACE.html"><code>kernel::memory::BASE_ADDRESS_SPACE</code></a>
+блок виртуальных страниц, достаточный для хранения <code>block_count</code> блоков файловой системы.
 И записать соответствующее значение в
 <a href="../../doc/kernel/fs/block_cache/struct.BLOCK_CACHE.html"><code>BLOCK_CACHE</code></a>.</p>
 <h4 id="Считывание-блока-с-диска"><a class="header" href="#Считывание-блока-с-диска">Считывание блока с диска</a></h4>
-<p>Реализуйте метод</p>
+<p>Реализуйте <a href="../../doc/kernel/fs/block_cache/struct.BlockCache.html#method.trap_handler">метод</a></p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span>fn BlockCache::trap_handler(info: &amp;Info) -&gt; Result&lt;bool&gt;
+</span>fn BlockCache::trap_handler(
+    info: &amp;Info,
+) -&gt; Result&lt;bool&gt;
 <span class="boring">}
 </span></code></pre></pre>
 <p>в файле
@@ -202,11 +215,14 @@
 Для чтения с диска используйте метод
 <a href="../../doc/kernel/fs/disk/struct.Disk.html#method.pio_read"><code>kernel::fs::disk::Disk::pio_read()</code></a>.</p>
 <h4 id="Запись-блока-на-диск"><a class="header" href="#Запись-блока-на-диск">Запись блока на диск</a></h4>
-<p>Запись блока выполняется при необходимости вызовом <code>BlockCache::flush_block()</code>.</p>
-<p>Реализуйте метод</p>
+<p>Запись блока выполняется при необходимости вызовом
+<a href="../../doc/kernel/fs/block_cache/struct.BlockCache.html#method.flush_block"><code>BlockCache::flush_block()</code></a>.</p>
+<p>Реализуйте <a href="../../doc/kernel/fs/block_cache/struct.BlockCache.html#method.flush_block">метод</a></p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span>fn BlockCache::flush_block(block_number: usize) -&gt; Result&lt;()&gt;
+</span>fn BlockCache::flush_block(
+    block_number: usize,
+) -&gt; Result&lt;()&gt;
 <span class="boring">}
 </span></code></pre></pre>
 <p>в файле
@@ -216,8 +232,8 @@
 Запись нужно делать только если:</p>
 <ul>
 <li>Блок отображён в память. Это означает что нему были обращения.</li>
-<li>И помечен как <code>PageTableFlags::DIRTY</code>. То есть, в память были записи, а значит блок на диске потенциально содержит устаревшие данные. Если обращения к блоку были только на чтение, то данные в памяти такие же как на диске, и можно их не записывать. А процессор в этом случае не установит бит <code>PageTableFlags::DIRTY</code>.</li>
-<li>После записи блока, сбросьте бит <code>PageTableFlags::DIRTY</code>. Он фактически означает одинаковость данных на диске и в памяти блочного кеша. Которая только что восстановлена. При этом нужно сбросить и соответствующую запись в <a href="https://en.wikipedia.org/wiki/Translation_lookaside_buffer">TLB</a> с помощью функции <a href="../../doc/kernel/memory/mmu/fn.flush.html"><code>kernel::memory::mmu::flush()</code></a>. Иначе процессор не узнает, что вы сбросили <code>PageTableFlags::DIRTY</code> и не проставит его в таблице страниц при следующей записи. И обновлённый блок на диск записан не будет.</li>
+<li>И помечен как <a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.DIRTY"><code>PageTableFlags::DIRTY</code></a>. То есть, в память были записи, а значит блок на диске потенциально содержит устаревшие данные. Если обращения к блоку были только на чтение, то данные в памяти такие же как на диске, и можно их не записывать. А процессор в этом случае не установит бит <a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.DIRTY"><code>PageTableFlags::DIRTY</code></a>.</li>
+<li>После записи блока, сбросьте бит <a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.DIRTY"><code>PageTableFlags::DIRTY</code></a>. Он фактически означает одинаковость данных на диске и в памяти блочного кеша. Которая только что восстановлена. При этом нужно сбросить и соответствующую запись в <a href="https://en.wikipedia.org/wiki/Translation_lookaside_buffer">TLB</a> с помощью функции <a href="../../doc/kernel/memory/mmu/fn.flush.html"><code>kernel::memory::mmu::flush()</code></a>. Иначе процессор не узнает, что вы сбросили <a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.DIRTY"><code>PageTableFlags::DIRTY</code></a> и не проставит его в таблице страниц при следующей записи. И обновлённый блок на диск записан не будет.</li>
 </ul>
 <h3 id="Проверьте-себя"><a class="header" href="#Проверьте-себя">Проверьте себя</a></h3>
 <p>Теперь должны заработать тесты в файлах
@@ -226,14 +242,52 @@
 <pre><code class="language-console">$ (cd kernel; cargo test --test 6-fs-1-block-cache-1-write --test 6-fs-1-block-cache-2-read)
 ...
 6_fs_1_block_cache_1_write::write---------------------------
-20:37:19 0 D block_count = 8192
+18:59:56 0 D block_count = 8192
+18:59:56 0 D flush; block = 0
+18:59:56 0 D flush; block = 2
+18:59:56 0 D flush; block = 4
+18:59:56 0 D flush; block = 6
+18:59:56 0 D flush; block = 8
+18:59:56 0 D flush; block = 10
+18:59:56 0 D flush; block = 12
+18:59:56 0 D flush; block = 14
+18:59:56 0 D flush; block = 16
+18:59:56 0 D flush; block = 18
+18:59:56 0 D flush; block = 20
+18:59:56 0 D flush; block = 22
+18:59:56 0 D flush; block = 24
+18:59:56 0 D flush; block = 26
+18:59:56 0 D flush; block = 28
+18:59:56 0 D flush; block = 30
 6_fs_1_block_cache_1_write::write------------------ [passed]
-20:37:19 0 I exit qemu; exit_code = SUCCESS
+18:59:56 0 I exit qemu; exit_code = SUCCESS
 ...
 6_fs_1_block_cache_2_read::read_what_was_written------------
-20:37:21 0 D block_count = 8192
+18:59:58 0 D block_count = 8192
+18:59:58 0 D i = 0; block = 0; actual = 0; expected = 0
+18:59:58 0 D i = 777; block = 1; actual = 0; expected = 0
+18:59:58 0 D i = 1554; block = 3; actual = 0; expected = 0
+18:59:58 0 D i = 2331; block = 4; actual = 2331; expected = 2331
+18:59:58 0 D i = 3108; block = 6; actual = 3108; expected = 3108
+18:59:58 0 D i = 3885; block = 7; actual = 0; expected = 0
+18:59:58 0 D i = 4662; block = 9; actual = 0; expected = 0
+18:59:58 0 D i = 5439; block = 10; actual = 5439; expected = 5439
+18:59:58 0 D i = 6216; block = 12; actual = 6216; expected = 6216
+18:59:58 0 D i = 6993; block = 13; actual = 0; expected = 0
+18:59:58 0 D i = 7770; block = 15; actual = 0; expected = 0
+18:59:58 0 D i = 8547; block = 16; actual = 8547; expected = 8547
+18:59:58 0 D i = 9324; block = 18; actual = 9324; expected = 9324
+18:59:58 0 D i = 10101; block = 19; actual = 0; expected = 0
+18:59:58 0 D i = 10878; block = 21; actual = 0; expected = 0
+18:59:58 0 D i = 11655; block = 22; actual = 11655; expected = 11655
+18:59:58 0 D i = 12432; block = 24; actual = 12432; expected = 12432
+18:59:58 0 D i = 13209; block = 25; actual = 0; expected = 0
+18:59:58 0 D i = 13986; block = 27; actual = 0; expected = 0
+18:59:58 0 D i = 14763; block = 28; actual = 14763; expected = 14763
+18:59:58 0 D i = 15540; block = 30; actual = 15540; expected = 15540
+18:59:58 0 D i = 16317; block = 31; actual = 0; expected = 0
 6_fs_1_block_cache_2_read::read_what_was_written--- [passed]
-20:37:21 0 I exit qemu; exit_code = SUCCESS
+18:59:58 0 I exit qemu; exit_code = SUCCESS
 </code></pre>
 <h3 id="Ориентировочный-объём-работ-этой-части-лабораторки"><a class="header" href="#Ориентировочный-объём-работ-этой-части-лабораторки">Ориентировочный объём работ этой части лабораторки</a></h3>
 <pre><code class="language-console"> kernel/src/fs/block_cache.rs |   64 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++--------

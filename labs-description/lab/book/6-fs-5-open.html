@@ -147,29 +147,46 @@
                         <h2 id="Поиск-файла-по-пути"><a class="header" href="#Поиск-файла-по-пути">Поиск файла по пути</a></h2>
 <h3 id="Задача-5--поиск-файла-по-пути"><a class="header" href="#Задача-5--поиск-файла-по-пути">Задача 5 — поиск файла по пути</a></h3>
 <p>Реализуйте <a href="../../doc/kernel/fs/file_system/struct.FileSystem.html#method.open">метод</a></p>
-<pre><code>fn FileSystem::open(&amp;mut self, path: &amp;str) -&gt; Result&lt;File&gt;
-</code></pre>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn FileSystem::open(
+    &amp;mut self,
+    path: &amp;str,
+) -&gt; Result&lt;File&gt;
+<span class="boring">}
+</span></code></pre></pre>
 <p>в файле
 <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/fs/file_system.rs"><code>kernel/src/fs/file_system.rs</code></a>.</p>
 <p>Он должен пройти от корня файловой системы по заданному полному пути <code>path</code>.
-И вернуть соответствующий <code>File</code>.</p>
+И вернуть соответствующий
+<a href="../../doc/kernel/fs/file/struct.File.html"><code>kernel::fs::file::File</code></a>.
+Вам пригодится метод
+<a href="../../doc/kernel/fs/inode/struct.Inode.html#method.find"><code>kernel::fs::inode::Inode::find()</code></a>.</p>
 <h3 id="Проверьте-себя"><a class="header" href="#Проверьте-себя">Проверьте себя</a></h3>
 <p>Теперь должен заработать тест <code>fs()</code> в файле
 <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/tests/6-fs-5-open.rs"><code>kernel/tests/6-fs-5-open.rs</code></a>:</p>
 <pre><code class="language-console">$ (cd kernel; cargo test --test 6-fs-5-open)
 ...
 6_fs_5_open::fs---------------------------------------------
-20:38:44 0 I formatted the file system; free_space = 31.988 MiB; disk = { id: 1, base_port: 0x1F0, disk: 1 }; block_count = 8192; reserved_block_count = 3; inode_size = 64 B; directory_entry_size = 128 B; max_file_size = 513.002 GiB
-20:38:44 0 I path = /file-1; entry = file-1, File, 5678 B = 5.545 KiB, 2022-12-11 20:38:44 UTC
-20:38:44 0 I path = /file-2; entry = file-2, File, 9876 B = 9.645 KiB, 2022-12-11 20:38:44 UTC
-20:38:44 0 I path = /dir-1; entry = dir-1, Directory, 4096 B = 4.000 KiB, 2022-12-11 20:38:44 UTC
-20:38:44 0 I path = /dir-1/file-4; entry = file-4, File, 0 B = 0 B, 2022-12-11 20:38:44 UTC
-20:38:44 0 I path = /dir-1/file-5; entry = file-5, File, 0 B = 0 B, 2022-12-11 20:38:44 UTC
-20:38:44 0 I path = /dir-1/dir-2; entry = dir-2, Directory, 4096 B = 4.000 KiB, 2022-12-11 20:38:44 UTC
-20:38:44 0 I path = /dir-1/dir-2/dir-3; entry = dir-3, Directory, 4096 B = 4.000 KiB, 2022-12-11 20:38:44 UTC
-20:38:44 0 I path = /dir-1/dir-2/dir-3/file-3; entry = file-3, File, 0 B = 0 B, 2022-12-11 20:38:44 UTC
+19:02:09 0 I formatted the file system; free_space = 31.988 MiB; disk = { id: 1, io_port: 0x1F0, io_disk: 1 }; block_count = 8192; reserved_block_count = 3; inode_size = 64 B; directory_entry_size = 128 B; max_file_size = 513.002 GiB
+19:02:09 0 I path = /file-1; entry = file-1, File, 5678 B = 5.545 KiB, 2022-12-17 19:02:09 UTC
+19:02:09 0 I path = /file-2; entry = file-2, File, 9876 B = 9.645 KiB, 2022-12-17 19:02:09 UTC
+19:02:09 0 I path = /dir-1; entry = dir-1, Directory, 4096 B = 4.000 KiB, 2022-12-17 19:02:09 UTC
+19:02:09 0 I path = /dir-1/file-4; entry = file-4, File, 0 B = 0 B, 2022-12-17 19:02:09 UTC
+19:02:09 0 I path = /dir-1/file-5; entry = file-5, File, 0 B = 0 B, 2022-12-17 19:02:09 UTC
+19:02:09 0 I path = /dir-1/dir-2; entry = dir-2, Directory, 4096 B = 4.000 KiB, 2022-12-17 19:02:09 UTC
+19:02:09 0 I path = /dir-1/dir-2/dir-3; entry = dir-3, Directory, 4096 B = 4.000 KiB, 2022-12-17 19:02:09 UTC
+19:02:09 0 I path = /dir-1/dir-2/dir-3/file-3; entry = file-3, File, 0 B = 0 B, 2022-12-17 19:02:09 UTC
+19:02:09 0 I removing; path = /file-1; entry = file-1, File, 5678 B = 5.545 KiB, 2022-12-17 19:02:09 UTC
+19:02:09 0 I removing; path = /file-2; entry = file-2, File, 9876 B = 9.645 KiB, 2022-12-17 19:02:09 UTC
+19:02:09 0 I removing; path = /dir-1; entry = dir-1, Directory, 4096 B = 4.000 KiB, 2022-12-17 19:02:09 UTC
+19:02:09 0 I removing; path = /dir-1/file-4; entry = file-4, File, 0 B = 0 B, 2022-12-17 19:02:09 UTC
+19:02:09 0 I removing; path = /dir-1/file-5; entry = file-5, File, 0 B = 0 B, 2022-12-17 19:02:09 UTC
+19:02:09 0 I removing; path = /dir-1/dir-2; entry = dir-2, Directory, 4096 B = 4.000 KiB, 2022-12-17 19:02:09 UTC
+19:02:09 0 I removing; path = /dir-1/dir-2/dir-3; entry = dir-3, Directory, 4096 B = 4.000 KiB, 2022-12-17 19:02:09 UTC
+19:02:09 0 I removing; path = /dir-1/dir-2/dir-3/file-3; entry = file-3, File, 0 B = 0 B, 2022-12-17 19:02:09 UTC
 6_fs_5_open::fs------------------------------------ [passed]
-20:38:45.049 0 I exit qemu; exit_code = SUCCESS
+19:02:10.121 0 I exit qemu; exit_code = SUCCESS
 </code></pre>
 <h3 id="Ориентировочный-объём-работ-этой-части-лабораторки"><a class="header" href="#Ориентировочный-объём-работ-этой-части-лабораторки">Ориентировочный объём работ этой части лабораторки</a></h3>
 <pre><code class="language-console"> kernel/src/fs/file_system.rs |   21 +++++++++++++++++++--

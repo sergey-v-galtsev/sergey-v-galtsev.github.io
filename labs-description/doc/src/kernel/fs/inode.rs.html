@@ -263,6 +263,49 @@
 <span id="263">263</span>
 <span id="264">264</span>
 <span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
 </pre><pre class="rust"><code><span class="kw">use </span>core::{cmp, fmt, iter::Filter, mem, ops::Add};
 
 <span class="kw">use </span>chrono::{DateTime, Utc};
@@ -317,8 +360,12 @@
     }
 
 
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>remove(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>remove(<span class="kw-2">&amp;mut </span><span class="self">self</span>, block_bitmap: <span class="kw-2">&amp;mut </span>BlockBitmap) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+        <span class="self">self</span>.set_size(<span class="number">0</span>, block_bitmap)<span class="question-mark">?</span>;
+        <span class="macro">assert!</span>(<span class="self">self</span>.root_blocks.iter().all(|<span class="kw-2">&amp;</span>block| block == NO_BLOCK));
         <span class="self">self</span>.set_kind(Kind::Unused);
+
+        <span class="prelude-val">Ok</span>(())
     }
 
 
@@ -487,6 +534,45 @@
     <span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
         <span class="self">self</span>.<span class="number">0</span>.next()
     }
+}
+
+
+<span class="attribute">#[allow(unused_mut)] </span><span class="comment">// TODO: remove before flight.
+</span><span class="kw">fn </span>find_tree(tree_count: usize, <span class="kw-2">mut </span>leaf_number: usize) -&gt; <span class="prelude-ty">Result</span>&lt;(usize, usize, usize)&gt; {
+    <span class="comment">// TODO: your code here.
+    </span><span class="macro">unimplemented!</span>();
+}
+
+
+<span class="kw">fn </span>remove_tree&lt;<span class="lifetime">&#39;a</span>&gt;(
+    node: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>usize,
+    height: usize,
+    block_bitmap: <span class="kw-2">&amp;mut </span>BlockBitmap,
+) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="comment">// TODO: your code here.
+    </span><span class="macro">unimplemented!</span>();
+}
+
+
+<span class="attribute">#[allow(unused_mut)] </span><span class="comment">// TODO: remove before flight.
+</span><span class="kw">fn </span>traverse_tree&lt;<span class="lifetime">&#39;a</span>&gt;(
+    <span class="kw-2">mut </span>node: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>usize,
+    height: usize,
+    <span class="kw-2">mut </span>leaf_count: usize,
+    <span class="kw-2">mut </span>leaf_number: usize,
+    <span class="kw-2">mut </span>block_bitmap: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;mut </span>BlockBitmap&gt;,
+) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>usize&gt; {
+    <span class="comment">// TODO: your code here.
+    </span><span class="macro">unimplemented!</span>();
+}
+
+
+<span class="kw">fn </span>next_level&lt;<span class="lifetime">&#39;a</span>&gt;(
+    node: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>usize,
+    block_bitmap: <span class="kw-2">&amp;mut </span><span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;mut </span>BlockBitmap&gt;,
+) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>[usize]&gt; {
+    <span class="comment">// TODO: your code here.
+    </span><span class="macro">unimplemented!</span>();
 }
 
 
