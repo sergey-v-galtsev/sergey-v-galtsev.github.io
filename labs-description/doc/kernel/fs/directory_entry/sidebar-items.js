@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"constant":[["MAX_NAME_LEN",""]],"struct":[["DirectoryEntry",""]]};
+window.SIDEBAR_ITEMS = {"constant":[["MAX_NAME_LEN","Максимальный размер имён файлов и директорий."]],"struct":[["DirectoryEntry","Запись директории с [`Inode`], который содержится в этой директории, и его именем."]]};

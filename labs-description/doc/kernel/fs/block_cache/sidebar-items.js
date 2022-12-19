@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"constant":[["SECTORS_PER_BLOCK",""]],"struct":[["BLOCK_CACHE",""],["BlockCache",""]]};
+window.SIDEBAR_ITEMS = {"constant":[["SECTORS_PER_BLOCK","Количество секторов диска в одном блоке файловой системы."]],"struct":[["BLOCK_CACHE","Блочный кеш для ускорения работы с диском за счёт кеширования блоков файловой системы в памяти."],["BlockCache","Блочный кеш для ускорения работы с диском за счёт кеширования блоков файловой системы в памяти."]]};

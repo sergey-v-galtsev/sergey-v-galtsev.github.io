@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"constant":[["SECTOR_SIZE",""],["TIMEOUT_IN_SECONDS",""]],"fn":[["ins32",""],["outs32",""]],"struct":[["Command",""],["Disk",""]]};
+window.SIDEBAR_ITEMS = {"constant":[["SECTOR_SIZE","Размер сектора PATA–диска."],["TIMEOUT_IN_SECONDS","Таймаут ожидания готовности диска к приёму команды в секундах."]],"fn":[["ins32","Читает из порта ввода–вывода номер `port` данные в буфер `buffer`."],["outs32","Записывает в порт ввода–вывода номер `port` данные из буфера `buffer`."]],"struct":[["Command","PATA–команда работы с диском."],["Disk","PATA–диск."]]};

@@ -211,6 +211,48 @@
 <span id="211">211</span>
 <span id="212">212</span>
 <span id="213">213</span>
+<span id="214">214</span>
+<span id="215">215</span>
+<span id="216">216</span>
+<span id="217">217</span>
+<span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
+<span id="221">221</span>
+<span id="222">222</span>
+<span id="223">223</span>
+<span id="224">224</span>
+<span id="225">225</span>
+<span id="226">226</span>
+<span id="227">227</span>
+<span id="228">228</span>
+<span id="229">229</span>
+<span id="230">230</span>
+<span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
+<span id="237">237</span>
+<span id="238">238</span>
+<span id="239">239</span>
+<span id="240">240</span>
+<span id="241">241</span>
+<span id="242">242</span>
+<span id="243">243</span>
+<span id="244">244</span>
+<span id="245">245</span>
+<span id="246">246</span>
+<span id="247">247</span>
+<span id="248">248</span>
+<span id="249">249</span>
+<span id="250">250</span>
+<span id="251">251</span>
+<span id="252">252</span>
+<span id="253">253</span>
+<span id="254">254</span>
+<span id="255">255</span>
 </pre><pre class="rust"><code><span class="kw">use </span>core::{arch::asm, hint, mem, ops::Range};
 
 <span class="kw">use </span>bitflags::bitflags;
@@ -229,7 +271,8 @@
 };
 
 
-<span class="attribute">#[derive(Clone, Copy, Debug, Display)]
+<span class="doccomment">/// [PATA](https://en.wikipedia.org/wiki/Parallel_ATA)--диск.
+</span><span class="attribute">#[derive(Clone, Copy, Debug, Display)]
 #[display(
     fmt = <span class="string">&quot;{{ id: {}, io_port: {:#04X}, io_disk: {} }}&quot;</span>,
     id,
@@ -237,14 +280,21 @@
     io_disk
 )]
 </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct </span>Disk {
-    id: u8,
-    io_disk: u8,
-    io_port: u16,
+    <span class="doccomment">/// Идентификатор диска --- `0..4`.
+    </span>id: u8,
+
+    <span class="doccomment">/// Идентификатор диска,
+    /// передаваемый в [порт ввода--вывода](https://wiki.osdev.org/Port_IO) при операциях с ним.
+    </span>io_disk: u8,
+
+    <span class="doccomment">/// Базовый [порт ввода--вывода](https://wiki.osdev.org/Port_IO) для операций с диском.
+    </span>io_port: u16,
 }
 
 
 <span class="kw">impl </span>Disk {
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>new(id: usize) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
+    <span class="doccomment">/// Возвращает диск с заданным `id`.
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>new(id: usize) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         <span class="kw">let </span>id = id.try_into().map_err(|<span class="kw">_</span>| NoDisk)<span class="question-mark">?</span>;
 
         <span class="prelude-val">Ok</span>(<span class="self">Self </span>{
@@ -255,7 +305,10 @@
     }
 
 
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>pio_read(<span class="kw-2">&amp;</span><span class="self">self</span>, sectors: Range&lt;usize&gt;, buffer: <span class="kw-2">&amp;mut </span>[u32]) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="doccomment">/// Читает с диска диапазон секторов `sectors` размера [`SECTOR_SIZE`]
+    /// в буфер `buffer` методом
+    /// [программного ввода--вывода](https://en.wikipedia.org/wiki/Programmed_input%E2%80%93output).
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>pio_read(<span class="kw-2">&amp;</span><span class="self">self</span>, sectors: Range&lt;usize&gt;, buffer: <span class="kw-2">&amp;mut </span>[u32]) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="macro">assert!</span>(
             buffer.len() * mem::size_of::&lt;u32&gt;() == (sectors.end - sectors.start) * SECTOR_SIZE
         );
@@ -276,7 +329,10 @@
     }
 
 
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>pio_write(<span class="kw-2">&amp;</span><span class="self">self</span>, sectors: Range&lt;usize&gt;, buffer: <span class="kw-2">&amp;</span>[u32]) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="doccomment">/// Записывает на диск диапазон секторов `sectors` размера [`SECTOR_SIZE`]
+    /// из буфера `buffer` методом
+    /// [программного ввода--вывода](https://en.wikipedia.org/wiki/Programmed_input%E2%80%93output).
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>pio_write(<span class="kw-2">&amp;</span><span class="self">self</span>, sectors: Range&lt;usize&gt;, buffer: <span class="kw-2">&amp;</span>[u32]) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="macro">assert!</span>(
             buffer.len() * mem::size_of::&lt;u32&gt;() == (sectors.end - sectors.start) * SECTOR_SIZE
         );
@@ -297,14 +353,21 @@
     }
 
 
-    <span class="kw">unsafe fn </span>send_command(
+    <span class="doccomment">/// Посылает в диск команду `command` для
+    /// [программного ввода--вывода](https://en.wikipedia.org/wiki/Programmed_input%E2%80%93output)
+    /// `sector_count` секторов начиная с сектора номер `start_sector`.
+    </span><span class="kw">unsafe fn </span>send_command(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         command: Command,
         start_sector: usize,
         sector_count: usize,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
-        <span class="kw">const </span>LBA: u8 = <span class="number">1 </span>&lt;&lt; <span class="number">6</span>;
-        <span class="kw">const </span>RESERVED_SHOULD_BE_ONES: u8 = (<span class="number">1 </span>&lt;&lt; <span class="number">5</span>) | (<span class="number">1 </span>&lt;&lt; <span class="number">7</span>);
+        <span class="doccomment">/// Выбирает режим логической адресации блоков диска
+        /// ([Logical block addressing](https://en.wikipedia.org/wiki/Logical_block_addressing), LBA).
+        </span><span class="kw">const </span>LBA: u8 = <span class="number">1 </span>&lt;&lt; <span class="number">6</span>;
+
+        <span class="doccomment">/// Зарезервированные биты, которые должны быть выставлены в `1`.
+        </span><span class="kw">const </span>RESERVED_SHOULD_BE_ONES: u8 = (<span class="number">1 </span>&lt;&lt; <span class="number">5</span>) | (<span class="number">1 </span>&lt;&lt; <span class="number">7</span>);
 
         <span class="macro">assert!</span>(start_sector &lt; (<span class="number">1 </span>&lt;&lt; <span class="number">24</span>));
         <span class="macro">assert!</span>(sector_count &lt; (<span class="number">1 </span>&lt;&lt; <span class="number">8</span>));
@@ -328,9 +391,11 @@
     }
 
 
-    <span class="kw">fn </span>wait_ready(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="doccomment">/// Ожидает готовности диска к приёму команды.
+    </span><span class="kw">fn </span>wait_ready(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="macro">bitflags! </span>{
-            <span class="kw">struct </span>Status: u8 {
+            <span class="doccomment">/// Регистр статуса.
+            </span><span class="kw">struct </span>Status: u8 {
                 <span class="kw">const </span>ERROR = <span class="number">1 </span>&lt;&lt; <span class="number">0</span>;
                 <span class="kw">const </span>FAILURE = <span class="number">1 </span>&lt;&lt; <span class="number">5</span>;
                 <span class="kw">const </span>READY = <span class="number">1 </span>&lt;&lt; <span class="number">6</span>;
@@ -367,9 +432,16 @@
     }
 
 
-    <span class="kw">fn </span>io_port(id: u8) -&gt; <span class="prelude-ty">Result</span>&lt;u16&gt; {
-        <span class="kw">const </span>ATA0_BASE_PORT: u16 = <span class="number">0x01F0</span>;
-        <span class="kw">const </span>ATA1_BASE_PORT: u16 = <span class="number">0x0170</span>;
+    <span class="doccomment">/// Базовый [порт ввода--вывода](https://wiki.osdev.org/Port_IO)
+    /// для операций с диском имеющим порядковый номер `id`.
+    </span><span class="kw">fn </span>io_port(id: u8) -&gt; <span class="prelude-ty">Result</span>&lt;u16&gt; {
+        <span class="doccomment">/// Базовый порт первого и второго
+        /// [PATA](https://en.wikipedia.org/wiki/Parallel_ATA)--диска.
+        </span><span class="kw">const </span>ATA0_BASE_PORT: u16 = <span class="number">0x01F0</span>;
+
+        <span class="doccomment">/// Базовый порт третьего и четвёртого
+        /// [PATA](https://en.wikipedia.org/wiki/Parallel_ATA)--диска.
+        </span><span class="kw">const </span>ATA1_BASE_PORT: u16 = <span class="number">0x0170</span>;
 
         <span class="kw">match </span>id / <span class="number">2 </span>{
             <span class="number">0 </span>=&gt; <span class="prelude-val">Ok</span>(ATA0_BASE_PORT),
@@ -379,13 +451,17 @@
     }
 
 
-    <span class="kw">fn </span>io_disk(id: u8) -&gt; u8 {
+    <span class="doccomment">/// Идентификатор диска,
+    /// передаваемый в [порт ввода--вывода](https://wiki.osdev.org/Port_IO)
+    /// для операций с диском имеющим порядковый номер `id`.
+    </span><span class="kw">fn </span>io_disk(id: u8) -&gt; u8 {
         id % <span class="number">2
     </span>}
 }
 
 
-<span class="kw">unsafe fn </span>outs32(port: u16, buffer: <span class="kw-2">&amp;</span>[u32]) {
+<span class="doccomment">/// Записывает в порт ввода--вывода номер `port` данные из буфера `buffer`.
+</span><span class="kw">unsafe fn </span>outs32(port: u16, buffer: <span class="kw-2">&amp;</span>[u32]) {
     <span class="macro">asm!</span>(
         <span class="string">&quot;
         rep outs dx, LONG PTR [rsi]
@@ -398,7 +474,8 @@
 }
 
 
-<span class="kw">unsafe fn </span>ins32(port: u16, buffer: <span class="kw-2">&amp;mut </span>[u32]) {
+<span class="doccomment">/// Читает из порта ввода--вывода номер `port` данные в буфер `buffer`.
+</span><span class="kw">unsafe fn </span>ins32(port: u16, buffer: <span class="kw-2">&amp;mut </span>[u32]) {
     <span class="macro">asm!</span>(
         <span class="string">&quot;
         rep ins LONG PTR [rdi], dx
@@ -411,17 +488,24 @@
 }
 
 
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">const </span>SECTOR_SIZE: usize = <span class="number">1 </span>&lt;&lt; <span class="number">9</span>;
+<span class="doccomment">/// Размер сектора [PATA](https://en.wikipedia.org/wiki/Parallel_ATA)--диска.
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">const </span>SECTOR_SIZE: usize = <span class="number">1 </span>&lt;&lt; <span class="number">9</span>;
 
-<span class="kw">const </span>TIMEOUT_IN_SECONDS: i64 = <span class="number">10</span>;
+<span class="doccomment">/// Таймаут ожидания готовности диска к приёму команды в секундах.
+</span><span class="kw">const </span>TIMEOUT_IN_SECONDS: i64 = <span class="number">10</span>;
+
 
 <span class="macro">const_assert!</span>(SECTOR_SIZE % mem::size_of::&lt;u32&gt;() == <span class="number">0</span>);
 
 
 <span class="macro">bitflags! </span>{
-    <span class="kw">struct </span>Command: u8 {
-        <span class="kw">const </span>READ = <span class="number">0x20</span>;
-        <span class="kw">const </span>WRITE = <span class="number">0x30</span>;
+    <span class="doccomment">/// [PATA](https://en.wikipedia.org/wiki/Parallel_ATA)--команда работы с диском.
+    </span><span class="kw">struct </span>Command: u8 {
+        <span class="doccomment">/// Чтение диапазона секторов с диска.
+        </span><span class="kw">const </span>READ = <span class="number">0x20</span>;
+
+        <span class="doccomment">/// Запись диапазона секторов на диск.
+        </span><span class="kw">const </span>WRITE = <span class="number">0x30</span>;
     }
 }
 </code></pre></div>

@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":[["BlockBitmap",""]]};
+window.SIDEBAR_ITEMS = {"struct":[["BlockBitmap","Битмап для отслеживания какие именно блоки файловой системы заняты, а какие свободны."]]};

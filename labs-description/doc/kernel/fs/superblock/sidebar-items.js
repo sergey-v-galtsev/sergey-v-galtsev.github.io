@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"constant":[["ENDIAN",""],["MAGIC",""]],"struct":[["Superblock",""]]};
+window.SIDEBAR_ITEMS = {"constant":[["ENDIAN","Значение индикатора направления байт."],["MAGIC","Сигнатура файловой системы."]],"struct":[["Superblock","Суперблок (superblock) файловой системы."]]};

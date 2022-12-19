@@ -169,6 +169,59 @@
 <span id="169">169</span>
 <span id="170">170</span>
 <span id="171">171</span>
+<span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
+<span id="177">177</span>
+<span id="178">178</span>
+<span id="179">179</span>
+<span id="180">180</span>
+<span id="181">181</span>
+<span id="182">182</span>
+<span id="183">183</span>
+<span id="184">184</span>
+<span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
+<span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
+<span id="201">201</span>
+<span id="202">202</span>
+<span id="203">203</span>
+<span id="204">204</span>
+<span id="205">205</span>
+<span id="206">206</span>
+<span id="207">207</span>
+<span id="208">208</span>
+<span id="209">209</span>
+<span id="210">210</span>
+<span id="211">211</span>
+<span id="212">212</span>
+<span id="213">213</span>
+<span id="214">214</span>
+<span id="215">215</span>
+<span id="216">216</span>
+<span id="217">217</span>
+<span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
+<span id="221">221</span>
+<span id="222">222</span>
+<span id="223">223</span>
+<span id="224">224</span>
 </pre><pre class="rust"><code><span class="kw">use </span>alloc::{string::String, vec::Vec};
 <span class="kw">use </span>core::fmt;
 
@@ -179,23 +232,31 @@
     memory::{Size, Virt},
 };
 
-
 <span class="kw">use super</span>::{
     block_bitmap::BlockBitmap,
     directory_entry::DirectoryEntry,
     inode::{Inode, Kind},
 };
 
+<span class="comment">// Used in docs.
+</span><span class="attribute">#[allow(unused)]
+</span><span class="kw">use </span>ku::error::Error;
 
-<span class="attribute">#[derive(Debug)]
+
+<span class="doccomment">/// Интерфейс к файлам и директориям файловой системы.
+</span><span class="attribute">#[derive(Debug)]
 </span><span class="kw">pub struct </span>File {
-    block_bitmap: BlockBitmap,
-    inode: Virt,
+    <span class="doccomment">/// [Битмап](https://en.wikipedia.org/wiki/Free-space_bitmap) файловой системы.
+    </span>block_bitmap: BlockBitmap,
+
+    <span class="doccomment">/// [Inode](https://en.wikipedia.org/wiki/Inode) файла.
+    </span>inode: Virt,
 }
 
 
 <span class="kw">impl </span>File {
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>new(inode: <span class="kw-2">&amp;</span>Inode, block_bitmap: <span class="kw-2">&amp;</span>BlockBitmap) -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Создаёт [`File`] для доступа к заданному `inode`.
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>new(inode: <span class="kw-2">&amp;</span>Inode, block_bitmap: <span class="kw-2">&amp;</span>BlockBitmap) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             block_bitmap: block_bitmap.clone(),
             inode: Virt::from_ref(inode),
@@ -203,100 +264,145 @@
     }
 
 
-    <span class="kw">pub fn </span>kind(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Kind {
+    <span class="doccomment">/// Тип --- файл или директория.
+    </span><span class="kw">pub fn </span>kind(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Kind {
         <span class="self">self</span>.inode().kind()
     }
 
 
-    <span class="kw">pub fn </span>set_kind(<span class="kw-2">&amp;mut </span><span class="self">self</span>, kind: Kind) {
-        <span class="self">self</span>.inode().set_kind(kind)
-    }
-
-
-    <span class="kw">pub fn </span>modify_time(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; DateTime&lt;Utc&gt; {
+    <span class="doccomment">/// Время последней модификации файла или директории.
+    </span><span class="kw">pub fn </span>modify_time(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; DateTime&lt;Utc&gt; {
         <span class="self">self</span>.inode().modify_time()
     }
 
 
-    <span class="kw">pub fn </span>size(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+    <span class="doccomment">/// Размер данных в байтах.
+    </span><span class="kw">pub fn </span>size(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="self">self</span>.inode().size()
     }
 
 
-    <span class="kw">pub fn </span>set_size(<span class="kw-2">&amp;mut </span><span class="self">self</span>, size: usize) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="doccomment">/// Устанавливает размер данных в байтах.
+    /// Если файл расширяется, то новые блоки с данными содержат нули.
+    /// При необходимости выделяет или освобождает блоки.
+    /// Обновляет время последней модификации файла.
+    </span><span class="kw">pub fn </span>set_size(<span class="kw-2">&amp;mut </span><span class="self">self</span>, size: usize) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="self">self</span>.inode().set_size(size, <span class="self">self</span>.block_bitmap())
     }
 
 
-    <span class="kw">pub fn </span>find(<span class="kw-2">&amp;mut </span><span class="self">self</span>, name: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;File&gt; {
+    <span class="doccomment">/// Находит файл или поддиректорию с именем `name` в директории.
+    /// Возвращает ошибку [`Error::FileNotFound`], если такого файла нет.
+    </span><span class="kw">pub fn </span>find(<span class="kw-2">&amp;mut </span><span class="self">self</span>, name: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;File&gt; {
         <span class="self">self</span>.inode().find(name).map(|inode| File::new(inode, <span class="kw-2">&amp;</span><span class="self">self</span>.block_bitmap))
     }
 
 
-    <span class="kw">pub fn </span>list(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;Entry&gt;&gt; {
+    <span class="doccomment">/// Возвращает список файлов и поддиректорий в директории.
+    </span><span class="kw">pub fn </span>list(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;Entry&gt;&gt; {
         <span class="prelude-val">Ok</span>(<span class="self">self</span>.inode().list()<span class="question-mark">?</span>.map(Entry::from).collect())
     }
 
 
-    <span class="kw">pub fn </span>insert(<span class="kw-2">&amp;mut </span><span class="self">self</span>, name: <span class="kw-2">&amp;</span>str, kind: Kind) -&gt; <span class="prelude-ty">Result</span>&lt;File&gt; {
+    <span class="doccomment">/// Вставляет в директорию запись с именем `name` и типом `kind`.
+    /// Обновляет как время модификации выделенной записи, так и время модификации самой директории.
+    ///
+    /// Возвращает ошибки:
+    ///
+    /// - [`Error::FileExists`] если запись с таким именем уже есть.
+    /// - [`Error::InvalidArgument`] если `kind` равен [`Kind::Unused`].
+    </span><span class="kw">pub fn </span>insert(<span class="kw-2">&amp;mut </span><span class="self">self</span>, name: <span class="kw-2">&amp;</span>str, kind: Kind) -&gt; <span class="prelude-ty">Result</span>&lt;File&gt; {
         <span class="self">self</span>.inode()
             .insert(name, kind, <span class="self">self</span>.block_bitmap())
             .map(|inode| File::new(inode, <span class="kw-2">&amp;</span><span class="self">self</span>.block_bitmap))
     }
 
 
-    <span class="kw">pub fn </span>remove(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="doccomment">/// Удаляет файл.
+    </span><span class="kw">pub fn </span>remove(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="self">self</span>.inode().remove(<span class="self">self</span>.block_bitmap())
     }
 
 
-    <span class="kw">pub fn </span>read(<span class="kw-2">&amp;mut </span><span class="self">self</span>, offset: usize, buffer: <span class="kw-2">&amp;mut </span>[u8]) -&gt; <span class="prelude-ty">Result</span>&lt;usize&gt; {
+    <span class="doccomment">/// Читает из файла по смещению `offset` в буфер `buffer` столько байт,
+    /// сколько остаётся до конца файла или до конца буфера.
+    ///
+    /// Возвращает количество прочитанных байт.
+    /// Если `offset` равен размеру файла, возвращает `0` прочитанных байт.
+    ///
+    /// Возвращает ошибки:
+    ///
+    /// - [`Error::NotFile`] если [Inode](https://en.wikipedia.org/wiki/Inode) не является файлом.
+    /// - [`Error::InvalidArgument`] если `offset` превышает размер файла.
+    </span><span class="kw">pub fn </span>read(<span class="kw-2">&amp;mut </span><span class="self">self</span>, offset: usize, buffer: <span class="kw-2">&amp;mut </span>[u8]) -&gt; <span class="prelude-ty">Result</span>&lt;usize&gt; {
         <span class="self">self</span>.inode().read(offset, buffer)
     }
 
 
-    <span class="kw">pub fn </span>write(<span class="kw-2">&amp;mut </span><span class="self">self</span>, offset: usize, buffer: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="prelude-ty">Result</span>&lt;usize&gt; {
+    <span class="doccomment">/// Записывает в файл по смещению `offset` байты из буфера `buffer`.
+    /// При необходимости расширяет размер файла.
+    ///
+    /// Возвращает количество записанных байт.
+    /// Если `offset` превышает размер файла, расширяет файл нулями до заданного `offset`.
+    ///
+    /// Возвращает ошибку [`Error::NotFile`]
+    /// если [Inode](https://en.wikipedia.org/wiki/Inode) не является файлом.
+    </span><span class="kw">pub fn </span>write(<span class="kw-2">&amp;mut </span><span class="self">self</span>, offset: usize, buffer: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="prelude-ty">Result</span>&lt;usize&gt; {
         <span class="self">self</span>.inode().write(offset, buffer, <span class="self">self</span>.block_bitmap())
     }
 
 
-    <span class="kw">fn </span>block_bitmap(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>BlockBitmap {
+    <span class="doccomment">/// Возвращает [битмап](https://en.wikipedia.org/wiki/Free-space_bitmap) файловой системы.
+    </span><span class="kw">fn </span>block_bitmap(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>BlockBitmap {
         <span class="kw-2">&amp;mut </span><span class="self">self</span>.block_bitmap
     }
 
 
-    <span class="kw">fn </span>inode(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span><span class="kw-2">mut </span>Inode {
+    <span class="doccomment">/// Возвращает [inode](https://en.wikipedia.org/wiki/Inode) файла.
+    </span><span class="kw">fn </span>inode(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span><span class="kw-2">mut </span>Inode {
         <span class="kw">unsafe </span>{ <span class="self">self</span>.inode.try_into_mut().unwrap() }
     }
 }
 
 
-<span class="attribute">#[derive(Clone, Debug)]
+<span class="doccomment">/// Элемент списка файлов и поддиректорий в директории.
+</span><span class="attribute">#[derive(Clone, Debug)]
 </span><span class="kw">pub struct </span>Entry {
-    kind: Kind,
-    modify_time: DateTime&lt;Utc&gt;,
-    name: String,
-    size: usize,
+    <span class="doccomment">/// Тип --- файл или поддиректория.
+    </span>kind: Kind,
+
+    <span class="doccomment">/// Время последней модификации файла или поддиректории.
+    </span>modify_time: DateTime&lt;Utc&gt;,
+
+    <span class="doccomment">/// Имя файла или поддиректории.
+    </span>name: String,
+
+    <span class="doccomment">/// Размер файла или поддиректории в байтах.
+    </span>size: usize,
 }
 
 
 <span class="kw">impl </span>Entry {
-    <span class="kw">pub fn </span>kind(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Kind {
+    <span class="doccomment">/// Тип --- файл или поддиректория.
+    </span><span class="kw">pub fn </span>kind(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Kind {
         <span class="self">self</span>.kind
     }
 
 
-    <span class="kw">pub fn </span>modify_time(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; DateTime&lt;Utc&gt; {
+    <span class="doccomment">/// Время последней модификации файла или поддиректории.
+    </span><span class="kw">pub fn </span>modify_time(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; DateTime&lt;Utc&gt; {
         <span class="self">self</span>.modify_time
     }
 
 
-    <span class="kw">pub fn </span>name(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>str {
+    <span class="doccomment">/// Имя файла или поддиректории.
+    </span><span class="kw">pub fn </span>name(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>str {
         <span class="kw-2">&amp;</span><span class="self">self</span>.name
     }
 
 
-    <span class="kw">pub fn </span>size(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+    <span class="doccomment">/// Размер файла или поддиректории в байтах.
+    </span><span class="kw">pub fn </span>size(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="self">self</span>.size
     }
 }

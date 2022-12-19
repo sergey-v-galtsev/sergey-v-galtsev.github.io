@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":[["FileSystem",""]]};
+window.SIDEBAR_ITEMS = {"struct":[["FileSystem","Интерфейс к файловой системе."]]};

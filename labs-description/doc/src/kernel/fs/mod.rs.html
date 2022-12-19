@@ -35,14 +35,79 @@
 <span id="35">35</span>
 <span id="36">36</span>
 <span id="37">37</span>
-</pre><pre class="rust"><code><span class="kw">mod </span>block_bitmap;
-<span class="kw">mod </span>block_cache;
-<span class="kw">mod </span>directory_entry;
-<span class="kw">mod </span>disk;
-<span class="kw">mod </span>file;
-<span class="kw">mod </span>file_system;
-<span class="kw">mod </span>inode;
-<span class="kw">mod </span>superblock;
+<span id="38">38</span>
+<span id="39">39</span>
+<span id="40">40</span>
+<span id="41">41</span>
+<span id="42">42</span>
+<span id="43">43</span>
+<span id="44">44</span>
+<span id="45">45</span>
+<span id="46">46</span>
+<span id="47">47</span>
+<span id="48">48</span>
+<span id="49">49</span>
+<span id="50">50</span>
+<span id="51">51</span>
+<span id="52">52</span>
+<span id="53">53</span>
+<span id="54">54</span>
+<span id="55">55</span>
+<span id="56">56</span>
+<span id="57">57</span>
+<span id="58">58</span>
+<span id="59">59</span>
+<span id="60">60</span>
+<span id="61">61</span>
+<span id="62">62</span>
+<span id="63">63</span>
+<span id="64">64</span>
+<span id="65">65</span>
+<span id="66">66</span>
+<span id="67">67</span>
+<span id="68">68</span>
+<span id="69">69</span>
+<span id="70">70</span>
+<span id="71">71</span>
+<span id="72">72</span>
+<span id="73">73</span>
+<span id="74">74</span>
+<span id="75">75</span>
+<span id="76">76</span>
+<span id="77">77</span>
+<span id="78">78</span>
+</pre><pre class="rust"><code><span class="attribute">#![warn(clippy::missing_docs_in_private_items)]
+#![warn(missing_docs)]
+
+
+</span><span class="doccomment">/// [Битмап](https://en.wikipedia.org/wiki/Free-space_bitmap)
+/// для отслеживания какие именно блоки файловой системы заняты, а какие свободны.
+</span><span class="kw">mod </span>block_bitmap;
+
+<span class="doccomment">/// [Блочный кеш](https://en.wikipedia.org/wiki/Page_cache)
+/// для ускорения работы с диском за счёт кеширования блоков диска в памяти.
+</span><span class="kw">mod </span>block_cache;
+
+<span class="doccomment">/// Запись [директории](https://en.wikipedia.org/wiki/Directory_(computing)) с [`Inode`],
+/// который содержится в этой директории, и его именем.
+</span><span class="kw">mod </span>directory_entry;
+
+<span class="doccomment">/// Интерфейс для работы с [PATA](https://en.wikipedia.org/wiki/Parallel_ATA)--дисками.
+</span><span class="kw">mod </span>disk;
+
+<span class="doccomment">/// Интерфейс к файлам и директориям файловой системы.
+</span><span class="kw">mod </span>file;
+
+<span class="doccomment">/// Интерфейс к файловой системе.
+</span><span class="kw">mod </span>file_system;
+
+<span class="doccomment">/// Метаинформация об объекте с данными --- [inode](https://en.wikipedia.org/wiki/Inode).
+</span><span class="kw">mod </span>inode;
+
+<span class="doccomment">/// Суперблок
+/// ([superblock](https://en.wikipedia.org/wiki/Unix_File_System#Design))
+/// файловой системы.
+</span><span class="kw">mod </span>superblock;
 
 
 <span class="kw">use </span>ku::memory::Page;
@@ -54,10 +119,27 @@
 <span class="kw">pub use </span>file_system::FileSystem;
 <span class="kw">pub use </span>inode::Kind;
 
+<span class="comment">// Used in docs.
+</span><span class="attribute">#[allow(unused)]
+</span><span class="kw">use </span>{
+    block_bitmap::BlockBitmap,
+    inode::Inode,
+    superblock::Superblock,
+};
 
-<span class="kw">const </span>BLOCK_SIZE: usize = Page::SIZE;
-<span class="kw">const </span>SUPERBLOCK_BLOCK: usize = <span class="number">1</span>;
-<span class="kw">const </span>FIRST_BITMAP_BLOCK: usize = SUPERBLOCK_BLOCK + <span class="number">1</span>;
+
+<span class="doccomment">/// Размер блока данных файловой системы.
+</span><span class="kw">const </span>BLOCK_SIZE: usize = Page::SIZE;
+
+<span class="doccomment">/// Номер блока, в котором хранится суперблок
+/// ([superblock](https://en.wikipedia.org/wiki/Unix_File_System#Design))
+/// файловой системы --- [`Superblock`].
+</span><span class="kw">const </span>SUPERBLOCK_BLOCK: usize = <span class="number">1</span>;
+
+<span class="doccomment">/// Номер первого блока, хранящего
+/// [битмап](https://en.wikipedia.org/wiki/Free-space_bitmap)
+/// занятых блоков --- [`BlockBitmap`].
+</span><span class="kw">const </span>FIRST_BITMAP_BLOCK: usize = SUPERBLOCK_BLOCK + <span class="number">1</span>;
 
 
 <span class="attribute">#[doc(hidden)]

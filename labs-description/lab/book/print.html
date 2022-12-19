@@ -9674,9 +9674,10 @@ pub(crate) struct TrapContext {
  kernel/src/fs/inode.rs        |  234 +++++++++++++++++++++++++++++++++++++++---
  4 files changed, 318 insertions(+), 27 deletions(-)
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="Блочный-кеш"><a class="header" href="#Блочный-кеш">Блочный кеш</a></h2>
+<div style="break-before: page; page-break-before: always;"></div><h2 id="Блочный-кеш"><a class="header" href="#Блочный-кеш"><a href="https://en.wikipedia.org/wiki/Page_cache">Блочный кеш</a></a></h2>
 <p>В Nikka диск отображается в память, чтобы удобнее было с ним работать.
 Для отслеживания с какого диска, куда именно и сколько памяти отображено, служит структура
+<a href="https://en.wikipedia.org/wiki/Page_cache">блочного кеша</a>
 <a href="../../doc/kernel/fs/block_cache/struct.BlockCache.html"><code>kernel::fs::block_cache::BlockCache</code></a>:</p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -9728,6 +9729,18 @@ pub(crate) struct TrapContext {
 блок виртуальных страниц, достаточный для хранения <code>block_count</code> блоков файловой системы.
 И записать соответствующее значение в
 <a href="../../doc/kernel/fs/block_cache/struct.BLOCK_CACHE.html"><code>BLOCK_CACHE</code></a>.</p>
+<h4 id="Обращение-к-блоку-в-блочном-кеше"><a class="header" href="#Обращение-к-блоку-в-блочном-кеше">Обращение к блоку в блочном кеше</a></h4>
+<p>Реализуйте <a href="../../doc/kernel/fs/block_cache/struct.BlockCache.html#method.block">метод</a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn block(
+    block_number: usize,
+) -&gt; Result&lt;Block&lt;Virt&gt;&gt;
+<span class="boring">}
+</span></code></pre></pre>
+<p>Он возвращает блок памяти блочного кеша
+<a href="../../doc/kernel/fs/block_cache/struct.BLOCK_CACHE.html"><code>BLOCK_CACHE</code></a>,
+который отвечает блоку <code>block_number</code> диска.</p>
 <h4 id="Считывание-блока-с-диска"><a class="header" href="#Считывание-блока-с-диска">Считывание блока с диска</a></h4>
 <p>Реализуйте <a href="../../doc/kernel/fs/block_cache/struct.BlockCache.html#method.trap_handler">метод</a></p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
@@ -9740,7 +9753,7 @@ pub(crate) struct TrapContext {
 <p>в файле
 <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/fs/block_cache.rs"><code>kernel/src/fs/block_cache.rs</code></a>.</p>
 <p>Он должен обработать Page Fault, если адрес, который его вызвал, относится к блочному кешу.
-Если это так и Page Fault обработан, верните <code>true</code>.
+Если это так и Page Fault успешно обработан, верните <code>true</code>.
 Если адрес, вызвавший Page Fault, не относится к блочному кешу, верните <code>false</code>.
 Для чтения с диска используйте метод
 <a href="../../doc/kernel/fs/disk/struct.Disk.html#method.pio_read"><code>kernel::fs::disk::Disk::pio_read()</code></a>.</p>

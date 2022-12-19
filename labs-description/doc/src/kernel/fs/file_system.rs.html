@@ -110,6 +110,22 @@
 <span id="110">110</span>
 <span id="111">111</span>
 <span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
+<span id="116">116</span>
+<span id="117">117</span>
+<span id="118">118</span>
+<span id="119">119</span>
+<span id="120">120</span>
+<span id="121">121</span>
+<span id="122">122</span>
+<span id="123">123</span>
+<span id="124">124</span>
+<span id="125">125</span>
+<span id="126">126</span>
+<span id="127">127</span>
+<span id="128">128</span>
 </pre><pre class="rust"><code><span class="kw">use </span>ku::{
     error::{
         Error::{FileNotFound, NotDirectory},
@@ -132,15 +148,24 @@
 };
 
 
-<span class="attribute">#[derive(Debug)]
+<span class="doccomment">/// Интерфейс к файловой системе.
+</span><span class="attribute">#[derive(Debug)]
 </span><span class="kw">pub struct </span>FileSystem {
-    block_bitmap: BlockBitmap,
-    superblock: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span><span class="kw-2">mut </span>Superblock,
+    <span class="doccomment">/// [Битмап](https://en.wikipedia.org/wiki/Free-space_bitmap)
+    /// для отслеживания какие именно блоки файловой системы заняты, а какие свободны.
+    </span>block_bitmap: BlockBitmap,
+
+    <span class="doccomment">/// Суперблок
+    /// ([superblock](https://en.wikipedia.org/wiki/Unix_File_System#Design))
+    /// файловой системы.
+    </span>superblock: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span><span class="kw-2">mut </span>Superblock,
 }
 
 
 <span class="kw">impl </span>FileSystem {
-    <span class="kw">pub fn </span>mount(disk: usize) -&gt; <span class="prelude-ty">Result</span>&lt;FileSystem&gt; {
+    <span class="doccomment">/// [Монтирует](https://en.wikipedia.org/wiki/Mount_(computing))
+    /// файловую систему с диска номер `disk`.
+    </span><span class="kw">pub fn </span>mount(disk: usize) -&gt; <span class="prelude-ty">Result</span>&lt;FileSystem&gt; {
         <span class="kw">let </span>disk = Disk::new(disk)<span class="question-mark">?</span>;
 
         BlockCache::init(disk, SUPERBLOCK_BLOCK + <span class="number">1</span>)<span class="question-mark">?</span>;
@@ -158,7 +183,8 @@
     }
 
 
-    <span class="kw">pub fn </span>format(disk: usize, size: usize) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="doccomment">/// Форматирует файловую систему размером `size` байт на диске номер `disk`.
+    </span><span class="kw">pub fn </span>format(disk: usize, size: usize) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">let </span>disk = Disk::new(disk)<span class="question-mark">?</span>;
 
         <span class="kw">let </span>block_count = size / BLOCK_SIZE;
@@ -188,28 +214,34 @@
     }
 
 
-    <span class="kw">pub fn </span>flush(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="doccomment">/// Записывает на диск все обновления файловой системы.
+    </span><span class="kw">pub fn </span>flush(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         BlockCache::flush(<span class="self">self</span>.superblock.block_count())
     }
 
 
-    <span class="kw">pub fn </span>open(<span class="kw-2">&amp;mut </span><span class="self">self</span>, path: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;File&gt; {
+    <span class="doccomment">/// Проходит от корня файловой системы по заданному полному пути `path`.
+    /// Вовзвращает [`File`], соответствующий этому `path`.
+    </span><span class="kw">pub fn </span>open(<span class="kw-2">&amp;mut </span><span class="self">self</span>, path: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;File&gt; {
         <span class="comment">// TODO: your code here.
         </span><span class="macro">unimplemented!</span>();
     }
 
 
-    <span class="kw">pub fn </span>free_space(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+    <span class="doccomment">/// Возвращает размер свободного места файловой системы в байтах.
+    </span><span class="kw">pub fn </span>free_space(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="self">self</span>.block_bitmap.free_block_count() * BLOCK_SIZE
     }
 
 
-    <span class="kw">pub fn </span>reserved_space(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+    <span class="doccomment">/// Возвращает размер зарезервированного места файловой системы в байтах.
+    </span><span class="kw">pub fn </span>reserved_space(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="self">self</span>.block_bitmap.reserved_block_count() * BLOCK_SIZE
     }
 
 
-    <span class="kw">pub fn </span>used_space(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+    <span class="doccomment">/// Возвращает размер занятого места файловой системы в байтах.
+    </span><span class="kw">pub fn </span>used_space(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="self">self</span>.superblock.block_count() * BLOCK_SIZE - <span class="self">self</span>.free_space() - <span class="self">self</span>.reserved_space()
     }
 }

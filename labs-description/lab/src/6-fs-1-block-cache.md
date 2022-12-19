@@ -1,7 +1,8 @@
-## Блочный кеш
+## [Блочный кеш](https://en.wikipedia.org/wiki/Page_cache)
 
 В Nikka диск отображается в память, чтобы удобнее было с ним работать.
 Для отслеживания с какого диска, куда именно и сколько памяти отображено, служит структура
+[блочного кеша](https://en.wikipedia.org/wiki/Page_cache)
 [`kernel::fs::block_cache::BlockCache`](../../doc/kernel/fs/block_cache/struct.BlockCache.html):
 
 ```rust
@@ -70,6 +71,21 @@ fn BlockCache::init(
 [`BLOCK_CACHE`](../../doc/kernel/fs/block_cache/struct.BLOCK_CACHE.html).
 
 
+#### Обращение к блоку в блочном кеше
+
+Реализуйте [метод](../../doc/kernel/fs/block_cache/struct.BlockCache.html#method.block)
+
+```rust
+fn block(
+    block_number: usize,
+) -> Result<Block<Virt>>
+```
+
+Он возвращает блок памяти блочного кеша
+[`BLOCK_CACHE`](../../doc/kernel/fs/block_cache/struct.BLOCK_CACHE.html),
+который отвечает блоку `block_number` диска.
+
+
 #### Считывание блока с диска
 
 Реализуйте [метод](../../doc/kernel/fs/block_cache/struct.BlockCache.html#method.trap_handler)
@@ -84,7 +100,7 @@ fn BlockCache::trap_handler(
 [`kernel/src/fs/block_cache.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/fs/block_cache.rs).
 
 Он должен обработать Page Fault, если адрес, который его вызвал, относится к блочному кешу.
-Если это так и Page Fault обработан, верните `true`.
+Если это так и Page Fault успешно обработан, верните `true`.
 Если адрес, вызвавший Page Fault, не относится к блочному кешу, верните `false`.
 Для чтения с диска используйте метод
 [`kernel::fs::disk::Disk::pio_read()`](../../doc/kernel/fs/disk/struct.Disk.html#method.pio_read).

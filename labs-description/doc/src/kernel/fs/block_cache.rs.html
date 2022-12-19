@@ -102,6 +102,46 @@
 <span id="102">102</span>
 <span id="103">103</span>
 <span id="104">104</span>
+<span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
+<span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
+<span id="116">116</span>
+<span id="117">117</span>
+<span id="118">118</span>
+<span id="119">119</span>
+<span id="120">120</span>
+<span id="121">121</span>
+<span id="122">122</span>
+<span id="123">123</span>
+<span id="124">124</span>
+<span id="125">125</span>
+<span id="126">126</span>
+<span id="127">127</span>
+<span id="128">128</span>
+<span id="129">129</span>
+<span id="130">130</span>
+<span id="131">131</span>
+<span id="132">132</span>
+<span id="133">133</span>
+<span id="134">134</span>
+<span id="135">135</span>
+<span id="136">136</span>
+<span id="137">137</span>
+<span id="138">138</span>
+<span id="139">139</span>
+<span id="140">140</span>
+<span id="141">141</span>
+<span id="142">142</span>
+<span id="143">143</span>
+<span id="144">144</span>
 </pre><pre class="rust"><code><span class="kw">use </span>lazy_static::lazy_static;
 <span class="kw">use </span>spin::Mutex;
 
@@ -125,33 +165,66 @@
 };
 
 
-<span class="attribute">#[derive(Clone, Copy, Debug)]
+<span class="doccomment">/// [Блочный кеш](https://en.wikipedia.org/wiki/Page_cache)
+/// для ускорения работы с диском за счёт кеширования блоков файловой системы в памяти.
+</span><span class="attribute">#[derive(Clone, Copy, Debug)]
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>BlockCache {
-    cache: Block&lt;Page&gt;,
-    disk: Disk,
+    <span class="doccomment">/// Диапазон памяти для кеширования блоков.
+    </span>cache: Block&lt;Page&gt;,
+
+    <span class="doccomment">/// Диск, обращения к которому кешируются.
+    </span>disk: Disk,
 }
 
 
 <span class="kw">impl </span>BlockCache {
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>init(disk: Disk, block_count: usize) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="doccomment">/// Инициализирует блочный кеш.
+    ///
+    /// Резервирует в [`struct@BASE_ADDRESS_SPACE`] блок виртуальных страниц,
+    /// достаточный для хранения `block_count` блоков файловой системы.
+    /// И записывает соответствующее значение в
+    /// [синглтон](https://en.wikipedia.org/wiki/Singleton_pattern)
+    /// [`struct@BLOCK_CACHE`].
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>init(disk: Disk, block_count: usize) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="comment">// TODO: your code here.
         </span><span class="macro">unimplemented!</span>();
     }
 
 
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>block(block_number: usize) -&gt; <span class="prelude-ty">Result</span>&lt;Block&lt;Virt&gt;&gt; {
+    <span class="doccomment">/// Возвращает блок памяти блочного кеша [`struct@BLOCK_CACHE`],
+    /// который отвечает блоку `block_number` диска.
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>block(block_number: usize) -&gt; <span class="prelude-ty">Result</span>&lt;Block&lt;Virt&gt;&gt; {
         <span class="comment">// TODO: your code here.
         </span><span class="macro">unimplemented!</span>();
     }
 
 
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>flush_block(block_number: usize) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="doccomment">/// Записывает блок `block_number` на диск, если:
+    ///
+    /// - Блок отображён в память. Это означает что нему были обращения.
+    /// - И помечен как [`PageTableFlags::DIRTY`].
+    /// То есть, в память были записи, а значит блок на диске потенциально содержит устаревшие данные.
+    /// Если обращения к блоку были только на чтение, то данные в памяти такие же как на диске,
+    /// и можно их не записывать.
+    /// А процессор в этом случае не установит бит [`PageTableFlags::DIRTY`].
+    ///
+    /// После записи блока, сбрасывает бит [`PageTableFlags::DIRTY`].
+    /// Он фактически означает одинаковость данных на диске и в памяти блочного кеша.
+    /// Которая только что восстановлена.
+    /// При этом сбрасывает и соответствующую запись в
+    /// [TLB](https://en.wikipedia.org/wiki/Translation_lookaside_buffer)
+    /// с помощью функции [`mmu::flush()`].
+    /// Иначе процессор не узнает, что сброшен [`PageTableFlags::DIRTY`]
+    /// и не проставит его в таблице страниц при следующей записи.
+    /// И обновлённый блок на диск записан не будет.
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>flush_block(block_number: usize) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="comment">// TODO: your code here.
         </span><span class="macro">unimplemented!</span>();
     }
 
 
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>flush(count: usize) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="doccomment">/// Сбрасывает первые `count` блоков на диск методом [`BlockCache::flush_block()`].
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>flush(count: usize) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">for </span>block_number <span class="kw">in </span><span class="number">0</span>..count {
             <span class="self">Self</span>::flush_block(block_number)<span class="question-mark">?</span>;
         }
@@ -160,13 +233,17 @@
     }
 
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>trap_handler(info: <span class="kw-2">&amp;</span>Info) -&gt; <span class="prelude-ty">Result</span>&lt;bool&gt; {
+    <span class="doccomment">/// Обрабатывает Page Fault, если адрес, который его вызвал, относится к блочному кешу.
+    /// Если это так и Page Fault успешно обработан, возвращает `true`.
+    /// Если адрес, вызвавший Page Fault, не относится к блочному кешу, возвращает `false`.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>trap_handler(info: <span class="kw-2">&amp;</span>Info) -&gt; <span class="prelude-ty">Result</span>&lt;bool&gt; {
         <span class="comment">// TODO: your code here.
         </span><span class="prelude-val">Ok</span>(<span class="bool-val">false</span>) <span class="comment">// TODO: remove before flight.
     </span>}
 
 
-    <span class="kw">fn </span>get(address: Virt) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>&gt; {
+    <span class="doccomment">/// Возвращает синглтон [`struct@BLOCK_CACHE`], если `address` относится к блочному кешу.
+    </span><span class="kw">fn </span>get(address: Virt) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>&gt; {
         BLOCK_CACHE
             .lock()
             .filter(|block_cache| block_cache.cache.contains_address(address))
@@ -175,11 +252,14 @@
 
 
 <span class="macro">lazy_static! </span>{
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">static </span><span class="kw-2">ref </span>BLOCK_CACHE: Mutex&lt;<span class="prelude-ty">Option</span>&lt;BlockCache&gt;&gt; = Mutex::new(<span class="prelude-val">None</span>);
+    <span class="doccomment">/// Блочный кеш для ускорения работы с диском
+    /// за счёт кеширования блоков файловой системы в памяти.
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">static </span><span class="kw-2">ref </span>BLOCK_CACHE: Mutex&lt;<span class="prelude-ty">Option</span>&lt;BlockCache&gt;&gt; = Mutex::new(<span class="prelude-val">None</span>);
 }
 
 
-<span class="kw">const </span>SECTORS_PER_BLOCK: usize = BLOCK_SIZE / SECTOR_SIZE;
+<span class="doccomment">/// Количество секторов диска в одном блоке файловой системы.
+</span><span class="kw">const </span>SECTORS_PER_BLOCK: usize = BLOCK_SIZE / SECTOR_SIZE;
 
 
 <span class="attribute">#[doc(hidden)]
