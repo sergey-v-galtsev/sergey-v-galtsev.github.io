@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"constant":[["DOUBLE_FAULT_IST_INDEX",""],["PAGE_FAULT_IST_INDEX",""]],"struct":[["TSS",""]]};
+window.SIDEBAR_ITEMS = {"constant":[["DOUBLE_FAULT_IST_INDEX","Индекс в сегменте состояния задачи (Task State Segment, TSS) стека, выделенного для обработки Double Fault."],["PAGE_FAULT_IST_INDEX","Индекс в сегменте состояния задачи (Task State Segment, TSS) стека, выделенного для обработки Page Fault."]],"struct":[["TSS","Сегмент состояния задачи (Task State Segment, TSS)"]]};

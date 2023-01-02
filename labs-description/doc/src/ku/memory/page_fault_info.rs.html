@@ -43,19 +43,39 @@
 <span id="43">43</span>
 <span id="44">44</span>
 <span id="45">45</span>
+<span id="46">46</span>
+<span id="47">47</span>
+<span id="48">48</span>
+<span id="49">49</span>
+<span id="50">50</span>
+<span id="51">51</span>
+<span id="52">52</span>
+<span id="53">53</span>
+<span id="54">54</span>
+<span id="55">55</span>
 </pre><pre class="rust"><code><span class="kw">use </span>core::fmt;
 
 <span class="kw">use </span>bitflags::bitflags;
 
 
 <span class="macro">bitflags! </span>{
-    <span class="doccomment">/// https://wiki.osdev.org/Exceptions#Error_code
+    <span class="doccomment">/// [Причина некорректности](https://wiki.osdev.org/Exceptions#Error_code)
+    /// обращения к странице виртуальной памяти.
     </span><span class="kw">pub struct </span>PageFaultInfo: usize {
-        <span class="kw">const </span>PRESENT = <span class="number">1 </span>&lt;&lt; <span class="number">0</span>;
-        <span class="kw">const </span>WRITE = <span class="number">1 </span>&lt;&lt; <span class="number">1</span>;
-        <span class="kw">const </span>USER = <span class="number">1 </span>&lt;&lt; <span class="number">2</span>;
-        <span class="kw">const </span>RESERVED_WRITE = <span class="number">1 </span>&lt;&lt; <span class="number">3</span>;
-        <span class="kw">const </span>EXECUTE = <span class="number">1 </span>&lt;&lt; <span class="number">4</span>;
+        <span class="doccomment">/// Страница отображена, но нарушены флаги доступа к ней.
+        </span><span class="kw">const </span>PRESENT = <span class="number">1 </span>&lt;&lt; <span class="number">0</span>;
+
+        <span class="doccomment">/// Недопустимое обращение на запись.
+        </span><span class="kw">const </span>WRITE = <span class="number">1 </span>&lt;&lt; <span class="number">1</span>;
+
+        <span class="doccomment">/// Недопустимое обращение из пространства пользователя.
+        </span><span class="kw">const </span>USER = <span class="number">1 </span>&lt;&lt; <span class="number">2</span>;
+
+        <span class="doccomment">/// Таблица страниц содержит некорректные данные --- есть `1` в зарезервированном бите.
+        </span><span class="kw">const </span>RESERVED_WRITE = <span class="number">1 </span>&lt;&lt; <span class="number">3</span>;
+
+        <span class="doccomment">/// Недопустимое выполнение кода.
+        </span><span class="kw">const </span>EXECUTE = <span class="number">1 </span>&lt;&lt; <span class="number">4</span>;
     }
 }
 

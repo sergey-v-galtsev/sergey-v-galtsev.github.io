@@ -2,7 +2,9 @@
 
 Добавим новые системные вызовы в файл [`kernel/src/process/syscall.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/process/syscall.rs).
 
-Эти системные вызовы будут принимать идентификатор `Pid` целевого процесса.
+Эти системные вызовы будут принимать идентификатор
+[`Pid`](../../doc/ku/process/pid/enum.Pid.html)
+целевого процесса.
 То есть, они будут позволять вызывающему процессу выполнить действие над самим собой,
 задав
 [`Pid::Current`](../../doc/ku/process/pid/enum.Pid.html#variant.Current)

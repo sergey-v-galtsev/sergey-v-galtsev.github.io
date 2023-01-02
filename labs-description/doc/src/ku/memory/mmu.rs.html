@@ -251,6 +251,13 @@
 <span id="251">251</span>
 <span id="252">252</span>
 <span id="253">253</span>
+<span id="254">254</span>
+<span id="255">255</span>
+<span id="256">256</span>
+<span id="257">257</span>
+<span id="258">258</span>
+<span id="259">259</span>
+<span id="260">260</span>
 </pre><pre class="rust"><code><span class="kw">use </span>core::{arch::asm, fmt, mem};
 
 <span class="kw">use </span>bitflags::bitflags;
@@ -454,29 +461,36 @@
 }
 
 
-<span class="kw">pub const </span>KERNEL_READ: PageTableFlags =
+<span class="doccomment">/// Флаги для страниц, доступных ядру только на чтение.
+</span><span class="kw">pub const </span>KERNEL_READ: PageTableFlags =
     PageTableFlags::from_bits_truncate(PageTableFlags::PRESENT.bits());
 
-<span class="kw">pub const </span>KERNEL_RW: PageTableFlags =
+<span class="doccomment">/// Флаги для страниц, доступных ядру на чтение и запись.
+</span><span class="kw">pub const </span>KERNEL_RW: PageTableFlags =
     PageTableFlags::from_bits_truncate(KERNEL_READ.bits() | PageTableFlags::WRITABLE.bits());
 
-<span class="kw">pub const </span>USER: PageTableFlags = PageTableFlags::from_bits_truncate(
+<span class="doccomment">/// Шаблон флагов для страниц, доступных коду пользователя.
+</span><span class="kw">pub const </span>USER: PageTableFlags = PageTableFlags::from_bits_truncate(
     PageTableFlags::PRESENT.bits() | PageTableFlags::USER_ACCESSIBLE.bits(),
 );
 
-<span class="kw">pub const </span>USER_READ: PageTableFlags =
+<span class="doccomment">/// Флаги для страниц, доступных коду пользователя только на чтение.
+</span><span class="kw">pub const </span>USER_READ: PageTableFlags =
     PageTableFlags::from_bits_truncate(KERNEL_READ.bits() | PageTableFlags::USER_ACCESSIBLE.bits());
 
-<span class="kw">pub const </span>USER_RW: PageTableFlags =
+<span class="doccomment">/// Флаги для страниц, доступных коду пользователя на чтение и запись.
+</span><span class="kw">pub const </span>USER_RW: PageTableFlags =
     PageTableFlags::from_bits_truncate(KERNEL_RW.bits() | PageTableFlags::USER_ACCESSIBLE.bits());
 
-<span class="kw">pub const </span>FULL_ACCESS: PageTableFlags = PageTableFlags::from_bits_truncate(
+<span class="doccomment">/// Шаблон флагов для страниц, не ограничивающий доступ.
+</span><span class="kw">pub const </span>FULL_ACCESS: PageTableFlags = PageTableFlags::from_bits_truncate(
     PageTableFlags::PRESENT.bits() |
         PageTableFlags::WRITABLE.bits() |
         PageTableFlags::USER_ACCESSIBLE.bits(),
 );
 
-<span class="kw">pub const </span>SYSCALL_ALLOWED_FLAGS: PageTableFlags =
+<span class="doccomment">/// Шаблон флагов для страниц, который пользователь может задавать в системных вызовах.
+</span><span class="kw">pub const </span>SYSCALL_ALLOWED_FLAGS: PageTableFlags =
     PageTableFlags::from_bits_truncate(USER_RW.bits() | PageTableFlags::COPY_ON_WRITE.bits());
 
 

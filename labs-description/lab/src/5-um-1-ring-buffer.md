@@ -56,7 +56,11 @@
 
 ### Структура циклического буфера
 
-В файле [`ku/src/ring_buffer.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/ku/src/ring_buffer.rs) определён [циклический буфер](https://en.wikipedia.org/wiki/Circular_buffer)
+В файле
+[`ku/src/ring_buffer.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/ku/src/ring_buffer.rs)
+определён
+[циклический буфер](https://en.wikipedia.org/wiki/Circular_buffer)
+[`RingBuffer`](../../doc/ku/ring_buffer/struct.RingBuffer.html).
 
 ```rust
 pub struct RingBuffer {
@@ -67,14 +71,17 @@ pub struct RingBuffer {
 }
 ```
 
-ёмкости `RingBuffer::REAL_SIZE`.
+ёмкости
+[`RingBuffer::REAL_SIZE`](../../doc/ku/ring_buffer/struct.RingBuffer.html#associatedconstant.REAL_SIZE).
 Его поля:
 
-- `RingBuffer::buf` --- виртуальный адрес начала блока памяти с данными, которые хранятся в буфере.
-- `RingBuffer::head` --- количество байт, прочитанных из буфера за всю время. То есть, эта величина потенциально больше размера буфера. Вариант хранить в `RingBuffer` это значение по модулю размера буфера, чреват ошибками.
-- `RingBuffer::tail` --- количество байт, записанных в буфер за всю время.
+- [`RingBuffer::buf`](../../doc/ku/ring_buffer/struct.RingBuffer.html#structfield.buf) --- виртуальный адрес начала блока памяти с данными, которые хранятся в буфере.
+- [`RingBuffer::head`](../../doc/ku/ring_buffer/struct.RingBuffer.html#structfield.head) --- количество байт, прочитанных из буфера за всё время. То есть, эта величина потенциально больше размера буфера. Вариант хранить в `RingBuffer` это значение по модулю размера буфера, чреват ошибками.
+- [`RingBuffer::tail`](../../doc/ku/ring_buffer/struct.RingBuffer.html#structfield.tail) --- количество байт, записанных в буфер за всё время.
 
-Поле `RingBuffer::stats` поддерживает статистики чтения и записи в буфер:
+Поле
+[`RingBuffer::stats`](../../doc/ku/ring_buffer/struct.RingBuffer.html#structfield.stats)
+поддерживает статистики чтения и записи в буфер:
 
 ```rust
 pub struct RingBufferStats {
@@ -87,19 +94,23 @@ pub struct RingBufferStats {
 }
 ```
 
-- `RingBufferStats::txs` --- количество транзакций чтения либо записи соответственно.
-- `RingBufferStats::commits` --- количество закоммиченных транзакций соответствующего типа.
-- `RingBufferStats::drops` --- количество оборванных (dropped, rolled back, aborted) транзакций соответствующего типа.
-- `RingBufferStats::commited` --- количество байт, прочитанных или записанных в закоммиченных транзакциях.
-- `RingBufferStats::dropped` --- количество байт, прочитанных или записанных в оборванных транзакциях.
-- `RingBufferStats::errors` --- количество ошибок в транзакциях.
+- [`RingBufferStats::txs`](../../doc/ku/ring_buffer/struct.RingBufferStats.html#structfield.txs) --- количество транзакций чтения либо записи соответственно.
+- [`RingBufferStats::commits`](../../doc/ku/ring_buffer/struct.RingBufferStats.html#structfield.commits) --- количество закоммиченных транзакций соответствующего типа.
+- [`RingBufferStats::drops`](../../doc/ku/ring_buffer/struct.RingBufferStats.html#structfield.drops) --- количество оборванных (dropped, rolled back, aborted) транзакций соответствующего типа.
+- [`RingBufferStats::commited`](../../doc/ku/ring_buffer/struct.RingBufferStats.html#structfield.commited) --- количество байт, прочитанных или записанных в закоммиченных транзакциях.
+- [`RingBufferStats::dropped`](../../doc/ku/ring_buffer/struct.RingBufferStats.html#structfield.dropped) --- количество байт, прочитанных или записанных в оборванных транзакциях.
+- [`RingBufferStats::errors`](../../doc/ku/ring_buffer/struct.RingBufferStats.html#structfield.errors) --- количество ошибок в транзакциях.
 
-Методы `RingBuffer` создают транзакции:
+Методы
+[`RingBuffer`](../../doc/ku/ring_buffer/struct.RingBuffer.html)
+создают транзакции:
 
-- `RingBuffer::read_tx()` --- читающую;
-- `RingBuffer::write_tx()` --- пишущую.
+- [`RingBuffer::read_tx()`](../../doc/ku/ring_buffer/struct.RingBuffer.html#method.read_tx) --- читающую;
+- [`RingBuffer::write_tx()`](../../doc/ku/ring_buffer/struct.RingBuffer.html#method.write_tx) --- пишущую.
 
-Транзакции устроены так:
+Транзакции
+[`RingBufferTx`](../../doc/ku/ring_buffer/struct.RingBufferTx.html)
+устроены так:
 
 ```rust
 pub struct RingBufferTx<'a, T: Tag> {
@@ -113,10 +124,10 @@ pub struct RingBufferTx<'a, T: Tag> {
 
 Они хранят:
 
-- Ссылку `RingBufferTx::ring_buffer` на исходный `RingBuffer`.
-- `RingBufferTx::head` и `RingBufferTx::tail` --- актуальные в рамках транзакции значения, в момент старта транзакции инициализирующиеся из полей `RingBuffer::head`.
-- `RingBufferTx::bytes` --- количество байт, прочитанных или записанных на текущий момент в данной транзакции.
-- Тег `RingBufferTx::_tag`, отличающий пишущие транзакции от читающих.
+- Ссылку [`RingBufferTx::ring_buffer`](../../doc/ku/ring_buffer/struct.RingBufferTx.html#structfield.ring_buffer) на исходный [`RingBuffer`](../../doc/ku/ring_buffer/struct.RingBuffer.html).
+- [`RingBufferTx::head`](../../doc/ku/ring_buffer/struct.RingBufferTx.html#structfield.head) и [`RingBufferTx::tail`](../../doc/ku/ring_buffer/struct.RingBufferTx.html#structfield.tail) --- актуальные в рамках транзакции значения, в момент старта транзакции инициализирующиеся из полей [`RingBuffer::head`](../../doc/ku/ring_buffer/struct.RingBuffer.html#structfield.head) и [`RingBuffer::tail`](../../doc/ku/ring_buffer/struct.RingBuffer.html#structfield.tail).
+- [`RingBufferTx::bytes`](../../doc/ku/ring_buffer/struct.RingBufferTx.html#structfield.bytes) --- количество байт, прочитанных или записанных на текущий момент в данной транзакции.
+- Тег [`RingBufferTx::_tag`](../../doc/ku/ring_buffer/struct.RingBufferTx.html#structfield._tag), отличающий пишущие транзакции от читающих.
 
 
 ### Задача 1 --- реализация циклического буфера
@@ -124,34 +135,48 @@ pub struct RingBufferTx<'a, T: Tag> {
 
 #### Читающая транзакция
 
-Реализуйте метод
+Реализуйте [метод](../../doc/ku/ring_buffer/struct.RingBufferTx.html#method.read)
 
 ```rust
 fn RingBufferTx<'_, ReadTag>::read(&mut self) -> &[u8]
 ```
 
-который возвращает в виде среза все доступные на момент запуска читающей транзакции байты из буфера, обновляя поля только самой транзакции `RingBufferTx`.
+который возвращает в виде среза все доступные на момент запуска читающей транзакции байты из буфера,
+обновляя поля только самой транзакции
+[`RingBufferTx`](../../doc/ku/ring_buffer/struct.RingBufferTx.html).
 
-И метод
+И [метод](../../doc/ku/ring_buffer/struct.RingBufferTx.html#method.commit)
 
 ```rust
 fn RingBufferTx<'_, ReadTag>::commit(&mut self)
 ```
 
 который коммитит читающую транзакцию, записывая обновлённое значение
-`RingBuffer::head` и статистику `RingBuffer::read_stats()` в поля `RingBuffer`.
+[`RingBuffer::head`](../../doc/ku/ring_buffer/struct.RingBuffer.html#structfield.head)
+и статистику
+[`RingBuffer::read_stats()`](../../doc/ku/ring_buffer/struct.RingBuffer.html#method.read_stats)
+в поля
+[`RingBuffer`](../../doc/ku/ring_buffer/struct.RingBuffer.html).
 
 
 #### Пишущая транзакция
 
-Реализуйте метод
+Реализуйте [метод](../../doc/ku/ring_buffer/struct.RingBufferTx.html#method.write)
 
 ```rust
 fn RingBufferTx<'_, WriteTag>::write(&mut self, data: &[u8]) -> Result<()>
 ```
 
-которая копирует в буфер байты среза `data`, обновляя поля самой транзакции `RingBufferTx` и статистики `RingBuffer::write_stats()`, но не трогает поля `RingBuffer::head` и `RingBuffer::tail`.
-Если в буфере не остаётся места под `data` верните ошибку
+которая копирует в буфер байты среза `data`, обновляя поля самой транзакции
+[`RingBufferTx`](../../doc/ku/ring_buffer/struct.RingBufferTx.html)
+и статистики
+[`RingBuffer::write_stats()`](../../doc/ku/ring_buffer/struct.RingBuffer.html#method.write_stats),
+но не трогая поля
+[`RingBuffer::head`](../../doc/ku/ring_buffer/struct.RingBufferTx.html#structfield.head)
+и
+[`RingBuffer::tail`](../../doc/ku/ring_buffer/struct.RingBufferTx.html#structfield.tail).
+Если в буфере не остаётся места под `data`, верните ошибку
+[`Error::Overflow`](../../doc/ku/ring_buffer/enum.Error.html#variant.Overflow):
 
 ```rust
 pub enum Error {
@@ -165,27 +190,34 @@ pub enum Error {
 
 С информацией
 
-- Об остававшемся месте в буфере на момент старта транзакции. То есть, полной доступной для транзакции ёмкости, --- `Error::Overflow::capacity`.
-- Об уже записанном ранее в рамках той же транзакции объёме --- `Error::Overflow::len`.
-- О размере объекта, который не влез --- `Error::Overflow::exceeding_object_len`.
+- Об остававшемся в буфере месте на момент старта транзакции. То есть, полной доступной для транзакции ёмкости, --- [`Error::Overflow::capacity`](../../doc/ku/ring_buffer/enum.Error.html#variant.Overflow.field.capacity).
+- Об уже записанном ранее в рамках той же транзакции объёме --- [`Error::Overflow::len`](../../doc/ku/ring_buffer/enum.Error.html#variant.Overflow.field.len).
+- О размере объекта, который не влез --- [`Error::Overflow::exceeding_object_len`](../../doc/ku/ring_buffer/enum.Error.html#variant.Overflow.field.exceeding_object_len).
 
 Вам может пригодиться метод
 [`copy_from_slice()`](https://doc.rust-lang.org/nightly/core/primitive.slice.html#method.copy_from_slice)
 срезов.
 
-Реализуйте метод
+Реализуйте [метод](../../doc/ku/ring_buffer/struct.RingBufferTx.html#method.commit-1)
 
 ```rust
 fn RingBufferTx<'_, WriteTag>::commit(&mut self)
 ```
 
 который коммитит пишущую транзакцию, обновляя значение
-`RingBuffer::tail` и статистику `RingBuffer::write_stats()` в полях `RingBuffer`.
+[`RingBuffer::tail`](../../doc/ku/ring_buffer/struct.RingBufferTx.html#structfield.tail)
+и статистику
+[`RingBuffer::write_stats()`](../../doc/ku/ring_buffer/struct.RingBuffer.html#method.write_stats)
+в полях
+[`RingBuffer`](../../doc/ku/ring_buffer/struct.RingBuffer.html).
 
 
 #### Сброс транзакции
 
-Реализуйте типаж [`core::ops::Drop`](https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html) для транзакций обоих типов --- метод
+Реализуйте типаж
+[`core::ops::Drop`](https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html)
+для транзакций обоих типов ---
+[метод](../../doc/ku/ring_buffer/struct.RingBufferTx.html#method.drop)
 
 ```rust
 fn RingBufferTx::drop(&mut self)
@@ -197,17 +229,19 @@ fn RingBufferTx::drop(&mut self)
 
 #### Отображение буфера в память процесса
 
-Реализуйте функцию
+Реализуйте [функцию](../../doc/kernel/process/fn.map_log.html)
 
 ```rust
-fn map_log(address_space: &mut AddressSpace) -> Result<RingBuffer>
+fn kernel::process::map_log(address_space: &mut AddressSpace) -> Result<RingBuffer>
 ```
 
 в файле [`kernel/src/process/mod.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/process/mod.rs).
 Она должна реализовать двойное отображение памяти буфера в адресное пространство `address_space` процесса.
 То есть, она должна выделить
-`RingBuffer::REAL_SIZE` байт в физической памяти и
-`RingBuffer::MAPPED_SIZE` --- в виртуальной.
+[`RingBuffer::REAL_SIZE`](../../doc/ku/ring_buffer/struct.RingBuffer.html#associatedconstant.REAL_SIZE)
+байт в физической памяти и
+[`RingBuffer::MAPPED_SIZE`](../../doc/ku/ring_buffer/struct.RingBuffer.html#associatedconstant.MAPPED_SIZE) ---
+в виртуальной.
 И построить отображение выделенных физических фреймов дважды подряд в пространство `address_space`.
 
 
@@ -224,7 +258,9 @@ fn map_log(address_space: &mut AddressSpace) -> Result<RingBuffer>
 
 #### Структурированное логирование в пространстве пользователя
 
-После того как вы реализуете `RingBuffer` наконец-то в пространстве пользователя заработает
+После того как вы реализуете
+[`RingBuffer`](../../doc/ku/ring_buffer/struct.RingBuffer.html)
+наконец-то в пространстве пользователя заработает
 структурированное логирование макросами библиотеки
 [tracing](https://docs.rs/tracing/) ---
 `info!()`, `debug!()` и т.д.
@@ -241,7 +277,9 @@ fn map_log(address_space: &mut AddressSpace) -> Result<RingBuffer>
 В случае переполнения, вызывается
 [`lib::syscall::sched_yield()`](../../doc/lib/syscall/fn.sched_yield.html).
 При попадании в ядро при любом системном вызове или исключении,
-ядро сбрасывает накопившиеся в `RingBuffer` записи в лог функцией
+ядро сбрасывает накопившиеся в
+[`RingBuffer`](../../doc/ku/ring_buffer/struct.RingBuffer.html)
+записи в лог функцией
 [`Process::flush_log()`](../../doc/kernel/process/process/struct.Process.html#method.flush_log).
 Благодаря этому они не потеряются даже если приложение упадёт по ошибке.
 

@@ -138,6 +138,7 @@
 <span id="138">138</span>
 <span id="139">139</span>
 <span id="140">140</span>
+<span id="141">141</span>
 </pre><pre class="rust"><code><span class="kw">use </span>core::{fmt, ops::Not};
 
 <span class="kw">use </span>derive_more::{BitAnd, BitAndAssign, BitOr, BitOrAssign, BitXor, BitXorAssign};
@@ -215,7 +216,8 @@
 
 <span class="kw">impl </span>fmt::Display <span class="kw">for </span>RFlags {
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, formatter: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
-        <span class="kw">static </span>FLAGS: [<span class="kw-2">&amp;</span>str; <span class="number">22</span>] = [
+        <span class="doccomment">/// Общепринятые сокращения для битов регистра флагов.
+        </span><span class="kw">static </span>FLAGS: [<span class="kw-2">&amp;</span>str; <span class="number">22</span>] = [
             <span class="string">&quot;CF&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;PF&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;AF&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;ZF&quot;</span>, <span class="string">&quot;SF&quot;</span>, <span class="comment">// Bits from 0 upto 7 inclusive.
             </span><span class="string">&quot;TF&quot;</span>, <span class="string">&quot;IF&quot;</span>, <span class="string">&quot;DF&quot;</span>, <span class="string">&quot;OF&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="string">&quot;NT&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="comment">// Bits from 8 upto 15 inclusive.
             </span><span class="string">&quot;RF&quot;</span>, <span class="string">&quot;VM&quot;</span>, <span class="string">&quot;AC&quot;</span>, <span class="string">&quot;VF&quot;</span>, <span class="string">&quot;VP&quot;</span>, <span class="string">&quot;ID&quot;</span>, <span class="comment">// Bits from 16 upto 21 inclusive.

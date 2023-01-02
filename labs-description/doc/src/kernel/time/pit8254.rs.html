@@ -42,6 +42,19 @@
 <span id="42">42</span>
 <span id="43">43</span>
 <span id="44">44</span>
+<span id="45">45</span>
+<span id="46">46</span>
+<span id="47">47</span>
+<span id="48">48</span>
+<span id="49">49</span>
+<span id="50">50</span>
+<span id="51">51</span>
+<span id="52">52</span>
+<span id="53">53</span>
+<span id="54">54</span>
+<span id="55">55</span>
+<span id="56">56</span>
+<span id="57">57</span>
 </pre><pre class="rust"><code><span class="kw">use </span>core::convert::TryFrom;
 
 <span class="kw">use </span>x86::io;
@@ -63,15 +76,28 @@
 
 <span class="doccomment">/// Инициализация PIT.
 </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>init() {
-    <span class="kw">const </span>COUNTER_NUMBER_0: u8 = <span class="number">0b_00 </span>&lt;&lt; <span class="number">6</span>;
-    <span class="kw">const </span>LSB_THAN_MSB: u8 = <span class="number">0b_11 </span>&lt;&lt; <span class="number">4</span>;
-    <span class="kw">const </span>REPETITIVE_MODE: u8 = <span class="number">0b_010 </span>&lt;&lt; <span class="number">1</span>;
-    <span class="kw">const </span>BINARY_CODED_DECIMAL: u8 = <span class="number">0b_1 </span>&lt;&lt; <span class="number">0</span>;
-    <span class="kw">const </span>COMMAND_WORD: u8 =
+    <span class="doccomment">/// Выбрать счётчик номер `0` таймера.
+    </span><span class="kw">const </span>COUNTER_NUMBER_0: u8 = <span class="number">0b_00 </span>&lt;&lt; <span class="number">6</span>;
+
+    <span class="doccomment">/// Первым передаётся младший байт [`DIVISOR`], затем старший.
+    </span><span class="kw">const </span>LSB_THAN_MSB: u8 = <span class="number">0b_11 </span>&lt;&lt; <span class="number">4</span>;
+
+    <span class="doccomment">/// Циклический режим таймера.
+    </span><span class="kw">const </span>REPETITIVE_MODE: u8 = <span class="number">0b_010 </span>&lt;&lt; <span class="number">1</span>;
+
+    <span class="doccomment">/// Использовать [двоично--десятичный](https://en.wikipedia.org/wiki/Binary-coded_decimal)
+    /// формат.
+    </span><span class="kw">const </span>BINARY_CODED_DECIMAL: u8 = <span class="number">0b_1 </span>&lt;&lt; <span class="number">0</span>;
+
+    <span class="doccomment">/// Команда инициализации.
+    </span><span class="kw">const </span>COMMAND_WORD: u8 =
         (COUNTER_NUMBER_0 | LSB_THAN_MSB | REPETITIVE_MODE) &amp; !BINARY_CODED_DECIMAL;
 
-    <span class="kw">const </span>COMMAND_WORD_REGISTER: u16 = <span class="number">0x43</span>;
-    <span class="kw">const </span>COUNTER_NUMBER_0_REGISTER: u16 = <span class="number">0x40</span>;
+    <span class="doccomment">/// Регистр команды.
+    </span><span class="kw">const </span>COMMAND_WORD_REGISTER: u16 = <span class="number">0x43</span>;
+
+    <span class="doccomment">/// Регистр счётчика номер `0` таймера.
+    </span><span class="kw">const </span>COUNTER_NUMBER_0_REGISTER: u16 = <span class="number">0x40</span>;
 
     <span class="kw">unsafe </span>{
         io::outb(COMMAND_WORD_REGISTER, COMMAND_WORD);

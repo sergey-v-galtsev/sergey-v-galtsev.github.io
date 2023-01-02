@@ -106,8 +106,7 @@ unsafe fn AddressSpace::unmap_pte(
 теперь в качестве `flags` ему можно передать пустой набор флагов
 [`PageTableFlags::empty()`](../../doc/kernel/memory/mmu/struct.PageTableFlags.html#method.empty).
 
-**Важно** сбросить запись в
-[буфере ассоциативной трансляции](https://ru.wikipedia.org/wiki/%D0%91%D1%83%D1%84%D0%B5%D1%80_%D0%B0%D1%81%D1%81%D0%BE%D1%86%D0%B8%D0%B0%D1%82%D0%B8%D0%B2%D0%BD%D0%BE%D0%B9_%D1%82%D1%80%D0%B0%D0%BD%D1%81%D0%BB%D1%8F%D1%86%D0%B8%D0%B8)
+**Важно** сбросить запись в буфере ассоциативной трансляции
 ([Translation lookaside buffer](https://en.wikipedia.org/wiki/Translation_lookaside_buffer),
 [TLB](https://wiki.osdev.org/TLB))
 касающуюся `page`.
@@ -117,9 +116,9 @@ unsafe fn AddressSpace::unmap_pte(
 Даже отладчик будет показывать вам то же самое, что вы ожидаете.
 А вот процессор будет читать и писать совсем в другую физическую память.
 Это приведёт к трудно отлаживаемым
-[гейзенбагам](https://ru.wikipedia.org/wiki/%D0%93%D0%B5%D0%B9%D0%B7%D0%B5%D0%BD%D0%B1%D0%B0%D0%B3).
+[гейзенбагам](https://en.wikipedia.org/wiki/Heisenbug).
 Для сброса нужной записи TLB поможет функция
-[kernel::memory::mmu::flush()](../../doc/kernel/memory/mmu/fn.flush.html).
+[`kernel::memory::mmu::flush()`](../../doc/kernel/memory/mmu/fn.flush.html).
 
 Также вам пригодятся
 

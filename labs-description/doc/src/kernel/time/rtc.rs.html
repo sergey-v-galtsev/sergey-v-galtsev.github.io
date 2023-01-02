@@ -334,6 +334,20 @@
 <span id="334">334</span>
 <span id="335">335</span>
 <span id="336">336</span>
+<span id="337">337</span>
+<span id="338">338</span>
+<span id="339">339</span>
+<span id="340">340</span>
+<span id="341">341</span>
+<span id="342">342</span>
+<span id="343">343</span>
+<span id="344">344</span>
+<span id="345">345</span>
+<span id="346">346</span>
+<span id="347">347</span>
+<span id="348">348</span>
+<span id="349">349</span>
+<span id="350">350</span>
 </pre><pre class="rust"><code><span class="kw">use </span>core::{
     convert::From,
     hint,
@@ -374,7 +388,7 @@
 /// запрещает все [прерывания](https://en.wikipedia.org/wiki/Interrupt),
 /// в том числе [немаскируемые](https://en.wikipedia.org/wiki/Non-maskable_interrupt).
 /// Иначе она может остаться в
-/// [некоррекном состоянии](https://wiki.osdev.org/RTC#Avoiding_NMI_and_Other_Interrupts_While_Programming).
+/// [некорректном состоянии](https://wiki.osdev.org/RTC#Avoiding_NMI_and_Other_Interrupts_While_Programming).
 </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>init() {
     <span class="kw">let </span><span class="kw-2">mut </span>old_settings = RegisterB::empty();
     <span class="kw">let </span><span class="kw-2">mut </span>new_settings = RegisterB::empty();
@@ -496,7 +510,10 @@
 }
 
 
-<span class="doccomment">/// Структура для хранения даты и времени, прочитанных из микросхемы [часов реального времени (Real-time clock, RTC)](https://en.wikipedia.org/wiki/Real-time_clock).
+<span class="doccomment">/// Структура для хранения даты
+/// (по [григорианскому календарю](https://en.wikipedia.org/wiki/Gregorian_calendar))
+/// и времени, прочитанных из микросхемы
+/// [часов реального времени (Real-time clock, RTC)](https://en.wikipedia.org/wiki/Real-time_clock).
 </span><span class="attribute">#[derive(Clone, Copy, Default, Display, Eq, PartialEq)]
 #[display(
     fmt = <span class="string">&quot;{:04}-{:02}-{:02} {:02}:{:02}:{:02}&quot;</span>,
@@ -508,12 +525,23 @@
     second
 )]
 </span><span class="kw">struct </span>Date {
-    year: u16,
-    month: u8,
-    day: u8,
-    hour: u8,
-    minute: u8,
-    second: u8,
+    <span class="doccomment">/// Год по [григорианскому календарю](https://en.wikipedia.org/wiki/Gregorian_calendar).
+    </span>year: u16,
+
+    <span class="doccomment">/// Месяц по [григорианскому календарю](https://en.wikipedia.org/wiki/Gregorian_calendar).
+    </span>month: u8,
+
+    <span class="doccomment">/// День месяца по [григорианскому календарю](https://en.wikipedia.org/wiki/Gregorian_calendar).
+    </span>day: u8,
+
+    <span class="doccomment">/// Час.
+    </span>hour: u8,
+
+    <span class="doccomment">/// Минута.
+    </span>minute: u8,
+
+    <span class="doccomment">/// Секунда.
+    </span>second: u8,
 }
 
 

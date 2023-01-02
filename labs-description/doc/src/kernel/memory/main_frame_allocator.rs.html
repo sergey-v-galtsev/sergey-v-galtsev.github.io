@@ -239,6 +239,7 @@
 <span id="239">239</span>
 <span id="240">240</span>
 <span id="241">241</span>
+<span id="242">242</span>
 </pre><pre class="rust"><code><span class="attribute">#![forbid(unsafe_code)]
 
 
@@ -301,7 +302,8 @@
 }
 
 
-<span class="kw">pub struct </span>MainFrameAllocator {
+<span class="doccomment">/// Основной аллокатор физических фреймов.
+</span><span class="kw">pub struct </span>MainFrameAllocator {
     <span class="doccomment">/// Информация про все доступные физические фреймы.
     </span>frame_info: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span><span class="kw-2">mut </span>[FrameInfo],
 

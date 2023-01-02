@@ -38,7 +38,8 @@ fn exofork(
 
 в файле [`kernel/src/process/syscall.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/process/syscall.rs).
 
-Он создаёт копию вызывающего процесса `process` и возвращает его `Pid`.
+Он создаёт копию вызывающего процесса `process` и возвращает его
+[`Pid`](../../doc/ku/process/pid/enum.Pid.html).
 При этом новый процесс создаётся практически без адресного пространства и не готовый к работе.
 Поэтому он, в частности, не ставится в очередь планировщика.
 
@@ -48,7 +49,11 @@ fn exofork(
 А вот пользовательскую часть адресного пространства он не копирует.
 Этим займётся код на стороне пользователя.
 
-Системный вызов `exofork()` возвращает `Pid::Id` с идентификатором потомка в процессе родителя и константу `Pid::Current` в процессе потомка.
+Системный вызов `exofork()` возвращает
+[`Pid::Id`](../../doc/ku/process/pid/enum.Pid.html#variant.Id)
+с идентификатором потомка в процессе родителя и константу
+[`Pid::Current`](../../doc/ku/process/pid/enum.Pid.html#variant.Current)
+в процессе потомка.
 
 Текущий контекст родителя --- `context` --- нужно записать в потомка.
 Вы уже делали аналогично для
@@ -76,8 +81,11 @@ fn exofork(
 ```rust
 let (child_pid, process_info) = syscall(Syscall::EXOFORK.bits(), 0, 0, 0, 0, 0)?;
 ```
-В поле `child_pid` должен быть `Pid::Id` с идентификатором потомка в процессе родителя или
-`Pid::Current` в процессе потомка.
+В поле `child_pid` должен быть
+[`Pid::Id`](../../doc/ku/process/pid/enum.Pid.html#variant.Id)
+с идентификатором потомка в процессе родителя или
+[`Pid::Current`](../../doc/ku/process/pid/enum.Pid.html#variant.Current)
+в процессе потомка.
 А в `process_info` --- ссылка на системную информацию о текущем процессе
 [`ku::info::ProcessInfo`](../../doc/ku/info/struct.ProcessInfo.html).
 Это поле имеет смысл только для потомка.
@@ -115,13 +123,17 @@ fn set_state(
 в файле [`kernel/src/process/syscall.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/process/syscall.rs).
 
 Он переводит целевой процесс, заданный идентификатором `dst_pid`, в заданное состояние `state`.
-И ставит его в очередь планировщика в случае `State::Runnable`.
-Не забудьте [проверить права доступа](../../lab/book/5-um-2-memory.html#check_process_permissions) процесса `process` к процессу `dst_pid`.
+И ставит его в очередь планировщика в случае
+[`State::RUNNABLE`](../../doc/ku/process/struct.State.html#associatedconstant.RUNNABLE).
+Не забудьте
+[проверить права доступа](../../lab/book/5-um-2-memory.html#check_process_permissions)
+процесса `process` к процессу `dst_pid`.
 
 
 ### Рекурсивное отображение памяти
 
-Для того чтобы в пространстве пользователя процесс мог прочитать собственное отображение страниц адресного пространства,
+Для того чтобы в пространстве пользователя процесс мог прочитать собственное
+отображение страниц адресного пространства,
 удобно использовать старый джедайский трюк ---
 [рекурсивное отображение памяти](https://os.phil-opp.com/page-tables/#recursive-mapping).
 
@@ -145,7 +157,9 @@ fn Mapping::make_recursive_mapping(&mut self) -> Result<usize>
 
 ### Библиотечные функции
 
-В файле [`user/lib/src/memory/mod.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/user/lib/src/memory/mod.rs) реализуйте вспомогательные функции кода пользователя.
+В файле
+[`user/lib/src/memory/mod.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/user/lib/src/memory/mod.rs)
+реализуйте вспомогательные функции кода пользователя.
 
 
 #### [`lib::memory::temp_page()`](../../doc/lib/memory/fn.temp_page.html)
@@ -203,7 +217,8 @@ fn copy_page_table(
 ) -> Result<()>
 ```
 
-Копирует таблицу страниц уровня `level` для виртуального адреса `virt_addr` из своего адресного пространства в пространство дочернего процесса `child`.
+Копирует таблицу страниц уровня `level` для виртуального адреса `virt_addr`
+из своего адресного пространства в пространство дочернего процесса `child`.
 Работает рекурсивно.
 Корень рекурсии запускает функция
 
@@ -215,15 +230,24 @@ fn copy_address_space(child: Pid) -> Result<()> {
 
 Проходится по таблице страниц, получая ссылку на неё с помощью
 [реализованной вами ранее](../../lab/book/5-um-3-eager-fork.html#page_table)
-`lib::memory::page_table()`.
-На записях `PageTableEntry`, которые доступны для пользовательского кода, либо рекурсивно спускается на следующий уровень таблицы страниц, либо на листьевом уровне копирует содержимое отображённой страницы.
+[`lib::memory::page_table()`](../../doc/lib/memory/fn.page_table.html).
+На записях
+[`PageTableEntry`](../../doc/ku/memory/mmu/struct.PageTableEntry.html),
+которые доступны для пользовательского кода,
+либо рекурсивно спускается на следующий уровень таблицы страниц,
+либо на листьевом уровне копирует содержимое отображённой страницы.
 Адрес отображаемой страницы вычисляет поэтапно на рекурсивных вызовах с помощью аргумента `virt_addr`,
-номера обрабатываемой записи `PageTableEntry` и уровня таблицы страниц.
+номера обрабатываемой записи
+[`PageTableEntry`](../../doc/ku/memory/mmu/struct.PageTableEntry.html),
+и уровня таблицы страниц.
 
-Для копирования страницы в целевой процесс, сначала выделяет временную страницу в собственном адресном пространстве с помощью функции `lib::memory::temp_page()`.
+Для копирования страницы в целевой процесс, сначала выделяет временную страницу
+в собственном адресном пространстве с помощью функции
+[`lib::memory::temp_page()`](../../doc/lib/memory/fn.temp_page.html).
 Копирует текущую отображаемую страницу туда с помощью
 [реализованной вами ранее](../../lab/book/5-um-3-eager-fork.html#copy_page)
-функции `lib::memory::copy_page()`.
+функции
+[`lib::memory::copy_page()`](../../doc/lib/memory/fn.copy_page.html).
 Затем, с помощью системных вызовов
 [`lib::syscall::copy_mapping()`](../../doc/lib/syscall/fn.copy_mapping.html)
 и
@@ -232,7 +256,9 @@ fn copy_address_space(child: Pid) -> Result<()> {
 по адресу исходной страницы в своём адресном пространстве.
 
 Запись номер `ku::process_info().recursive_mapping()` корневой таблицы страниц, а также страницы,
-предоставляющие пользовательскому процессу информацию о нём, системе и `RingBuffer` для логирования,
+предоставляющие пользовательскому процессу информацию о нём, системе и
+[`RingBuffer`](../../doc/ku/ring_buffer/struct.RingBuffer.html)
+для логирования,
 нужно проигнорировать.
 То есть, страницы для которых `ku::process_info().contains_address()` возвращает `true`.
 Их отобразит в память потомка ядро, выбирая новые, а не разделяемые, физические фреймы.
@@ -246,9 +272,13 @@ fn eager_fork() -> Result<bool>
 
 Создаёт процесс потомка с помощью
 [реализованного вами ранее](../../lab/book/5-um-3-eager-fork.html#%D0%A1%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D0%BD%D1%8B%D0%B9-%D0%B2%D1%8B%D0%B7%D0%BE%D0%B2-exofork)
-системного вызова `syscall::exofork()`.
+системного вызова
+[`lib::syscall::exofork()`](../../doc/lib/syscall/fn.exofork.html).
 Далее копирует своё адресное пространство в пространство потомка с помощью функции `fn copy_address_space()`.
-И запускает потомка системным вызовом `syscall::set_state()`, устанавливая его состояние в `State::Runnable`.
+И запускает потомка системным вызовом
+[`lib::syscall::set_state()`](../../doc/lib/syscall/fn.set_state.html),
+устанавливая его состояние в
+[`State::RUNNABLE`](../../doc/ku/process/struct.State.html#associatedconstant.RUNNABLE).
 В потомке ничего не делает.
 Возвращает `true` в процессе потомка и `false` в процессе родителя.
 

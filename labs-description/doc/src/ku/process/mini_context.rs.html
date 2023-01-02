@@ -49,6 +49,17 @@
 <span id="49">49</span>
 <span id="50">50</span>
 <span id="51">51</span>
+<span id="52">52</span>
+<span id="53">53</span>
+<span id="54">54</span>
+<span id="55">55</span>
+<span id="56">56</span>
+<span id="57">57</span>
+<span id="58">58</span>
+<span id="59">59</span>
+<span id="60">60</span>
+<span id="61">61</span>
+<span id="62">62</span>
 </pre><pre class="rust"><code><span class="kw">use </span>core::{fmt, mem};
 
 <span class="kw">use </span>memoffset::offset_of;
@@ -59,31 +70,40 @@
 };
 
 
-<span class="attribute">#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+<span class="doccomment">/// Минимальная информация о контексте исполнения.
+</span><span class="attribute">#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 #[repr(C)]
 </span><span class="kw">pub struct </span>MiniContext {
-    rip: Virt,
-    rsp: Virt,
+    <span class="doccomment">/// Адрес кода --- содержимое регистра `rip`.
+    </span>rip: Virt,
+
+    <span class="doccomment">/// Адрес стека --- содержимое регистра `rsp`.
+    </span>rsp: Virt,
 }
 
 
 <span class="kw">impl </span>MiniContext {
-    <span class="kw">pub fn </span>new(rip: Virt, rsp: Virt) -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Создаёт [`MiniContext`] по значениям регистров `rip` и `rsp`.
+    </span><span class="kw">pub fn </span>new(rip: Virt, rsp: Virt) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{ rip, rsp }
     }
 
 
-    <span class="kw">pub fn </span>rip(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Virt {
+    <span class="doccomment">/// Адрес кода --- содержимое регистра `rip`.
+    </span><span class="kw">pub fn </span>rip(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Virt {
         <span class="self">self</span>.rip
     }
 
 
-    <span class="kw">pub fn </span>rsp(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Virt {
+    <span class="doccomment">/// Адрес стека --- содержимое регистра `rsp`.
+    </span><span class="kw">pub fn </span>rsp(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Virt {
         <span class="self">self</span>.rsp
     }
 
 
-    <span class="kw">pub fn </span>push&lt;T&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;Block&lt;Virt&gt;&gt; {
+    <span class="doccomment">/// Выделяет на стеке [`MiniContext`] блок памяти под объект типа `T`.
+    /// Не проверяет ни выравнивание, ни допустимость обращения к этому блоку памяти.
+    </span><span class="kw">pub fn </span>push&lt;T&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;Block&lt;Virt&gt;&gt; {
         <span class="kw">let </span>old_rsp = <span class="self">self</span>.rsp;
         <span class="self">self</span>.rsp = (old_rsp - mem::size_of::&lt;T&gt;())<span class="question-mark">?</span>;
 
@@ -99,6 +119,8 @@
 }
 
 
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">const </span>RSP_OFFSET_IN_MINI_CONTEXT: usize = <span class="macro">offset_of!</span>(MiniContext, rsp);
+<span class="doccomment">/// Смещение поля для регистра `rsp` контекста в структуре [`MiniContext`].
+/// Позволяет обращаться к этому полю из ассемблерных вставок.
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">const </span>RSP_OFFSET_IN_MINI_CONTEXT: usize = <span class="macro">offset_of!</span>(MiniContext, rsp);
 </code></pre></div>
 </section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="ku" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (bc4b39c27 2022-08-29)" ></div></body></html>

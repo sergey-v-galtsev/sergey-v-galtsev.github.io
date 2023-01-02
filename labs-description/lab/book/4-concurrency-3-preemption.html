@@ -200,7 +200,8 @@
 <a href="https://github.com/rust-lang/rust/issues/40180"><code>extern &quot;x86-interrupt&quot;</code></a>
 и эту запись увидит инструкция процессора
 <a href="https://www.felixcloutier.com/x86/iret:iretd:iretq"><code>iretq</code></a>.
-Чтобы предотвратить выкидывание оптимизатором команд записи в <code>context</code> и нужен <code>Volatile</code>.</p>
+Чтобы предотвратить выкидывание оптимизатором команд записи в <code>context</code> и нужен
+<a href="../../doc/volatile/struct.Volatile.html"><code>Volatile</code></a>.</p>
 <p>В <a href="../../doc/kernel/process/process/struct.Process.html#method.enter_user_mode">методе</a></p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {

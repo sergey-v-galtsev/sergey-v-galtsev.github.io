@@ -58,7 +58,8 @@ extern "x86-interrupt" fn apic_timer(mut context: InterruptContext)
 [`extern "x86-interrupt"`](https://github.com/rust-lang/rust/issues/40180)
 и эту запись увидит инструкция процессора
 [`iretq`](https://www.felixcloutier.com/x86/iret:iretd:iretq).
-Чтобы предотвратить выкидывание оптимизатором команд записи в `context` и нужен `Volatile`.
+Чтобы предотвратить выкидывание оптимизатором команд записи в `context` и нужен
+[`Volatile`](../../doc/volatile/struct.Volatile.html).
 
 В [методе](../../doc/kernel/process/process/struct.Process.html#method.enter_user_mode)
 

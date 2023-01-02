@@ -98,53 +98,151 @@
 <span id="98">98</span>
 <span id="99">99</span>
 <span id="100">100</span>
+<span id="101">101</span>
+<span id="102">102</span>
+<span id="103">103</span>
+<span id="104">104</span>
+<span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
+<span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
+<span id="116">116</span>
+<span id="117">117</span>
+<span id="118">118</span>
+<span id="119">119</span>
+<span id="120">120</span>
+<span id="121">121</span>
+<span id="122">122</span>
+<span id="123">123</span>
+<span id="124">124</span>
+<span id="125">125</span>
+<span id="126">126</span>
+<span id="127">127</span>
+<span id="128">128</span>
+<span id="129">129</span>
+<span id="130">130</span>
+<span id="131">131</span>
+<span id="132">132</span>
+<span id="133">133</span>
+<span id="134">134</span>
+<span id="135">135</span>
+<span id="136">136</span>
+<span id="137">137</span>
+<span id="138">138</span>
+<span id="139">139</span>
+<span id="140">140</span>
+<span id="141">141</span>
+<span id="142">142</span>
+<span id="143">143</span>
+<span id="144">144</span>
+<span id="145">145</span>
+<span id="146">146</span>
+<span id="147">147</span>
+<span id="148">148</span>
+<span id="149">149</span>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::error::{Error, <span class="prelude-ty">Result</span>};
 
 <span class="kw">use </span>bitflags::bitflags;
 
 
 <span class="macro">bitflags! </span>{
-    <span class="kw">pub struct </span>ExitCode: usize {
-        <span class="kw">const </span>OK = <span class="number">0</span>;
-        <span class="kw">const </span>PANIC = <span class="number">1</span>;
-        <span class="kw">const </span>UNIMPLEMENTED_SYSCALL = <span class="number">2</span>;
+    <span class="doccomment">/// Код выхода пользовательской программы, передаваемый в `syscall::exit()`.
+    </span><span class="kw">pub struct </span>ExitCode: usize {
+        <span class="doccomment">/// Пользовательская программа завершилась успешно.
+        </span><span class="kw">const </span>OK = <span class="number">0</span>;
+
+        <span class="doccomment">/// Пользовательская программа запаниковала.
+        </span><span class="kw">const </span>PANIC = <span class="number">1</span>;
+
+        <span class="doccomment">/// Пользовательская программа выполнила несуществующий системный вызов.
+        </span><span class="kw">const </span>UNIMPLEMENTED_SYSCALL = <span class="number">2</span>;
     }
 }
 
 
 <span class="macro">bitflags! </span>{
-    <span class="kw">pub struct </span>Syscall: usize {
-        <span class="kw">const </span>EXIT = <span class="number">0</span>;
-        <span class="kw">const </span>LOG_VALUE = <span class="number">1</span>;
-        <span class="kw">const </span>SCHED_YIELD = <span class="number">2</span>;
-        <span class="kw">const </span>EXOFORK = <span class="number">3</span>;
-        <span class="kw">const </span>MAP = <span class="number">4</span>;
-        <span class="kw">const </span>UNMAP = <span class="number">5</span>;
-        <span class="kw">const </span>COPY_MAPPING = <span class="number">6</span>;
-        <span class="kw">const </span>SET_STATE = <span class="number">7</span>;
-        <span class="kw">const </span>SET_TRAP_HANDLER = <span class="number">8</span>;
+    <span class="doccomment">/// Номера системных вызовов.
+    </span><span class="kw">pub struct </span>Syscall: usize {
+        <span class="doccomment">/// Номер системного вызова `exit()`.
+        </span><span class="kw">const </span>EXIT = <span class="number">0</span>;
+
+        <span class="doccomment">/// Номер системного вызова `log_value()`.
+        </span><span class="kw">const </span>LOG_VALUE = <span class="number">1</span>;
+
+        <span class="doccomment">/// Номер системного вызова `sched_yield()`.
+        </span><span class="kw">const </span>SCHED_YIELD = <span class="number">2</span>;
+
+        <span class="doccomment">/// Номер системного вызова `sched_exofork()`.
+        </span><span class="kw">const </span>EXOFORK = <span class="number">3</span>;
+
+        <span class="doccomment">/// Номер системного вызова `map()`.
+        </span><span class="kw">const </span>MAP = <span class="number">4</span>;
+
+        <span class="doccomment">/// Номер системного вызова `unmap()`.
+        </span><span class="kw">const </span>UNMAP = <span class="number">5</span>;
+
+        <span class="doccomment">/// Номер системного вызова `copy_mapping()`.
+        </span><span class="kw">const </span>COPY_MAPPING = <span class="number">6</span>;
+
+        <span class="doccomment">/// Номер системного вызова `set_state()`.
+        </span><span class="kw">const </span>SET_STATE = <span class="number">7</span>;
+
+        <span class="doccomment">/// Номер системного вызова `set_trap_handler()`.
+        </span><span class="kw">const </span>SET_TRAP_HANDLER = <span class="number">8</span>;
     }
 }
 
 
-<span class="attribute">#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+<span class="doccomment">/// Данные, возвращаемые из системных вызовов.
+</span><span class="attribute">#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 </span><span class="kw">pub struct </span>SyscallResult(<span class="kw">pub </span>usize);
 
 
 <span class="macro">bitflags! </span>{
-    <span class="kw">pub struct </span>ResultCode: usize {
-        <span class="kw">const </span>OK = <span class="number">0</span>;
-        <span class="kw">const </span>INVALID_ARGUMENT = <span class="number">1</span>;
-        <span class="kw">const </span>NO_FRAME = <span class="number">2</span>;
-        <span class="kw">const </span>NO_PAGE = <span class="number">3</span>;
-        <span class="kw">const </span>NO_PROCESS = <span class="number">4</span>;
-        <span class="kw">const </span>NO_PROCESS_SLOT = <span class="number">5</span>;
-        <span class="kw">const </span>NULL = <span class="number">6</span>;
-        <span class="kw">const </span>OVERFLOW = <span class="number">7</span>;
-        <span class="kw">const </span>PERMISSION_DENIED = <span class="number">8</span>;
-        <span class="kw">const </span>UNEXPECTED = <span class="number">9</span>;
-        <span class="kw">const </span>UNIMPLEMENTED = <span class="number">10</span>;
-        <span class="kw">const </span>WRONG_ALIGNMENT = <span class="number">11</span>;
+    <span class="doccomment">/// Код ошибки, возвращаемый из системных вызовов.
+    </span><span class="kw">pub struct </span>ResultCode: usize {
+        <span class="doccomment">/// Код для [`Result::Ok`].
+        </span><span class="kw">const </span>OK = <span class="number">0</span>;
+
+        <span class="doccomment">/// Код для всех ошибок, которые не должны возвращаться из системных вызовов.
+        </span><span class="kw">const </span>UNEXPECTED = <span class="number">1</span>;
+
+        <span class="doccomment">/// Код для [`Error::InvalidArgument`].
+        </span><span class="kw">const </span>INVALID_ARGUMENT = <span class="number">2</span>;
+
+        <span class="doccomment">/// Код для [`Error::NoFrame`].
+        </span><span class="kw">const </span>NO_FRAME = <span class="number">3</span>;
+
+        <span class="doccomment">/// Код для [`Error::NoPage`].
+        </span><span class="kw">const </span>NO_PAGE = <span class="number">4</span>;
+
+        <span class="doccomment">/// Код для [`Error::NoProcess`].
+        </span><span class="kw">const </span>NO_PROCESS = <span class="number">5</span>;
+
+        <span class="doccomment">/// Код для [`Error::NoProcessSlot`].
+        </span><span class="kw">const </span>NO_PROCESS_SLOT = <span class="number">6</span>;
+
+        <span class="doccomment">/// Код для [`Error::Null`].
+        </span><span class="kw">const </span>NULL = <span class="number">7</span>;
+
+        <span class="doccomment">/// Код для [`Error::Overflow`].
+        </span><span class="kw">const </span>OVERFLOW = <span class="number">8</span>;
+
+        <span class="doccomment">/// Код для [`Error::PermissionDenied`].
+        </span><span class="kw">const </span>PERMISSION_DENIED = <span class="number">9</span>;
+
+        <span class="doccomment">/// Код для [`Error::Unimplemented`].
+        </span><span class="kw">const </span>UNIMPLEMENTED = <span class="number">10</span>;
+
+        <span class="doccomment">/// Код для [`Error::WrongAlignment`].
+        </span><span class="kw">const </span>WRONG_ALIGNMENT = <span class="number">11</span>;
     }
 }
 

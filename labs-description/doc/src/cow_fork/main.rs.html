@@ -138,7 +138,7 @@
         PageFaultInfo,
         Virt,
     },
-    process::{<span class="self">self</span>, ExitCode, Info, Pid, State, TrapInfo},
+    process::{ExitCode, Info, Pid, State, TrapInfo},
 };
 
 <span class="kw">use </span>lib::{entry, memory, syscall};
@@ -167,7 +167,7 @@
     trap_stack: Block&lt;Page&gt;,
 ) {
     name.push(suffix).unwrap();
-    pedigree.push(process::pid()).unwrap();
+    pedigree.push(ku::process_info().pid()).unwrap();
 
     <span class="macro">info!</span>(
         name = name.as_str(),

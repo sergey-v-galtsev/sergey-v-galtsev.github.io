@@ -519,6 +519,120 @@
 <span id="519">519</span>
 <span id="520">520</span>
 <span id="521">521</span>
+<span id="522">522</span>
+<span id="523">523</span>
+<span id="524">524</span>
+<span id="525">525</span>
+<span id="526">526</span>
+<span id="527">527</span>
+<span id="528">528</span>
+<span id="529">529</span>
+<span id="530">530</span>
+<span id="531">531</span>
+<span id="532">532</span>
+<span id="533">533</span>
+<span id="534">534</span>
+<span id="535">535</span>
+<span id="536">536</span>
+<span id="537">537</span>
+<span id="538">538</span>
+<span id="539">539</span>
+<span id="540">540</span>
+<span id="541">541</span>
+<span id="542">542</span>
+<span id="543">543</span>
+<span id="544">544</span>
+<span id="545">545</span>
+<span id="546">546</span>
+<span id="547">547</span>
+<span id="548">548</span>
+<span id="549">549</span>
+<span id="550">550</span>
+<span id="551">551</span>
+<span id="552">552</span>
+<span id="553">553</span>
+<span id="554">554</span>
+<span id="555">555</span>
+<span id="556">556</span>
+<span id="557">557</span>
+<span id="558">558</span>
+<span id="559">559</span>
+<span id="560">560</span>
+<span id="561">561</span>
+<span id="562">562</span>
+<span id="563">563</span>
+<span id="564">564</span>
+<span id="565">565</span>
+<span id="566">566</span>
+<span id="567">567</span>
+<span id="568">568</span>
+<span id="569">569</span>
+<span id="570">570</span>
+<span id="571">571</span>
+<span id="572">572</span>
+<span id="573">573</span>
+<span id="574">574</span>
+<span id="575">575</span>
+<span id="576">576</span>
+<span id="577">577</span>
+<span id="578">578</span>
+<span id="579">579</span>
+<span id="580">580</span>
+<span id="581">581</span>
+<span id="582">582</span>
+<span id="583">583</span>
+<span id="584">584</span>
+<span id="585">585</span>
+<span id="586">586</span>
+<span id="587">587</span>
+<span id="588">588</span>
+<span id="589">589</span>
+<span id="590">590</span>
+<span id="591">591</span>
+<span id="592">592</span>
+<span id="593">593</span>
+<span id="594">594</span>
+<span id="595">595</span>
+<span id="596">596</span>
+<span id="597">597</span>
+<span id="598">598</span>
+<span id="599">599</span>
+<span id="600">600</span>
+<span id="601">601</span>
+<span id="602">602</span>
+<span id="603">603</span>
+<span id="604">604</span>
+<span id="605">605</span>
+<span id="606">606</span>
+<span id="607">607</span>
+<span id="608">608</span>
+<span id="609">609</span>
+<span id="610">610</span>
+<span id="611">611</span>
+<span id="612">612</span>
+<span id="613">613</span>
+<span id="614">614</span>
+<span id="615">615</span>
+<span id="616">616</span>
+<span id="617">617</span>
+<span id="618">618</span>
+<span id="619">619</span>
+<span id="620">620</span>
+<span id="621">621</span>
+<span id="622">622</span>
+<span id="623">623</span>
+<span id="624">624</span>
+<span id="625">625</span>
+<span id="626">626</span>
+<span id="627">627</span>
+<span id="628">628</span>
+<span id="629">629</span>
+<span id="630">630</span>
+<span id="631">631</span>
+<span id="632">632</span>
+<span id="633">633</span>
+<span id="634">634</span>
+<span id="635">635</span>
 </pre><pre class="rust"><code><span class="kw">use </span>core::{cell::Cell, convert::TryFrom, fmt, fmt::Write, result};
 
 <span class="kw">use </span>heapless::String;
@@ -543,22 +657,42 @@
     RingBufferWriteTx,
 };
 
-
 <span class="kw">pub use </span>tracing::{debug, error, info, trace, warn};
 
+<span class="comment">// Used in docs.
+</span><span class="attribute">#[allow(unused)]
+</span><span class="kw">use crate as </span>ku;
 
-<span class="attribute">#[derive(Debug, Deserialize, Serialize)]
+
+<span class="doccomment">/// Структура для сериализации метаданных сообщения лога, соответствует [`tracing::Metadata`].
+/// Требуется, так как [`tracing::Metadata`] не реализует
+/// типажи [`serde::Serialize`] и [`serde::Deserialize`].
+/// Дополнительно снабжает метаданные сообщения отметкой времени.
+</span><span class="attribute">#[derive(Debug, Deserialize, Serialize)]
 </span><span class="kw">pub struct </span>LogMetadata&lt;<span class="lifetime">&#39;a</span>&gt; {
-    file: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;,
-    line: <span class="prelude-ty">Option</span>&lt;u32&gt;,
-    level: char,
-    target: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str,
-    timestamp: Tsc,
+    <span class="doccomment">/// Исходный файл, где содержится вызов макроса, записавшего сообщение.
+    </span>file: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;,
+
+    <span class="doccomment">/// Строка исходного файла, где содержится вызов макроса, записавшего сообщение.
+    </span>line: <span class="prelude-ty">Option</span>&lt;u32&gt;,
+
+    <span class="doccomment">/// Уровень логирования сообщения.
+    </span>level: char,
+
+    <span class="doccomment">/// Строка, описывающая часть программы, в которой было залогировано сообщение.
+    /// По умолчанию --- имя модуля.
+    /// Соответствует [`tracing::Metadata::target()`].
+    </span>target: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str,
+
+    <span class="doccomment">/// Отметка времени сообщения.
+    </span>timestamp: Tsc,
 }
 
 
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; LogMetadata&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="kw">pub fn </span>new(metadata: <span class="kw-2">&amp;</span>Metadata&lt;<span class="lifetime">&#39;a</span>&gt;, timestamp: Tsc) -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Переводит метаданные `metadata` библиотеки [`tracing`] и отметку времени `timestamp`
+    /// в сериализуемые метаданные [`LogMetadata`].
+    </span><span class="kw">pub fn </span>new(metadata: <span class="kw-2">&amp;</span>Metadata&lt;<span class="lifetime">&#39;a</span>&gt;, timestamp: Tsc) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             file: metadata.file(),
             line: metadata.line(),
@@ -569,66 +703,95 @@
     }
 
 
-    <span class="kw">pub fn </span>file(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt; {
+    <span class="doccomment">/// Исходный файл, где содержится вызов макроса, записавшего сообщение.
+    </span><span class="kw">pub fn </span>file(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt; {
         <span class="self">self</span>.file
     }
 
 
-    <span class="kw">pub fn </span>line(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;u32&gt; {
+    <span class="doccomment">/// Строка исходного файла, где содержится вызов макроса, записавшего сообщение.
+    </span><span class="kw">pub fn </span>line(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;u32&gt; {
         <span class="self">self</span>.line
     }
 
 
-    <span class="kw">pub fn </span>level(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;Level&gt; {
+    <span class="doccomment">/// Уровень логирования сообщения.
+    </span><span class="kw">pub fn </span>level(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;Level&gt; {
         level_try_from_symbol(<span class="self">self</span>.level)
     }
 
 
-    <span class="kw">pub fn </span>target(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str {
+    <span class="doccomment">/// Строка, описывающая часть программы, в которой было залогировано сообщение.
+    /// По умолчанию --- имя модуля.
+    /// Соответствует [`tracing::Metadata::target()`].
+    </span><span class="kw">pub fn </span>target(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str {
         <span class="self">self</span>.target
     }
 
 
-    <span class="kw">pub fn </span>timestamp(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Tsc {
+    <span class="doccomment">/// Отметка времени сообщения.
+    </span><span class="kw">pub fn </span>timestamp(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Tsc {
         <span class="self">self</span>.timestamp
     }
 }
 
 
-<span class="attribute">#[derive(Debug, Deserialize)]
+<span class="doccomment">/// Поле сообщения с именем и значением, соответствует [`tracing::field::Field`].
+/// Требуется, так как [`tracing::field::Field`] не реализует
+/// типажи [`serde::Serialize`] и [`serde::Deserialize`].
+</span><span class="attribute">#[derive(Debug, Deserialize)]
 </span><span class="kw">pub struct </span>LogField&lt;<span class="lifetime">&#39;a</span>&gt;(<span class="attribute">#[serde(borrow)] </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str, <span class="attribute">#[serde(borrow)] </span>LogFieldValue&lt;<span class="lifetime">&#39;a</span>&gt;);
 
 
 <span class="kw">impl </span>LogField&lt;<span class="lifetime">&#39;_</span>&gt; {
-    <span class="kw">pub fn </span>name(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>str {
+    <span class="doccomment">/// Имя поля сообщения.
+    </span><span class="kw">pub fn </span>name(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>str {
         <span class="self">self</span>.<span class="number">0
     </span>}
 
 
-    <span class="kw">pub fn </span>value(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>LogFieldValue&lt;<span class="lifetime">&#39;_</span>&gt; {
+    <span class="doccomment">/// Значение поля сообщения.
+    </span><span class="kw">pub fn </span>value(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>LogFieldValue&lt;<span class="lifetime">&#39;_</span>&gt; {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">1
     </span>}
 }
 
 
-<span class="attribute">#[derive(Debug, Deserialize, Serialize)]
+<span class="doccomment">/// Значение поля сообщения.
+</span><span class="attribute">#[derive(Debug, Deserialize, Serialize)]
 </span><span class="kw">pub enum </span>LogFieldValue&lt;<span class="lifetime">&#39;a</span>&gt; {
-    Bool(bool),
-    I64(i64),
-    Str(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str),
-    U64(u64),
-    VecStr,
+    <span class="doccomment">/// Булево значение.
+    </span>Bool(bool),
+
+    <span class="doccomment">/// Знаковое целочисленное значение.
+    </span>I64(i64),
+
+    <span class="doccomment">/// Строковое значение.
+    </span>Str(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str),
+
+    <span class="doccomment">/// Беззнаковое целочисленное значение.
+    </span>U64(u64),
+
+    <span class="doccomment">/// Для значений остальных типов --- список строковых фрагментов, которые выдала
+    /// соответствующая реализация [`core::fmt::Debug::fmt()`] при форматировании этого значения.
+    </span>VecStr,
 }
 
 
-<span class="kw">struct </span>LogEvent&lt;<span class="lifetime">&#39;a</span>&gt; {
-    serializer: postcard::Serializer&lt;LogBuffer&lt;<span class="lifetime">&#39;a</span>&gt;&gt;,
-    result: <span class="prelude-ty">Result</span>&lt;()&gt;,
+<span class="doccomment">/// Процесс сериализации одного сообщения лога.
+</span><span class="kw">struct </span>LogEvent&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="doccomment">/// Сериализатор.
+    </span>serializer: postcard::Serializer&lt;LogBuffer&lt;<span class="lifetime">&#39;a</span>&gt;&gt;,
+
+    <span class="doccomment">/// Результат сериализации.
+    </span>result: <span class="prelude-ty">Result</span>&lt;()&gt;,
 }
 
 
 <span class="kw">impl </span>LogEvent&lt;<span class="lifetime">&#39;_</span>&gt; {
-    <span class="kw">fn </span>record_event(event: <span class="kw-2">&amp;</span>Event&lt;<span class="lifetime">&#39;_</span>&gt;, timestamp: Tsc) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="doccomment">/// Записывает сообщение `event` с отметкой времени `timestamp`
+    /// в [`ku::info::ProcessInfo::log()`].
+    </span><span class="kw">fn </span>record_event(event: <span class="kw-2">&amp;</span>Event&lt;<span class="lifetime">&#39;_</span>&gt;, timestamp: Tsc) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>log_event = <span class="self">Self </span>{
             serializer: postcard::Serializer {
                 output: LogBuffer::new(),
@@ -648,7 +811,8 @@
     }
 
 
-    <span class="kw">fn </span>record_header(<span class="kw-2">&amp;mut </span><span class="self">self</span>, event: <span class="kw-2">&amp;</span>Event&lt;<span class="lifetime">&#39;_</span>&gt;, timestamp: Tsc) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="doccomment">/// Сериализует заголовок сообщения `event` с отметкой временем `timestamp`.
+    </span><span class="kw">fn </span>record_header(<span class="kw-2">&amp;mut </span><span class="self">self</span>, event: <span class="kw-2">&amp;</span>Event&lt;<span class="lifetime">&#39;_</span>&gt;, timestamp: Tsc) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">let </span>metadata = LogMetadata::new(event.metadata(), timestamp);
         metadata.serialize(<span class="kw-2">&amp;mut </span><span class="self">self</span>.serializer)<span class="question-mark">?</span>;
 
@@ -659,7 +823,8 @@
     }
 
 
-    <span class="kw">fn </span>record_field(<span class="kw-2">&amp;mut </span><span class="self">self</span>, field: <span class="kw-2">&amp;</span>Field, value: <span class="kw-2">&amp;</span>LogFieldValue&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="doccomment">/// Сериализует поле сообщения `field` со значением `value`.
+    </span><span class="kw">fn </span>record_field(<span class="kw-2">&amp;mut </span><span class="self">self</span>, field: <span class="kw-2">&amp;</span>Field, value: <span class="kw-2">&amp;</span>LogFieldValue&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="self">self</span>.is_ok_so_far()<span class="question-mark">?</span>;
 
         <span class="kw">let </span><span class="kw-2">mut </span>s = <span class="self">self</span>.serializer.serialize_tuple(<span class="number">2</span>)<span class="question-mark">?</span>;
@@ -671,7 +836,8 @@
     }
 
 
-    <span class="kw">fn </span>record_vec_str(<span class="kw-2">&amp;mut </span><span class="self">self</span>, value: <span class="kw-2">&amp;</span><span class="kw">dyn </span>fmt::Debug) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="doccomment">/// Сериализует значение `value` поля сообщения через [`core::fmt::Debug::fmt()`].
+    </span><span class="kw">fn </span>record_vec_str(<span class="kw-2">&amp;mut </span><span class="self">self</span>, value: <span class="kw-2">&amp;</span><span class="kw">dyn </span>fmt::Debug) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="self">self</span>.is_ok_so_far()<span class="question-mark">?</span>;
 
         <span class="self">self</span>.write_fmt(<span class="macro">format_args!</span>(<span class="string">&quot;{:?}&quot;</span>, value))<span class="question-mark">?</span>;
@@ -682,7 +848,9 @@
     }
 
 
-    <span class="kw">fn </span>record_vec_element(<span class="kw-2">&amp;mut </span><span class="self">self</span>, text: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="doccomment">/// Записывает один фрагмент `text` поля сообщения
+    /// при сериализации через [`core::fmt::Debug::fmt()`].
+    </span><span class="kw">fn </span>record_vec_element(<span class="kw-2">&amp;mut </span><span class="self">self</span>, text: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="self">self</span>.is_ok_so_far()<span class="question-mark">?</span>;
 
         <span class="prelude-val">Some</span>(text).serialize(<span class="kw-2">&amp;mut </span><span class="self">self</span>.serializer)<span class="question-mark">?</span>;
@@ -691,14 +859,17 @@
     }
 
 
-    <span class="kw">fn </span>set_result(<span class="kw-2">&amp;mut </span><span class="self">self</span>, result: <span class="prelude-ty">Result</span>&lt;()&gt;) {
+    <span class="doccomment">/// Запоминает первую ошибку, возникшую в процессе сериализации.
+    /// Если `result` не содержит ошибку, ничего не делает.
+    </span><span class="kw">fn </span>set_result(<span class="kw-2">&amp;mut </span><span class="self">self</span>, result: <span class="prelude-ty">Result</span>&lt;()&gt;) {
         <span class="kw">if </span><span class="self">self</span>.result.is_ok() &amp;&amp; result.is_err() {
             <span class="self">self</span>.result = result;
         }
     }
 
 
-    <span class="kw">fn </span>is_ok_so_far(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="doccomment">/// Возвращает [`Ok`] или возникшую в процессе сериализации ошибку.
+    </span><span class="kw">fn </span>is_ok_so_far(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">if </span><span class="self">self</span>.serializer.output.result.is_err() {
             <span class="self">self</span>.serializer.output.result<span class="question-mark">?</span>;
         }
@@ -760,15 +931,22 @@
 }
 
 
-<span class="kw">struct </span>PlanB&lt;<span class="kw">const </span>N: usize&gt; {
-    log_message: String&lt;N&gt;,
-    overflow: bool,
-    separator: bool,
+<span class="doccomment">/// Структура для записи префикса сообщения, которое не влезает в буфер целиком.
+</span><span class="kw">struct </span>PlanB&lt;<span class="kw">const </span>N: usize&gt; {
+    <span class="doccomment">/// Буфер под строковое представление префикса сообщения.
+    </span>log_message: String&lt;N&gt;,
+
+    <span class="doccomment">/// Признак того, что буфер [`PlanB::log_message`] уже переполнен.
+    </span>overflow: bool,
+
+    <span class="doccomment">/// Признак того, что нужно записать разделитель полей после ранее записанного поля.
+    </span>separator: bool,
 }
 
 
 <span class="kw">impl</span>&lt;<span class="kw">const </span>N: usize&gt; PlanB&lt;N&gt; {
-    <span class="kw">fn </span>record_event(event: <span class="kw-2">&amp;</span>Event&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; String&lt;N&gt; {
+    <span class="doccomment">/// Записывает префикс сообщения `event` в виде строки ограниченной длины.
+    </span><span class="kw">fn </span>record_event(event: <span class="kw-2">&amp;</span>Event&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; String&lt;N&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>plan_b = <span class="self">Self </span>{
             log_message: String::new(),
             overflow: <span class="bool-val">false</span>,
@@ -781,7 +959,8 @@
     }
 
 
-    <span class="kw">fn </span>record_field(<span class="kw-2">&amp;mut </span><span class="self">self</span>, field: <span class="kw-2">&amp;</span>Field, value: <span class="kw-2">&amp;</span><span class="kw">dyn </span>fmt::Debug) -&gt; result::Result&lt;(), ()&gt; {
+    <span class="doccomment">/// Сериализует поле сообщения `field` со значением `value` через [`core::fmt::Debug::fmt()`].
+    </span><span class="kw">fn </span>record_field(<span class="kw-2">&amp;mut </span><span class="self">self</span>, field: <span class="kw-2">&amp;</span>Field, value: <span class="kw-2">&amp;</span><span class="kw">dyn </span>fmt::Debug) -&gt; result::Result&lt;(), ()&gt; {
         <span class="kw">if </span><span class="self">self</span>.separator {
             <span class="self">self</span>.log_message.push_str(<span class="string">&quot;; &quot;</span>)<span class="question-mark">?</span>;
         }
@@ -816,20 +995,44 @@
 }
 
 
-<span class="kw">pub struct </span>LogCollector {
-    flush: Cell&lt;<span class="prelude-ty">Option</span>&lt;<span class="kw">fn</span>()&gt;&gt;,
-    level: Level,
-    lost_recently: Cell&lt;usize&gt;,
-    lost_totally: Cell&lt;usize&gt;,
-    plan_b_failures: Cell&lt;usize&gt;,
-    plan_c_failures: Cell&lt;usize&gt;,
-    recursion: Cell&lt;usize&gt;,
-    recursive_failure: Cell&lt;usize&gt;,
+<span class="doccomment">/// Сборщик сообщений лога.
+</span><span class="kw">pub struct </span>LogCollector {
+    <span class="doccomment">/// Функция сброса буфера накопленных сообщений.
+    /// Обычно это `syscall::sched_yield()`, так как за сброс буфера отвечает ядро.
+    </span>flush: Cell&lt;<span class="prelude-ty">Option</span>&lt;<span class="kw">fn</span>()&gt;&gt;,
+
+    <span class="doccomment">/// Текущий уровень логирования.
+    </span>level: Level,
+
+    <span class="doccomment">/// Количество потерянных сообщений с момента предыдущего служебного сообщения о таких потерях.
+    </span>lost_recently: Cell&lt;usize&gt;,
+
+    <span class="doccomment">/// Количество потерянных сообщений за всё время.
+    </span>lost_totally: Cell&lt;usize&gt;,
+
+    <span class="doccomment">/// Количество потерянных сообщений, для которых к тому же провалился
+    /// первый запасной вариант --- запись в лог префикса сообщения фиксированной длины.
+    </span>plan_b_failures: Cell&lt;usize&gt;,
+
+    <span class="doccomment">/// Количество потерянных сообщений, для которых к тому же провалились оба запасных варианта.
+    /// Первый запасной вариант записывает в лог префикс сообщения фиксированной длины,
+    /// второй запасной вариант --- только метаданные потерянного сообщения.
+    </span>plan_c_failures: Cell&lt;usize&gt;,
+
+    <span class="doccomment">/// Уровень вложенности текущей операции записи сообщения.
+    /// В момент обработки записи сообщения, возможна попытка записать ещё одно сообщения.
+    /// Поле [`LogCollector::recursion`] позволяет отсечь бесконечную рекурсию в этом случае.
+    </span>recursion: Cell&lt;usize&gt;,
+
+    <span class="doccomment">/// Количество потерянных сообщений в текущем наборе рекурсивных вызовов логирования.
+    </span>recursive_failure: Cell&lt;usize&gt;,
 }
 
 
 <span class="kw">impl </span>LogCollector {
-    <span class="kw">const fn </span>new(level: Level) -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Создаёт сборщик сообщений лога, записывающий в [`ku::info::ProcessInfo::log()`]
+    /// сообщения с уровнем логирования `level` и выше.
+    </span><span class="kw">const fn </span>new(level: Level) -&gt; <span class="self">Self </span>{
         LogCollector {
             flush: Cell::new(<span class="prelude-val">None</span>),
             level,
@@ -843,12 +1046,14 @@
     }
 
 
-    <span class="kw">pub fn </span>set_flush(<span class="kw-2">&amp;</span><span class="self">self</span>, flush: <span class="kw">fn</span>()) {
+    <span class="doccomment">/// Устанавливает функцию `flush` для сброса буфера накопленных сообщений.
+    </span><span class="kw">pub fn </span>set_flush(<span class="kw-2">&amp;</span><span class="self">self</span>, flush: <span class="kw">fn</span>()) {
         <span class="self">self</span>.flush.set(<span class="prelude-val">Some</span>(flush));
     }
 
 
-    <span class="kw">fn </span>flush(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+    <span class="doccomment">/// Сбрасывает буфер накопленных сообщений.
+    </span><span class="kw">fn </span>flush(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
         <span class="kw">if let </span><span class="prelude-val">Some</span>(flush) = <span class="self">self</span>.flush.get() {
             (flush)();
             <span class="bool-val">true
@@ -858,7 +1063,8 @@
     }
 
 
-    <span class="kw">fn </span>report_lost_messages_statistics(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+    <span class="doccomment">/// Записывает служебное сообщение с количеством потерянных сообщений.
+    </span><span class="kw">fn </span>report_lost_messages_statistics(<span class="kw-2">&amp;</span><span class="self">self</span>) {
         <span class="kw">let </span>recent = <span class="self">self</span>.lost_recently.get();
         <span class="kw">let </span>recursive_failure = <span class="self">self</span>.recursive_failure.get();
 
@@ -884,7 +1090,13 @@
     }
 
 
-    <span class="kw">fn </span>report_lost_message(<span class="kw-2">&amp;</span><span class="self">self</span>, event: <span class="kw-2">&amp;</span>Event&lt;<span class="lifetime">&#39;_</span>&gt;, timestamp: Tsc, error: <span class="kw-2">&amp;</span>Error) {
+    <span class="doccomment">/// Записывает служебное сообщение с префиксом не поместившегося в буфер сообщения `event`,
+    /// его метаданными, отметкой времени `timestamp` и
+    /// возникшей при записи сообщения ошибкой `error`.
+    /// Либо только с метаданными потерянного сообщения,
+    /// отметкой времени `timestamp` и возникшей ошибкой `error`,
+    /// если даже префикс исходного сообщения записать не удалось.
+    </span><span class="kw">fn </span>report_lost_message(<span class="kw-2">&amp;</span><span class="self">self</span>, event: <span class="kw-2">&amp;</span>Event&lt;<span class="lifetime">&#39;_</span>&gt;, timestamp: Tsc, error: <span class="kw-2">&amp;</span>Error) {
         <span class="self">self</span>.lost_recently.update(|x| x + <span class="number">1</span>);
         <span class="kw">let </span>recursive_failure = <span class="self">self</span>.recursive_failure.get();
 
@@ -927,7 +1139,9 @@
             <span class="kw">return</span>;
         }
 
-        <span class="kw">const </span>TRY_COUNT: i32 = <span class="number">2</span>;
+        <span class="doccomment">/// Количество попыток записи сообщения в [`ku::info::ProcessInfo::log()`].
+        /// Между которыми выполняется попытка сброса буфера.
+        </span><span class="kw">const </span>TRY_COUNT: i32 = <span class="number">2</span>;
 
         <span class="kw">for </span>tries_left <span class="kw">in </span>(<span class="number">0</span>..TRY_COUNT).rev() {
             <span class="kw">if let </span><span class="prelude-val">Err</span>(error) = LogEvent::record_event(event, timestamp) {
@@ -976,14 +1190,20 @@
 }
 
 
-<span class="kw">struct </span>LogBuffer&lt;<span class="lifetime">&#39;a</span>&gt; {
-    buffer: RingBufferWriteTx&lt;<span class="lifetime">&#39;a</span>&gt;,
-    result: ring_buffer::Result&lt;()&gt;,
+<span class="doccomment">/// Буфер для записи сообщения в [`ku::info::ProcessInfo::log()`].
+</span><span class="kw">struct </span>LogBuffer&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="doccomment">/// Буфер пишущей в [`ku::info::ProcessInfo::log()`] транзакции.
+    </span>buffer: RingBufferWriteTx&lt;<span class="lifetime">&#39;a</span>&gt;,
+
+    <span class="doccomment">/// Текущий результат записи сообщения в буфер.
+    </span>result: ring_buffer::Result&lt;()&gt;,
 }
 
 
 <span class="kw">impl </span>LogBuffer&lt;<span class="lifetime">&#39;_</span>&gt; {
-    <span class="kw">fn </span>new() -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Создаёт пишущую в [`ku::info::ProcessInfo::log()`] транзакцию и
+    /// возвращает буфер для записи сообщения.
+    </span><span class="kw">fn </span>new() -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             buffer: <span class="kw">crate</span>::process_info().log().write_tx(),
             result: <span class="prelude-val">Ok</span>(()),
@@ -994,6 +1214,7 @@
 
 <span class="kw">impl </span>Flavor <span class="kw">for </span>LogBuffer&lt;<span class="lifetime">&#39;_</span>&gt; {
     <span class="kw">type </span>Output = ();
+
 
     <span class="kw">fn </span>try_extend(<span class="kw-2">&amp;mut </span><span class="self">self</span>, data: <span class="kw-2">&amp;</span>[u8]) -&gt; postcard::Result&lt;()&gt; {
         <span class="self">self</span>.result = <span class="self">self</span>.buffer.write(data);
@@ -1013,7 +1234,9 @@
 }
 
 
-<span class="kw">pub const fn </span>level_into_symbol(level: <span class="kw-2">&amp;</span>Level) -&gt; char {
+<span class="doccomment">/// Переводит уровень логирования `level` в соответствующий символ.
+/// Этот же символ используется при сериализации уровня логирования.
+</span><span class="kw">pub const fn </span>level_into_symbol(level: <span class="kw-2">&amp;</span>Level) -&gt; char {
     <span class="kw">match </span><span class="kw-2">*</span>level {
         Level::ERROR =&gt; <span class="string">&#39;E&#39;</span>,
         Level::WARN =&gt; <span class="string">&#39;W&#39;</span>,
@@ -1024,7 +1247,9 @@
 }
 
 
-<span class="kw">const fn </span>level_try_from_symbol(level: char) -&gt; <span class="prelude-ty">Result</span>&lt;Level&gt; {
+<span class="doccomment">/// Переводит символ уровня логирования `level` в соответствующий уровень.
+/// Возвращает ошибку [`Error::InvalidArgument`], если символу не соответствует никакой уровень.
+</span><span class="kw">const fn </span>level_try_from_symbol(level: char) -&gt; <span class="prelude-ty">Result</span>&lt;Level&gt; {
     <span class="kw">match </span>level {
         <span class="string">&#39;E&#39; </span>=&gt; <span class="prelude-val">Ok</span>(Level::ERROR),
         <span class="string">&#39;W&#39; </span>=&gt; <span class="prelude-val">Ok</span>(Level::WARN),
@@ -1036,9 +1261,12 @@
 }
 
 
-<span class="kw">pub static </span>LOG_COLLECTOR: LogCollector = LogCollector::new(Level::DEBUG);
+<span class="doccomment">/// Сборщик сообщений лога.
+</span><span class="kw">pub static </span>LOG_COLLECTOR: LogCollector = LogCollector::new(Level::DEBUG);
 
 
-<span class="kw">const </span>PLAN_B_MAX_MESSAGE_SIZE: usize = <span class="number">128</span>;
+<span class="doccomment">/// Размер префикса сообщения, который записывается в лог в случае,
+/// когда сообщение не влезает в буфер лога целиком.
+</span><span class="kw">const </span>PLAN_B_MAX_MESSAGE_SIZE: usize = <span class="number">128</span>;
 </code></pre></div>
 </section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="ku" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (bc4b39c27 2022-08-29)" ></div></body></html>

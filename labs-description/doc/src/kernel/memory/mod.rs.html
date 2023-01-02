@@ -295,15 +295,11 @@
 <span id="295">295</span>
 <span id="296">296</span>
 <span id="297">297</span>
-<span id="298">298</span>
-</pre><pre class="rust"><code><span class="attribute">#![warn(clippy::missing_docs_in_private_items)]
-#![warn(missing_docs)]
-
-
-</span><span class="doccomment">/// Дополнительные функции для работы с [Memory Management Unit](https://en.wikipedia.org/wiki/Memory_management_unit), доступные только ядру.
+</pre><pre class="rust"><code><span class="doccomment">/// Дополнительные функции для работы с [Memory Management Unit](https://en.wikipedia.org/wiki/Memory_management_unit), доступные только ядру.
 </span><span class="kw">pub mod </span>mmu;
 
-<span class="doccomment">/// Таблица сегментов памяти [`Gdt`].
+<span class="doccomment">/// Глобальная таблица дескрипторов [`Gdt`]
+/// ([Global Descriptor Table](https://en.wikipedia.org/wiki/Global_Descriptor_Table), GDT).
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod </span>gdt;
 
 <span class="doccomment">/// Абстракция адресного пространства [`AddressSpace`].
@@ -321,10 +317,12 @@
 <span class="doccomment">/// Аллокатор страниц виртуальной памяти [`PageAllocator`].
 </span><span class="kw">mod </span>page_allocator;
 
-<span class="doccomment">/// Работа со стеками [`Stack`]. Выделенные стеки для непредвиденных исключений [`ExceptionStacks`].
+<span class="doccomment">/// Работа со стеками [`Stack`] и
+/// выделенные стеки для непредвиденных исключений [`ExceptionStacks`].
 </span><span class="kw">mod </span>stack;
 
-<span class="doccomment">/// Сегмент состояния задачи ([task state segment](https://en.wikipedia.org/wiki/Task_state_segment), TSS).
+<span class="doccomment">/// Сегмент состояния задачи
+/// ([Task State Segment](https://en.wikipedia.org/wiki/Task_state_segment), TSS).
 </span><span class="kw">mod </span>tss;
 
 

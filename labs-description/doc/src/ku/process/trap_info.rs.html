@@ -100,6 +100,39 @@
 <span id="100">100</span>
 <span id="101">101</span>
 <span id="102">102</span>
+<span id="103">103</span>
+<span id="104">104</span>
+<span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
+<span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
+<span id="116">116</span>
+<span id="117">117</span>
+<span id="118">118</span>
+<span id="119">119</span>
+<span id="120">120</span>
+<span id="121">121</span>
+<span id="122">122</span>
+<span id="123">123</span>
+<span id="124">124</span>
+<span id="125">125</span>
+<span id="126">126</span>
+<span id="127">127</span>
+<span id="128">128</span>
+<span id="129">129</span>
+<span id="130">130</span>
+<span id="131">131</span>
+<span id="132">132</span>
+<span id="133">133</span>
+<span id="134">134</span>
+<span id="135">135</span>
 </pre><pre class="rust"><code><span class="kw">use </span>core::{fmt, mem};
 
 <span class="kw">use </span>memoffset::offset_of;
@@ -112,28 +145,43 @@
 <span class="kw">use super</span>::{mini_context::RSP_OFFSET_IN_MINI_CONTEXT, MiniContext};
 
 
-<span class="attribute">#[derive(Clone, Copy, Debug)]
+<span class="doccomment">/// Информация об исключении процессора.
+</span><span class="attribute">#[derive(Clone, Copy, Debug)]
 #[repr(C)]
 </span><span class="kw">pub struct </span>TrapInfo {
-    number: usize,
-    info: Info,
-    context: MiniContext,
+    <span class="doccomment">/// Номер исключения.
+    </span>number: usize,
 
-    <span class="doccomment">/// `TrapInfo` can be pushed onto the same stack the `context` is pointing to.
-    /// Eg. if the trap is recursive - the trap has happened inside a trap handler.
-    /// In this case `lib::syscall::trap_trampoline` and `lib::syscall::trap_handler_invoker`
-    /// will push a return address onto the `context` stack.
-    /// That will effectively overwrite the `TrapInfo`.
-    /// This field exists only to protect meaningfull fields of the `TrapInfo` from beeing overwritten.
+    <span class="doccomment">/// Информация об исключении, предоставляемая процессором.
+    </span>info: Info,
+
+    <span class="doccomment">/// Контекст, в котором возникло исключение.
+    </span>context: MiniContext,
+
+    <span class="doccomment">/// [`TrapInfo`] может быть сохранено в тот же стек,
+    /// на который указывает [`TrapInfo::context`].
+    /// Это происходит при рекурсивном исключении ---
+    /// то есть когда исключение происходит внутри обработчика исключений.
+    /// В этом случае функции `lib::syscall::trap_trampoline` и `lib::syscall::trap_handler_invoker`
+    /// сохранят адрес возврата на тот же стек [`TrapInfo::context`].
+    /// Что приведёт к перезаписи содержимого [`TrapInfo`].
+    /// Поле [`TrapInfo::return_address_placeholder`] служит для избежания перезаписи
+    /// существенных полей --- оно имеет тот же размер и расположение, как и адрес возврата.
     </span>return_address_placeholder: [u8; <span class="self">Self</span>::PLACEHOLDER_SIZE],
 }
 
 
 <span class="kw">impl </span>TrapInfo {
-    <span class="kw">const </span>PLACEHOLDER_SIZE: usize = mem::size_of::&lt;Virt&gt;();
+    <span class="doccomment">/// Размер адреса возврата из функции, см. [`TrapInfo::return_address_placeholder`].
+    </span><span class="kw">const </span>PLACEHOLDER_SIZE: usize = mem::size_of::&lt;Virt&gt;();
 
 
-    <span class="kw">pub fn </span>new(number: usize, info: Info, context: MiniContext) -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Создаёт информацию об исключении.
+    ///
+    /// - number --- номер исключения,
+    /// - info --- информация об исключении, предоставляемая процессором.
+    /// - context --- контекст, в котором возникло исключение.
+    </span><span class="kw">pub fn </span>new(number: usize, info: Info, context: MiniContext) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             number,
             info,
@@ -143,22 +191,29 @@
     }
 
 
-    <span class="kw">pub fn </span>number(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+    <span class="doccomment">/// Номер исключения.
+    </span><span class="kw">pub fn </span>number(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="self">self</span>.number
     }
 
 
-    <span class="kw">pub fn </span>info(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Info {
+    <span class="doccomment">/// Информация об исключении, предоставляемая процессором.
+    </span><span class="kw">pub fn </span>info(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Info {
         <span class="self">self</span>.info
     }
 
 
-    <span class="kw">pub fn </span>context(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; MiniContext {
+    <span class="doccomment">/// Контекст, в котором возникло исключение.
+    </span><span class="kw">pub fn </span>context(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; MiniContext {
         <span class="self">self</span>.context
     }
 
 
-    <span class="kw">pub unsafe fn </span>prepare_for_ret(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="doccomment">/// Записывает на стек контекста исключения адрес возникновения исключения.
+    /// После этого, если переключить стек в изменившийся [`TrapInfo::context`],
+    /// и выполнить инструкцию `ret`,
+    /// то регистры `rip` и `rsp` окажутся в состоянии, равном исходному [`TrapInfo::context`].
+    </span><span class="kw">pub unsafe fn </span>prepare_for_ret(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw-2">*</span><span class="self">self</span>.context.push::&lt;Virt&gt;()<span class="question-mark">?</span>.try_into_mut()<span class="question-mark">? </span>= <span class="self">self</span>.context.rip();
         <span class="prelude-val">Ok</span>(())
     }
@@ -176,13 +231,22 @@
 }
 
 
-<span class="attribute">#[derive(Clone, Copy, Debug)]
+<span class="doccomment">/// Информация об исключении, предоставляемая процессором.
+</span><span class="attribute">#[derive(Clone, Copy, Debug)]
 </span><span class="kw">pub enum </span>Info {
-    <span class="prelude-val">None</span>,
-    Code(u64),
-    PageFault {
-        address: Virt,
-        code: PageFaultInfo,
+    <span class="doccomment">/// Исключение не имеет дополнительной информации.
+    </span><span class="prelude-val">None</span>,
+
+    <span class="doccomment">/// Код ошибки, сохраняемый процессором на стеке для некоторых исключений.
+    </span>Code(u64),
+
+    <span class="doccomment">/// Информация об исключении обращения к странице виртуальной памяти.
+    </span>PageFault {
+        <span class="doccomment">/// Адрес к которому происходило обращение.
+        </span>address: Virt,
+
+        <span class="doccomment">/// Причина некорректности обращения.
+        </span>code: PageFaultInfo,
     },
 }
 
@@ -200,7 +264,9 @@
 }
 
 
-<span class="kw">pub const </span>RSP_OFFSET_IN_TRAP_INFO: usize =
+<span class="doccomment">/// Смещение поля для регистра `rsp` контекста исключения в структуре [`TrapInfo`].
+/// Позволяет обращаться к этому полю из ассемблерных вставок.
+</span><span class="kw">pub const </span>RSP_OFFSET_IN_TRAP_INFO: usize =
     <span class="macro">offset_of!</span>(TrapInfo, context) + RSP_OFFSET_IN_MINI_CONTEXT;
 </code></pre></div>
 </section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="ku" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (bc4b39c27 2022-08-29)" ></div></body></html>

@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":[["Error",""]],"type":[["Result",""]]};
+window.SIDEBAR_ITEMS = {"enum":[["Error","Перечисление для возможных ошибок."]],"type":[["Result","Тип возвращаемого результата `T` или ошибки [`Error`] — мономорфизация [`result::Result`] по типу ошибки."]]};

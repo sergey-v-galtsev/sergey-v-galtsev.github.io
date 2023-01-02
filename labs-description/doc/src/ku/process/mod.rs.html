@@ -32,11 +32,24 @@
 <span id="32">32</span>
 <span id="33">33</span>
 <span id="34">34</span>
-</pre><pre class="rust"><code><span class="kw">pub mod </span>mini_context;
-<span class="kw">pub mod </span>pid;
-<span class="kw">pub mod </span>registers;
-<span class="kw">pub mod </span>syscall;
-<span class="kw">pub mod </span>trap_info;
+<span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
+<span id="38">38</span>
+</pre><pre class="rust"><code><span class="doccomment">/// Минимальная информация о контексте исполнения.
+</span><span class="kw">pub mod </span>mini_context;
+
+<span class="doccomment">/// Идентификатор процесса.
+</span><span class="kw">pub mod </span>pid;
+
+<span class="doccomment">/// Операции с [регистром флагов](https://en.wikipedia.org/wiki/FLAGS_register).
+</span><span class="kw">pub mod </span>registers;
+
+<span class="doccomment">/// Константы для работы с системными вызовами.
+</span><span class="kw">pub mod </span>syscall;
+
+<span class="doccomment">/// Информация об исключении процессора.
+</span><span class="kw">pub mod </span>trap_info;
 
 
 <span class="kw">use </span>bitflags::bitflags;
@@ -60,11 +73,6 @@
         <span class="doccomment">/// Процесс выполняется в данный момент.
         </span><span class="kw">const </span>RUNNING = <span class="number">2</span>;
     }
-}
-
-
-<span class="kw">pub fn </span>pid() -&gt; Pid {
-    <span class="kw">super</span>::process_info().pid()
 }
 </code></pre></div>
 </section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="ku" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (bc4b39c27 2022-08-29)" ></div></body></html>

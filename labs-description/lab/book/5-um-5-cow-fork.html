@@ -146,7 +146,10 @@
                     <main>
                         <h2 id="copy-on-write-fork"><a class="header" href="#copy-on-write-fork">Copy-on-write fork</a></h2>
 <p>Теперь у нас есть всё необходимое для реализации copy-on-write <code>fork()</code> в пространстве пользователя.
-Программа <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/user/cow_fork/src/main.rs"><code>user/cow_fork/src/main.rs</code></a> структурно похожа на <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/user/eager_fork/src/main.rs"><code>user/eager_fork/src/main.rs</code></a>
+Программа
+<a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/user/cow_fork/src/main.rs"><code>user/cow_fork/src/main.rs</code></a>
+структурно похожа на
+<a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/user/eager_fork/src/main.rs"><code>user/eager_fork/src/main.rs</code></a>
 и на <code>eager_fork</code> можно ориентироваться при реализации.</p>
 <h4 id="Ленивое-копирование-адресного-пространства"><a class="header" href="#Ленивое-копирование-адресного-пространства">Ленивое копирование адресного пространства</a></h4>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
@@ -163,7 +166,7 @@
 Отличается от которой в паре моментов:</p>
 <ul>
 <li>К игнорируемым страницам добавляется <code>trap_stack</code>, его копировать не нужно. У потомка изначально будет полностью отдельный стек для обработки исключений.</li>
-<li>Вместо копирования страниц функцией <code>lib::memory::copy_page()</code> создаёт в потомке отображение. Оно ссылается на тот же физический фрейм, на который ссылается соответствующая виртуальная страница в родителе. При этом для страниц, которые отображены с одним из флагов <a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.WRITABLE"><code>PageTableFlags::WRITABLE</code></a> или <a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.COPY_ON_WRITE"><code>PageTableFlags::COPY_ON_WRITE</code></a>, в обоих адресных пространствах меняет флаги отображения страницы так, чтобы <a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.COPY_ON_WRITE"><code>PageTableFlags::COPY_ON_WRITE</code></a> был включён, а <a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.WRITABLE"><code>PageTableFlags::WRITABLE</code></a> — выключен. Копирование содержимого страницы функцией <code>lib::memory::copy_page()</code> таким образом лениво откладывается до возникновения Page Fault.</li>
+<li>Вместо копирования страниц функцией <a href="../../doc/lib/memory/fn.copy_page.html"><code>lib::memory::copy_page()</code></a> создаёт в потомке отображение. Оно ссылается на тот же физический фрейм, на который ссылается соответствующая виртуальная страница в родителе. При этом для страниц, которые отображены с одним из флагов <a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.WRITABLE"><code>PageTableFlags::WRITABLE</code></a> или <a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.COPY_ON_WRITE"><code>PageTableFlags::COPY_ON_WRITE</code></a>, в обоих адресных пространствах меняет флаги отображения страницы так, чтобы <a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.COPY_ON_WRITE"><code>PageTableFlags::COPY_ON_WRITE</code></a> был включён, а <a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.WRITABLE"><code>PageTableFlags::WRITABLE</code></a> — выключен. Копирование содержимого страницы функцией <a href="../../doc/lib/memory/fn.copy_page.html"><code>lib::memory::copy_page()</code></a> таким образом лениво откладывается до возникновения Page Fault.</li>
 </ul>
 <h4 id="Пользовательский-обработчик-исключений-page-fault"><a class="header" href="#Пользовательский-обработчик-исключений-page-fault">Пользовательский обработчик исключений Page Fault</a></h4>
 <p>Когда программа попытается записать в страницу, помеченную в <code>copy_page_table()</code> как
@@ -171,36 +174,44 @@
 и только на чтение,
 возникнет Page Fault и ядро передаст управление в
 <a href="../../lab/book/5-um-4-trap-handler.html#%D0%A2%D1%80%D0%B0%D0%BC%D0%BF%D0%BB%D0%B8%D0%BD-%D0%BE%D0%B1%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%B0-%D0%BF%D1%80%D0%B5%D1%80%D1%8B%D0%B2%D0%B0%D0%BD%D0%B8%D0%B9">реализованный вами ранее</a>
-<code>trap_trampoline()</code>, который в свою очередь запустит</p>
+<a href="../../doc/lib/syscall/fn.trap_trampoline.html"><code>lib::syscall::trap_trampoline()</code></a>,
+который в свою очередь запустит</p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>fn trap_handler(info: &amp;TrapInfo)
 <span class="boring">}
 </span></code></pre></pre>
 <p>Эта функция работает в очень стеснённых условиях.</p>
-<p>Возможно, вся память программы, кроме стека <code>trap_stack</code>, на котором сейчас работает эта функция, доступна только на чтение.
-В том числе <code>RingBuffer</code>, который используется для логирования в пространстве пользователя макросами библиотеки <a href="https://docs.rs/tracing/">tracing</a> — <code>info!()</code>, <code>debug!()</code> и т.д.
+<p>Возможно, вся память программы, кроме стека <code>trap_stack</code>, на котором сейчас работает эта функция,
+доступна только на чтение.
+В том числе
+<a href="../../doc/ku/ring_buffer/struct.RingBuffer.html"><code>RingBuffer</code></a>,
+который используется для логирования в пространстве пользователя
+макросами библиотеки <a href="https://docs.rs/tracing/">tracing</a> — <code>info!()</code>, <code>debug!()</code> и т.д.
 Так как при этом нужно писать, то такое логирование в <code>trap_handler()</code> не доступно.
 <code>panic!()</code> тоже не доступен, так как он использует логирование.
-В других частях <code>cow_fork</code> логированием можно пользоваться, потому что <code>trap_handler()</code> починит возникающие при этом Page Fault.
+В других частях <code>cow_fork</code> логированием можно пользоваться,
+потому что <code>trap_handler()</code> починит возникающие при этом Page Fault.
 Для логирования в <code>trap_handler()</code> можно воспользоваться
 <a href="../../lab/book/3-process-4-syscall.html#%D0%97%D0%B0%D0%B4%D0%B0%D1%87%D0%B0-12--%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D0%BD%D1%8B%D0%B9-%D0%B2%D1%8B%D0%B7%D0%BE%D0%B2-log_value">одним из первых реализованных системных вызовов</a> —
-<code>syscall::log_value()</code>.</p>
+<a href="../../doc/lib/syscall/fn.log_value.html"><code>lib::syscall::log_value()</code></a>.</p>
 <p>Вторая неприятность заключается в том, что в процессе–потомке в <code>trap_handler()</code> не доступны
-<code>ku::ProcessInfo</code> и <code>ku::SystemInfo</code> даже на чтение.
-Поэтому потомок не может узнать свой идентификатор <code>Pid</code>.
-Так как не работает, в том числе функция <code>ku::process::pid()</code>.
-Поэтому в <code>trap_handler()</code> идентифицировать процесс для выполняемых системных вызовов нужно как <code>Pid::Current</code>.</p>
+<a href="../../doc/ku/info/struct.ProcessInfo.html"><code>ku::ProcessInfo</code></a> и
+<a href="../../doc/ku/info/struct.SystemInfo.html"><code>ku::SystemInfo</code></a> даже на чтение.
+Поэтому потомок не может узнать свой идентификатор
+<a href="../../doc/ku/process/pid/enum.Pid.html"><code>Pid</code></a>.
+Поэтому в <code>trap_handler()</code> идентифицировать процесс для выполняемых системных вызовов нужно как
+<a href="../../doc/ku/process/pid/enum.Pid.html#variant.Current"><code>Pid::Current</code></a>.</p>
 <p>Также учтите, что эти ограничения распространяются на вспомогательные функции, которые <code>trap_handler()</code> использует.
 Впрочем, оба эти ограничения — во многом следствие нашей реализации <code>cow_fork</code>,
 а не характерная особенность обработки прерываний в пространстве пользователя.</p>
 <p>При получении управления, <code>trap_handler()</code>:</p>
 <ul>
-<li>Проверяет, что прерывание — это действительно <code>PageFault</code> и он вызван записью. Иначе обработчик прекращает исполнение программы, вызвав <code>syscall::exit()</code> с кодом ошибки.</li>
-<li>С помощью <a href="../../lab/book/5-um-3-eager-fork.html#temp_page">реализованной ранее</a> функции <code>lib::memory::temp_page()</code> находит временную страницу.</li>
-<li>Копирует содержимое страницы, обращение к которой привело к Page Fault, во временную, с помощью <a href="../../lab/book/5-um-3-eager-fork.html#copy_page">реализованной вами ранее</a> функции <code>lib::memory::copy_page()</code>.</li>
-<li>С помощью системного вызова <code>syscall::copy_mapping()</code> заменяет физический фрейм под скопированной страницей на фрейм временной страницы, одновременно меняя флаг <a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.COPY_ON_WRITE"><code>PageTableFlags::COPY_ON_WRITE</code></a> на <a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.WRITABLE"><code>PageTableFlags::WRITABLE</code></a> в её отображении.</li>
-<li>С помощью системного вызова <code>syscall::unmap()</code> удаляет из адресного пространства не нужную более временную страницу.</li>
+<li>Проверяет, что прерывание — это действительно <code>PageFault</code> и он вызван записью. Иначе обработчик прекращает исполнение программы, вызвав <a href="../../doc/lib/syscall/fn.exit.html"><code>lib::syscall::exit()</code></a> с кодом ошибки.</li>
+<li>С помощью <a href="../../lab/book/5-um-3-eager-fork.html#temp_page">реализованной ранее</a> функции <a href="../../doc/lib/memory/fn.temp_page.html"><code>lib::memory::temp_page()</code></a> находит временную страницу.</li>
+<li>Копирует содержимое страницы, обращение к которой привело к Page Fault, во временную, с помощью <a href="../../lab/book/5-um-3-eager-fork.html#copy_page">реализованной вами ранее</a> функции <a href="../../doc/lib/memory/fn.copy_page.html"><code>lib::memory::copy_page()</code></a>.</li>
+<li>С помощью системного вызова <a href="../../doc/lib/syscall/fn.copy_mapping.html"><code>lib::syscall::copy_mapping()</code></a> заменяет физический фрейм под скопированной страницей на фрейм временной страницы, одновременно меняя флаг <a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.COPY_ON_WRITE"><code>PageTableFlags::COPY_ON_WRITE</code></a> на <a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.WRITABLE"><code>PageTableFlags::WRITABLE</code></a> в её отображении.</li>
+<li>С помощью системного вызова <a href="../../doc/lib/syscall/fn.unmap.html"><code>lib::syscall::unmap()</code></a> удаляет из адресного пространства не нужную более временную страницу.</li>
 </ul>
 <h4 id="cow_fork"><a class="header" href="#cow_fork"><code>cow_fork()</code></a></h4>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
@@ -211,11 +222,11 @@
 <p>Эта функции похожа на соответствующую функцию <code>eager_fork()</code>, но в ней добавляется работа по инициализации обработчика прерываний.
 Функция <code>cow_fork()</code>:</p>
 <ul>
-<li>Выделяет себе — родительскому процессу — стек для обработки исключений с помощью <code>syscall::map()</code> и устанавливает себе функцией <code>syscall::set_trap_handler()</code> обработчик исключений <code>trap_handler()</code>.</li>
-<li>Создаёт процесс потомка с помощью <a href="../../lab/book/5-um-3-eager-fork.html#%D0%A1%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D0%BD%D1%8B%D0%B9-%D0%B2%D1%8B%D0%B7%D0%BE%D0%B2-exofork">реализованного вами ранее</a> системного вызова <code>syscall::exofork()</code>.</li>
+<li>Выделяет себе — родительскому процессу — стек для обработки исключений с помощью <a href="../../doc/lib/syscall/fn.map.html"><code>lib::syscall::map()</code></a> и устанавливает себе функцией <a href="../../doc/lib/syscall/fn.set_trap_handler.html"><code>lib::syscall::set_trap_handler()</code></a> обработчик исключений <code>trap_handler()</code>.</li>
+<li>Создаёт процесс потомка с помощью <a href="../../lab/book/5-um-3-eager-fork.html#%D0%A1%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D0%BD%D1%8B%D0%B9-%D0%B2%D1%8B%D0%B7%D0%BE%D0%B2-exofork">реализованного вами ранее</a> системного вызова <a href="../../doc/lib/syscall/fn.exofork.html"><code>lib::syscall::exofork()</code></a>.</li>
 <li>Далее лениво копирует своё адресное пространство в пространство потомка с помощью функции <code>fn copy_address_space()</code>.</li>
-<li>Выделяет потомку отдельный стек для обработки исключений с помощью <code>syscall::map()</code> и устанавливает уже ему обработчик исключений <code>trap_handler()</code> функцией <code>syscall::set_trap_handler()</code>.</li>
-<li>Запускает потомка системным вызовом <code>syscall::set_state()</code>, устанавливая его состояние в <code>State::Runnable</code>.</li>
+<li>Выделяет потомку отдельный стек для обработки исключений с помощью <a href="../../doc/lib/syscall/fn.map.html"><code>lib::syscall::map()</code></a> и устанавливает уже ему обработчик исключений <code>trap_handler()</code> функцией <a href="../../doc/lib/syscall/fn.set_trap_handler.html"><code>lib::syscall::set_trap_handler()</code></a>.</li>
+<li>Запускает потомка системным вызовом <a href="../../doc/lib/syscall/fn.set_state.html"><code>lib::syscall::set_state()</code></a>, устанавливая его состояние в <a href="../../doc/ku/process/struct.State.html#associatedconstant.RUNNABLE"><code>State::RUNNABLE</code></a>.</li>
 </ul>
 <p>В потомке <code>cow_fork()</code> ничего не делает.
 Возвращает она <code>true</code> в процессе потомка и <code>false</code> в процессе родителя.</p>

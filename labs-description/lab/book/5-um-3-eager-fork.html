@@ -177,7 +177,8 @@
 <span class="boring">}
 </span></code></pre></pre>
 <p>в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/process/syscall.rs"><code>kernel/src/process/syscall.rs</code></a>.</p>
-<p>Он создаёт копию вызывающего процесса <code>process</code> и возвращает его <code>Pid</code>.
+<p>Он создаёт копию вызывающего процесса <code>process</code> и возвращает его
+<a href="../../doc/ku/process/pid/enum.Pid.html"><code>Pid</code></a>.
 При этом новый процесс создаётся практически без адресного пространства и не готовый к работе.
 Поэтому он, в частности, не ставится в очередь планировщика.</p>
 <p>Этот системный вызов использует создание копии системной части адресного пространства процесса <code>process</code>,
@@ -185,7 +186,11 @@
 <a href="../../lab/book/2-mm-6-address-space-2-translate.html#%D0%97%D0%B0%D0%B4%D0%B0%D1%87%D0%B0-6--%D1%81%D0%BE%D0%B7%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-%D0%BF%D0%BE%D0%BB%D0%BD%D0%BE%D0%B9-%D0%BA%D0%BE%D0%BF%D0%B8%D0%B8-%D0%B2%D0%B8%D1%80%D1%82%D1%83%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%D0%B3%D0%BE-%D0%BE%D1%82%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D1%8F">вы реализовали ранее</a>.
 А вот пользовательскую часть адресного пространства он не копирует.
 Этим займётся код на стороне пользователя.</p>
-<p>Системный вызов <code>exofork()</code> возвращает <code>Pid::Id</code> с идентификатором потомка в процессе родителя и константу <code>Pid::Current</code> в процессе потомка.</p>
+<p>Системный вызов <code>exofork()</code> возвращает
+<a href="../../doc/ku/process/pid/enum.Pid.html#variant.Id"><code>Pid::Id</code></a>
+с идентификатором потомка в процессе родителя и константу
+<a href="../../doc/ku/process/pid/enum.Pid.html#variant.Current"><code>Pid::Current</code></a>
+в процессе потомка.</p>
 <p>Текущий контекст родителя — <code>context</code> — нужно записать в потомка.
 Вы уже делали аналогично для
 <a href="../../doc/kernel/process/syscall/fn.sched_yield.html"><code>sched_yield()</code></a>.
@@ -213,8 +218,11 @@
 </span>let (child_pid, process_info) = syscall(Syscall::EXOFORK.bits(), 0, 0, 0, 0, 0)?;
 <span class="boring">}
 </span></code></pre></pre>
-<p>В поле <code>child_pid</code> должен быть <code>Pid::Id</code> с идентификатором потомка в процессе родителя или
-<code>Pid::Current</code> в процессе потомка.
+<p>В поле <code>child_pid</code> должен быть
+<a href="../../doc/ku/process/pid/enum.Pid.html#variant.Id"><code>Pid::Id</code></a>
+с идентификатором потомка в процессе родителя или
+<a href="../../doc/ku/process/pid/enum.Pid.html#variant.Current"><code>Pid::Current</code></a>
+в процессе потомка.
 А в <code>process_info</code> — ссылка на системную информацию о текущем процессе
 <a href="../../doc/ku/info/struct.ProcessInfo.html"><code>ku::info::ProcessInfo</code></a>.
 Это поле имеет смысл только для потомка.
@@ -248,10 +256,14 @@
 </span></code></pre></pre>
 <p>в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/process/syscall.rs"><code>kernel/src/process/syscall.rs</code></a>.</p>
 <p>Он переводит целевой процесс, заданный идентификатором <code>dst_pid</code>, в заданное состояние <code>state</code>.
-И ставит его в очередь планировщика в случае <code>State::Runnable</code>.
-Не забудьте <a href="../../lab/book/5-um-2-memory.html#check_process_permissions">проверить права доступа</a> процесса <code>process</code> к процессу <code>dst_pid</code>.</p>
+И ставит его в очередь планировщика в случае
+<a href="../../doc/ku/process/struct.State.html#associatedconstant.RUNNABLE"><code>State::RUNNABLE</code></a>.
+Не забудьте
+<a href="../../lab/book/5-um-2-memory.html#check_process_permissions">проверить права доступа</a>
+процесса <code>process</code> к процессу <code>dst_pid</code>.</p>
 <h3 id="Рекурсивное-отображение-памяти"><a class="header" href="#Рекурсивное-отображение-памяти">Рекурсивное отображение памяти</a></h3>
-<p>Для того чтобы в пространстве пользователя процесс мог прочитать собственное отображение страниц адресного пространства,
+<p>Для того чтобы в пространстве пользователя процесс мог прочитать собственное
+отображение страниц адресного пространства,
 удобно использовать старый джедайский трюк —
 <a href="https://os.phil-opp.com/page-tables/#recursive-mapping">рекурсивное отображение памяти</a>.</p>
 <p>Реализуйте <a href="../../doc/kernel/memory/mapping/struct.Mapping.html#method.make_recursive_mapping">метод</a></p>
@@ -271,7 +283,9 @@
 <a href="../../doc/kernel/memory/mapping/struct.Mapping.html#method.drop_page_table"><code>Mapping::drop_page_table()</code></a>,
 чтобы они игнорировали эту запись корневой таблицы страниц.</p>
 <h3 id="Библиотечные-функции"><a class="header" href="#Библиотечные-функции">Библиотечные функции</a></h3>
-<p>В файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/user/lib/src/memory/mod.rs"><code>user/lib/src/memory/mod.rs</code></a> реализуйте вспомогательные функции кода пользователя.</p>
+<p>В файле
+<a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/user/lib/src/memory/mod.rs"><code>user/lib/src/memory/mod.rs</code></a>
+реализуйте вспомогательные функции кода пользователя.</p>
 <h4 id="libmemorytemp_page"><a class="header" href="#libmemorytemp_page"><a href="../../doc/lib/memory/fn.temp_page.html"><code>lib::memory::temp_page()</code></a></a></h4>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -318,7 +332,8 @@
 ) -&gt; Result&lt;()&gt;
 <span class="boring">}
 </span></code></pre></pre>
-<p>Копирует таблицу страниц уровня <code>level</code> для виртуального адреса <code>virt_addr</code> из своего адресного пространства в пространство дочернего процесса <code>child</code>.
+<p>Копирует таблицу страниц уровня <code>level</code> для виртуального адреса <code>virt_addr</code>
+из своего адресного пространства в пространство дочернего процесса <code>child</code>.
 Работает рекурсивно.
 Корень рекурсии запускает функция</p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
@@ -330,14 +345,23 @@
 </span></code></pre></pre>
 <p>Проходится по таблице страниц, получая ссылку на неё с помощью
 <a href="../../lab/book/5-um-3-eager-fork.html#page_table">реализованной вами ранее</a>
-<code>lib::memory::page_table()</code>.
-На записях <code>PageTableEntry</code>, которые доступны для пользовательского кода, либо рекурсивно спускается на следующий уровень таблицы страниц, либо на листьевом уровне копирует содержимое отображённой страницы.
+<a href="../../doc/lib/memory/fn.page_table.html"><code>lib::memory::page_table()</code></a>.
+На записях
+<a href="../../doc/ku/memory/mmu/struct.PageTableEntry.html"><code>PageTableEntry</code></a>,
+которые доступны для пользовательского кода,
+либо рекурсивно спускается на следующий уровень таблицы страниц,
+либо на листьевом уровне копирует содержимое отображённой страницы.
 Адрес отображаемой страницы вычисляет поэтапно на рекурсивных вызовах с помощью аргумента <code>virt_addr</code>,
-номера обрабатываемой записи <code>PageTableEntry</code> и уровня таблицы страниц.</p>
-<p>Для копирования страницы в целевой процесс, сначала выделяет временную страницу в собственном адресном пространстве с помощью функции <code>lib::memory::temp_page()</code>.
+номера обрабатываемой записи
+<a href="../../doc/ku/memory/mmu/struct.PageTableEntry.html"><code>PageTableEntry</code></a>,
+и уровня таблицы страниц.</p>
+<p>Для копирования страницы в целевой процесс, сначала выделяет временную страницу
+в собственном адресном пространстве с помощью функции
+<a href="../../doc/lib/memory/fn.temp_page.html"><code>lib::memory::temp_page()</code></a>.
 Копирует текущую отображаемую страницу туда с помощью
 <a href="../../lab/book/5-um-3-eager-fork.html#copy_page">реализованной вами ранее</a>
-функции <code>lib::memory::copy_page()</code>.
+функции
+<a href="../../doc/lib/memory/fn.copy_page.html"><code>lib::memory::copy_page()</code></a>.
 Затем, с помощью системных вызовов
 <a href="../../doc/lib/syscall/fn.copy_mapping.html"><code>lib::syscall::copy_mapping()</code></a>
 и
@@ -345,7 +369,9 @@
 передаёт скопированную временную страницу потомку <code>child</code>, отображая её в его адресном пространстве
 по адресу исходной страницы в своём адресном пространстве.</p>
 <p>Запись номер <code>ku::process_info().recursive_mapping()</code> корневой таблицы страниц, а также страницы,
-предоставляющие пользовательскому процессу информацию о нём, системе и <code>RingBuffer</code> для логирования,
+предоставляющие пользовательскому процессу информацию о нём, системе и
+<a href="../../doc/ku/ring_buffer/struct.RingBuffer.html"><code>RingBuffer</code></a>
+для логирования,
 нужно проигнорировать.
 То есть, страницы для которых <code>ku::process_info().contains_address()</code> возвращает <code>true</code>.
 Их отобразит в память потомка ядро, выбирая новые, а не разделяемые, физические фреймы.</p>
@@ -357,9 +383,13 @@
 </span></code></pre></pre>
 <p>Создаёт процесс потомка с помощью
 <a href="../../lab/book/5-um-3-eager-fork.html#%D0%A1%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D0%BD%D1%8B%D0%B9-%D0%B2%D1%8B%D0%B7%D0%BE%D0%B2-exofork">реализованного вами ранее</a>
-системного вызова <code>syscall::exofork()</code>.
+системного вызова
+<a href="../../doc/lib/syscall/fn.exofork.html"><code>lib::syscall::exofork()</code></a>.
 Далее копирует своё адресное пространство в пространство потомка с помощью функции <code>fn copy_address_space()</code>.
-И запускает потомка системным вызовом <code>syscall::set_state()</code>, устанавливая его состояние в <code>State::Runnable</code>.
+И запускает потомка системным вызовом
+<a href="../../doc/lib/syscall/fn.set_state.html"><code>lib::syscall::set_state()</code></a>,
+устанавливая его состояние в
+<a href="../../doc/ku/process/struct.State.html#associatedconstant.RUNNABLE"><code>State::RUNNABLE</code></a>.
 В потомке ничего не делает.
 Возвращает <code>true</code> в процессе потомка и <code>false</code> в процессе родителя.</p>
 <h3 id="Проверьте-себя"><a class="header" href="#Проверьте-себя">Проверьте себя</a></h3>

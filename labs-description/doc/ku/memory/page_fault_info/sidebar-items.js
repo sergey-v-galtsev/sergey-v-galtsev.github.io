@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":[["PageFaultInfo","https://wiki.osdev.org/Exceptions#Error_code"]]};
+window.SIDEBAR_ITEMS = {"struct":[["PageFaultInfo","Причина некорректности обращения к странице виртуальной памяти."]]};

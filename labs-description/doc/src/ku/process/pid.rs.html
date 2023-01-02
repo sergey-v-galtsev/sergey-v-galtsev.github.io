@@ -129,6 +129,9 @@
 <span id="129">129</span>
 <span id="130">130</span>
 <span id="131">131</span>
+<span id="132">132</span>
+<span id="133">133</span>
+<span id="134">134</span>
 </pre><pre class="rust"><code><span class="kw">use </span>core::{convert::TryInto, fmt, mem};
 
 <span class="kw">use </span>static_assertions::const_assert;
@@ -162,8 +165,11 @@
     <span class="doccomment">/// Максимальное поддерживаемое [`Pid`] количество одновременно работающих процессов.
     </span><span class="kw">pub const </span>MAX_COUNT: usize = (<span class="number">1 </span>&lt;&lt; <span class="self">Self</span>::EPOCH_SHIFT);
 
-    <span class="kw">const </span>EPOCH_SHIFT: u32 = u16::BITS;
-    <span class="kw">const </span>INDEX_MASK: usize = <span class="self">Self</span>::MAX_COUNT - <span class="number">1</span>;
+    <span class="doccomment">/// Сдвиг для значения [`Pid::Id::epoch`] при сериализации и десериализации [`Pid`] в [`usize`].
+    </span><span class="kw">const </span>EPOCH_SHIFT: u32 = u16::BITS;
+
+    <span class="doccomment">/// Сдвиг для значения [`Pid::Id::slot`] при сериализации и десериализации [`Pid`] в [`usize`].
+    </span><span class="kw">const </span>SLOT_MASK: usize = <span class="self">Self</span>::MAX_COUNT - <span class="number">1</span>;
 
 
     <span class="doccomment">/// Создаёт [`Pid`] с начальным значением [`Pid::Id::epoch`] для заданного `slot`.
@@ -181,7 +187,7 @@
             <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Current)
         } <span class="kw">else </span>{
             <span class="kw">let </span>result = <span class="self">Self</span>::Id {
-                slot: (pid &amp; <span class="self">Self</span>::INDEX_MASK) <span class="kw">as </span>u16,
+                slot: (pid &amp; <span class="self">Self</span>::SLOT_MASK) <span class="kw">as </span>u16,
                 epoch: (pid &gt;&gt; <span class="self">Self</span>::EPOCH_SHIFT) <span class="kw">as </span>u32,
             };
 

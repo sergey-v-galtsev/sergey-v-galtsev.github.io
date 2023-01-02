@@ -22,18 +22,40 @@
 <span id="22">22</span>
 <span id="23">23</span>
 <span id="24">24</span>
+<span id="25">25</span>
+<span id="26">26</span>
+<span id="27">27</span>
+<span id="28">28</span>
+<span id="29">29</span>
+<span id="30">30</span>
+<span id="31">31</span>
+<span id="32">32</span>
+<span id="33">33</span>
+<span id="34">34</span>
+<span id="35">35</span>
 </pre><pre class="rust"><code><span class="kw">use </span>lazy_static::lazy_static;
 <span class="kw">use </span>x86_64::structures::tss::TaskStateSegment;
 
 <span class="kw">use </span><span class="kw">super</span>::stack::EXCEPTION_STACKS;
 
 
-<span class="kw">pub const </span>DOUBLE_FAULT_IST_INDEX: u16 = <span class="number">0</span>;
-<span class="kw">pub const </span>PAGE_FAULT_IST_INDEX: u16 = <span class="number">1</span>;
+<span class="doccomment">/// Индекс в сегменте состояния задачи
+/// ([Task State Segment](https://en.wikipedia.org/wiki/Task_state_segment), TSS)
+/// стека, выделенного для обработки
+/// [Double Fault](https://en.wikipedia.org/wiki/Double_fault).
+</span><span class="kw">pub const </span>DOUBLE_FAULT_IST_INDEX: u16 = <span class="number">0</span>;
+
+<span class="doccomment">/// Индекс в сегменте состояния задачи
+/// ([Task State Segment](https://en.wikipedia.org/wiki/Task_state_segment), TSS)
+/// стека, выделенного для обработки
+/// [Page Fault](https://en.wikipedia.org/wiki/Page_fault).
+</span><span class="kw">pub const </span>PAGE_FAULT_IST_INDEX: u16 = <span class="number">1</span>;
 
 
 <span class="macro">lazy_static! </span>{
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">static </span><span class="kw-2">ref </span>TSS: TaskStateSegment = {
+    <span class="doccomment">/// Сегмент состояния задачи
+    /// ([Task State Segment](https://en.wikipedia.org/wiki/Task_state_segment), TSS)
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">static </span><span class="kw-2">ref </span>TSS: TaskStateSegment = {
         <span class="kw">let </span><span class="kw-2">mut </span>tss = TaskStateSegment::new();
 
         <span class="kw">let </span>stacks = EXCEPTION_STACKS.lock();

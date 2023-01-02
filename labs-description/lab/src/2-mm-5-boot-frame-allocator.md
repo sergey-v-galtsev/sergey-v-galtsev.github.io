@@ -137,7 +137,7 @@ help: use `::<...>` instead of `<...>` to specify type or const arguments
 ```
 Но чаще всего вам не потребуется указывать шаблонный параметр вообще.
 Rust использует
-[достаточно мощный алгоритм вывода типов](https://ru.wikipedia.org/wiki/%D0%92%D1%8B%D0%B2%D0%BE%D0%B4_%D1%82%D0%B8%D0%BF%D0%BE%D0%B2#%D0%90%D0%BB%D0%B3%D0%BE%D1%80%D0%B8%D1%82%D0%BC_%D0%A5%D0%B8%D0%BD%D0%B4%D0%BB%D0%B8_%E2%80%94_%D0%9C%D0%B8%D0%BB%D0%BD%D0%B5%D1%80%D0%B0)
+[достаточно мощный алгоритм вывода типов](https://en.wikipedia.org/wiki/Hindley%E2%80%93Milner_type_system)
 и если вы напишите что-нибудь вроде
 ```rust
 fn new(memory_map: &MemoryMap) -> Self {

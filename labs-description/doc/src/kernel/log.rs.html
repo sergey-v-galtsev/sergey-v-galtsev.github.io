@@ -270,6 +270,84 @@
 <span id="270">270</span>
 <span id="271">271</span>
 <span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
+<span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
+<span id="334">334</span>
+<span id="335">335</span>
+<span id="336">336</span>
+<span id="337">337</span>
+<span id="338">338</span>
+<span id="339">339</span>
+<span id="340">340</span>
+<span id="341">341</span>
+<span id="342">342</span>
+<span id="343">343</span>
+<span id="344">344</span>
+<span id="345">345</span>
+<span id="346">346</span>
+<span id="347">347</span>
+<span id="348">348</span>
+<span id="349">349</span>
+<span id="350">350</span>
 </pre><pre class="rust"><code><span class="kw">use </span>core::fmt::{Debug, Write};
 
 <span class="kw">use </span>serde::Deserialize;
@@ -302,28 +380,39 @@
 <span class="kw">pub use </span>tracing::{debug, error, info, trace, warn};
 
 
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>init() {
+<span class="doccomment">/// Инициализация логирования.
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>init() {
     dispatch::set_global_default(Dispatch::from_static(<span class="kw-2">&amp;</span>LOG_COLLECTOR)).unwrap();
 }
 
 
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>user_events(pid: Pid, log_buffer: <span class="kw-2">&amp;mut </span>RingBuffer) {
+<span class="doccomment">/// Записывает в лог все сообщения от пользовательского процесса `pid`,
+/// сохранённые им в буфер `log_buffer`.
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>user_events(pid: Pid, log_buffer: <span class="kw-2">&amp;mut </span>RingBuffer) {
     LOG_COLLECTOR.log.lock().user_events(pid, log_buffer);
 }
 
 
-<span class="kw">struct </span>LogEvent {
-    separator: bool,
-    colour: Colour,
+<span class="doccomment">/// Вспомогательная структура для печати сообщения.
+</span><span class="kw">struct </span>LogEvent {
+    <span class="doccomment">/// Признак того, что нужно записать разделитель полей после ранее записанного поля.
+    </span>separator: bool,
+
+    <span class="doccomment">/// Текущий цвет при выводе части сообщения на экран.
+    </span>colour: Colour,
 }
 
 
 <span class="kw">impl </span>LogEvent {
-    <span class="kw">const </span>MESSAGE: Colour = Colour::WHITE;
-    <span class="kw">const </span>VALUE: Colour = Colour::LIGHT_CYAN;
+    <span class="doccomment">/// Цвет для вывода текста сообщения.
+    </span><span class="kw">const </span>MESSAGE: Colour = Colour::WHITE;
+
+    <span class="doccomment">/// Цвет для вывода значений полей сообщения.
+    </span><span class="kw">const </span>VALUE: Colour = Colour::LIGHT_CYAN;
 
 
-    <span class="kw">fn </span>new() -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Создаёт вспомогательную структуру для печати сообщения.
+    </span><span class="kw">fn </span>new() -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             separator: <span class="bool-val">false</span>,
             colour: <span class="self">Self</span>::VALUE,
@@ -331,7 +420,10 @@
     }
 
 
-    <span class="kw">fn </span>field(<span class="kw-2">&amp;mut </span><span class="self">self</span>, name: <span class="kw-2">&amp;</span>str) {
+    <span class="doccomment">/// Печатает заголовок поля `name`.
+    /// Если `name == &quot;message&quot;`, то это поле --- текст сообщения.
+    /// Для него имя поля опускается.
+    </span><span class="kw">fn </span>field(<span class="kw-2">&amp;mut </span><span class="self">self</span>, name: <span class="kw-2">&amp;</span>str) {
         <span class="kw">if </span><span class="self">self</span>.separator {
             <span class="macro">print!</span>(<span class="string">&quot;; &quot;</span>);
         } <span class="kw">else </span>{
@@ -347,12 +439,14 @@
     }
 
 
-    <span class="kw">fn </span>str_value_part(<span class="kw-2">&amp;mut </span><span class="self">self</span>, value_part: <span class="kw-2">&amp;</span>str) {
+    <span class="doccomment">/// Печатает строковый фрагмент `value_part` значения поля сообщения.
+    </span><span class="kw">fn </span>str_value_part(<span class="kw-2">&amp;mut </span><span class="self">self</span>, value_part: <span class="kw-2">&amp;</span>str) {
         <span class="macro">print!</span>(colour(<span class="self">self</span>.colour), <span class="string">&quot;{}&quot;</span>, value_part);
     }
 
 
-    <span class="kw">fn </span>debug(<span class="kw-2">&amp;mut </span><span class="self">self</span>, name: <span class="kw-2">&amp;</span>str, value: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Debug) {
+    <span class="doccomment">/// Печатает поле сообщения `name` со значением `value` через [`core::fmt::Debug::fmt()`].
+    </span><span class="kw">fn </span>debug(<span class="kw-2">&amp;mut </span><span class="self">self</span>, name: <span class="kw-2">&amp;</span>str, value: <span class="kw-2">&amp;</span><span class="kw">dyn </span>Debug) {
         <span class="self">self</span>.field(name);
         <span class="macro">print!</span>(colour(<span class="self">self</span>.colour), <span class="string">&quot;{:?}&quot;</span>, value);
     }
@@ -366,31 +460,78 @@
 }
 
 
-<span class="attribute">#[allow(unused)]
+<span class="doccomment">/// Формат печати сообщений лога.
+</span><span class="attribute">#[allow(unused)]
 #[derive(Eq, PartialEq)]
 </span><span class="kw">enum </span>Format {
-    Compact,
-    Full,
-    Timeless,
+    <span class="doccomment">/// Компактный формат:
+    /// ```console
+    /// &lt;время в UTC&gt; &lt;CPU id&gt; &lt;level char&gt; &lt;message&gt;; &lt;key1&gt; = &lt;value1&gt;; &lt;key2&gt; = &lt;value2&gt;; ...
+    /// ```
+    /// Пример:
+    /// ```console
+    /// 17:50:31.233 0 I Nikka booted; now = 2023-01-01 17:50:31 UTC; tsc = Tsc(2850348853)
+    /// ```
+    ///
+    /// - Сокращает уровень логирования до первой буквы.
+    /// - Не печатает [`tracing::Metadata::target()`].
+    /// - Не печатает файл [`tracing::Metadata::file()`] и строку [`tracing::Metadata::line()`]
+    /// исходного кода, где находится соответствующий вызов макроса логирования.
+    </span>Compact,
+
+    <span class="doccomment">/// Полный формат:
+    /// ```console
+    /// &lt;время в UTC&gt; &lt;CPU id&gt; &lt;level&gt; &lt;target&gt; &lt;file:line&gt; &lt;message&gt;; &lt;key1&gt; = &lt;value1&gt;; &lt;key2&gt; = &lt;value2&gt;; ...
+    /// ```
+    /// Пример:
+    /// ```console
+    /// 17:51:20.477 0 INFO kernel kernel/src/lib.rs:118 Nikka booted; now = 2023-01-01 17:51:20 UTC; tsc = Tsc(2732927919)
+    /// ```
+    </span>Full,
+
+    <span class="doccomment">/// Аналогичен [`Format::Compact`], но дополнительно не печатает время:
+    /// ```console
+    /// &lt;CPU id&gt; &lt;level char&gt; &lt;message&gt;; &lt;key1&gt; = &lt;value1&gt;; &lt;key2&gt; = &lt;value2&gt;; ...
+    /// ```
+    /// Это позволяет писать в лог из функций, которые вычисляют текущее время, без зацикливания.
+    /// Пример:
+    /// ```console
+    /// 0 I Nikka booted; now = 2023-01-01 17:52:07 UTC; tsc = Tsc(2787412607)
+    /// ```
+    ///
+    /// - Не печатает текущее время.
+    /// - Сокращает уровень логирования до первой буквы.
+    /// - Не печатает [`tracing::Metadata::target()`].
+    /// - Не печатает файл [`tracing::Metadata::file()`] и строку [`tracing::Metadata::line()`]
+    /// исходного кода, где находится соответствующий вызов макроса логирования.
+    </span>Timeless,
 }
 
 
-<span class="kw">struct </span>Log {
-    format: Format,
+<span class="doccomment">/// Логгер для печати сообщений в заданном формате.
+</span><span class="kw">struct </span>Log {
+    <span class="doccomment">/// Формат печати сообщений лога.
+    </span>format: Format,
 }
 
 
 <span class="kw">impl </span>Log {
-    <span class="kw">const </span>CPU: Colour = Colour::DARK_GREY;
-    <span class="kw">const </span>LOCATION: Colour = Colour::DARK_GREY;
+    <span class="doccomment">/// Цвет для вывода номера CPU.
+    </span><span class="kw">const </span>CPU: Colour = Colour::DARK_GREY;
+
+    <span class="doccomment">/// Цвет для вывода [`tracing::Metadata::target()`],
+    /// файла [`tracing::Metadata::file()`] и строки [`tracing::Metadata::line()`].
+    </span><span class="kw">const </span>LOCATION: Colour = Colour::DARK_GREY;
 
 
-    <span class="kw">const fn </span>new(format: Format) -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Создаёт логгер для печати сообщений в формате `format`.
+    </span><span class="kw">const fn </span>new(format: Format) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{ format }
     }
 
 
-    <span class="kw">const fn </span>level_colour(level: <span class="kw-2">&amp;</span>Level) -&gt; Colour {
+    <span class="doccomment">/// Возвращает цвет, которым нужно печатать уровень логирования `level`.
+    </span><span class="kw">const fn </span>level_colour(level: <span class="kw-2">&amp;</span>Level) -&gt; Colour {
         <span class="kw">match </span><span class="kw-2">*</span>level {
             Level::ERROR =&gt; Colour::LIGHT_RED,
             Level::WARN =&gt; Colour::LIGHT_YELLOW,
@@ -401,17 +542,20 @@
     }
 
 
-    <span class="kw">fn </span>log_event(<span class="kw-2">&amp;</span><span class="self">self</span>, event: <span class="kw-2">&amp;</span>Event&lt;<span class="lifetime">&#39;_</span>&gt;, tsc: Tsc) {
+    <span class="doccomment">/// Печатает сообщение `event` с отметкой времени `timestamp`.
+    </span><span class="kw">fn </span>log_event(<span class="kw-2">&amp;</span><span class="self">self</span>, event: <span class="kw-2">&amp;</span>Event&lt;<span class="lifetime">&#39;_</span>&gt;, timestamp: Tsc) {
         <span class="self">self</span>.log_metadata(
             event.metadata().level(),
-            LogMetadata::new(event.metadata(), tsc),
+            LogMetadata::new(event.metadata(), timestamp),
         );
         event.record(<span class="kw-2">&amp;mut </span>LogEvent::new());
         <span class="macro">println!</span>();
     }
 
 
-    <span class="kw">fn </span>log_metadata(<span class="kw-2">&amp;</span><span class="self">self</span>, level: <span class="kw-2">&amp;</span>Level, metadata: LogMetadata) {
+    <span class="doccomment">/// Печатает метаданные `metadata` сообщения, включая отметку времени,
+    /// на уровне логирования `level`.
+    </span><span class="kw">fn </span>log_metadata(<span class="kw-2">&amp;</span><span class="self">self</span>, level: <span class="kw-2">&amp;</span>Level, metadata: LogMetadata) {
         <span class="kw">if </span><span class="self">self</span>.format != Format::Timeless {
             <span class="kw">let </span>timestamp = datetime_ms(metadata.timestamp());
             <span class="macro">print!</span>(<span class="string">&quot;{:?} &quot;</span>, timestamp.time());
@@ -441,7 +585,9 @@
     }
 
 
-    <span class="kw">fn </span>user_events(<span class="kw-2">&amp;</span><span class="self">self</span>, pid: Pid, log_buffer: <span class="kw-2">&amp;mut </span>RingBuffer) {
+    <span class="doccomment">/// Печатает все сообщения от пользовательского процесса `pid`,
+    /// сериализованные им в буфер `log_buffer`.
+    </span><span class="kw">fn </span>user_events(<span class="kw-2">&amp;</span><span class="self">self</span>, pid: Pid, log_buffer: <span class="kw-2">&amp;mut </span>RingBuffer) {
         <span class="kw">let </span><span class="kw-2">mut </span>tx = log_buffer.read_tx();
         <span class="kw">let </span><span class="kw-2">mut </span>deserializer = postcard::Deserializer::from_bytes(tx.read());
 
@@ -451,7 +597,9 @@
     }
 
 
-    <span class="kw">fn </span>user_event&lt;<span class="lifetime">&#39;a</span>&gt;(
+    <span class="doccomment">/// Печатает одно сообщение от пользовательского процесса `pid`,
+    /// десериализуя его из `deserializer`.
+    </span><span class="kw">fn </span>user_event&lt;<span class="lifetime">&#39;a</span>&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         pid: Pid,
         deserializer: <span class="kw-2">&amp;mut </span>postcard::Deserializer&lt;<span class="lifetime">&#39;a</span>, postcard::de_flavors::Slice&lt;<span class="lifetime">&#39;a</span>&gt;&gt;,
@@ -486,14 +634,21 @@
 }
 
 
-<span class="kw">struct </span>LogCollector {
-    level: Level,
-    log: Mutex&lt;Log&gt;,
+<span class="doccomment">/// Сборщик сообщений лога, печатающий сообщения на экран и в COM--порт.
+</span><span class="kw">struct </span>LogCollector {
+    <span class="doccomment">/// Уровень логирования.
+    /// Печатаются только сообщения с уровнем логирования, равным [`LogCollector::level`] и выше.
+    </span>level: Level,
+
+    <span class="doccomment">/// Логгер для печати сообщений в заданном формате.
+    </span>log: Mutex&lt;Log&gt;,
 }
 
 
 <span class="kw">impl </span>LogCollector {
-    <span class="kw">const fn </span>new(format: Format, level: Level) -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Создаёт сборщик сообщений лога, печатающий сообщения с уровнем логирования `level` и выше
+    /// на экран и в COM--порт в формате `format`.
+    </span><span class="kw">const fn </span>new(format: Format, level: Level) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             level,
             log: Mutex::new(Log::new(format)),
@@ -541,6 +696,7 @@
 }
 
 
-<span class="kw">static </span>LOG_COLLECTOR: LogCollector = LogCollector::new(Format::Compact, Level::DEBUG);
+<span class="doccomment">/// Сборщик сообщений лога, печатающий сообщения на экран и в COM--порт.
+</span><span class="kw">static </span>LOG_COLLECTOR: LogCollector = LogCollector::new(Format::Compact, Level::DEBUG);
 </code></pre></div>
 </section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="kernel" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (bc4b39c27 2022-08-29)" ></div></body></html>

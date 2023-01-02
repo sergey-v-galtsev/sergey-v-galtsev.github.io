@@ -8,7 +8,7 @@
 Это [перечисление](https://doc.rust-lang.ru/book/ch06-01-defining-an-enum.html) с вариантами:
 
 - [`FrameInfo::Absent`](../../doc/kernel/memory/main_frame_allocator/enum.FrameInfo.html#variant.Absent) --- этого физического фрейма нет в компьютере или же он зарезервирован, например [BIOS](https://en.wikipedia.org/wiki/BIOS) или загрузчиком [bootloader](../../doc/bootloader/index.html).
-- [`FrameInfo::Free`](../../doc/kernel/memory/main_frame_allocator/enum.FrameInfo.html#variant.Free) --- этот физический фрейм свободен. Содержит поле [`FrameInfo::Free::next_free`](../../doc/kernel/memory/main_frame_allocator/enum.FrameInfo.html#variant.Free.field.next_free) с номером следующего свободного фрейма, либо `None` если это последний элемент списка. То есть, описатели свободных фреймов провязаны в односвязный [интрузивный список](https://ru.wikipedia.org/wiki/%D0%98%D0%BD%D1%82%D1%80%D1%83%D0%B7%D0%B8%D0%B2%D0%BD%D1%8B%D0%B9_%D1%81%D0%BF%D0%B8%D1%81%D0%BE%D0%BA) с номерами вместо указателей.
+- [`FrameInfo::Free`](../../doc/kernel/memory/main_frame_allocator/enum.FrameInfo.html#variant.Free) --- этот физический фрейм свободен. Содержит поле [`FrameInfo::Free::next_free`](../../doc/kernel/memory/main_frame_allocator/enum.FrameInfo.html#variant.Free.field.next_free) с номером следующего свободного фрейма, либо `None` если это последний элемент списка. То есть, описатели свободных фреймов провязаны в интрузивный односвязный список с номерами вместо указателей.
 - [`FrameInfo::Used`](../../doc/kernel/memory/main_frame_allocator/enum.FrameInfo.html#variant.Used) --- этот физический фрейм занят. Содержит поле [`FrameInfo::Used::reference_count`](../../doc/kernel/memory/main_frame_allocator/enum.FrameInfo.html#variant.Used.field.reference_count) с количеством ссылок на описываемый фрейм.
 
 В
@@ -142,7 +142,7 @@ fn MainFrameAllocator::deallocate(
 Так как может быть много разных причин почему он не был
 [`MemoryRegionType::Usable`](../../doc/bootloader/bootinfo/enum.MemoryRegionType.html#variant.Usable).
 Например, он может соответствовать микросхеме
-[постоянного запоминающего устройства](https://ru.wikipedia.org/wiki/%D0%9F%D0%BE%D1%81%D1%82%D0%BE%D1%8F%D0%BD%D0%BD%D0%BE%D0%B5_%D0%B7%D0%B0%D0%BF%D0%BE%D0%BC%D0%B8%D0%BD%D0%B0%D1%8E%D1%89%D0%B5%D0%B5_%D1%83%D1%81%D1%82%D1%80%D0%BE%D0%B9%D1%81%D1%82%D0%B2%D0%BE),
+[постоянного запоминающего устройства](https://en.wikipedia.org/wiki/Read-only_memory),
 которая позволяет только читать данные, и не может быть использован ядром для произвольных данных.
 
 То же самое относится к фреймам, номера которых выходят за границы среза

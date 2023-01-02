@@ -60,36 +60,130 @@
 <span id="60">60</span>
 <span id="61">61</span>
 <span id="62">62</span>
+<span id="63">63</span>
+<span id="64">64</span>
+<span id="65">65</span>
+<span id="66">66</span>
+<span id="67">67</span>
+<span id="68">68</span>
+<span id="69">69</span>
+<span id="70">70</span>
+<span id="71">71</span>
+<span id="72">72</span>
+<span id="73">73</span>
+<span id="74">74</span>
+<span id="75">75</span>
+<span id="76">76</span>
+<span id="77">77</span>
+<span id="78">78</span>
+<span id="79">79</span>
+<span id="80">80</span>
+<span id="81">81</span>
+<span id="82">82</span>
+<span id="83">83</span>
+<span id="84">84</span>
+<span id="85">85</span>
+<span id="86">86</span>
+<span id="87">87</span>
+<span id="88">88</span>
+<span id="89">89</span>
+<span id="90">90</span>
+<span id="91">91</span>
+<span id="92">92</span>
+<span id="93">93</span>
+<span id="94">94</span>
+<span id="95">95</span>
+<span id="96">96</span>
+<span id="97">97</span>
+<span id="98">98</span>
+<span id="99">99</span>
+<span id="100">100</span>
+<span id="101">101</span>
+<span id="102">102</span>
+<span id="103">103</span>
+<span id="104">104</span>
+<span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
 </pre><pre class="rust"><code><span class="kw">use </span>core::{fmt, num::TryFromIntError, result};
 
 <span class="kw">use </span><span class="kw">super</span>::ring_buffer;
 
 
-<span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
+<span class="doccomment">/// Перечисление для возможных ошибок.
+</span><span class="attribute">#[derive(Clone, Debug, Eq, PartialEq)]
 </span><span class="kw">pub enum </span>Error {
-    Elf(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str),
-    FileExists,
-    FileNotFound,
-    Fmt(fmt::Error),
-    Int(TryFromIntError),
-    InvalidArgument,
-    Medium,
-    NoData,
-    NoDisk,
-    NoFrame,
-    NoPage,
-    NoProcess,
-    NoProcessSlot,
-    NotDirectory,
-    NotFile,
-    Null,
-    Overflow,
-    PermissionDenied,
-    Postcard(postcard::Error),
-    RingBuffer(ring_buffer::Error),
-    Timeout,
-    Unimplemented,
-    WrongAlignment,
+    <span class="doccomment">/// Ошибка загрузки [ELF--файла](https://en.wikipedia.org/wiki/Executable_and_Linkable_Format).
+    </span>Elf(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str),
+
+    <span class="doccomment">/// Файл уже существует.
+    </span>FileExists,
+
+    <span class="doccomment">/// Файла не существует.
+    </span>FileNotFound,
+
+    <span class="doccomment">/// Ошибка форматирования сообщения.
+    </span>Fmt(fmt::Error),
+
+    <span class="doccomment">/// Заданное целое значение не помещается в указанный тип.
+    </span>Int(TryFromIntError),
+
+    <span class="doccomment">/// Задано недопустимое значение аргумента.
+    </span>InvalidArgument,
+
+    <span class="doccomment">/// Ошибка на устройстве хранения данных.
+    </span>Medium,
+
+    <span class="doccomment">/// На данный момент данных нет.
+    </span>NoData,
+
+    <span class="doccomment">/// Нет такого устройства хранения данных.
+    </span>NoDisk,
+
+    <span class="doccomment">/// Нет свободного физического фрейма памяти.
+    </span>NoFrame,
+
+    <span class="doccomment">/// Нет заданной страницы виртуальной памяти.
+    </span>NoPage,
+
+    <span class="doccomment">/// Нет заданного процесса.
+    </span>NoProcess,
+
+    <span class="doccomment">/// Нет свободного слота в таблице процессов.
+    </span>NoProcessSlot,
+
+    <span class="doccomment">/// Заданный путь содержит объект, не являющийся директорией.
+    </span>NotDirectory,
+
+    <span class="doccomment">/// Заданный путь указывает на объект, не являющийся файлом.
+    </span>NotFile,
+
+    <span class="doccomment">/// Попытка разыменовать нулевой указатель.
+    </span>Null,
+
+    <span class="doccomment">/// Возникло переполнение.
+    </span>Overflow,
+
+    <span class="doccomment">/// Нарушение прав доступа.
+    </span>PermissionDenied,
+
+    <span class="doccomment">/// Ошибка библиотеки [`postcard`] --- [`postcard::Error`].
+    </span>Postcard(postcard::Error),
+
+    <span class="doccomment">/// Ошибка кольцевого буфера --- [`ring_buffer::Error`].
+    </span>RingBuffer(ring_buffer::Error),
+
+    <span class="doccomment">/// Истёк тайм-аут.
+    </span>Timeout,
+
+    <span class="doccomment">/// Запрошенная функциональность не реализована.
+    </span>Unimplemented,
+
+    <span class="doccomment">/// Неверное выравнивание.
+    </span>WrongAlignment,
 }
 
 
@@ -121,6 +215,8 @@
 }
 
 
-<span class="kw">pub type </span><span class="prelude-ty">Result</span>&lt;T&gt; = result::Result&lt;T, Error&gt;;
+<span class="doccomment">/// Тип возвращаемого результата `T` или ошибки [`Error`] ---
+/// мономорфизация [`result::Result`] по типу ошибки.
+</span><span class="kw">pub type </span><span class="prelude-ty">Result</span>&lt;T&gt; = result::Result&lt;T, Error&gt;;
 </code></pre></div>
 </section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="ku" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (bc4b39c27 2022-08-29)" ></div></body></html>

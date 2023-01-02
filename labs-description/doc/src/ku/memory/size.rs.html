@@ -95,6 +95,30 @@
 <span id="95">95</span>
 <span id="96">96</span>
 <span id="97">97</span>
+<span id="98">98</span>
+<span id="99">99</span>
+<span id="100">100</span>
+<span id="101">101</span>
+<span id="102">102</span>
+<span id="103">103</span>
+<span id="104">104</span>
+<span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
+<span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
+<span id="116">116</span>
+<span id="117">117</span>
+<span id="118">118</span>
+<span id="119">119</span>
+<span id="120">120</span>
+<span id="121">121</span>
 </pre><pre class="rust"><code><span class="kw">use </span>core::{convert::TryInto, fmt, mem};
 
 <span class="kw">use </span>number_prefix::NumberPrefix;
@@ -102,79 +126,103 @@
 
 <span class="kw">use </span><span class="kw">crate</span>::error::Result;
 
+<span class="comment">// Used in docs.
+</span><span class="attribute">#[allow(unused)]
+</span><span class="kw">use </span><span class="kw">crate</span>::error::Error;
 
-<span class="attribute">#[allow(non_upper_case_globals)]
+
+<span class="doccomment">/// [Кибибайт](https://en.wikipedia.org/wiki/kibibyte)
+</span><span class="attribute">#[allow(non_upper_case_globals)]
 </span><span class="kw">pub const </span>KiB: usize = <span class="number">1 </span>&lt;&lt; <span class="number">10</span>;
 
-<span class="attribute">#[allow(non_upper_case_globals)]
+<span class="doccomment">/// [Мебибайт](https://en.wikipedia.org/wiki/mebibyte)
+</span><span class="attribute">#[allow(non_upper_case_globals)]
 </span><span class="kw">pub const </span>MiB: usize = <span class="number">1 </span>&lt;&lt; <span class="number">20</span>;
 
-<span class="attribute">#[allow(non_upper_case_globals)]
+<span class="doccomment">/// [Гибибайт](https://en.wikipedia.org/wiki/gibibyte)
+</span><span class="attribute">#[allow(non_upper_case_globals)]
 </span><span class="kw">pub const </span>GiB: usize = <span class="number">1 </span>&lt;&lt; <span class="number">30</span>;
 
-<span class="attribute">#[allow(non_upper_case_globals)]
+<span class="doccomment">/// [Тебибайт](https://en.wikipedia.org/wiki/tebibyte)
+</span><span class="attribute">#[allow(non_upper_case_globals)]
 </span><span class="kw">pub const </span>TiB: usize = <span class="number">1 </span>&lt;&lt; <span class="number">40</span>;
 
 
-<span class="kw">pub const fn </span>into_usize(x: u64) -&gt; usize {
+<span class="doccomment">/// Преобразует [`u64`] в [`usize`],
+/// проверяя что эти типы имеют одинаковый размер на этапе компиляции.
+</span><span class="kw">pub const fn </span>into_usize(x: u64) -&gt; usize {
     <span class="macro">const_assert!</span>(mem::size_of::&lt;u64&gt;() == mem::size_of::&lt;usize&gt;());
     x <span class="kw">as </span>usize
 }
 
 
-<span class="kw">pub const fn </span>into_u64(x: usize) -&gt; u64 {
+<span class="doccomment">/// Преобразует [`usize`] в [`u64`],
+/// проверяя что эти типы имеют одинаковый размер на этапе компиляции.
+</span><span class="kw">pub const fn </span>into_u64(x: usize) -&gt; u64 {
     <span class="macro">const_assert!</span>(mem::size_of::&lt;u64&gt;() == mem::size_of::&lt;usize&gt;());
     x <span class="kw">as </span>u64
 }
 
 
-<span class="kw">pub fn </span>try_into_u32(x: usize) -&gt; <span class="prelude-ty">Result</span>&lt;u32&gt; {
+<span class="doccomment">/// Преобразует [`usize`] в [`u32`].
+/// Возвращает ошибку [`Error::Int`], если значение `x` не помещается в [`u32`].
+</span><span class="kw">pub fn </span>try_into_u32(x: usize) -&gt; <span class="prelude-ty">Result</span>&lt;u32&gt; {
     <span class="prelude-val">Ok</span>(into_u64(x).try_into()<span class="question-mark">?</span>)
 }
 
 
-<span class="kw">pub trait </span>SizeOf {
-    <span class="kw">const </span>SIZE_OF: usize;
+<span class="doccomment">/// Трейт для указания размеров областей памяти определённого типа.
+</span><span class="kw">pub trait </span>SizeOf {
+    <span class="doccomment">/// Размер области памяти.
+    </span><span class="kw">const </span>SIZE_OF: usize;
 
 
-    <span class="kw">fn </span>count_up(size: usize) -&gt; usize {
+    <span class="doccomment">/// Возвращает количество областей, покрывающих `size` байт, округлённое вверх.
+    </span><span class="kw">fn </span>count_up(size: usize) -&gt; usize {
         (size + <span class="self">Self</span>::SIZE_OF - <span class="number">1</span>) / <span class="self">Self</span>::SIZE_OF
     }
 }
 
 
-<span class="attribute">#[derive(Clone, Copy, Debug, Default, Eq, Ord, PartialEq, PartialOrd)]
+<span class="doccomment">/// Обёртка для печати размеров областей памяти.
+</span><span class="attribute">#[derive(Clone, Copy, Debug, Default, Eq, Ord, PartialEq, PartialOrd)]
 #[repr(transparent)]
 </span><span class="kw">pub struct </span>Size(usize);
 
 
 <span class="kw">impl </span>Size {
-    <span class="kw">pub const fn </span>new&lt;T: SizeOf&gt;(count: usize) -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Возвращает размер для `count` областей памяти типа `T`.
+    </span><span class="kw">pub const fn </span>new&lt;T: SizeOf&gt;(count: usize) -&gt; <span class="self">Self </span>{
         <span class="self">Self</span>(count * T::SIZE_OF)
     }
 
 
-    <span class="kw">pub const fn </span>new_u64&lt;T: SizeOf&gt;(count: u64) -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Возвращает размер для `count` областей памяти типа `T`.
+    </span><span class="kw">pub const fn </span>new_u64&lt;T: SizeOf&gt;(count: u64) -&gt; <span class="self">Self </span>{
         <span class="self">Self</span>::new::&lt;T&gt;(into_usize(count))
     }
 
 
-    <span class="kw">pub const fn </span>bytes(bytes: usize) -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Возвращает размер для области памяти в `bytes` байт.
+    </span><span class="kw">pub const fn </span>bytes(bytes: usize) -&gt; <span class="self">Self </span>{
         <span class="self">Self</span>(bytes)
     }
 
 
-    <span class="kw">pub const fn </span>from_slice&lt;T&gt;(slice: <span class="kw-2">&amp;</span>[T]) -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Возвращает размер для области памяти заданного в `slice` среза элементов типа `T`.
+    </span><span class="kw">pub const fn </span>from_slice&lt;T&gt;(slice: <span class="kw-2">&amp;</span>[T]) -&gt; <span class="self">Self </span>{
         <span class="self">Self</span>(slice.len() * mem::size_of::&lt;T&gt;())
     }
 
 
-    <span class="kw">pub const fn </span>of&lt;T&gt;() -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Возвращает размер для области памяти элемента типа `T`.
+    </span><span class="kw">pub const fn </span>of&lt;T&gt;() -&gt; <span class="self">Self </span>{
         <span class="self">Self</span>(mem::size_of::&lt;T&gt;())
     }
 
 
-    <span class="kw">pub const fn </span>size(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+    <span class="doccomment">/// Возвращает размер в байтах.
+    </span><span class="kw">pub const fn </span>num_bytes(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         <span class="self">self</span>.<span class="number">0
     </span>}
 }
@@ -182,9 +230,9 @@
 
 <span class="kw">impl </span>fmt::Display <span class="kw">for </span>Size {
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, formatter: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
-        <span class="kw">match </span>NumberPrefix::binary(<span class="self">self</span>.size() <span class="kw">as </span>f64) {
+        <span class="kw">match </span>NumberPrefix::binary(<span class="self">self</span>.num_bytes() <span class="kw">as </span>f64) {
             NumberPrefix::Standalone(<span class="kw">_</span>) =&gt; {
-                <span class="macro">write!</span>(formatter, <span class="string">&quot;{} B&quot;</span>, <span class="self">self</span>.size())
+                <span class="macro">write!</span>(formatter, <span class="string">&quot;{} B&quot;</span>, <span class="self">self</span>.num_bytes())
             },
             NumberPrefix::Prefixed(prefix, value) =&gt; {
                 <span class="macro">write!</span>(formatter, <span class="string">&quot;{:.3} {}B&quot;</span>, value, prefix.symbol())

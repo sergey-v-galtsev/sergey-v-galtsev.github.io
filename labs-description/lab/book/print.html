@@ -2360,7 +2360,8 @@ PIT тикает уже 9 раз, и в первый раз тикает RTC.
 <blockquote>
 <h3 id="Больше-информации-про-время-в-компьютерных-системах"><a class="header" href="#Больше-информации-про-время-в-компьютерных-системах">Больше информации про время в компьютерных системах</a></h3>
 <p>Если вас заинтересовала тема отслеживания времени в компьютерных системах,
-вы можете посмотреть небольшой отрывок с <a href="https://lk.yandexdataschool.ru/courses/2021-autumn/7.946-raspredelennye-sistemy/classes/7879/">семинара из курса распределённых систем</a>.
+вы можете посмотреть небольшой отрывок с
+<a href="https://lk.yandexdataschool.ru/courses/2021-autumn/7.946-raspredelennye-sistemy/classes/7879/">семинара из курса распределённых систем</a>.
 В <a href="https://disk.yandex.ru/i/MwH4kiQ_p4XCsA">видеозаписи</a> он начинается с 44:44.
 Там, в частности рассказано:</p>
 <ul>
@@ -2368,6 +2369,12 @@ PIT тикает уже 9 раз, и в первый раз тикает RTC.
 <li>Оказывается, есть несколько стандартов текущего времени. И некоторые из них зависят, например, от приливов.</li>
 <li>Как устроено отслеживание точного времени на Земле.</li>
 <li>Про несколько серьёзных компьютерных сбоев, связанных с неаккуратной работой со временем в программах. Например, про <a href="https://blog.cloudflare.com/how-and-why-the-leap-second-affected-cloudflare-dns/">сбой в Cloudflare</a> из-за использования немонотонных часов при измерении интервала времени.</li>
+</ul>
+<p>Дополнительные ссылки про системы отслеживания времени:</p>
+<ul>
+<li><a href="https://habr.com/ru/post/677064/">Как устроены атомные часы</a> — самый точный доступный источник времени.</li>
+<li><a href="https://www.nature.com/articles/d41586-022-03783-5">Грядущая отмена високосных секунд</a>.</li>
+<li><a href="https://en.wikipedia.org/wiki/History_of_timekeeping_devices">История часов</a>.</li>
 </ul>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h2 id="Память"><a class="header" href="#Память">Память</a></h2>
@@ -3075,7 +3082,7 @@ help: use `::&lt;...&gt;` instead of `&lt;...&gt;` to specify type or const argu
 </code></pre>
 <p>Но чаще всего вам не потребуется указывать шаблонный параметр вообще.
 Rust использует
-<a href="https://ru.wikipedia.org/wiki/%D0%92%D1%8B%D0%B2%D0%BE%D0%B4_%D1%82%D0%B8%D0%BF%D0%BE%D0%B2#%D0%90%D0%BB%D0%B3%D0%BE%D1%80%D0%B8%D1%82%D0%BC_%D0%A5%D0%B8%D0%BD%D0%B4%D0%BB%D0%B8_%E2%80%94_%D0%9C%D0%B8%D0%BB%D0%BD%D0%B5%D1%80%D0%B0">достаточно мощный алгоритм вывода типов</a>
+<a href="https://en.wikipedia.org/wiki/Hindley%E2%80%93Milner_type_system">достаточно мощный алгоритм вывода типов</a>
 и если вы напишите что-нибудь вроде</p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -4074,8 +4081,7 @@ Rust не даст скомпилировать такой код из-за на
 <a href="../../doc/kernel/memory/mapping/struct.Mapping.html#method.translate"><code>Mapping::translate()</code></a>,
 теперь в качестве <code>flags</code> ему можно передать пустой набор флагов
 <a href="../../doc/kernel/memory/mmu/struct.PageTableFlags.html#method.empty"><code>PageTableFlags::empty()</code></a>.</p>
-<p><strong>Важно</strong> сбросить запись в
-<a href="https://ru.wikipedia.org/wiki/%D0%91%D1%83%D1%84%D0%B5%D1%80_%D0%B0%D1%81%D1%81%D0%BE%D1%86%D0%B8%D0%B0%D1%82%D0%B8%D0%B2%D0%BD%D0%BE%D0%B9_%D1%82%D1%80%D0%B0%D0%BD%D1%81%D0%BB%D1%8F%D1%86%D0%B8%D0%B8">буфере ассоциативной трансляции</a>
+<p><strong>Важно</strong> сбросить запись в буфере ассоциативной трансляции
 (<a href="https://en.wikipedia.org/wiki/Translation_lookaside_buffer">Translation lookaside buffer</a>,
 <a href="https://wiki.osdev.org/TLB">TLB</a>)
 касающуюся <code>page</code>.
@@ -4085,9 +4091,9 @@ Rust не даст скомпилировать такой код из-за на
 Даже отладчик будет показывать вам то же самое, что вы ожидаете.
 А вот процессор будет читать и писать совсем в другую физическую память.
 Это приведёт к трудно отлаживаемым
-<a href="https://ru.wikipedia.org/wiki/%D0%93%D0%B5%D0%B9%D0%B7%D0%B5%D0%BD%D0%B1%D0%B0%D0%B3">гейзенбагам</a>.
+<a href="https://en.wikipedia.org/wiki/Heisenbug">гейзенбагам</a>.
 Для сброса нужной записи TLB поможет функция
-<a href="../../doc/kernel/memory/mmu/fn.flush.html">kernel::memory::mmu::flush()</a>.</p>
+<a href="../../doc/kernel/memory/mmu/fn.flush.html"><code>kernel::memory::mmu::flush()</code></a>.</p>
 <p>Также вам пригодятся</p>
 <ul>
 <li><a href="../../doc/kernel/memory/enum.FrameAllocator.html#method.deallocate"><code>FrameAllocator::deallocate()</code></a> и</li>
@@ -4184,7 +4190,7 @@ Rust не даст скомпилировать такой код из-за на
 Это <a href="https://doc.rust-lang.ru/book/ch06-01-defining-an-enum.html">перечисление</a> с вариантами:</p>
 <ul>
 <li><a href="../../doc/kernel/memory/main_frame_allocator/enum.FrameInfo.html#variant.Absent"><code>FrameInfo::Absent</code></a> — этого физического фрейма нет в компьютере или же он зарезервирован, например <a href="https://en.wikipedia.org/wiki/BIOS">BIOS</a> или загрузчиком <a href="../../doc/bootloader/index.html">bootloader</a>.</li>
-<li><a href="../../doc/kernel/memory/main_frame_allocator/enum.FrameInfo.html#variant.Free"><code>FrameInfo::Free</code></a> — этот физический фрейм свободен. Содержит поле <a href="../../doc/kernel/memory/main_frame_allocator/enum.FrameInfo.html#variant.Free.field.next_free"><code>FrameInfo::Free::next_free</code></a> с номером следующего свободного фрейма, либо <code>None</code> если это последний элемент списка. То есть, описатели свободных фреймов провязаны в односвязный <a href="https://ru.wikipedia.org/wiki/%D0%98%D0%BD%D1%82%D1%80%D1%83%D0%B7%D0%B8%D0%B2%D0%BD%D1%8B%D0%B9_%D1%81%D0%BF%D0%B8%D1%81%D0%BE%D0%BA">интрузивный список</a> с номерами вместо указателей.</li>
+<li><a href="../../doc/kernel/memory/main_frame_allocator/enum.FrameInfo.html#variant.Free"><code>FrameInfo::Free</code></a> — этот физический фрейм свободен. Содержит поле <a href="../../doc/kernel/memory/main_frame_allocator/enum.FrameInfo.html#variant.Free.field.next_free"><code>FrameInfo::Free::next_free</code></a> с номером следующего свободного фрейма, либо <code>None</code> если это последний элемент списка. То есть, описатели свободных фреймов провязаны в интрузивный односвязный список с номерами вместо указателей.</li>
 <li><a href="../../doc/kernel/memory/main_frame_allocator/enum.FrameInfo.html#variant.Used"><code>FrameInfo::Used</code></a> — этот физический фрейм занят. Содержит поле <a href="../../doc/kernel/memory/main_frame_allocator/enum.FrameInfo.html#variant.Used.field.reference_count"><code>FrameInfo::Used::reference_count</code></a> с количеством ссылок на описываемый фрейм.</li>
 </ul>
 <p>В
@@ -4308,7 +4314,7 @@ let frame_info = BASE_ADDRESS_SPACE
 Так как может быть много разных причин почему он не был
 <a href="../../doc/bootloader/bootinfo/enum.MemoryRegionType.html#variant.Usable"><code>MemoryRegionType::Usable</code></a>.
 Например, он может соответствовать микросхеме
-<a href="https://ru.wikipedia.org/wiki/%D0%9F%D0%BE%D1%81%D1%82%D0%BE%D1%8F%D0%BD%D0%BD%D0%BE%D0%B5_%D0%B7%D0%B0%D0%BF%D0%BE%D0%BC%D0%B8%D0%BD%D0%B0%D1%8E%D1%89%D0%B5%D0%B5_%D1%83%D1%81%D1%82%D1%80%D0%BE%D0%B9%D1%81%D1%82%D0%B2%D0%BE">постоянного запоминающего устройства</a>,
+<a href="https://en.wikipedia.org/wiki/Read-only_memory">постоянного запоминающего устройства</a>,
 которая позволяет только читать данные, и не может быть использован ядром для произвольных данных.</p>
 <p>То же самое относится к фреймам, номера которых выходят за границы среза
 <a href="../../doc/kernel/memory/main_frame_allocator/struct.MainFrameAllocator.html#structfield.frame_info"><code>MainFrameAllocator::frame_info</code></a>, —
@@ -6962,7 +6968,8 @@ pub enum Pid {
 <a href="https://github.com/rust-lang/rust/issues/40180"><code>extern &quot;x86-interrupt&quot;</code></a>
 и эту запись увидит инструкция процессора
 <a href="https://www.felixcloutier.com/x86/iret:iretd:iretq"><code>iretq</code></a>.
-Чтобы предотвратить выкидывание оптимизатором команд записи в <code>context</code> и нужен <code>Volatile</code>.</p>
+Чтобы предотвратить выкидывание оптимизатором команд записи в <code>context</code> и нужен
+<a href="../../doc/volatile/struct.Volatile.html"><code>Volatile</code></a>.</p>
 <p>В <a href="../../doc/kernel/process/process/struct.Process.html#method.enter_user_mode">методе</a></p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -7293,7 +7300,11 @@ pub enum Pid {
 Другой вариант — скопировать данные из буфера в собственную, не разделяемую, память.
 А валидировать и использовать их уже там.</p>
 <h3 id="Структура-циклического-буфера"><a class="header" href="#Структура-циклического-буфера">Структура циклического буфера</a></h3>
-<p>В файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/ku/src/ring_buffer.rs"><code>ku/src/ring_buffer.rs</code></a> определён <a href="https://en.wikipedia.org/wiki/Circular_buffer">циклический буфер</a></p>
+<p>В файле
+<a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/ku/src/ring_buffer.rs"><code>ku/src/ring_buffer.rs</code></a>
+определён
+<a href="https://en.wikipedia.org/wiki/Circular_buffer">циклический буфер</a>
+<a href="../../doc/ku/ring_buffer/struct.RingBuffer.html"><code>RingBuffer</code></a>.</p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>pub struct RingBuffer {
@@ -7304,14 +7315,17 @@ pub enum Pid {
 }
 <span class="boring">}
 </span></code></pre></pre>
-<p>ёмкости <code>RingBuffer::REAL_SIZE</code>.
+<p>ёмкости
+<a href="../../doc/ku/ring_buffer/struct.RingBuffer.html#associatedconstant.REAL_SIZE"><code>RingBuffer::REAL_SIZE</code></a>.
 Его поля:</p>
 <ul>
-<li><code>RingBuffer::buf</code> — виртуальный адрес начала блока памяти с данными, которые хранятся в буфере.</li>
-<li><code>RingBuffer::head</code> — количество байт, прочитанных из буфера за всю время. То есть, эта величина потенциально больше размера буфера. Вариант хранить в <code>RingBuffer</code> это значение по модулю размера буфера, чреват ошибками.</li>
-<li><code>RingBuffer::tail</code> — количество байт, записанных в буфер за всю время.</li>
+<li><a href="../../doc/ku/ring_buffer/struct.RingBuffer.html#structfield.buf"><code>RingBuffer::buf</code></a> — виртуальный адрес начала блока памяти с данными, которые хранятся в буфере.</li>
+<li><a href="../../doc/ku/ring_buffer/struct.RingBuffer.html#structfield.head"><code>RingBuffer::head</code></a> — количество байт, прочитанных из буфера за всё время. То есть, эта величина потенциально больше размера буфера. Вариант хранить в <code>RingBuffer</code> это значение по модулю размера буфера, чреват ошибками.</li>
+<li><a href="../../doc/ku/ring_buffer/struct.RingBuffer.html#structfield.tail"><code>RingBuffer::tail</code></a> — количество байт, записанных в буфер за всё время.</li>
 </ul>
-<p>Поле <code>RingBuffer::stats</code> поддерживает статистики чтения и записи в буфер:</p>
+<p>Поле
+<a href="../../doc/ku/ring_buffer/struct.RingBuffer.html#structfield.stats"><code>RingBuffer::stats</code></a>
+поддерживает статистики чтения и записи в буфер:</p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>pub struct RingBufferStats {
@@ -7325,19 +7339,23 @@ pub enum Pid {
 <span class="boring">}
 </span></code></pre></pre>
 <ul>
-<li><code>RingBufferStats::txs</code> — количество транзакций чтения либо записи соответственно.</li>
-<li><code>RingBufferStats::commits</code> — количество закоммиченных транзакций соответствующего типа.</li>
-<li><code>RingBufferStats::drops</code> — количество оборванных (dropped, rolled back, aborted) транзакций соответствующего типа.</li>
-<li><code>RingBufferStats::commited</code> — количество байт, прочитанных или записанных в закоммиченных транзакциях.</li>
-<li><code>RingBufferStats::dropped</code> — количество байт, прочитанных или записанных в оборванных транзакциях.</li>
-<li><code>RingBufferStats::errors</code> — количество ошибок в транзакциях.</li>
+<li><a href="../../doc/ku/ring_buffer/struct.RingBufferStats.html#structfield.txs"><code>RingBufferStats::txs</code></a> — количество транзакций чтения либо записи соответственно.</li>
+<li><a href="../../doc/ku/ring_buffer/struct.RingBufferStats.html#structfield.commits"><code>RingBufferStats::commits</code></a> — количество закоммиченных транзакций соответствующего типа.</li>
+<li><a href="../../doc/ku/ring_buffer/struct.RingBufferStats.html#structfield.drops"><code>RingBufferStats::drops</code></a> — количество оборванных (dropped, rolled back, aborted) транзакций соответствующего типа.</li>
+<li><a href="../../doc/ku/ring_buffer/struct.RingBufferStats.html#structfield.commited"><code>RingBufferStats::commited</code></a> — количество байт, прочитанных или записанных в закоммиченных транзакциях.</li>
+<li><a href="../../doc/ku/ring_buffer/struct.RingBufferStats.html#structfield.dropped"><code>RingBufferStats::dropped</code></a> — количество байт, прочитанных или записанных в оборванных транзакциях.</li>
+<li><a href="../../doc/ku/ring_buffer/struct.RingBufferStats.html#structfield.errors"><code>RingBufferStats::errors</code></a> — количество ошибок в транзакциях.</li>
 </ul>
-<p>Методы <code>RingBuffer</code> создают транзакции:</p>
+<p>Методы
+<a href="../../doc/ku/ring_buffer/struct.RingBuffer.html"><code>RingBuffer</code></a>
+создают транзакции:</p>
 <ul>
-<li><code>RingBuffer::read_tx()</code> — читающую;</li>
-<li><code>RingBuffer::write_tx()</code> — пишущую.</li>
+<li><a href="../../doc/ku/ring_buffer/struct.RingBuffer.html#method.read_tx"><code>RingBuffer::read_tx()</code></a> — читающую;</li>
+<li><a href="../../doc/ku/ring_buffer/struct.RingBuffer.html#method.write_tx"><code>RingBuffer::write_tx()</code></a> — пишущую.</li>
 </ul>
-<p>Транзакции устроены так:</p>
+<p>Транзакции
+<a href="../../doc/ku/ring_buffer/struct.RingBufferTx.html"><code>RingBufferTx</code></a>
+устроены так:</p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>pub struct RingBufferTx&lt;'a, T: Tag&gt; {
@@ -7351,37 +7369,51 @@ pub enum Pid {
 </span></code></pre></pre>
 <p>Они хранят:</p>
 <ul>
-<li>Ссылку <code>RingBufferTx::ring_buffer</code> на исходный <code>RingBuffer</code>.</li>
-<li><code>RingBufferTx::head</code> и <code>RingBufferTx::tail</code> — актуальные в рамках транзакции значения, в момент старта транзакции инициализирующиеся из полей <code>RingBuffer::head</code>.</li>
-<li><code>RingBufferTx::bytes</code> — количество байт, прочитанных или записанных на текущий момент в данной транзакции.</li>
-<li>Тег <code>RingBufferTx::_tag</code>, отличающий пишущие транзакции от читающих.</li>
+<li>Ссылку <a href="../../doc/ku/ring_buffer/struct.RingBufferTx.html#structfield.ring_buffer"><code>RingBufferTx::ring_buffer</code></a> на исходный <a href="../../doc/ku/ring_buffer/struct.RingBuffer.html"><code>RingBuffer</code></a>.</li>
+<li><a href="../../doc/ku/ring_buffer/struct.RingBufferTx.html#structfield.head"><code>RingBufferTx::head</code></a> и <a href="../../doc/ku/ring_buffer/struct.RingBufferTx.html#structfield.tail"><code>RingBufferTx::tail</code></a> — актуальные в рамках транзакции значения, в момент старта транзакции инициализирующиеся из полей <a href="../../doc/ku/ring_buffer/struct.RingBuffer.html#structfield.head"><code>RingBuffer::head</code></a> и <a href="../../doc/ku/ring_buffer/struct.RingBuffer.html#structfield.tail"><code>RingBuffer::tail</code></a>.</li>
+<li><a href="../../doc/ku/ring_buffer/struct.RingBufferTx.html#structfield.bytes"><code>RingBufferTx::bytes</code></a> — количество байт, прочитанных или записанных на текущий момент в данной транзакции.</li>
+<li>Тег <a href="../../doc/ku/ring_buffer/struct.RingBufferTx.html#structfield._tag"><code>RingBufferTx::_tag</code></a>, отличающий пишущие транзакции от читающих.</li>
 </ul>
 <h3 id="Задача-1--реализация-циклического-буфера"><a class="header" href="#Задача-1--реализация-циклического-буфера">Задача 1 — реализация циклического буфера</a></h3>
 <h4 id="Читающая-транзакция"><a class="header" href="#Читающая-транзакция">Читающая транзакция</a></h4>
-<p>Реализуйте метод</p>
+<p>Реализуйте <a href="../../doc/ku/ring_buffer/struct.RingBufferTx.html#method.read">метод</a></p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>fn RingBufferTx&lt;'_, ReadTag&gt;::read(&amp;mut self) -&gt; &amp;[u8]
 <span class="boring">}
 </span></code></pre></pre>
-<p>который возвращает в виде среза все доступные на момент запуска читающей транзакции байты из буфера, обновляя поля только самой транзакции <code>RingBufferTx</code>.</p>
-<p>И метод</p>
+<p>который возвращает в виде среза все доступные на момент запуска читающей транзакции байты из буфера,
+обновляя поля только самой транзакции
+<a href="../../doc/ku/ring_buffer/struct.RingBufferTx.html"><code>RingBufferTx</code></a>.</p>
+<p>И <a href="../../doc/ku/ring_buffer/struct.RingBufferTx.html#method.commit">метод</a></p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>fn RingBufferTx&lt;'_, ReadTag&gt;::commit(&amp;mut self)
 <span class="boring">}
 </span></code></pre></pre>
 <p>который коммитит читающую транзакцию, записывая обновлённое значение
-<code>RingBuffer::head</code> и статистику <code>RingBuffer::read_stats()</code> в поля <code>RingBuffer</code>.</p>
+<a href="../../doc/ku/ring_buffer/struct.RingBuffer.html#structfield.head"><code>RingBuffer::head</code></a>
+и статистику
+<a href="../../doc/ku/ring_buffer/struct.RingBuffer.html#method.read_stats"><code>RingBuffer::read_stats()</code></a>
+в поля
+<a href="../../doc/ku/ring_buffer/struct.RingBuffer.html"><code>RingBuffer</code></a>.</p>
 <h4 id="Пишущая-транзакция"><a class="header" href="#Пишущая-транзакция">Пишущая транзакция</a></h4>
-<p>Реализуйте метод</p>
+<p>Реализуйте <a href="../../doc/ku/ring_buffer/struct.RingBufferTx.html#method.write">метод</a></p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>fn RingBufferTx&lt;'_, WriteTag&gt;::write(&amp;mut self, data: &amp;[u8]) -&gt; Result&lt;()&gt;
 <span class="boring">}
 </span></code></pre></pre>
-<p>которая копирует в буфер байты среза <code>data</code>, обновляя поля самой транзакции <code>RingBufferTx</code> и статистики <code>RingBuffer::write_stats()</code>, но не трогает поля <code>RingBuffer::head</code> и <code>RingBuffer::tail</code>.
-Если в буфере не остаётся места под <code>data</code> верните ошибку</p>
+<p>которая копирует в буфер байты среза <code>data</code>, обновляя поля самой транзакции
+<a href="../../doc/ku/ring_buffer/struct.RingBufferTx.html"><code>RingBufferTx</code></a>
+и статистики
+<a href="../../doc/ku/ring_buffer/struct.RingBuffer.html#method.write_stats"><code>RingBuffer::write_stats()</code></a>,
+но не трогая поля
+<a href="../../doc/ku/ring_buffer/struct.RingBufferTx.html#structfield.head"><code>RingBuffer::head</code></a>
+и
+<a href="../../doc/ku/ring_buffer/struct.RingBufferTx.html#structfield.tail"><code>RingBuffer::tail</code></a>.
+Если в буфере не остаётся места под <code>data</code>, верните ошибку
+<a href="../../doc/ku/ring_buffer/enum.Error.html#variant.Overflow"><code>Error::Overflow</code></a>:</p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>pub enum Error {
@@ -7395,23 +7427,30 @@ pub enum Pid {
 </span></code></pre></pre>
 <p>С информацией</p>
 <ul>
-<li>Об остававшемся месте в буфере на момент старта транзакции. То есть, полной доступной для транзакции ёмкости, — <code>Error::Overflow::capacity</code>.</li>
-<li>Об уже записанном ранее в рамках той же транзакции объёме — <code>Error::Overflow::len</code>.</li>
-<li>О размере объекта, который не влез — <code>Error::Overflow::exceeding_object_len</code>.</li>
+<li>Об остававшемся в буфере месте на момент старта транзакции. То есть, полной доступной для транзакции ёмкости, — <a href="../../doc/ku/ring_buffer/enum.Error.html#variant.Overflow.field.capacity"><code>Error::Overflow::capacity</code></a>.</li>
+<li>Об уже записанном ранее в рамках той же транзакции объёме — <a href="../../doc/ku/ring_buffer/enum.Error.html#variant.Overflow.field.len"><code>Error::Overflow::len</code></a>.</li>
+<li>О размере объекта, который не влез — <a href="../../doc/ku/ring_buffer/enum.Error.html#variant.Overflow.field.exceeding_object_len"><code>Error::Overflow::exceeding_object_len</code></a>.</li>
 </ul>
 <p>Вам может пригодиться метод
 <a href="https://doc.rust-lang.org/nightly/core/primitive.slice.html#method.copy_from_slice"><code>copy_from_slice()</code></a>
 срезов.</p>
-<p>Реализуйте метод</p>
+<p>Реализуйте <a href="../../doc/ku/ring_buffer/struct.RingBufferTx.html#method.commit-1">метод</a></p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>fn RingBufferTx&lt;'_, WriteTag&gt;::commit(&amp;mut self)
 <span class="boring">}
 </span></code></pre></pre>
 <p>который коммитит пишущую транзакцию, обновляя значение
-<code>RingBuffer::tail</code> и статистику <code>RingBuffer::write_stats()</code> в полях <code>RingBuffer</code>.</p>
+<a href="../../doc/ku/ring_buffer/struct.RingBufferTx.html#structfield.tail"><code>RingBuffer::tail</code></a>
+и статистику
+<a href="../../doc/ku/ring_buffer/struct.RingBuffer.html#method.write_stats"><code>RingBuffer::write_stats()</code></a>
+в полях
+<a href="../../doc/ku/ring_buffer/struct.RingBuffer.html"><code>RingBuffer</code></a>.</p>
 <h4 id="Сброс-транзакции"><a class="header" href="#Сброс-транзакции">Сброс транзакции</a></h4>
-<p>Реализуйте типаж <a href="https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html"><code>core::ops::Drop</code></a> для транзакций обоих типов — метод</p>
+<p>Реализуйте типаж
+<a href="https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html"><code>core::ops::Drop</code></a>
+для транзакций обоих типов —
+<a href="../../doc/ku/ring_buffer/struct.RingBufferTx.html#method.drop">метод</a></p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>fn RingBufferTx::drop(&amp;mut self)
@@ -7420,17 +7459,19 @@ pub enum Pid {
 <p>который обновляет соответствующие статистики <code>RingBufferTx::ring_buffer.stats[T::STATS_INDEX]</code>,
 если в транзакции был прочитан или записан хотя бы один байт.</p>
 <h4 id="Отображение-буфера-в-память-процесса"><a class="header" href="#Отображение-буфера-в-память-процесса">Отображение буфера в память процесса</a></h4>
-<p>Реализуйте функцию</p>
+<p>Реализуйте <a href="../../doc/kernel/process/fn.map_log.html">функцию</a></p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span>fn map_log(address_space: &amp;mut AddressSpace) -&gt; Result&lt;RingBuffer&gt;
+</span>fn kernel::process::map_log(address_space: &amp;mut AddressSpace) -&gt; Result&lt;RingBuffer&gt;
 <span class="boring">}
 </span></code></pre></pre>
 <p>в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/process/mod.rs"><code>kernel/src/process/mod.rs</code></a>.
 Она должна реализовать двойное отображение памяти буфера в адресное пространство <code>address_space</code> процесса.
 То есть, она должна выделить
-<code>RingBuffer::REAL_SIZE</code> байт в физической памяти и
-<code>RingBuffer::MAPPED_SIZE</code> — в виртуальной.
+<a href="../../doc/ku/ring_buffer/struct.RingBuffer.html#associatedconstant.REAL_SIZE"><code>RingBuffer::REAL_SIZE</code></a>
+байт в физической памяти и
+<a href="../../doc/ku/ring_buffer/struct.RingBuffer.html#associatedconstant.MAPPED_SIZE"><code>RingBuffer::MAPPED_SIZE</code></a> —
+в виртуальной.
 И построить отображение выделенных физических фреймов дважды подряд в пространство <code>address_space</code>.</p>
 <h4 id="Сброс-буфера"><a class="header" href="#Сброс-буфера">Сброс буфера</a></h4>
 <p>За сброс буфера с сообщениями процесса пользователя в общий лог отвечает ядро.
@@ -7442,7 +7483,9 @@ pub enum Pid {
 <li>Из диспетчера системных вызовов <a href="../../doc/kernel/process/syscall/fn.syscall.html"><code>kernel::process::syscall::syscall()</code></a>. Это вам придётся добавить самостоятельно. Чтобы не поменялся логический порядок записей, относящихся к одному процессу, сделайте сброс до того как ядро залогирует какое-либо своё сообщение при обработке системного вызова.</li>
 </ul>
 <h4 id="Структурированное-логирование-в-пространстве-пользователя"><a class="header" href="#Структурированное-логирование-в-пространстве-пользователя">Структурированное логирование в пространстве пользователя</a></h4>
-<p>После того как вы реализуете <code>RingBuffer</code> наконец-то в пространстве пользователя заработает
+<p>После того как вы реализуете
+<a href="../../doc/ku/ring_buffer/struct.RingBuffer.html"><code>RingBuffer</code></a>
+наконец-то в пространстве пользователя заработает
 структурированное логирование макросами библиотеки
 <a href="https://docs.rs/tracing/">tracing</a> —
 <code>info!()</code>, <code>debug!()</code> и т.д.</p>
@@ -7457,7 +7500,9 @@ pub enum Pid {
 В случае переполнения, вызывается
 <a href="../../doc/lib/syscall/fn.sched_yield.html"><code>lib::syscall::sched_yield()</code></a>.
 При попадании в ядро при любом системном вызове или исключении,
-ядро сбрасывает накопившиеся в <code>RingBuffer</code> записи в лог функцией
+ядро сбрасывает накопившиеся в
+<a href="../../doc/ku/ring_buffer/struct.RingBuffer.html"><code>RingBuffer</code></a>
+записи в лог функцией
 <a href="../../doc/kernel/process/process/struct.Process.html#method.flush_log"><code>Process::flush_log()</code></a>.
 Благодаря этому они не потеряются даже если приложение упадёт по ошибке.</p>
 <p>После сброса переполнившегося буфера, выполняется повторная попытка записать в него не поместившееся сообщение.
@@ -7525,7 +7570,9 @@ pub enum Pid {
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h2 id="Системные-вызовы-для-работы-с-виртуальной-памятью"><a class="header" href="#Системные-вызовы-для-работы-с-виртуальной-памятью">Системные вызовы для работы с виртуальной памятью</a></h2>
 <p>Добавим новые системные вызовы в файл <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/process/syscall.rs"><code>kernel/src/process/syscall.rs</code></a>.</p>
-<p>Эти системные вызовы будут принимать идентификатор <code>Pid</code> целевого процесса.
+<p>Эти системные вызовы будут принимать идентификатор
+<a href="../../doc/ku/process/pid/enum.Pid.html"><code>Pid</code></a>
+целевого процесса.
 То есть, они будут позволять вызывающему процессу выполнить действие над самим собой,
 задав
 <a href="../../doc/ku/process/pid/enum.Pid.html#variant.Current"><code>Pid::Current</code></a>
@@ -7816,7 +7863,8 @@ pub enum Pid {
 <span class="boring">}
 </span></code></pre></pre>
 <p>в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/process/syscall.rs"><code>kernel/src/process/syscall.rs</code></a>.</p>
-<p>Он создаёт копию вызывающего процесса <code>process</code> и возвращает его <code>Pid</code>.
+<p>Он создаёт копию вызывающего процесса <code>process</code> и возвращает его
+<a href="../../doc/ku/process/pid/enum.Pid.html"><code>Pid</code></a>.
 При этом новый процесс создаётся практически без адресного пространства и не готовый к работе.
 Поэтому он, в частности, не ставится в очередь планировщика.</p>
 <p>Этот системный вызов использует создание копии системной части адресного пространства процесса <code>process</code>,
@@ -7824,7 +7872,11 @@ pub enum Pid {
 <a href="../../lab/book/2-mm-6-address-space-2-translate.html#%D0%97%D0%B0%D0%B4%D0%B0%D1%87%D0%B0-6--%D1%81%D0%BE%D0%B7%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5-%D0%BF%D0%BE%D0%BB%D0%BD%D0%BE%D0%B9-%D0%BA%D0%BE%D0%BF%D0%B8%D0%B8-%D0%B2%D0%B8%D1%80%D1%82%D1%83%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%D0%B3%D0%BE-%D0%BE%D1%82%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D1%8F">вы реализовали ранее</a>.
 А вот пользовательскую часть адресного пространства он не копирует.
 Этим займётся код на стороне пользователя.</p>
-<p>Системный вызов <code>exofork()</code> возвращает <code>Pid::Id</code> с идентификатором потомка в процессе родителя и константу <code>Pid::Current</code> в процессе потомка.</p>
+<p>Системный вызов <code>exofork()</code> возвращает
+<a href="../../doc/ku/process/pid/enum.Pid.html#variant.Id"><code>Pid::Id</code></a>
+с идентификатором потомка в процессе родителя и константу
+<a href="../../doc/ku/process/pid/enum.Pid.html#variant.Current"><code>Pid::Current</code></a>
+в процессе потомка.</p>
 <p>Текущий контекст родителя — <code>context</code> — нужно записать в потомка.
 Вы уже делали аналогично для
 <a href="../../doc/kernel/process/syscall/fn.sched_yield.html"><code>sched_yield()</code></a>.
@@ -7852,8 +7904,11 @@ pub enum Pid {
 </span>let (child_pid, process_info) = syscall(Syscall::EXOFORK.bits(), 0, 0, 0, 0, 0)?;
 <span class="boring">}
 </span></code></pre></pre>
-<p>В поле <code>child_pid</code> должен быть <code>Pid::Id</code> с идентификатором потомка в процессе родителя или
-<code>Pid::Current</code> в процессе потомка.
+<p>В поле <code>child_pid</code> должен быть
+<a href="../../doc/ku/process/pid/enum.Pid.html#variant.Id"><code>Pid::Id</code></a>
+с идентификатором потомка в процессе родителя или
+<a href="../../doc/ku/process/pid/enum.Pid.html#variant.Current"><code>Pid::Current</code></a>
+в процессе потомка.
 А в <code>process_info</code> — ссылка на системную информацию о текущем процессе
 <a href="../../doc/ku/info/struct.ProcessInfo.html"><code>ku::info::ProcessInfo</code></a>.
 Это поле имеет смысл только для потомка.
@@ -7887,10 +7942,14 @@ pub enum Pid {
 </span></code></pre></pre>
 <p>в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/process/syscall.rs"><code>kernel/src/process/syscall.rs</code></a>.</p>
 <p>Он переводит целевой процесс, заданный идентификатором <code>dst_pid</code>, в заданное состояние <code>state</code>.
-И ставит его в очередь планировщика в случае <code>State::Runnable</code>.
-Не забудьте <a href="../../lab/book/5-um-2-memory.html#check_process_permissions">проверить права доступа</a> процесса <code>process</code> к процессу <code>dst_pid</code>.</p>
+И ставит его в очередь планировщика в случае
+<a href="../../doc/ku/process/struct.State.html#associatedconstant.RUNNABLE"><code>State::RUNNABLE</code></a>.
+Не забудьте
+<a href="../../lab/book/5-um-2-memory.html#check_process_permissions">проверить права доступа</a>
+процесса <code>process</code> к процессу <code>dst_pid</code>.</p>
 <h3 id="Рекурсивное-отображение-памяти"><a class="header" href="#Рекурсивное-отображение-памяти">Рекурсивное отображение памяти</a></h3>
-<p>Для того чтобы в пространстве пользователя процесс мог прочитать собственное отображение страниц адресного пространства,
+<p>Для того чтобы в пространстве пользователя процесс мог прочитать собственное
+отображение страниц адресного пространства,
 удобно использовать старый джедайский трюк —
 <a href="https://os.phil-opp.com/page-tables/#recursive-mapping">рекурсивное отображение памяти</a>.</p>
 <p>Реализуйте <a href="../../doc/kernel/memory/mapping/struct.Mapping.html#method.make_recursive_mapping">метод</a></p>
@@ -7910,7 +7969,9 @@ pub enum Pid {
 <a href="../../doc/kernel/memory/mapping/struct.Mapping.html#method.drop_page_table"><code>Mapping::drop_page_table()</code></a>,
 чтобы они игнорировали эту запись корневой таблицы страниц.</p>
 <h3 id="Библиотечные-функции"><a class="header" href="#Библиотечные-функции">Библиотечные функции</a></h3>
-<p>В файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/user/lib/src/memory/mod.rs"><code>user/lib/src/memory/mod.rs</code></a> реализуйте вспомогательные функции кода пользователя.</p>
+<p>В файле
+<a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/user/lib/src/memory/mod.rs"><code>user/lib/src/memory/mod.rs</code></a>
+реализуйте вспомогательные функции кода пользователя.</p>
 <h4 id="libmemorytemp_page"><a class="header" href="#libmemorytemp_page"><a href="../../doc/lib/memory/fn.temp_page.html"><code>lib::memory::temp_page()</code></a></a></h4>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -7957,7 +8018,8 @@ pub enum Pid {
 ) -&gt; Result&lt;()&gt;
 <span class="boring">}
 </span></code></pre></pre>
-<p>Копирует таблицу страниц уровня <code>level</code> для виртуального адреса <code>virt_addr</code> из своего адресного пространства в пространство дочернего процесса <code>child</code>.
+<p>Копирует таблицу страниц уровня <code>level</code> для виртуального адреса <code>virt_addr</code>
+из своего адресного пространства в пространство дочернего процесса <code>child</code>.
 Работает рекурсивно.
 Корень рекурсии запускает функция</p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
@@ -7969,14 +8031,23 @@ pub enum Pid {
 </span></code></pre></pre>
 <p>Проходится по таблице страниц, получая ссылку на неё с помощью
 <a href="../../lab/book/5-um-3-eager-fork.html#page_table">реализованной вами ранее</a>
-<code>lib::memory::page_table()</code>.
-На записях <code>PageTableEntry</code>, которые доступны для пользовательского кода, либо рекурсивно спускается на следующий уровень таблицы страниц, либо на листьевом уровне копирует содержимое отображённой страницы.
+<a href="../../doc/lib/memory/fn.page_table.html"><code>lib::memory::page_table()</code></a>.
+На записях
+<a href="../../doc/ku/memory/mmu/struct.PageTableEntry.html"><code>PageTableEntry</code></a>,
+которые доступны для пользовательского кода,
+либо рекурсивно спускается на следующий уровень таблицы страниц,
+либо на листьевом уровне копирует содержимое отображённой страницы.
 Адрес отображаемой страницы вычисляет поэтапно на рекурсивных вызовах с помощью аргумента <code>virt_addr</code>,
-номера обрабатываемой записи <code>PageTableEntry</code> и уровня таблицы страниц.</p>
-<p>Для копирования страницы в целевой процесс, сначала выделяет временную страницу в собственном адресном пространстве с помощью функции <code>lib::memory::temp_page()</code>.
+номера обрабатываемой записи
+<a href="../../doc/ku/memory/mmu/struct.PageTableEntry.html"><code>PageTableEntry</code></a>,
+и уровня таблицы страниц.</p>
+<p>Для копирования страницы в целевой процесс, сначала выделяет временную страницу
+в собственном адресном пространстве с помощью функции
+<a href="../../doc/lib/memory/fn.temp_page.html"><code>lib::memory::temp_page()</code></a>.
 Копирует текущую отображаемую страницу туда с помощью
 <a href="../../lab/book/5-um-3-eager-fork.html#copy_page">реализованной вами ранее</a>
-функции <code>lib::memory::copy_page()</code>.
+функции
+<a href="../../doc/lib/memory/fn.copy_page.html"><code>lib::memory::copy_page()</code></a>.
 Затем, с помощью системных вызовов
 <a href="../../doc/lib/syscall/fn.copy_mapping.html"><code>lib::syscall::copy_mapping()</code></a>
 и
@@ -7984,7 +8055,9 @@ pub enum Pid {
 передаёт скопированную временную страницу потомку <code>child</code>, отображая её в его адресном пространстве
 по адресу исходной страницы в своём адресном пространстве.</p>
 <p>Запись номер <code>ku::process_info().recursive_mapping()</code> корневой таблицы страниц, а также страницы,
-предоставляющие пользовательскому процессу информацию о нём, системе и <code>RingBuffer</code> для логирования,
+предоставляющие пользовательскому процессу информацию о нём, системе и
+<a href="../../doc/ku/ring_buffer/struct.RingBuffer.html"><code>RingBuffer</code></a>
+для логирования,
 нужно проигнорировать.
 То есть, страницы для которых <code>ku::process_info().contains_address()</code> возвращает <code>true</code>.
 Их отобразит в память потомка ядро, выбирая новые, а не разделяемые, физические фреймы.</p>
@@ -7996,9 +8069,13 @@ pub enum Pid {
 </span></code></pre></pre>
 <p>Создаёт процесс потомка с помощью
 <a href="../../lab/book/5-um-3-eager-fork.html#%D0%A1%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D0%BD%D1%8B%D0%B9-%D0%B2%D1%8B%D0%B7%D0%BE%D0%B2-exofork">реализованного вами ранее</a>
-системного вызова <code>syscall::exofork()</code>.
+системного вызова
+<a href="../../doc/lib/syscall/fn.exofork.html"><code>lib::syscall::exofork()</code></a>.
 Далее копирует своё адресное пространство в пространство потомка с помощью функции <code>fn copy_address_space()</code>.
-И запускает потомка системным вызовом <code>syscall::set_state()</code>, устанавливая его состояние в <code>State::Runnable</code>.
+И запускает потомка системным вызовом
+<a href="../../doc/lib/syscall/fn.set_state.html"><code>lib::syscall::set_state()</code></a>,
+устанавливая его состояние в
+<a href="../../doc/ku/process/struct.State.html#associatedconstant.RUNNABLE"><code>State::RUNNABLE</code></a>.
 В потомке ничего не делает.
 Возвращает <code>true</code> в процессе потомка и <code>false</code> в процессе родителя.</p>
 <h3 id="Проверьте-себя-18"><a class="header" href="#Проверьте-себя-18">Проверьте себя</a></h3>
@@ -8507,7 +8584,7 @@ pub enum Pid {
 должна переключить <code>RSP</code> на этот адрес и выполнить инструкцию
 <a href="https://www.felixcloutier.com/x86/ret"><code>ret</code></a>.
 Лежит нужный нам <code>RSP</code> в поле
-<code>TrapInfo::context</code>(../../doc/ku/process/trap_info/struct.TrapInfo.html#structfield.context)
+<a href="../../doc/ku/process/trap_info/struct.TrapInfo.html#structfield.context"><code>TrapInfo::context</code></a>
 структуры</p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -8737,7 +8814,10 @@ pub(crate) struct TrapContext {
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h2 id="copy-on-write-fork"><a class="header" href="#copy-on-write-fork">Copy-on-write fork</a></h2>
 <p>Теперь у нас есть всё необходимое для реализации copy-on-write <code>fork()</code> в пространстве пользователя.
-Программа <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/user/cow_fork/src/main.rs"><code>user/cow_fork/src/main.rs</code></a> структурно похожа на <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/user/eager_fork/src/main.rs"><code>user/eager_fork/src/main.rs</code></a>
+Программа
+<a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/user/cow_fork/src/main.rs"><code>user/cow_fork/src/main.rs</code></a>
+структурно похожа на
+<a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/user/eager_fork/src/main.rs"><code>user/eager_fork/src/main.rs</code></a>
 и на <code>eager_fork</code> можно ориентироваться при реализации.</p>
 <h4 id="Ленивое-копирование-адресного-пространства"><a class="header" href="#Ленивое-копирование-адресного-пространства">Ленивое копирование адресного пространства</a></h4>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
@@ -8754,7 +8834,7 @@ pub(crate) struct TrapContext {
 Отличается от которой в паре моментов:</p>
 <ul>
 <li>К игнорируемым страницам добавляется <code>trap_stack</code>, его копировать не нужно. У потомка изначально будет полностью отдельный стек для обработки исключений.</li>
-<li>Вместо копирования страниц функцией <code>lib::memory::copy_page()</code> создаёт в потомке отображение. Оно ссылается на тот же физический фрейм, на который ссылается соответствующая виртуальная страница в родителе. При этом для страниц, которые отображены с одним из флагов <a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.WRITABLE"><code>PageTableFlags::WRITABLE</code></a> или <a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.COPY_ON_WRITE"><code>PageTableFlags::COPY_ON_WRITE</code></a>, в обоих адресных пространствах меняет флаги отображения страницы так, чтобы <a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.COPY_ON_WRITE"><code>PageTableFlags::COPY_ON_WRITE</code></a> был включён, а <a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.WRITABLE"><code>PageTableFlags::WRITABLE</code></a> — выключен. Копирование содержимого страницы функцией <code>lib::memory::copy_page()</code> таким образом лениво откладывается до возникновения Page Fault.</li>
+<li>Вместо копирования страниц функцией <a href="../../doc/lib/memory/fn.copy_page.html"><code>lib::memory::copy_page()</code></a> создаёт в потомке отображение. Оно ссылается на тот же физический фрейм, на который ссылается соответствующая виртуальная страница в родителе. При этом для страниц, которые отображены с одним из флагов <a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.WRITABLE"><code>PageTableFlags::WRITABLE</code></a> или <a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.COPY_ON_WRITE"><code>PageTableFlags::COPY_ON_WRITE</code></a>, в обоих адресных пространствах меняет флаги отображения страницы так, чтобы <a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.COPY_ON_WRITE"><code>PageTableFlags::COPY_ON_WRITE</code></a> был включён, а <a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.WRITABLE"><code>PageTableFlags::WRITABLE</code></a> — выключен. Копирование содержимого страницы функцией <a href="../../doc/lib/memory/fn.copy_page.html"><code>lib::memory::copy_page()</code></a> таким образом лениво откладывается до возникновения Page Fault.</li>
 </ul>
 <h4 id="Пользовательский-обработчик-исключений-page-fault"><a class="header" href="#Пользовательский-обработчик-исключений-page-fault">Пользовательский обработчик исключений Page Fault</a></h4>
 <p>Когда программа попытается записать в страницу, помеченную в <code>copy_page_table()</code> как
@@ -8762,36 +8842,44 @@ pub(crate) struct TrapContext {
 и только на чтение,
 возникнет Page Fault и ядро передаст управление в
 <a href="../../lab/book/5-um-4-trap-handler.html#%D0%A2%D1%80%D0%B0%D0%BC%D0%BF%D0%BB%D0%B8%D0%BD-%D0%BE%D0%B1%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%B0-%D0%BF%D1%80%D0%B5%D1%80%D1%8B%D0%B2%D0%B0%D0%BD%D0%B8%D0%B9">реализованный вами ранее</a>
-<code>trap_trampoline()</code>, который в свою очередь запустит</p>
+<a href="../../doc/lib/syscall/fn.trap_trampoline.html"><code>lib::syscall::trap_trampoline()</code></a>,
+который в свою очередь запустит</p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>fn trap_handler(info: &amp;TrapInfo)
 <span class="boring">}
 </span></code></pre></pre>
 <p>Эта функция работает в очень стеснённых условиях.</p>
-<p>Возможно, вся память программы, кроме стека <code>trap_stack</code>, на котором сейчас работает эта функция, доступна только на чтение.
-В том числе <code>RingBuffer</code>, который используется для логирования в пространстве пользователя макросами библиотеки <a href="https://docs.rs/tracing/">tracing</a> — <code>info!()</code>, <code>debug!()</code> и т.д.
+<p>Возможно, вся память программы, кроме стека <code>trap_stack</code>, на котором сейчас работает эта функция,
+доступна только на чтение.
+В том числе
+<a href="../../doc/ku/ring_buffer/struct.RingBuffer.html"><code>RingBuffer</code></a>,
+который используется для логирования в пространстве пользователя
+макросами библиотеки <a href="https://docs.rs/tracing/">tracing</a> — <code>info!()</code>, <code>debug!()</code> и т.д.
 Так как при этом нужно писать, то такое логирование в <code>trap_handler()</code> не доступно.
 <code>panic!()</code> тоже не доступен, так как он использует логирование.
-В других частях <code>cow_fork</code> логированием можно пользоваться, потому что <code>trap_handler()</code> починит возникающие при этом Page Fault.
+В других частях <code>cow_fork</code> логированием можно пользоваться,
+потому что <code>trap_handler()</code> починит возникающие при этом Page Fault.
 Для логирования в <code>trap_handler()</code> можно воспользоваться
 <a href="../../lab/book/3-process-4-syscall.html#%D0%97%D0%B0%D0%B4%D0%B0%D1%87%D0%B0-12--%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D0%BD%D1%8B%D0%B9-%D0%B2%D1%8B%D0%B7%D0%BE%D0%B2-log_value">одним из первых реализованных системных вызовов</a> —
-<code>syscall::log_value()</code>.</p>
+<a href="../../doc/lib/syscall/fn.log_value.html"><code>lib::syscall::log_value()</code></a>.</p>
 <p>Вторая неприятность заключается в том, что в процессе–потомке в <code>trap_handler()</code> не доступны
-<code>ku::ProcessInfo</code> и <code>ku::SystemInfo</code> даже на чтение.
-Поэтому потомок не может узнать свой идентификатор <code>Pid</code>.
-Так как не работает, в том числе функция <code>ku::process::pid()</code>.
-Поэтому в <code>trap_handler()</code> идентифицировать процесс для выполняемых системных вызовов нужно как <code>Pid::Current</code>.</p>
+<a href="../../doc/ku/info/struct.ProcessInfo.html"><code>ku::ProcessInfo</code></a> и
+<a href="../../doc/ku/info/struct.SystemInfo.html"><code>ku::SystemInfo</code></a> даже на чтение.
+Поэтому потомок не может узнать свой идентификатор
+<a href="../../doc/ku/process/pid/enum.Pid.html"><code>Pid</code></a>.
+Поэтому в <code>trap_handler()</code> идентифицировать процесс для выполняемых системных вызовов нужно как
+<a href="../../doc/ku/process/pid/enum.Pid.html#variant.Current"><code>Pid::Current</code></a>.</p>
 <p>Также учтите, что эти ограничения распространяются на вспомогательные функции, которые <code>trap_handler()</code> использует.
 Впрочем, оба эти ограничения — во многом следствие нашей реализации <code>cow_fork</code>,
 а не характерная особенность обработки прерываний в пространстве пользователя.</p>
 <p>При получении управления, <code>trap_handler()</code>:</p>
 <ul>
-<li>Проверяет, что прерывание — это действительно <code>PageFault</code> и он вызван записью. Иначе обработчик прекращает исполнение программы, вызвав <code>syscall::exit()</code> с кодом ошибки.</li>
-<li>С помощью <a href="../../lab/book/5-um-3-eager-fork.html#temp_page">реализованной ранее</a> функции <code>lib::memory::temp_page()</code> находит временную страницу.</li>
-<li>Копирует содержимое страницы, обращение к которой привело к Page Fault, во временную, с помощью <a href="../../lab/book/5-um-3-eager-fork.html#copy_page">реализованной вами ранее</a> функции <code>lib::memory::copy_page()</code>.</li>
-<li>С помощью системного вызова <code>syscall::copy_mapping()</code> заменяет физический фрейм под скопированной страницей на фрейм временной страницы, одновременно меняя флаг <a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.COPY_ON_WRITE"><code>PageTableFlags::COPY_ON_WRITE</code></a> на <a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.WRITABLE"><code>PageTableFlags::WRITABLE</code></a> в её отображении.</li>
-<li>С помощью системного вызова <code>syscall::unmap()</code> удаляет из адресного пространства не нужную более временную страницу.</li>
+<li>Проверяет, что прерывание — это действительно <code>PageFault</code> и он вызван записью. Иначе обработчик прекращает исполнение программы, вызвав <a href="../../doc/lib/syscall/fn.exit.html"><code>lib::syscall::exit()</code></a> с кодом ошибки.</li>
+<li>С помощью <a href="../../lab/book/5-um-3-eager-fork.html#temp_page">реализованной ранее</a> функции <a href="../../doc/lib/memory/fn.temp_page.html"><code>lib::memory::temp_page()</code></a> находит временную страницу.</li>
+<li>Копирует содержимое страницы, обращение к которой привело к Page Fault, во временную, с помощью <a href="../../lab/book/5-um-3-eager-fork.html#copy_page">реализованной вами ранее</a> функции <a href="../../doc/lib/memory/fn.copy_page.html"><code>lib::memory::copy_page()</code></a>.</li>
+<li>С помощью системного вызова <a href="../../doc/lib/syscall/fn.copy_mapping.html"><code>lib::syscall::copy_mapping()</code></a> заменяет физический фрейм под скопированной страницей на фрейм временной страницы, одновременно меняя флаг <a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.COPY_ON_WRITE"><code>PageTableFlags::COPY_ON_WRITE</code></a> на <a href="../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.WRITABLE"><code>PageTableFlags::WRITABLE</code></a> в её отображении.</li>
+<li>С помощью системного вызова <a href="../../doc/lib/syscall/fn.unmap.html"><code>lib::syscall::unmap()</code></a> удаляет из адресного пространства не нужную более временную страницу.</li>
 </ul>
 <h4 id="cow_fork"><a class="header" href="#cow_fork"><code>cow_fork()</code></a></h4>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
@@ -8802,11 +8890,11 @@ pub(crate) struct TrapContext {
 <p>Эта функции похожа на соответствующую функцию <code>eager_fork()</code>, но в ней добавляется работа по инициализации обработчика прерываний.
 Функция <code>cow_fork()</code>:</p>
 <ul>
-<li>Выделяет себе — родительскому процессу — стек для обработки исключений с помощью <code>syscall::map()</code> и устанавливает себе функцией <code>syscall::set_trap_handler()</code> обработчик исключений <code>trap_handler()</code>.</li>
-<li>Создаёт процесс потомка с помощью <a href="../../lab/book/5-um-3-eager-fork.html#%D0%A1%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D0%BD%D1%8B%D0%B9-%D0%B2%D1%8B%D0%B7%D0%BE%D0%B2-exofork">реализованного вами ранее</a> системного вызова <code>syscall::exofork()</code>.</li>
+<li>Выделяет себе — родительскому процессу — стек для обработки исключений с помощью <a href="../../doc/lib/syscall/fn.map.html"><code>lib::syscall::map()</code></a> и устанавливает себе функцией <a href="../../doc/lib/syscall/fn.set_trap_handler.html"><code>lib::syscall::set_trap_handler()</code></a> обработчик исключений <code>trap_handler()</code>.</li>
+<li>Создаёт процесс потомка с помощью <a href="../../lab/book/5-um-3-eager-fork.html#%D0%A1%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D0%BD%D1%8B%D0%B9-%D0%B2%D1%8B%D0%B7%D0%BE%D0%B2-exofork">реализованного вами ранее</a> системного вызова <a href="../../doc/lib/syscall/fn.exofork.html"><code>lib::syscall::exofork()</code></a>.</li>
 <li>Далее лениво копирует своё адресное пространство в пространство потомка с помощью функции <code>fn copy_address_space()</code>.</li>
-<li>Выделяет потомку отдельный стек для обработки исключений с помощью <code>syscall::map()</code> и устанавливает уже ему обработчик исключений <code>trap_handler()</code> функцией <code>syscall::set_trap_handler()</code>.</li>
-<li>Запускает потомка системным вызовом <code>syscall::set_state()</code>, устанавливая его состояние в <code>State::Runnable</code>.</li>
+<li>Выделяет потомку отдельный стек для обработки исключений с помощью <a href="../../doc/lib/syscall/fn.map.html"><code>lib::syscall::map()</code></a> и устанавливает уже ему обработчик исключений <code>trap_handler()</code> функцией <a href="../../doc/lib/syscall/fn.set_trap_handler.html"><code>lib::syscall::set_trap_handler()</code></a>.</li>
+<li>Запускает потомка системным вызовом <a href="../../doc/lib/syscall/fn.set_state.html"><code>lib::syscall::set_state()</code></a>, устанавливая его состояние в <a href="../../doc/ku/process/struct.State.html#associatedconstant.RUNNABLE"><code>State::RUNNABLE</code></a>.</li>
 </ul>
 <p>В потомке <code>cow_fork()</code> ничего не делает.
 Возвращает она <code>true</code> в процессе потомка и <code>false</code> в процессе родителя.</p>

@@ -96,7 +96,7 @@ extern "C" fn lib::syscall::trap_handler_invoker(
 должна переключить `RSP` на этот адрес и выполнить инструкцию
 [`ret`](https://www.felixcloutier.com/x86/ret).
 Лежит нужный нам `RSP` в поле
-`TrapInfo::context`(../../doc/ku/process/trap_info/struct.TrapInfo.html#structfield.context)
+[`TrapInfo::context`](../../doc/ku/process/trap_info/struct.TrapInfo.html#structfield.context)
 структуры
 
 ```rust

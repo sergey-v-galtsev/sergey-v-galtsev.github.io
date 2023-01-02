@@ -146,7 +146,9 @@
                     <main>
                         <h2 id="Системные-вызовы-для-работы-с-виртуальной-памятью"><a class="header" href="#Системные-вызовы-для-работы-с-виртуальной-памятью">Системные вызовы для работы с виртуальной памятью</a></h2>
 <p>Добавим новые системные вызовы в файл <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/process/syscall.rs"><code>kernel/src/process/syscall.rs</code></a>.</p>
-<p>Эти системные вызовы будут принимать идентификатор <code>Pid</code> целевого процесса.
+<p>Эти системные вызовы будут принимать идентификатор
+<a href="../../doc/ku/process/pid/enum.Pid.html"><code>Pid</code></a>
+целевого процесса.
 То есть, они будут позволять вызывающему процессу выполнить действие над самим собой,
 задав
 <a href="../../doc/ku/process/pid/enum.Pid.html#variant.Current"><code>Pid::Current</code></a>

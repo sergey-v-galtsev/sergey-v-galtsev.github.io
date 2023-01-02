@@ -235,11 +235,83 @@
 <span id="235">235</span>
 <span id="236">236</span>
 <span id="237">237</span>
+<span id="238">238</span>
+<span id="239">239</span>
+<span id="240">240</span>
+<span id="241">241</span>
+<span id="242">242</span>
+<span id="243">243</span>
+<span id="244">244</span>
+<span id="245">245</span>
+<span id="246">246</span>
+<span id="247">247</span>
+<span id="248">248</span>
+<span id="249">249</span>
+<span id="250">250</span>
+<span id="251">251</span>
+<span id="252">252</span>
+<span id="253">253</span>
+<span id="254">254</span>
+<span id="255">255</span>
+<span id="256">256</span>
+<span id="257">257</span>
+<span id="258">258</span>
+<span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
+<span id="262">262</span>
+<span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
 </pre><pre class="rust"><code><span class="attribute">#![allow(dead_code)]
 #![allow(unused_imports)]
 #![allow(unused_variables)]
 
-#![allow(dead_code)]
+</span><span class="doccomment">//! Библиотека ядра.
+//! Позволяет подключать ядро как при обычном запуске, так и при запуске интеграционных тестов.
+
+
+</span><span class="attribute">#![allow(dead_code)]
 #![allow(unused_imports)]
 #![allow(unused_variables)]
 
@@ -262,6 +334,8 @@
 #![no_std]
 #![reexport_test_harness_main = <span class="string">&quot;test_main&quot;</span>]
 #![test_runner(<span class="kw">crate</span>::test_runner)]
+#![warn(clippy::missing_docs_in_private_items)]
+#![warn(missing_docs)]
 
 
 </span><span class="kw">extern crate </span>alloc;
@@ -270,10 +344,22 @@
 <span class="doccomment">/// Аллокаторы памяти общего назначения.
 </span><span class="kw">pub mod </span>allocator;
 
-<span class="kw">pub mod </span>error;
-<span class="kw">pub mod </span>fs;
-<span class="kw">pub mod </span>interrupts;
-<span class="kw">pub mod </span>log;
+<span class="doccomment">/// Перечисление для возможных ошибок [`Error`] и соответствующий [`Result`].
+</span><span class="kw">pub mod </span>error;
+
+<span class="doccomment">/// [Файловая система](https://en.wikipedia.org/wiki/File_system).
+</span><span class="kw">pub mod </span>fs;
+
+<span class="doccomment">/// Система обработки [прерываний](https://en.wikipedia.org/wiki/Interrupt).
+///
+/// External Interrupts in the x86 system:
+/// - [Part 1. Interrupt controller evolution](https://habr.com/en/post/446312/)
+/// - [Part 2. Linux kernel boot options](https://habr.com/en/post/501660/)
+/// - [Part 3. Interrupt routing setup in a chipset, with the example of coreboot](https://habr.com/en/post/501912/)
+</span><span class="kw">pub mod </span>interrupts;
+
+<span class="doccomment">/// Поддержка логирования макросами библиотеки [`tracing`].
+</span><span class="kw">pub mod </span>log;
 
 <span class="doccomment">/// Здесь находится часть работы с памятью, которая происходит только в ядре.
 </span><span class="kw">pub mod </span>memory;
@@ -301,46 +387,78 @@
 <span class="kw">use </span>memory::{gdt, EXCEPTION_STACKS};
 <span class="kw">use </span>text::println;
 
+<span class="comment">// Used in docs.
+</span><span class="attribute">#[allow(unused)]
+</span><span class="kw">use </span>error::Error;
 
-<span class="attribute">#[allow(dead_code)]
+
+<span class="doccomment">/// Цвет для печати сообщения об успешном завершении теста.
+</span><span class="attribute">#[allow(dead_code)]
 </span><span class="kw">const </span>PASS: text::Colour = text::Colour::LIGHT_GREEN;
 
-<span class="attribute">#[allow(dead_code)]
+<span class="doccomment">/// Цвет для печати сообщения о провале теста.
+</span><span class="attribute">#[allow(dead_code)]
 </span><span class="kw">const </span>FAIL: text::Colour = text::Colour::LIGHT_RED;
 
 
 <span class="macro">bitflags! </span>{
-    <span class="kw">pub struct </span>ExitCode: u8 {
-        <span class="kw">const </span>SUCCESS = <span class="number">1</span>;
-        <span class="kw">const </span>FAILURE = <span class="number">2</span>;
+    <span class="doccomment">/// Код выхода из qemu при запуске тестов.
+    </span><span class="kw">pub struct </span>ExitCode: u8 {
+        <span class="doccomment">/// Успешное завершение --- все тесты прошли.
+        </span><span class="kw">const </span>SUCCESS = <span class="number">1</span>;
+
+        <span class="doccomment">/// Неуспешное завершение --- есть провалившийся тест.
+        </span><span class="kw">const </span>FAILURE = <span class="number">2</span>;
     }
 }
 
 
 <span class="macro">bitflags! </span>{
-    <span class="kw">pub struct </span>Subsystems: usize {
-        <span class="kw">const </span>PHYS_MEMORY = <span class="number">1 </span>&lt;&lt; <span class="number">0</span>;
-        <span class="kw">const </span>VIRT_MEMORY = <span class="number">1 </span>&lt;&lt; <span class="number">1</span>;
-        <span class="kw">const </span>MAIN_FRAME_ALLOCATOR = <span class="number">1 </span>&lt;&lt; <span class="number">2</span>;
+    <span class="doccomment">/// Разбивка на подсистемы для возможности инициализации только части из них в тестах.
+    </span><span class="kw">pub struct </span>Subsystems: usize {
+        <span class="doccomment">/// Память: подсистема физической памяти.
+        </span><span class="kw">const </span>PHYS_MEMORY = <span class="number">1 </span>&lt;&lt; <span class="number">0</span>;
 
-        <span class="kw">const </span>MEMORY = <span class="self">Self</span>::PHYS_MEMORY.bits | <span class="self">Self</span>::VIRT_MEMORY.bits | <span class="self">Self</span>::MAIN_FRAME_ALLOCATOR.bits;
+        <span class="doccomment">/// Память: подсистема виртуальной памяти.
+        </span><span class="kw">const </span>VIRT_MEMORY = <span class="number">1 </span>&lt;&lt; <span class="number">1</span>;
 
-        <span class="kw">const </span>SYSCALL = <span class="number">1 </span>&lt;&lt; <span class="number">4</span>;
-        <span class="kw">const </span>PROCESS_TABLE = <span class="number">1 </span>&lt;&lt; <span class="number">5</span>;
-        <span class="kw">const </span>SCHEDULER = <span class="number">1 </span>&lt;&lt; <span class="number">6</span>;
+        <span class="doccomment">/// Память: основной аллокатор физической памяти.
+        </span><span class="kw">const </span>MAIN_FRAME_ALLOCATOR = <span class="number">1 </span>&lt;&lt; <span class="number">2</span>;
 
-        <span class="kw">const </span>PROCESS = <span class="self">Self</span>::SYSCALL.bits | <span class="self">Self</span>::PROCESS_TABLE.bits | <span class="self">Self</span>::SCHEDULER.bits;
+        <span class="doccomment">/// Все части подсистемы памяти.
+        </span><span class="kw">const </span>MEMORY = <span class="self">Self</span>::PHYS_MEMORY.bits | <span class="self">Self</span>::VIRT_MEMORY.bits | <span class="self">Self</span>::MAIN_FRAME_ALLOCATOR.bits;
 
-        <span class="kw">const </span>LOCAL_APIC = <span class="number">1 </span>&lt;&lt; <span class="number">7</span>;
-        <span class="kw">const </span>CPUS = <span class="number">1 </span>&lt;&lt; <span class="number">8</span>;
-        <span class="kw">const </span>BOOT_APS = <span class="number">1 </span>&lt;&lt; <span class="number">9</span>;
+        <span class="doccomment">/// Процессы: системные вызовы.
+        </span><span class="kw">const </span>SYSCALL = <span class="number">1 </span>&lt;&lt; <span class="number">4</span>;
 
-        <span class="kw">const </span>SMP = <span class="self">Self</span>::LOCAL_APIC.bits | <span class="self">Self</span>::CPUS.bits | <span class="self">Self</span>::BOOT_APS.bits;
+        <span class="doccomment">/// Процессы: таблица процессов.
+        </span><span class="kw">const </span>PROCESS_TABLE = <span class="number">1 </span>&lt;&lt; <span class="number">5</span>;
+
+        <span class="doccomment">/// Процессы: планировщик.
+        </span><span class="kw">const </span>SCHEDULER = <span class="number">1 </span>&lt;&lt; <span class="number">6</span>;
+
+        <span class="doccomment">/// Все части подсистемы процессов.
+        </span><span class="kw">const </span>PROCESS = <span class="self">Self</span>::SYSCALL.bits | <span class="self">Self</span>::PROCESS_TABLE.bits | <span class="self">Self</span>::SCHEDULER.bits;
+
+        <span class="doccomment">/// Симметричной многопроцессорности: контроллер прерываний Local APIC.
+        </span><span class="kw">const </span>LOCAL_APIC = <span class="number">1 </span>&lt;&lt; <span class="number">7</span>;
+
+        <span class="doccomment">/// Симметричной многопроцессорности: вектор структур для CPU--локальных данных.
+        </span><span class="kw">const </span>CPUS = <span class="number">1 </span>&lt;&lt; <span class="number">8</span>;
+
+        <span class="doccomment">/// Симметричной многопроцессорности: запуск Application Processors.
+        </span><span class="kw">const </span>BOOT_APS = <span class="number">1 </span>&lt;&lt; <span class="number">9</span>;
+
+        <span class="doccomment">/// Все части подсистемы симметричной многопроцессорности.
+        </span><span class="kw">const </span>SMP = <span class="self">Self</span>::LOCAL_APIC.bits | <span class="self">Self</span>::CPUS.bits | <span class="self">Self</span>::BOOT_APS.bits;
     }
 }
 
 
-<span class="attribute">#[cold]
+<span class="doccomment">/// Инициализация части подсистем ядра для тестов.
+/// Аргумент `boot_info` содержит информацию от [`bootloader`],
+/// `subsystems` задаёт набор подсистем, которые нужно инициализировать.
+</span><span class="attribute">#[cold]
 #[inline(never)]
 </span><span class="kw">pub fn </span>init_subsystems(boot_info: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>BootInfo, subsystems: Subsystems) {
     set_system_info(<span class="kw-2">&amp;</span>SYSTEM_INFO);
@@ -374,14 +492,19 @@
 }
 
 
-<span class="attribute">#[cold]
+<span class="doccomment">/// Инициализация всех подсистем ядра.
+/// Аргумент `boot_info` содержит информацию от [`bootloader`].
+</span><span class="attribute">#[cold]
 #[inline(never)]
 </span><span class="kw">pub fn </span>init(boot_info: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>BootInfo) {
     init_subsystems(boot_info, Subsystems::all());
 }
 
 
-<span class="attribute">#[cold]
+<span class="doccomment">/// Останавливает процессор инструкцией
+/// [`hlt`](https://www.felixcloutier.com/x86/hlt)
+/// при запрещённых внешних прерываниях.
+</span><span class="attribute">#[cold]
 #[inline(never)]
 </span><span class="kw">pub fn </span>halt() -&gt; ! {
     <span class="kw">loop </span>{
@@ -390,10 +513,14 @@
 }
 
 
-<span class="kw">pub fn </span>exit_qemu(exit_code: ExitCode) -&gt; ! {
+<span class="doccomment">/// Выхода из qemu при запуске тестов с кодом `exit_code`.
+/// Требует указания аргумента `-device isa-debug-exit,iobase=0xF4,iosize=0x04` при запуске qemu.
+</span><span class="kw">pub fn </span>exit_qemu(exit_code: ExitCode) -&gt; ! {
     <span class="macro">info!</span>(<span class="question-mark">?</span>exit_code, <span class="string">&quot;exit qemu&quot;</span>);
 
-    <span class="kw">const </span>EXIT_PORT: u16 = <span class="number">0xF4</span>;
+    <span class="doccomment">/// [Порт ввода--вывода](https://wiki.osdev.org/Port_IO)
+    /// для команды выхода из qemu.
+    </span><span class="kw">const </span>EXIT_PORT: u16 = <span class="number">0xF4</span>;
 
     <span class="kw">unsafe </span>{
         io::outb(EXIT_PORT, exit_code.bits);
@@ -403,7 +530,8 @@
 }
 
 
-<span class="attribute">#[alloc_error_handler]
+<span class="doccomment">/// Обработчик ошибок аллокации памяти.
+</span><span class="attribute">#[alloc_error_handler]
 #[cold]
 #[inline(never)]
 </span><span class="kw">fn </span>alloc_error_handler(layout: alloc::alloc::Layout) -&gt; ! {
@@ -411,8 +539,10 @@
 }
 
 
-<span class="kw">pub trait </span>Testable {
-    <span class="kw">fn </span>run(<span class="kw-2">&amp;</span><span class="self">self</span>);
+<span class="doccomment">/// Определяет интерфейс запуска теста.
+</span><span class="kw">pub trait </span>Testable {
+    <span class="doccomment">/// Запускает тест.
+    </span><span class="kw">fn </span>run(<span class="kw-2">&amp;</span><span class="self">self</span>);
 }
 
 
@@ -428,7 +558,8 @@
 }
 
 
-<span class="kw">pub fn </span>test_runner(tests: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="kw">dyn </span>Testable]) {
+<span class="doccomment">/// Запускает набор тестов `tests`.
+</span><span class="kw">pub fn </span>test_runner(tests: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="kw">dyn </span>Testable]) {
     <span class="macro">println!</span>(<span class="string">&quot;running {} tests&quot;</span>, tests.len());
 
     <span class="kw">for </span>test <span class="kw">in </span>tests {
@@ -439,21 +570,24 @@
 }
 
 
-<span class="kw">pub fn </span>fail_test(panic_info: <span class="kw-2">&amp;</span>PanicInfo) -&gt; ! {
+<span class="doccomment">/// Отмечает интеграционный тест как проваленный.
+</span><span class="kw">pub fn </span>fail_test(panic_info: <span class="kw-2">&amp;</span>PanicInfo) -&gt; ! {
     <span class="macro">println!</span>(colour(FAIL), <span class="string">&quot;{}\n{:-&lt;51} [failed]&quot;</span>, panic_info, <span class="string">&quot;&quot;</span>);
 
     exit_qemu(ExitCode::FAILURE)
 }
 
 
-<span class="kw">pub fn </span>pass_test() -&gt; ! {
+<span class="doccomment">/// Отмечает интеграционный тест как прошедший.
+</span><span class="kw">pub fn </span>pass_test() -&gt; ! {
     <span class="macro">println!</span>(colour(PASS), <span class="string">&quot;{:-&lt;51} [passed]&quot;</span>, <span class="string">&quot;&quot;</span>);
 
     exit_qemu(ExitCode::SUCCESS)
 }
 
 
-<span class="attribute">#[cfg(test)]
+<span class="doccomment">/// Точка входа для запуска интеграционных тестов.
+</span><span class="attribute">#[cfg(test)]
 #[no_mangle]
 </span><span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>_start() -&gt; ! {
     test_main();
@@ -461,7 +595,8 @@
 }
 
 
-<span class="attribute">#[cfg(test)]
+<span class="doccomment">/// Обработчик паники для интеграционных тестов.
+</span><span class="attribute">#[cfg(test)]
 #[cold]
 #[inline(never)]
 #[no_mangle]
@@ -471,6 +606,7 @@
 }
 
 
-<span class="kw">static </span>SYSTEM_INFO: SystemInfo = SystemInfo::new();
+<span class="doccomment">/// Страница памяти с общей информацией о системе.
+</span><span class="kw">static </span>SYSTEM_INFO: SystemInfo = SystemInfo::new();
 </code></pre></div>
 </section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="kernel" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (bc4b39c27 2022-08-29)" ></div></body></html>

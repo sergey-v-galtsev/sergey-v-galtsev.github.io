@@ -250,7 +250,104 @@
 <span id="250">250</span>
 <span id="251">251</span>
 <span id="252">252</span>
-</pre><pre class="rust"><code><span class="kw">use </span>core::{
+<span id="253">253</span>
+<span id="254">254</span>
+<span id="255">255</span>
+<span id="256">256</span>
+<span id="257">257</span>
+<span id="258">258</span>
+<span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
+<span id="262">262</span>
+<span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
+<span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
+<span id="334">334</span>
+<span id="335">335</span>
+<span id="336">336</span>
+<span id="337">337</span>
+<span id="338">338</span>
+<span id="339">339</span>
+<span id="340">340</span>
+<span id="341">341</span>
+<span id="342">342</span>
+<span id="343">343</span>
+<span id="344">344</span>
+<span id="345">345</span>
+<span id="346">346</span>
+</pre><pre class="rust"><code><span class="attribute">#![allow(rustdoc::private_intra_doc_links)]
+
+
+</span><span class="kw">use </span>core::{
     marker::PhantomData,
     mem,
     result,
@@ -262,26 +359,43 @@
 <span class="kw">use </span><span class="kw">crate</span>::memory::{Block, Page, Virt};
 
 
-<span class="kw">type </span>RingBufferRaw = [u8; RingBuffer::MAPPED_SIZE];
+<span class="doccomment">/// Сырая память для
+/// [непрерывного циклического буфера](https://fgiesen.wordpress.com/2012/07/21/the-magic-ring-buffer/).
+</span><span class="kw">type </span>RingBufferRaw = [u8; RingBuffer::MAPPED_SIZE];
 
-<span class="attribute">#[repr(C, align(<span class="number">4096</span>))]
+<span class="doccomment">/// Сырая память для
+/// [непрерывного циклического буфера](https://fgiesen.wordpress.com/2012/07/21/the-magic-ring-buffer/),
+/// выравненная на границу страницы.
+</span><span class="attribute">#[repr(C, align(<span class="number">4096</span>))]
 </span><span class="kw">pub struct </span>RingBufferMemory([u8; RingBuffer::MAPPED_SIZE]);
 
 <span class="macro">const_assert!</span>(mem::align_of::&lt;RingBufferMemory&gt;() == Page::SIZE);
 <span class="macro">const_assert!</span>(mem::size_of::&lt;RingBufferMemory&gt;() % Page::SIZE == <span class="number">0</span>);
 
 
-<span class="doccomment">/// Continuous Ring Buffer
+<span class="doccomment">/// [Непрерывный циклический буфер](https://fgiesen.wordpress.com/2012/07/21/the-magic-ring-buffer/).
 </span><span class="kw">pub struct </span>RingBuffer {
-    buf: Virt,
-    head: AtomicUsize,
-    tail: AtomicUsize,
-    stats: [RingBufferStats; <span class="number">2</span>],
+    <span class="doccomment">/// Виртуальный адрес начала блока памяти с данными, которые хранятся в буфере.
+    </span>buf: Virt,
+
+    <span class="doccomment">/// Количество байт, прочитанных из буфера за всё время.
+    /// То есть, эта величина потенциально больше размера буфера.
+    /// Вариант хранить в [`RingBuffer`] значения по модулю размера буфера, чреват ошибками.
+    </span>head: AtomicUsize,
+
+    <span class="doccomment">/// Количество байт, записанных в буфер за всё время.
+    /// То есть, эта величина потенциально больше размера буфера.
+    /// Вариант хранить в [`RingBuffer`] значения по модулю размера буфера, чреват ошибками.
+    </span>tail: AtomicUsize,
+
+    <span class="doccomment">/// Статистики чтения и записи в буфер.
+    </span>stats: [RingBufferStats; <span class="number">2</span>],
 }
 
 
 <span class="kw">impl </span>RingBuffer {
-    <span class="kw">pub fn </span>new(buf: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span><span class="kw-2">mut </span>RingBufferMemory) -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Создаёт [`RingBuffer`] поверх уже отображённой памяти `buf`.
+    </span><span class="kw">pub fn </span>new(buf: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span><span class="kw-2">mut </span>RingBufferMemory) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>buf = <span class="kw-2">&amp;mut </span>buf.<span class="number">0</span>;
 
         <span class="self">Self</span>::check_continuous_mapping(buf);
@@ -295,7 +409,8 @@
     }
 
 
-    <span class="kw">pub fn </span>zero() -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Создаёт недействительный [`RingBuffer`].
+    </span><span class="kw">pub fn </span>zero() -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             buf: Virt::default(),
             head: AtomicUsize::new(<span class="number">0</span>),
@@ -305,7 +420,8 @@
     }
 
 
-    <span class="kw">pub fn </span>block(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Block&lt;Virt&gt; {
+    <span class="doccomment">/// Возвращает блок виртуальной памяти, в которую отображён буфер.
+    </span><span class="kw">pub fn </span>block(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Block&lt;Virt&gt; {
         <span class="kw">if </span><span class="self">self</span>.buf == Virt::default() {
             Block::default()
         } <span class="kw">else </span>{
@@ -314,27 +430,32 @@
     }
 
 
-    <span class="kw">pub fn </span>read_tx(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; RingBufferTx&lt;<span class="lifetime">&#39;_</span>, ReadTag&gt; {
+    <span class="doccomment">/// Создаёт читающую транзакцию.
+    </span><span class="kw">pub fn </span>read_tx(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; RingBufferTx&lt;<span class="lifetime">&#39;_</span>, ReadTag&gt; {
         <span class="self">self</span>.tx()
     }
 
 
-    <span class="kw">pub fn </span>write_tx(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; RingBufferTx&lt;<span class="lifetime">&#39;_</span>, WriteTag&gt; {
+    <span class="doccomment">/// Создаёт пишущую транзакцию.
+    </span><span class="kw">pub fn </span>write_tx(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; RingBufferTx&lt;<span class="lifetime">&#39;_</span>, WriteTag&gt; {
         <span class="self">self</span>.tx()
     }
 
 
-    <span class="kw">pub fn </span>read_stats(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>RingBufferStats {
+    <span class="doccomment">/// Возвращает статистики читающих транзакций.
+    </span><span class="kw">pub fn </span>read_stats(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>RingBufferStats {
         <span class="kw-2">&amp;</span><span class="self">self</span>.stats[ReadTag::STATS_INDEX]
     }
 
 
-    <span class="kw">pub fn </span>write_stats(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>RingBufferStats {
+    <span class="doccomment">/// Возвращает статистики пишущих транзакций.
+    </span><span class="kw">pub fn </span>write_stats(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>RingBufferStats {
         <span class="kw-2">&amp;</span><span class="self">self</span>.stats[WriteTag::STATS_INDEX]
     }
 
 
-    <span class="kw">fn </span>buf(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>RingBufferRaw {
+    <span class="doccomment">/// Возвращает ссылку на буфер с данными.
+    </span><span class="kw">fn </span>buf(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>RingBufferRaw {
         <span class="kw">if </span><span class="self">self</span>.buf == Virt::default() {
             <span class="macro">panic!</span>(<span class="string">&quot;the RingBuffer is not properly initialized&quot;</span>);
         } <span class="kw">else </span>{
@@ -343,7 +464,8 @@
     }
 
 
-    <span class="kw">fn </span>tx&lt;T: Tag&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; RingBufferTx&lt;<span class="lifetime">&#39;_</span>, T&gt; {
+    <span class="doccomment">/// Создаёт читающую или пишущую транзакцию.
+    </span><span class="kw">fn </span>tx&lt;T: Tag&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; RingBufferTx&lt;<span class="lifetime">&#39;_</span>, T&gt; {
         <span class="kw">let </span>(head, tail) = <span class="self">self</span>.head_tail();
 
         <span class="self">self</span>.stats[T::STATS_INDEX].txs.fetch_add(<span class="number">1</span>, Ordering::Relaxed);
@@ -358,7 +480,9 @@
     }
 
 
-    <span class="kw">fn </span>head_tail(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (usize, usize) {
+    <span class="doccomment">/// Возвращает пару из количество байт,
+    /// прочитанных из буфера и записанных в буфер за всё время.
+    </span><span class="kw">fn </span>head_tail(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (usize, usize) {
         <span class="kw">let </span>head = <span class="self">self</span>.head.load(Ordering::Acquire);
         <span class="kw">let </span>tail = <span class="self">self</span>.tail.load(Ordering::Acquire);
 
@@ -366,7 +490,9 @@
     }
 
 
-    <span class="kw">fn </span>check_continuous_mapping(buf: <span class="kw-2">&amp;mut </span>RingBufferRaw) {
+    <span class="doccomment">/// Проверяет, что `buf` отображён в виртуальную память
+    /// [непрерывно](https://fgiesen.wordpress.com/2012/07/21/the-magic-ring-buffer/).
+    </span><span class="kw">fn </span>check_continuous_mapping(buf: <span class="kw-2">&amp;mut </span>RingBufferRaw) {
         <span class="kw">let </span>read_ptr = <span class="kw-2">&amp;</span>buf[<span class="number">0</span>] <span class="kw">as </span><span class="kw-2">*const </span>u8;
         <span class="kw">let </span>write_ptr = <span class="kw-2">&amp;mut </span>buf[<span class="self">Self</span>::REAL_SIZE] <span class="kw">as </span><span class="kw-2">*mut </span>u8;
 
@@ -383,28 +509,49 @@
     }
 
 
-    <span class="kw">pub const </span>MAPPED_SIZE: usize = <span class="number">2 </span>* <span class="self">Self</span>::REAL_SIZE;
-    <span class="kw">pub const </span>REAL_SIZE: usize = <span class="number">4 </span>* Page::SIZE;
+    <span class="doccomment">/// Размер отображённой виртуальной памяти.
+    </span><span class="kw">pub const </span>MAPPED_SIZE: usize = <span class="number">2 </span>* <span class="self">Self</span>::REAL_SIZE;
+
+    <span class="doccomment">/// Ёмкость циклического буфера.
+    </span><span class="kw">pub const </span>REAL_SIZE: usize = <span class="number">4 </span>* Page::SIZE;
 }
 
 
-<span class="kw">pub struct </span>RingBufferTx&lt;<span class="lifetime">&#39;a</span>, T: Tag&gt; {
-    ring_buffer: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>RingBuffer,
-    head: usize,
-    tail: usize,
-    bytes: usize,
-    _tag: PhantomData&lt;T&gt;,
+<span class="doccomment">/// Читающая или пишущая транзакция.
+</span><span class="kw">pub struct </span>RingBufferTx&lt;<span class="lifetime">&#39;a</span>, T: Tag&gt; {
+    <span class="doccomment">/// Ссылка на исходный [`RingBuffer`].
+    </span>ring_buffer: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>RingBuffer,
+
+    <span class="doccomment">/// Актуальное в рамках транзакции значение количества байт,
+    /// прочитанных из буфера за всё время.
+    /// В момент старта транзакции инициализируется из поля [`RingBuffer::head`].
+    </span>head: usize,
+
+    <span class="doccomment">/// Актуальное в рамках транзакции значение количества байт,
+    /// записанных в буфер за всё время.
+    /// В момент старта транзакции инициализируется из поля [`RingBuffer::tail`].
+    </span>tail: usize,
+
+    <span class="doccomment">/// Количество байт, прочитанных или записанных на текущий момент в данной транзакции.
+    </span>bytes: usize,
+
+    <span class="doccomment">/// Тег, отличающий пишущие транзакции от читающих.
+    </span>_tag: PhantomData&lt;T&gt;,
 }
 
 
 <span class="kw">impl </span>RingBufferTx&lt;<span class="lifetime">&#39;_</span>, ReadTag&gt; {
-    <span class="kw">pub fn </span>read(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[u8] {
+    <span class="doccomment">/// Возвращает в виде среза все доступные на момент запуска читающей транзакции байты из буфера.
+    /// Обновляет поля только самой транзакции [`RingBufferTx`].
+    </span><span class="kw">pub fn </span>read(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[u8] {
         <span class="comment">// TODO: your code here.
         </span><span class="macro">unimplemented!</span>();
     }
 
 
-    <span class="kw">pub fn </span>commit(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+    <span class="doccomment">/// Коммитит читающую транзакцию, записывая обновлённое значение [`RingBuffer::head`] и
+    /// статистику [`RingBuffer::read_stats()`] в поля [`RingBuffer`].
+    </span><span class="kw">pub fn </span>commit(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
         <span class="comment">// TODO: your code here.
         </span><span class="macro">unimplemented!</span>();
     }
@@ -412,42 +559,58 @@
 
 
 <span class="kw">impl </span>RingBufferTx&lt;<span class="lifetime">&#39;_</span>, WriteTag&gt; {
-    <span class="kw">pub fn </span>write(<span class="kw-2">&amp;mut </span><span class="self">self</span>, data: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="doccomment">/// Копирует в буфер байты среза `data`.
+    /// Обновляет поля самой транзакции [`RingBufferTx`] и статистики [`RingBuffer::write_stats()`],
+    /// но не трогает поля [`RingBuffer::head`] и [`RingBuffer::tail`].
+    /// Если в буфере не остаётся места под `data`, возвращает ошибку [`Error::Overflow`].
+    </span><span class="kw">pub fn </span>write(<span class="kw-2">&amp;mut </span><span class="self">self</span>, data: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="comment">// TODO: your code here.
         </span><span class="macro">unimplemented!</span>();
     }
 
 
-    <span class="kw">pub fn </span>commit(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+    <span class="doccomment">/// Коммитит пишущую транзакцию, обновляя значение [`RingBuffer::tail`] и
+    /// статистику [`RingBuffer::write_stats()`] в полях [`RingBuffer`].
+    </span><span class="kw">pub fn </span>commit(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
         <span class="comment">// TODO: your code here.
         </span><span class="macro">unimplemented!</span>();
     }
 
 
-    <span class="kw">pub fn </span>capacity(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+    <span class="doccomment">/// Ёмкость, оставшаяся в буфере транзакции на текущий момент.
+    </span><span class="kw">pub fn </span>capacity(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
         RingBuffer::REAL_SIZE - (<span class="self">self</span>.tail - <span class="self">self</span>.head)
     }
 }
 
 
 <span class="kw">impl</span>&lt;T: Tag&gt; Drop <span class="kw">for </span>RingBufferTx&lt;<span class="lifetime">&#39;_</span>, T&gt; {
-    <span class="kw">fn </span>drop(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+    <span class="doccomment">/// Обрывает читающую или пишущую транзакцию.
+    /// Обновляет соответствующие статистики [`RingBuffer::stats`],
+    /// если в транзакции был прочитан или записан хотя бы один байт.
+    </span><span class="kw">fn </span>drop(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
         <span class="comment">// TODO: your code here.
         </span><span class="macro">unimplemented!</span>();
     }
 }
 
 
-<span class="kw">pub trait </span>Tag {
-    <span class="kw">const </span>STATS_INDEX: usize;
+<span class="doccomment">/// Тег, отличающий пишущие транзакции от читающих.
+</span><span class="kw">pub trait </span>Tag {
+    <span class="doccomment">/// Индекс соответствующих статистик в массиве [`RingBuffer::stats`].
+    </span><span class="kw">const </span>STATS_INDEX: usize;
 }
 
 
-<span class="kw">pub type </span>RingBufferReadTx&lt;<span class="lifetime">&#39;a</span>&gt; = RingBufferTx&lt;<span class="lifetime">&#39;a</span>, ReadTag&gt;;
-<span class="kw">pub type </span>RingBufferWriteTx&lt;<span class="lifetime">&#39;a</span>&gt; = RingBufferTx&lt;<span class="lifetime">&#39;a</span>, WriteTag&gt;;
+<span class="doccomment">/// Читающая транзакция.
+</span><span class="kw">pub type </span>RingBufferReadTx&lt;<span class="lifetime">&#39;a</span>&gt; = RingBufferTx&lt;<span class="lifetime">&#39;a</span>, ReadTag&gt;;
+
+<span class="doccomment">/// Пишущая транзакция.
+</span><span class="kw">pub type </span>RingBufferWriteTx&lt;<span class="lifetime">&#39;a</span>&gt; = RingBufferTx&lt;<span class="lifetime">&#39;a</span>, WriteTag&gt;;
 
 
-<span class="kw">pub struct </span>ReadTag;
+<span class="doccomment">/// Тег читающих транзакций.
+</span><span class="kw">pub struct </span>ReadTag;
 
 
 <span class="kw">impl </span>Tag <span class="kw">for </span>ReadTag {
@@ -455,7 +618,8 @@
 }
 
 
-<span class="kw">pub struct </span>WriteTag;
+<span class="doccomment">/// Тег пишущих транзакций.
+</span><span class="kw">pub struct </span>WriteTag;
 
 
 <span class="kw">impl </span>Tag <span class="kw">for </span>WriteTag {
@@ -466,19 +630,32 @@
 <span class="macro">const_assert!</span>(ReadTag::STATS_INDEX != WriteTag::STATS_INDEX);
 
 
-<span class="attribute">#[derive(Debug)]
+<span class="doccomment">/// Статистики чтения или записи в буфер.
+</span><span class="attribute">#[derive(Debug)]
 </span><span class="kw">pub struct </span>RingBufferStats {
-    commited: AtomicUsize,
-    commits: AtomicUsize,
-    dropped: AtomicUsize,
-    drops: AtomicUsize,
-    errors: AtomicUsize,
-    txs: AtomicUsize,
+    <span class="doccomment">/// Количество байт, прочитанных или записанных в закоммиченных транзакциях.
+    </span>commited: AtomicUsize,
+
+    <span class="doccomment">/// Количество закоммиченных транзакций соответствующего типа.
+    </span>commits: AtomicUsize,
+
+    <span class="doccomment">/// Количество байт, прочитанных или записанных в оборванных транзакциях.
+    </span>dropped: AtomicUsize,
+
+    <span class="doccomment">/// Количество оборванных (dropped, rolled back, aborted) транзакций соответствующего типа.
+    </span>drops: AtomicUsize,
+
+    <span class="doccomment">/// Количество ошибок в транзакциях.
+    </span>errors: AtomicUsize,
+
+    <span class="doccomment">/// Количество транзакций чтения либо записи соответственно.
+    </span>txs: AtomicUsize,
 }
 
 
 <span class="kw">impl </span>RingBufferStats {
-    <span class="kw">fn </span>new() -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Создаёт статистики чтения или записи в буфер.
+    </span><span class="kw">fn </span>new() -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             commited: AtomicUsize::new(<span class="number">0</span>),
             commits: AtomicUsize::new(<span class="number">0</span>),
@@ -491,16 +668,27 @@
 }
 
 
-<span class="attribute">#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+<span class="doccomment">/// Ошибки, которые могут возникать при работе с [`RingBuffer`].
+</span><span class="attribute">#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 </span><span class="kw">pub enum </span>Error {
-    Overflow {
-        capacity: usize,
-        len: usize,
-        exceeding_object_len: usize,
+    <span class="doccomment">/// Буфер транзакции переполнен.
+    </span>Overflow {
+        <span class="doccomment">/// Остававшееся в буфере место на момент старта транзакции.
+        /// То есть, полная доступная для транзакции ёмкость.
+        </span>capacity: usize,
+
+        <span class="doccomment">/// Уже записанный ранее в рамках транзакции объём.
+        </span>len: usize,
+
+        <span class="doccomment">/// Размер объекта, при записи которого буфер транзакции переполнился.
+        /// Должно выполняться неравенство `exceeding_object_len &gt; capacity - len`.
+        </span>exceeding_object_len: usize,
     },
 }
 
 
-<span class="kw">pub type </span><span class="prelude-ty">Result</span>&lt;T&gt; = result::Result&lt;T, Error&gt;;
+<span class="doccomment">/// Тип возвращаемого результата `T` или ошибки [`Error`] ---
+/// мономорфизация [`result::Result`] по типу ошибки.
+</span><span class="kw">pub type </span><span class="prelude-ty">Result</span>&lt;T&gt; = result::Result&lt;T, Error&gt;;
 </code></pre></div>
 </section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="ku" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (bc4b39c27 2022-08-29)" ></div></body></html>

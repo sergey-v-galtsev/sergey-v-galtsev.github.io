@@ -189,7 +189,11 @@
 Другой вариант — скопировать данные из буфера в собственную, не разделяемую, память.
 А валидировать и использовать их уже там.</p>
 <h3 id="Структура-циклического-буфера"><a class="header" href="#Структура-циклического-буфера">Структура циклического буфера</a></h3>
-<p>В файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/ku/src/ring_buffer.rs"><code>ku/src/ring_buffer.rs</code></a> определён <a href="https://en.wikipedia.org/wiki/Circular_buffer">циклический буфер</a></p>
+<p>В файле
+<a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/ku/src/ring_buffer.rs"><code>ku/src/ring_buffer.rs</code></a>
+определён
+<a href="https://en.wikipedia.org/wiki/Circular_buffer">циклический буфер</a>
+<a href="../../doc/ku/ring_buffer/struct.RingBuffer.html"><code>RingBuffer</code></a>.</p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>pub struct RingBuffer {
@@ -200,14 +204,17 @@
 }
 <span class="boring">}
 </span></code></pre></pre>
-<p>ёмкости <code>RingBuffer::REAL_SIZE</code>.
+<p>ёмкости
+<a href="../../doc/ku/ring_buffer/struct.RingBuffer.html#associatedconstant.REAL_SIZE"><code>RingBuffer::REAL_SIZE</code></a>.
 Его поля:</p>
 <ul>
-<li><code>RingBuffer::buf</code> — виртуальный адрес начала блока памяти с данными, которые хранятся в буфере.</li>
-<li><code>RingBuffer::head</code> — количество байт, прочитанных из буфера за всю время. То есть, эта величина потенциально больше размера буфера. Вариант хранить в <code>RingBuffer</code> это значение по модулю размера буфера, чреват ошибками.</li>
-<li><code>RingBuffer::tail</code> — количество байт, записанных в буфер за всю время.</li>
+<li><a href="../../doc/ku/ring_buffer/struct.RingBuffer.html#structfield.buf"><code>RingBuffer::buf</code></a> — виртуальный адрес начала блока памяти с данными, которые хранятся в буфере.</li>
+<li><a href="../../doc/ku/ring_buffer/struct.RingBuffer.html#structfield.head"><code>RingBuffer::head</code></a> — количество байт, прочитанных из буфера за всё время. То есть, эта величина потенциально больше размера буфера. Вариант хранить в <code>RingBuffer</code> это значение по модулю размера буфера, чреват ошибками.</li>
+<li><a href="../../doc/ku/ring_buffer/struct.RingBuffer.html#structfield.tail"><code>RingBuffer::tail</code></a> — количество байт, записанных в буфер за всё время.</li>
 </ul>
-<p>Поле <code>RingBuffer::stats</code> поддерживает статистики чтения и записи в буфер:</p>
+<p>Поле
+<a href="../../doc/ku/ring_buffer/struct.RingBuffer.html#structfield.stats"><code>RingBuffer::stats</code></a>
+поддерживает статистики чтения и записи в буфер:</p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>pub struct RingBufferStats {
@@ -221,19 +228,23 @@
 <span class="boring">}
 </span></code></pre></pre>
 <ul>
-<li><code>RingBufferStats::txs</code> — количество транзакций чтения либо записи соответственно.</li>
-<li><code>RingBufferStats::commits</code> — количество закоммиченных транзакций соответствующего типа.</li>
-<li><code>RingBufferStats::drops</code> — количество оборванных (dropped, rolled back, aborted) транзакций соответствующего типа.</li>
-<li><code>RingBufferStats::commited</code> — количество байт, прочитанных или записанных в закоммиченных транзакциях.</li>
-<li><code>RingBufferStats::dropped</code> — количество байт, прочитанных или записанных в оборванных транзакциях.</li>
-<li><code>RingBufferStats::errors</code> — количество ошибок в транзакциях.</li>
+<li><a href="../../doc/ku/ring_buffer/struct.RingBufferStats.html#structfield.txs"><code>RingBufferStats::txs</code></a> — количество транзакций чтения либо записи соответственно.</li>
+<li><a href="../../doc/ku/ring_buffer/struct.RingBufferStats.html#structfield.commits"><code>RingBufferStats::commits</code></a> — количество закоммиченных транзакций соответствующего типа.</li>
+<li><a href="../../doc/ku/ring_buffer/struct.RingBufferStats.html#structfield.drops"><code>RingBufferStats::drops</code></a> — количество оборванных (dropped, rolled back, aborted) транзакций соответствующего типа.</li>
+<li><a href="../../doc/ku/ring_buffer/struct.RingBufferStats.html#structfield.commited"><code>RingBufferStats::commited</code></a> — количество байт, прочитанных или записанных в закоммиченных транзакциях.</li>
+<li><a href="../../doc/ku/ring_buffer/struct.RingBufferStats.html#structfield.dropped"><code>RingBufferStats::dropped</code></a> — количество байт, прочитанных или записанных в оборванных транзакциях.</li>
+<li><a href="../../doc/ku/ring_buffer/struct.RingBufferStats.html#structfield.errors"><code>RingBufferStats::errors</code></a> — количество ошибок в транзакциях.</li>
 </ul>
-<p>Методы <code>RingBuffer</code> создают транзакции:</p>
+<p>Методы
+<a href="../../doc/ku/ring_buffer/struct.RingBuffer.html"><code>RingBuffer</code></a>
+создают транзакции:</p>
 <ul>
-<li><code>RingBuffer::read_tx()</code> — читающую;</li>
-<li><code>RingBuffer::write_tx()</code> — пишущую.</li>
+<li><a href="../../doc/ku/ring_buffer/struct.RingBuffer.html#method.read_tx"><code>RingBuffer::read_tx()</code></a> — читающую;</li>
+<li><a href="../../doc/ku/ring_buffer/struct.RingBuffer.html#method.write_tx"><code>RingBuffer::write_tx()</code></a> — пишущую.</li>
 </ul>
-<p>Транзакции устроены так:</p>
+<p>Транзакции
+<a href="../../doc/ku/ring_buffer/struct.RingBufferTx.html"><code>RingBufferTx</code></a>
+устроены так:</p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>pub struct RingBufferTx&lt;'a, T: Tag&gt; {
@@ -247,37 +258,51 @@
 </span></code></pre></pre>
 <p>Они хранят:</p>
 <ul>
-<li>Ссылку <code>RingBufferTx::ring_buffer</code> на исходный <code>RingBuffer</code>.</li>
-<li><code>RingBufferTx::head</code> и <code>RingBufferTx::tail</code> — актуальные в рамках транзакции значения, в момент старта транзакции инициализирующиеся из полей <code>RingBuffer::head</code>.</li>
-<li><code>RingBufferTx::bytes</code> — количество байт, прочитанных или записанных на текущий момент в данной транзакции.</li>
-<li>Тег <code>RingBufferTx::_tag</code>, отличающий пишущие транзакции от читающих.</li>
+<li>Ссылку <a href="../../doc/ku/ring_buffer/struct.RingBufferTx.html#structfield.ring_buffer"><code>RingBufferTx::ring_buffer</code></a> на исходный <a href="../../doc/ku/ring_buffer/struct.RingBuffer.html"><code>RingBuffer</code></a>.</li>
+<li><a href="../../doc/ku/ring_buffer/struct.RingBufferTx.html#structfield.head"><code>RingBufferTx::head</code></a> и <a href="../../doc/ku/ring_buffer/struct.RingBufferTx.html#structfield.tail"><code>RingBufferTx::tail</code></a> — актуальные в рамках транзакции значения, в момент старта транзакции инициализирующиеся из полей <a href="../../doc/ku/ring_buffer/struct.RingBuffer.html#structfield.head"><code>RingBuffer::head</code></a> и <a href="../../doc/ku/ring_buffer/struct.RingBuffer.html#structfield.tail"><code>RingBuffer::tail</code></a>.</li>
+<li><a href="../../doc/ku/ring_buffer/struct.RingBufferTx.html#structfield.bytes"><code>RingBufferTx::bytes</code></a> — количество байт, прочитанных или записанных на текущий момент в данной транзакции.</li>
+<li>Тег <a href="../../doc/ku/ring_buffer/struct.RingBufferTx.html#structfield._tag"><code>RingBufferTx::_tag</code></a>, отличающий пишущие транзакции от читающих.</li>
 </ul>
 <h3 id="Задача-1--реализация-циклического-буфера"><a class="header" href="#Задача-1--реализация-циклического-буфера">Задача 1 — реализация циклического буфера</a></h3>
 <h4 id="Читающая-транзакция"><a class="header" href="#Читающая-транзакция">Читающая транзакция</a></h4>
-<p>Реализуйте метод</p>
+<p>Реализуйте <a href="../../doc/ku/ring_buffer/struct.RingBufferTx.html#method.read">метод</a></p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>fn RingBufferTx&lt;'_, ReadTag&gt;::read(&amp;mut self) -&gt; &amp;[u8]
 <span class="boring">}
 </span></code></pre></pre>
-<p>который возвращает в виде среза все доступные на момент запуска читающей транзакции байты из буфера, обновляя поля только самой транзакции <code>RingBufferTx</code>.</p>
-<p>И метод</p>
+<p>который возвращает в виде среза все доступные на момент запуска читающей транзакции байты из буфера,
+обновляя поля только самой транзакции
+<a href="../../doc/ku/ring_buffer/struct.RingBufferTx.html"><code>RingBufferTx</code></a>.</p>
+<p>И <a href="../../doc/ku/ring_buffer/struct.RingBufferTx.html#method.commit">метод</a></p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>fn RingBufferTx&lt;'_, ReadTag&gt;::commit(&amp;mut self)
 <span class="boring">}
 </span></code></pre></pre>
 <p>который коммитит читающую транзакцию, записывая обновлённое значение
-<code>RingBuffer::head</code> и статистику <code>RingBuffer::read_stats()</code> в поля <code>RingBuffer</code>.</p>
+<a href="../../doc/ku/ring_buffer/struct.RingBuffer.html#structfield.head"><code>RingBuffer::head</code></a>
+и статистику
+<a href="../../doc/ku/ring_buffer/struct.RingBuffer.html#method.read_stats"><code>RingBuffer::read_stats()</code></a>
+в поля
+<a href="../../doc/ku/ring_buffer/struct.RingBuffer.html"><code>RingBuffer</code></a>.</p>
 <h4 id="Пишущая-транзакция"><a class="header" href="#Пишущая-транзакция">Пишущая транзакция</a></h4>
-<p>Реализуйте метод</p>
+<p>Реализуйте <a href="../../doc/ku/ring_buffer/struct.RingBufferTx.html#method.write">метод</a></p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>fn RingBufferTx&lt;'_, WriteTag&gt;::write(&amp;mut self, data: &amp;[u8]) -&gt; Result&lt;()&gt;
 <span class="boring">}
 </span></code></pre></pre>
-<p>которая копирует в буфер байты среза <code>data</code>, обновляя поля самой транзакции <code>RingBufferTx</code> и статистики <code>RingBuffer::write_stats()</code>, но не трогает поля <code>RingBuffer::head</code> и <code>RingBuffer::tail</code>.
-Если в буфере не остаётся места под <code>data</code> верните ошибку</p>
+<p>которая копирует в буфер байты среза <code>data</code>, обновляя поля самой транзакции
+<a href="../../doc/ku/ring_buffer/struct.RingBufferTx.html"><code>RingBufferTx</code></a>
+и статистики
+<a href="../../doc/ku/ring_buffer/struct.RingBuffer.html#method.write_stats"><code>RingBuffer::write_stats()</code></a>,
+но не трогая поля
+<a href="../../doc/ku/ring_buffer/struct.RingBufferTx.html#structfield.head"><code>RingBuffer::head</code></a>
+и
+<a href="../../doc/ku/ring_buffer/struct.RingBufferTx.html#structfield.tail"><code>RingBuffer::tail</code></a>.
+Если в буфере не остаётся места под <code>data</code>, верните ошибку
+<a href="../../doc/ku/ring_buffer/enum.Error.html#variant.Overflow"><code>Error::Overflow</code></a>:</p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>pub enum Error {
@@ -291,23 +316,30 @@
 </span></code></pre></pre>
 <p>С информацией</p>
 <ul>
-<li>Об остававшемся месте в буфере на момент старта транзакции. То есть, полной доступной для транзакции ёмкости, — <code>Error::Overflow::capacity</code>.</li>
-<li>Об уже записанном ранее в рамках той же транзакции объёме — <code>Error::Overflow::len</code>.</li>
-<li>О размере объекта, который не влез — <code>Error::Overflow::exceeding_object_len</code>.</li>
+<li>Об остававшемся в буфере месте на момент старта транзакции. То есть, полной доступной для транзакции ёмкости, — <a href="../../doc/ku/ring_buffer/enum.Error.html#variant.Overflow.field.capacity"><code>Error::Overflow::capacity</code></a>.</li>
+<li>Об уже записанном ранее в рамках той же транзакции объёме — <a href="../../doc/ku/ring_buffer/enum.Error.html#variant.Overflow.field.len"><code>Error::Overflow::len</code></a>.</li>
+<li>О размере объекта, который не влез — <a href="../../doc/ku/ring_buffer/enum.Error.html#variant.Overflow.field.exceeding_object_len"><code>Error::Overflow::exceeding_object_len</code></a>.</li>
 </ul>
 <p>Вам может пригодиться метод
 <a href="https://doc.rust-lang.org/nightly/core/primitive.slice.html#method.copy_from_slice"><code>copy_from_slice()</code></a>
 срезов.</p>
-<p>Реализуйте метод</p>
+<p>Реализуйте <a href="../../doc/ku/ring_buffer/struct.RingBufferTx.html#method.commit-1">метод</a></p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>fn RingBufferTx&lt;'_, WriteTag&gt;::commit(&amp;mut self)
 <span class="boring">}
 </span></code></pre></pre>
 <p>который коммитит пишущую транзакцию, обновляя значение
-<code>RingBuffer::tail</code> и статистику <code>RingBuffer::write_stats()</code> в полях <code>RingBuffer</code>.</p>
+<a href="../../doc/ku/ring_buffer/struct.RingBufferTx.html#structfield.tail"><code>RingBuffer::tail</code></a>
+и статистику
+<a href="../../doc/ku/ring_buffer/struct.RingBuffer.html#method.write_stats"><code>RingBuffer::write_stats()</code></a>
+в полях
+<a href="../../doc/ku/ring_buffer/struct.RingBuffer.html"><code>RingBuffer</code></a>.</p>
 <h4 id="Сброс-транзакции"><a class="header" href="#Сброс-транзакции">Сброс транзакции</a></h4>
-<p>Реализуйте типаж <a href="https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html"><code>core::ops::Drop</code></a> для транзакций обоих типов — метод</p>
+<p>Реализуйте типаж
+<a href="https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html"><code>core::ops::Drop</code></a>
+для транзакций обоих типов —
+<a href="../../doc/ku/ring_buffer/struct.RingBufferTx.html#method.drop">метод</a></p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>fn RingBufferTx::drop(&amp;mut self)
@@ -316,17 +348,19 @@
 <p>который обновляет соответствующие статистики <code>RingBufferTx::ring_buffer.stats[T::STATS_INDEX]</code>,
 если в транзакции был прочитан или записан хотя бы один байт.</p>
 <h4 id="Отображение-буфера-в-память-процесса"><a class="header" href="#Отображение-буфера-в-память-процесса">Отображение буфера в память процесса</a></h4>
-<p>Реализуйте функцию</p>
+<p>Реализуйте <a href="../../doc/kernel/process/fn.map_log.html">функцию</a></p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span>fn map_log(address_space: &amp;mut AddressSpace) -&gt; Result&lt;RingBuffer&gt;
+</span>fn kernel::process::map_log(address_space: &amp;mut AddressSpace) -&gt; Result&lt;RingBuffer&gt;
 <span class="boring">}
 </span></code></pre></pre>
 <p>в файле <a href="https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/kernel/src/process/mod.rs"><code>kernel/src/process/mod.rs</code></a>.
 Она должна реализовать двойное отображение памяти буфера в адресное пространство <code>address_space</code> процесса.
 То есть, она должна выделить
-<code>RingBuffer::REAL_SIZE</code> байт в физической памяти и
-<code>RingBuffer::MAPPED_SIZE</code> — в виртуальной.
+<a href="../../doc/ku/ring_buffer/struct.RingBuffer.html#associatedconstant.REAL_SIZE"><code>RingBuffer::REAL_SIZE</code></a>
+байт в физической памяти и
+<a href="../../doc/ku/ring_buffer/struct.RingBuffer.html#associatedconstant.MAPPED_SIZE"><code>RingBuffer::MAPPED_SIZE</code></a> —
+в виртуальной.
 И построить отображение выделенных физических фреймов дважды подряд в пространство <code>address_space</code>.</p>
 <h4 id="Сброс-буфера"><a class="header" href="#Сброс-буфера">Сброс буфера</a></h4>
 <p>За сброс буфера с сообщениями процесса пользователя в общий лог отвечает ядро.
@@ -338,7 +372,9 @@
 <li>Из диспетчера системных вызовов <a href="../../doc/kernel/process/syscall/fn.syscall.html"><code>kernel::process::syscall::syscall()</code></a>. Это вам придётся добавить самостоятельно. Чтобы не поменялся логический порядок записей, относящихся к одному процессу, сделайте сброс до того как ядро залогирует какое-либо своё сообщение при обработке системного вызова.</li>
 </ul>
 <h4 id="Структурированное-логирование-в-пространстве-пользователя"><a class="header" href="#Структурированное-логирование-в-пространстве-пользователя">Структурированное логирование в пространстве пользователя</a></h4>
-<p>После того как вы реализуете <code>RingBuffer</code> наконец-то в пространстве пользователя заработает
+<p>После того как вы реализуете
+<a href="../../doc/ku/ring_buffer/struct.RingBuffer.html"><code>RingBuffer</code></a>
+наконец-то в пространстве пользователя заработает
 структурированное логирование макросами библиотеки
 <a href="https://docs.rs/tracing/">tracing</a> —
 <code>info!()</code>, <code>debug!()</code> и т.д.</p>
@@ -353,7 +389,9 @@
 В случае переполнения, вызывается
 <a href="../../doc/lib/syscall/fn.sched_yield.html"><code>lib::syscall::sched_yield()</code></a>.
 При попадании в ядро при любом системном вызове или исключении,
-ядро сбрасывает накопившиеся в <code>RingBuffer</code> записи в лог функцией
+ядро сбрасывает накопившиеся в
+<a href="../../doc/ku/ring_buffer/struct.RingBuffer.html"><code>RingBuffer</code></a>
+записи в лог функцией
 <a href="../../doc/kernel/process/process/struct.Process.html#method.flush_log"><code>Process::flush_log()</code></a>.
 Благодаря этому они не потеряются даже если приложение упадёт по ошибке.</p>
 <p>После сброса переполнившегося буфера, выполняется повторная попытка записать в него не поместившееся сообщение.

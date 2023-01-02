@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"constant":[["RSP_OFFSET_IN_MINI_CONTEXT",""]],"struct":[["MiniContext",""]]};
+window.SIDEBAR_ITEMS = {"constant":[["RSP_OFFSET_IN_MINI_CONTEXT","Смещение поля для регистра `rsp` контекста в структуре [`MiniContext`]. Позволяет обращаться к этому полю из ассемблерных вставок."]],"struct":[["MiniContext","Минимальная информация о контексте исполнения."]]};

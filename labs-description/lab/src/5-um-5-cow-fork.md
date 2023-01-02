@@ -1,7 +1,10 @@
 ## Copy-on-write fork
 
 Теперь у нас есть всё необходимое для реализации copy-on-write `fork()` в пространстве пользователя.
-Программа [`user/cow_fork/src/main.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/user/cow_fork/src/main.rs) структурно похожа на [`user/eager_fork/src/main.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/user/eager_fork/src/main.rs)
+Программа
+[`user/cow_fork/src/main.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/user/cow_fork/src/main.rs)
+структурно похожа на
+[`user/eager_fork/src/main.rs`](https://gitlab.com/sergey-v-galtsev/nikka-public/-/blob/master/user/eager_fork/src/main.rs)
 и на `eager_fork` можно ориентироваться при реализации.
 
 
@@ -20,7 +23,7 @@ fn copy_page_table(
 Отличается от которой в паре моментов:
 
 - К игнорируемым страницам добавляется `trap_stack`, его копировать не нужно. У потомка изначально будет полностью отдельный стек для обработки исключений.
-- Вместо копирования страниц функцией `lib::memory::copy_page()` создаёт в потомке отображение. Оно ссылается на тот же физический фрейм, на который ссылается соответствующая виртуальная страница в родителе. При этом для страниц, которые отображены с одним из флагов [`PageTableFlags::WRITABLE`](../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.WRITABLE) или [`PageTableFlags::COPY_ON_WRITE`](../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.COPY_ON_WRITE), в обоих адресных пространствах меняет флаги отображения страницы так, чтобы [`PageTableFlags::COPY_ON_WRITE`](../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.COPY_ON_WRITE) был включён, а [`PageTableFlags::WRITABLE`](../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.WRITABLE) --- выключен. Копирование содержимого страницы функцией `lib::memory::copy_page()` таким образом лениво откладывается до возникновения Page Fault.
+- Вместо копирования страниц функцией [`lib::memory::copy_page()`](../../doc/lib/memory/fn.copy_page.html) создаёт в потомке отображение. Оно ссылается на тот же физический фрейм, на который ссылается соответствующая виртуальная страница в родителе. При этом для страниц, которые отображены с одним из флагов [`PageTableFlags::WRITABLE`](../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.WRITABLE) или [`PageTableFlags::COPY_ON_WRITE`](../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.COPY_ON_WRITE), в обоих адресных пространствах меняет флаги отображения страницы так, чтобы [`PageTableFlags::COPY_ON_WRITE`](../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.COPY_ON_WRITE) был включён, а [`PageTableFlags::WRITABLE`](../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.WRITABLE) --- выключен. Копирование содержимого страницы функцией [`lib::memory::copy_page()`](../../doc/lib/memory/fn.copy_page.html) таким образом лениво откладывается до возникновения Page Fault.
 
 
 #### Пользовательский обработчик исключений Page Fault
@@ -30,7 +33,8 @@ fn copy_page_table(
 и только на чтение,
 возникнет Page Fault и ядро передаст управление в
 [реализованный вами ранее](../../lab/book/5-um-4-trap-handler.html#%D0%A2%D1%80%D0%B0%D0%BC%D0%BF%D0%BB%D0%B8%D0%BD-%D0%BE%D0%B1%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D1%87%D0%B8%D0%BA%D0%B0-%D0%BF%D1%80%D0%B5%D1%80%D1%8B%D0%B2%D0%B0%D0%BD%D0%B8%D0%B9)
-`trap_trampoline()`, который в свою очередь запустит
+[`lib::syscall::trap_trampoline()`](../../doc/lib/syscall/fn.trap_trampoline.html),
+который в свою очередь запустит
 
 ```rust
 fn trap_handler(info: &TrapInfo)
@@ -38,20 +42,27 @@ fn trap_handler(info: &TrapInfo)
 
 Эта функция работает в очень стеснённых условиях.
 
-Возможно, вся память программы, кроме стека `trap_stack`, на котором сейчас работает эта функция, доступна только на чтение.
-В том числе `RingBuffer`, который используется для логирования в пространстве пользователя макросами библиотеки [tracing](https://docs.rs/tracing/) --- `info!()`, `debug!()` и т.д.
+Возможно, вся память программы, кроме стека `trap_stack`, на котором сейчас работает эта функция,
+доступна только на чтение.
+В том числе
+[`RingBuffer`](../../doc/ku/ring_buffer/struct.RingBuffer.html),
+который используется для логирования в пространстве пользователя
+макросами библиотеки [tracing](https://docs.rs/tracing/) --- `info!()`, `debug!()` и т.д.
 Так как при этом нужно писать, то такое логирование в `trap_handler()` не доступно.
 `panic!()` тоже не доступен, так как он использует логирование.
-В других частях `cow_fork` логированием можно пользоваться, потому что `trap_handler()` починит возникающие при этом Page Fault.
+В других частях `cow_fork` логированием можно пользоваться,
+потому что `trap_handler()` починит возникающие при этом Page Fault.
 Для логирования в `trap_handler()` можно воспользоваться
 [одним из первых реализованных системных вызовов](../../lab/book/3-process-4-syscall.html#%D0%97%D0%B0%D0%B4%D0%B0%D1%87%D0%B0-12--%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D0%BD%D1%8B%D0%B9-%D0%B2%D1%8B%D0%B7%D0%BE%D0%B2-log_value) ---
-`syscall::log_value()`.
+[`lib::syscall::log_value()`](../../doc/lib/syscall/fn.log_value.html).
 
 Вторая неприятность заключается в том, что в процессе--потомке в `trap_handler()` не доступны
-`ku::ProcessInfo` и `ku::SystemInfo` даже на чтение.
-Поэтому потомок не может узнать свой идентификатор `Pid`.
-Так как не работает, в том числе функция `ku::process::pid()`.
-Поэтому в `trap_handler()` идентифицировать процесс для выполняемых системных вызовов нужно как `Pid::Current`.
+[`ku::ProcessInfo`](../../doc/ku/info/struct.ProcessInfo.html) и
+[`ku::SystemInfo`](../../doc/ku/info/struct.SystemInfo.html) даже на чтение.
+Поэтому потомок не может узнать свой идентификатор
+[`Pid`](../../doc/ku/process/pid/enum.Pid.html).
+Поэтому в `trap_handler()` идентифицировать процесс для выполняемых системных вызовов нужно как
+[`Pid::Current`](../../doc/ku/process/pid/enum.Pid.html#variant.Current).
 
 Также учтите, что эти ограничения распространяются на вспомогательные функции, которые `trap_handler()` использует.
 Впрочем, оба эти ограничения --- во многом следствие нашей реализации `cow_fork`,
@@ -59,11 +70,11 @@ fn trap_handler(info: &TrapInfo)
 
 При получении управления, `trap_handler()`:
 
-- Проверяет, что прерывание --- это действительно `PageFault` и он вызван записью. Иначе обработчик прекращает исполнение программы, вызвав `syscall::exit()` с кодом ошибки.
-- С помощью [реализованной ранее](../../lab/book/5-um-3-eager-fork.html#temp_page) функции `lib::memory::temp_page()` находит временную страницу.
-- Копирует содержимое страницы, обращение к которой привело к Page Fault, во временную, с помощью [реализованной вами ранее](../../lab/book/5-um-3-eager-fork.html#copy_page) функции `lib::memory::copy_page()`.
-- С помощью системного вызова `syscall::copy_mapping()` заменяет физический фрейм под скопированной страницей на фрейм временной страницы, одновременно меняя флаг [`PageTableFlags::COPY_ON_WRITE`](../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.COPY_ON_WRITE) на [`PageTableFlags::WRITABLE`](../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.WRITABLE) в её отображении.
-- С помощью системного вызова `syscall::unmap()` удаляет из адресного пространства не нужную более временную страницу.
+- Проверяет, что прерывание --- это действительно `PageFault` и он вызван записью. Иначе обработчик прекращает исполнение программы, вызвав [`lib::syscall::exit()`](../../doc/lib/syscall/fn.exit.html) с кодом ошибки.
+- С помощью [реализованной ранее](../../lab/book/5-um-3-eager-fork.html#temp_page) функции [`lib::memory::temp_page()`](../../doc/lib/memory/fn.temp_page.html) находит временную страницу.
+- Копирует содержимое страницы, обращение к которой привело к Page Fault, во временную, с помощью [реализованной вами ранее](../../lab/book/5-um-3-eager-fork.html#copy_page) функции [`lib::memory::copy_page()`](../../doc/lib/memory/fn.copy_page.html).
+- С помощью системного вызова [`lib::syscall::copy_mapping()`](../../doc/lib/syscall/fn.copy_mapping.html) заменяет физический фрейм под скопированной страницей на фрейм временной страницы, одновременно меняя флаг [`PageTableFlags::COPY_ON_WRITE`](../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.COPY_ON_WRITE) на [`PageTableFlags::WRITABLE`](../../doc/ku/memory/mmu/struct.PageTableFlags.html#associatedconstant.WRITABLE) в её отображении.
+- С помощью системного вызова [`lib::syscall::unmap()`](../../doc/lib/syscall/fn.unmap.html) удаляет из адресного пространства не нужную более временную страницу.
 
 
 #### `cow_fork()`
@@ -75,11 +86,11 @@ fn cow_fork() -> Result<bool>
 Эта функции похожа на соответствующую функцию `eager_fork()`, но в ней добавляется работа по инициализации обработчика прерываний.
 Функция `cow_fork()`:
 
-- Выделяет себе --- родительскому процессу --- стек для обработки исключений с помощью `syscall::map()` и устанавливает себе функцией `syscall::set_trap_handler()` обработчик исключений `trap_handler()`.
-- Создаёт процесс потомка с помощью [реализованного вами ранее](../../lab/book/5-um-3-eager-fork.html#%D0%A1%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D0%BD%D1%8B%D0%B9-%D0%B2%D1%8B%D0%B7%D0%BE%D0%B2-exofork) системного вызова `syscall::exofork()`.
+- Выделяет себе --- родительскому процессу --- стек для обработки исключений с помощью [`lib::syscall::map()`](../../doc/lib/syscall/fn.map.html) и устанавливает себе функцией [`lib::syscall::set_trap_handler()`](../../doc/lib/syscall/fn.set_trap_handler.html) обработчик исключений `trap_handler()`.
+- Создаёт процесс потомка с помощью [реализованного вами ранее](../../lab/book/5-um-3-eager-fork.html#%D0%A1%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D0%BD%D1%8B%D0%B9-%D0%B2%D1%8B%D0%B7%D0%BE%D0%B2-exofork) системного вызова [`lib::syscall::exofork()`](../../doc/lib/syscall/fn.exofork.html).
 - Далее лениво копирует своё адресное пространство в пространство потомка с помощью функции `fn copy_address_space()`.
-- Выделяет потомку отдельный стек для обработки исключений с помощью `syscall::map()` и устанавливает уже ему обработчик исключений `trap_handler()` функцией `syscall::set_trap_handler()`.
-- Запускает потомка системным вызовом `syscall::set_state()`, устанавливая его состояние в `State::Runnable`.
+- Выделяет потомку отдельный стек для обработки исключений с помощью [`lib::syscall::map()`](../../doc/lib/syscall/fn.map.html) и устанавливает уже ему обработчик исключений `trap_handler()` функцией [`lib::syscall::set_trap_handler()`](../../doc/lib/syscall/fn.set_trap_handler.html).
+- Запускает потомка системным вызовом [`lib::syscall::set_state()`](../../doc/lib/syscall/fn.set_state.html), устанавливая его состояние в [`State::RUNNABLE`](../../doc/ku/process/struct.State.html#associatedconstant.RUNNABLE).
 
 В потомке `cow_fork()` ничего не делает.
 Возвращает она `true` в процессе потомка и `false` в процессе родителя.
